@@ -1,4 +1,6 @@
-﻿using Booking.Api.Infrasrtructure;
+﻿using Booking.Api.Common.Errors;
+using Booking.Api.Infrastructure;
+using Microsoft.AspNetCore.Mvc.Infrastructure;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.OpenApi.Models;
 
@@ -10,6 +12,8 @@ public static class DependencyInjection
 		IConfiguration configuration)
 	{
 		services.AddControllers();
+
+		services.AddSingleton<ProblemDetailsFactory, BookingProblemDetailsFactory>();	
 
 		services.AddExceptionHandler<GlobalExeptionHandler>()
 			.AddProblemDetails();

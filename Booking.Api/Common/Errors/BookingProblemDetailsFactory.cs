@@ -1,7 +1,9 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using ErrorOr;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Infrastructure;
 using Microsoft.AspNetCore.Mvc.ModelBinding;
 using Microsoft.Extensions.Options;
+using System.Diagnostics;
 
 namespace Booking.Api.Common.Errors;
 
@@ -43,6 +45,54 @@ public class BookingProblemDetailsFactory(IOptions<ApiBehaviorOptions> options) 
 		string? detail = null,
 		string? instance = null)
 	{
-		throw new NotImplementedException();
+		if (modelStateDictionary == null)
+		{ 
+			throw new ArgumentNullException(nameof(modelStateDictionary));
+		}
+
+		statusCode ??= 400;
+
+		var problemDetails = new ValidationProblemDetails
+		{
+			Status = statusCode,
+			Type = type,
+			Detail = detail,
+			Instance = instance
+		};
+
+		if (title != null)
+		{
+			problemDetails.Title = title;
+		}
+
+		ApplyProblemDetailsDefaults(httpContext, problemDetails, statusCode.Value);
+
+		return problemDetails;
+	}
+
+	private void ApplyProblemDetailsDefaults(HttpContext httpContext, ProblemDetails problemDetails, int statusCode)
+	{
+		problemDetails.Status ??= statusCode;
+
+		if (_options.ClientErrorMapping.TryGetValue(statusCode, out var clientErrorData))
+		{
+			problemDetails.Title ??= clientErrorData.Title;
+			problemDetails.Type ??= clientErrorData.Link;
+		}
+
+		var traceId = Activity.Current?.Id ?? httpContext?.TraceIdentifier;
+
+		if (traceId != null) 
+		{
+			problemDetails.Extensions["traceId"] = traceId;
+		}
+
+		var errors = httpContext?.Items["errors"] as List<Error>;
+
+		if (errors is not null)
+		{ 
+			problemDetails.Extensions.Add("errorCodes", "customValue");
+		}
+
 	}
 }

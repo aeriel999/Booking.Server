@@ -1,11 +1,11 @@
 ﻿using Microsoft.AspNetCore.Diagnostics;
 using Microsoft.AspNetCore.Mvc;
 
-namespace Booking.Api.Infrasrtructure;
+namespace Booking.Api.Infrastructure;
 
 public class GlobalExeptionHandler(ILogger<GlobalExeptionHandler> logger) : IExceptionHandler
 {
-	public async ValueTask<bool> TryHandleAsync(HttpContext httpContext, Exception exception, 
+	public async ValueTask<bool> TryHandleAsync(HttpContext httpContext, Exception exception,
 		CancellationToken cancellationToken)
 	{
 		logger.LogError(exception, "Exeption occurred: {Message}", exception.Message);
