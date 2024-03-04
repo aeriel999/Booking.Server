@@ -1,10 +1,10 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using Booking.Domain.Users;
+using ErrorOr;
 
 namespace Booking.Application.Common.Interfaces.Authentication;
-internal interface IJwtTokenGenerator
+
+public interface IJwtTokenGenerator
 {
+	Task<ErrorOr<string>> GenerateJwtTokenAsync(User user);
+
 }
