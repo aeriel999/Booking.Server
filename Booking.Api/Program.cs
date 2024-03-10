@@ -1,11 +1,15 @@
 using Booking.Api;
+using Booking.Api.Common;
+using Booking.Application;
 using Booking.Infrastructure;
+using Booking.Infrastructure.Common.Initializers;
 
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
 builder.Services
-	.AddPresentation(builder.Configuration)
+	.AddPresentation()
+	.AddApplication()
 	.AddInfrastructure(builder.Configuration);
 
 
@@ -24,6 +28,14 @@ else
 	app.UseExceptionHandler("/error");
 }
 
+app.UseCustomStaticFiles();
+
+app.UseCors(options =>
+	options.SetIsOriginAllowed(origin => true)
+		.AllowAnyHeader()
+		.AllowCredentials()
+		.AllowAnyMethod());
+
 app.UseHttpsRedirection();
 
 app.UseAuthentication();
@@ -31,5 +43,7 @@ app.UseAuthentication();
 app.UseAuthorization();
 
 app.MapControllers();
+
+//UserAndRolesInitializer.SeedData(app);
 
 app.Run();

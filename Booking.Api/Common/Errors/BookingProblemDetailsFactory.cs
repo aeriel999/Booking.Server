@@ -9,13 +9,13 @@ namespace Booking.Api.Common.Errors;
 
 public class BookingProblemDetailsFactory(IOptions<ApiBehaviorOptions> options) : ProblemDetailsFactory
 {
-	private readonly ApiBehaviorOptions _options = options?.Value ?? 
+	private readonly ApiBehaviorOptions _options = options?.Value ??
 		throw new ArgumentNullException(nameof(options));
 
 	public override ProblemDetails CreateProblemDetails(
-		HttpContext httpContext, 
-		int? statusCode = null, 
-		string? title = null, 
+		HttpContext httpContext,
+		int? statusCode = null,
+		string? title = null,
 		string? type = null,
 		string? detail = null,
 		string? instance = null)
@@ -36,27 +36,66 @@ public class BookingProblemDetailsFactory(IOptions<ApiBehaviorOptions> options) 
 		return problemDetails;
 	}
 
+	//public override ValidationProblemDetails CreateValidationProblemDetails(
+	//	HttpContext httpContext,
+	//	ModelStateDictionary modelStateDictionary,
+	//	int? statusCode = null,
+	//	string? title = null,
+	//	string? type = null,
+	//	string? detail = null,
+	//	string? instance = null)
+	//{
+	//	if (modelStateDictionary == null)
+	//	{
+	//		throw new ArgumentNullException(nameof(modelStateDictionary));
+	//	}
+
+	//	statusCode ??= 400;
+
+
+
+	//	foreach (var error in modelStateDictionary.AsEnumerable())
+	//	{
+	//		var e = error.Key;
+	//		var v = error.Value;
+	//	}
+
+
+	//	var problemDetails = new ValidationProblemDetails
+	//	{
+	//		Status = statusCode,
+	//		Type = type,
+	//		Detail = detail,
+	//		Instance = instance
+	//	};
+
+	//	if (title != null)
+	//	{
+	//		problemDetails.Title = title;
+	//	}
+
+	//	//ApplyProblemDetailsDefaults(httpContext, problemDetails, statusCode.Value);
+
+	//	return problemDetails;
+	//}
+
 	public override ValidationProblemDetails CreateValidationProblemDetails(
 		HttpContext httpContext,
-		ModelStateDictionary modelStateDictionary, 
-		int? statusCode = null, 
-		string? title = null, 
-		string? type = null,
-		string? detail = null,
-		string? instance = null)
+	   ModelStateDictionary modelStateDictionary,
+	   int? statusCode = null,
+	   string? title = null,
+	   string? type = null,
+	   string? detail = null,
+	   string? instance = null)
 	{
-		if (modelStateDictionary == null)
-		{ 
-			throw new ArgumentNullException(nameof(modelStateDictionary));
-		}
-
 		statusCode ??= 400;
+		type ??= "https://tools.ietf.org/html/rfc7231#section-6.5.1";
+		instance ??= httpContext.Request.Path;
 
-		var problemDetails = new ValidationProblemDetails
+		var problemDetails = new CustomValidationProblemDetails(modelStateDictionary)
 		{
 			Status = statusCode,
 			Type = type,
-			Detail = detail,
 			Instance = instance
 		};
 
@@ -65,7 +104,12 @@ public class BookingProblemDetailsFactory(IOptions<ApiBehaviorOptions> options) 
 			problemDetails.Title = title;
 		}
 
-		ApplyProblemDetailsDefaults(httpContext, problemDetails, statusCode.Value);
+		var traceId = Activity.Current?.Id ?? httpContext?.TraceIdentifier;
+
+		if (traceId != null)
+		{
+			problemDetails.Extensions["traceId"] = traceId;
+		}
 
 		return problemDetails;
 	}
@@ -82,7 +126,7 @@ public class BookingProblemDetailsFactory(IOptions<ApiBehaviorOptions> options) 
 
 		var traceId = Activity.Current?.Id ?? httpContext?.TraceIdentifier;
 
-		if (traceId != null) 
+		if (traceId != null)
 		{
 			problemDetails.Extensions["traceId"] = traceId;
 		}
@@ -90,9 +134,11 @@ public class BookingProblemDetailsFactory(IOptions<ApiBehaviorOptions> options) 
 		var errors = httpContext?.Items["errors"] as List<Error>;
 
 		if (errors is not null)
-		{ 
+		{
 			problemDetails.Extensions.Add("errorCodes", "customValue");
 		}
 
 	}
 }
+
+

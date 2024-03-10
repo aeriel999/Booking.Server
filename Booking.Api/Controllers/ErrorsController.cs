@@ -1,9 +1,15 @@
-﻿using Microsoft.AspNetCore.Diagnostics;
+﻿using Booking.Api.Infrastructure;
+using Microsoft.AspNetCore.Diagnostics;
 using Microsoft.AspNetCore.Mvc;
 
 namespace Booking.Api.Controllers;
-public class ErrorsController : ControllerBase
+
+[ApiController]
+public class ErrorsController : ApiController
 {
+	//ToDo Add loging
+	//ToDo Add Email sends with error data
+	[ApiExplorerSettings(IgnoreApi = true)]
 	[Route("/error-development")]
 	public IActionResult HandleErrorDevelopment(
 	[FromServices] IHostEnvironment hostEnvironment)
@@ -21,6 +27,7 @@ public class ErrorsController : ControllerBase
 			title: exceptionHandlerFeature.Error.Message);
 	}
 
+	[ApiExplorerSettings(IgnoreApi = true)]
 	[Route("/error")]
 	public IActionResult HandleError() =>
 		Problem();

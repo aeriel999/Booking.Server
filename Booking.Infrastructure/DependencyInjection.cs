@@ -1,11 +1,13 @@
 ﻿using Booking.Application.Common.Interfaces.Authentication;
 using Booking.Application.Common.Interfaces.Services;
+using Booking.Domain.Users;
 using Booking.Infrastructure.Authentification;
 using Booking.Infrastructure.Common.Persistence;
+using Booking.Infrastructure.Repositories;
 using Booking.Infrastructure.Services;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.EntityFrameworkCore.Metadata.Internal;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Options;
@@ -23,9 +25,9 @@ public static class DependencyInjection
 		services
 			.AddPersistence(configuration)
 			.AddAppIdentity()
-			.AddAuth(configuration)
-			//.AddRepositories()
-			.AddInfrastructureServices();
+			.AddRepositories()
+			.AddInfrastructureServices()
+			.AddAuth(configuration);
 
 		return services;
 	}
@@ -38,7 +40,7 @@ public static class DependencyInjection
 
 		services.AddDbContext<BookingDbContext>(opt =>
 		{
-			//opt.UseSqlServer(connectionString);
+			//opt.UseSqlServer(connStr);
 			opt.UseNpgsql(connStr);
 
 			opt.UseQueryTrackingBehavior(QueryTrackingBehavior.NoTracking);
@@ -49,7 +51,7 @@ public static class DependencyInjection
 
 	private static IServiceCollection AddAppIdentity(this IServiceCollection services)
 	{
-		services.AddIdentityCore<BookingDbContext>(option =>
+		services.AddIdentity<User, IdentityRole<Guid>>(option =>
 		{
 			option.SignIn.RequireConfirmedEmail = true;
 			option.Lockout.MaxFailedAccessAttempts = 5;
@@ -61,30 +63,36 @@ public static class DependencyInjection
 			option.Password.RequireNonAlphanumeric = true;
 			option.User.RequireUniqueEmail = true;
 		})
-			.AddEntityFrameworkStores<BookingDbContext>();
+			.AddEntityFrameworkStores<BookingDbContext>().AddDefaultTokenProviders();
 
 		return services;
 	}
 
-	//private static IServiceCollection AddRepositories(this IServiceCollection services)
-	//{
-	//	services.AddScoped<IUserRepository, UserRepository>();
-	//	services.AddScoped<IApartmentsRepository, ApartmentsRepository>();
-	//	services.AddScoped<IImageRepository, ImageRepository>();
-	//	services.AddScoped<IStreetRepository, StreetRepository>();
-	//	services.AddScoped<IRefreshTokenRepository, RefreshTokenRepository>();
+	private static IServiceCollection AddRepositories(this IServiceCollection services)
+	{
+		services.AddScoped<IUserRepository, UserRepository>();
+		//services.AddScoped<IApartmentsRepository, ApartmentsRepository>();
+		//services.AddScoped<IImageRepository, ImageRepository>();
+		//services.AddScoped<IStreetRepository, StreetRepository>();
+		//services.AddScoped<IRefreshTokenRepository, RefreshTokenRepository>();
 
-	//	return services;
-	//}
+		return services;
+	}
 
 	private static IServiceCollection AddInfrastructureServices(this IServiceCollection services)
 	{
 		services.AddSingleton<IJwtTokenGenerator, JwtTokenGenerator>();
 		services.AddSingleton<IDateTimeProvider, DateTimeProvider>();
 
+		services.AddScoped<ISmtpService, SmtpService>();
+		services.AddTransient<SmtpService>();
+
+		services.AddScoped<IUserAuthenticationService, UserAuthenticationService>();
+		services.AddTransient<UserAuthenticationService>();
+
 		//services.AddScoped<IJwtTokenGenerator, JwtTokenGenerator>();
 		//services.AddTransient<JwtTokenGenerator>();
-		 
+
 		return services;
 	}
 
@@ -93,7 +101,7 @@ public static class DependencyInjection
 	{
 		var jwtSettings = new JwtSettings();
 		configuration.Bind(JwtSettings.SectionName, jwtSettings);
-		
+
 		services.AddSingleton(Options.Create(jwtSettings));
 		services.AddSingleton<IJwtTokenGenerator, JwtTokenGenerator>();
 
