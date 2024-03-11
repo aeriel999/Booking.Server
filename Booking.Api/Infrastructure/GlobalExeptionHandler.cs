@@ -3,7 +3,8 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace Booking.Api.Infrastructure;
 
-public class GlobalExeptionHandler(ILogger<GlobalExeptionHandler> logger) : IExceptionHandler
+internal sealed class GlobalExeptionHandler(ILogger<GlobalExeptionHandler> logger)
+	: IExceptionHandler
 {
 	public async ValueTask<bool> TryHandleAsync(HttpContext httpContext, Exception exception,
 		CancellationToken cancellationToken)

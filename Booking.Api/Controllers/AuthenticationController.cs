@@ -7,7 +7,6 @@ using Booking.Application.Authentication.Login;
 using Booking.Application.Authentication.Register;
 using MapsterMapper;
 using MediatR;
-using Microsoft.AspNetCore.Hosting.Server;
 using Microsoft.AspNetCore.Mvc;
 
 namespace Booking.Api.Controllers;
@@ -29,7 +28,7 @@ public class AuthenticationController(ISender mediatr, IMapper mapper, IHttpCont
 			errors => Problem(errors));
 	}
 
-	[HttpGet("ConfirmEmail")]
+	[HttpGet("confirm-email")]
 	public async Task<IActionResult> ConfirmEmailAsync([FromQuery] ConfirmEmailRequest request)
 	{
 		var confirmEmailResult = await mediatr.Send(mapper.Map<ConfirmEmailCommand>(request));

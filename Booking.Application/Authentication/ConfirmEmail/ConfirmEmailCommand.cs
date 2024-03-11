@@ -4,5 +4,5 @@ using MediatR;
 namespace Booking.Application.Authentication.ConfirmEmail;
 
 public record ConfirmEmailCommand(
-	string UserId,
+	Guid UserId,
 	string Token) : IRequest<ErrorOr<Success>>;

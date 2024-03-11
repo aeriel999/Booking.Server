@@ -6,8 +6,7 @@ public class ConfirmEmailCommandValidation : AbstractValidator<ConfirmEmailComma
 {
 	public ConfirmEmailCommandValidation()
 	{
-		RuleFor(r => r.UserId).NotEmpty().WithMessage("Field must not be empty")
-		   .MaximumLength(254).MinimumLength(24);
+		RuleFor(r => r.UserId).NotEmpty().WithMessage("Field must not be empty");
 
 		RuleFor(r => r.Token).NotEmpty().WithMessage("Field must not be empty")
 			.MaximumLength(4096).MinimumLength(256);

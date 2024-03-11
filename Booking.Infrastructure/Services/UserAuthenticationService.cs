@@ -20,17 +20,17 @@ public class UserAuthenticationService(UserManager<User> userManager) : IUserAut
 		throw new NotImplementedException();
 	}
 
-	public Task<ErrorOr<Success>> LogoutUserAsync(string userId)
+	public Task<ErrorOr<Success>> LogoutUserAsync(Guid userId)
 	{
 		throw new NotImplementedException();
 	}
 
-	public async Task<ErrorOr<Success>> ConfirmEmailAsync(string userId, string token)
+	public async Task<ErrorOr<Success>> ConfirmEmailAsync(Guid userId, string token)
 	{
-		var user = await userManager.FindByIdAsync(userId);
+		var user = await userManager.FindByIdAsync(userId.ToString());
 
 		if (user == null)
-			return Error.NotFound(userId);
+			return Error.NotFound();
 
 		var decoderToken = WebEncoders.Base64UrlDecode(token);
 

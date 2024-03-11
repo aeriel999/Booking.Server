@@ -1,3 +1,14 @@
-﻿namespace Booking.Api.Contracts.Authetication.ConfirmEmail;
+﻿using System.ComponentModel.DataAnnotations;
 
-public record ConfirmEmailRequest(string UserId, string Token);
+namespace Booking.Api.Contracts.Authetication.ConfirmEmail;
+
+public record ConfirmEmailRequest {
+
+	[Required(ErrorMessage = "{PropertyName} must not be empty")]
+	public required Guid UserId { get; init; }
+
+	[Required(ErrorMessage = "{PropertyName} must not be empty")]
+	[Length(256, 4096)]
+	public required string Token { get; init; }
+}
+ 

@@ -38,6 +38,8 @@ public static class UserAndRolesInitializer
 
 			if (!context.Roles.Any())
 			{
+
+				//ToDo make without foreach
 				foreach (var role in Roles.All)
 				{
 					var result = roleManager.CreateAsync(new IdentityRole<Guid>
