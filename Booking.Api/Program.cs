@@ -3,6 +3,7 @@ using Booking.Api.Common;
 using Booking.Application;
 using Booking.Infrastructure;
 using Booking.Infrastructure.Common.Initializers;
+using NLog.Web;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -12,6 +13,10 @@ builder.Services
 	.AddApplication()
 	.AddInfrastructure(builder.Configuration);
 
+//NLog
+builder.Logging.ClearProviders();
+builder.Logging.SetMinimumLevel(LogLevel.Trace);
+builder.Host.UseNLog();
 
 var app = builder.Build();
 
@@ -26,6 +31,7 @@ if (app.Environment.IsDevelopment())
 else
 {
 	app.UseExceptionHandler("/error");
+	app.UseHsts();
 }
 
 app.UseCustomStaticFiles();

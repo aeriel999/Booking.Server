@@ -8,6 +8,7 @@ using Microsoft.OpenApi.Models;
 using Mapster;
 using MapsterMapper;
 using System.Reflection;
+using Booking.Api.Infrastructure.NLog;
 
 namespace Booking.Api;
 
@@ -19,8 +20,10 @@ public static class DependencyInjection
 
 		services.AddSingleton<ProblemDetailsFactory, BookingProblemDetailsFactory>();
 
-		services.AddExceptionHandler<GlobalExeptionHandler>()
+		services.AddExceptionHandler<GlobalExceptionHandler>()
 			.AddProblemDetails();
+
+		services.AddSingleton<ILoggerService, LoggerService>();
 
 		services.AddSwagger();
 
