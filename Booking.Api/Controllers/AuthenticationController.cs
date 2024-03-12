@@ -16,7 +16,7 @@ namespace Booking.Api.Controllers;
 public class AuthenticationController(ISender mediatr, IMapper mapper, IHttpContextAccessor httpContext)
 	: ApiController
 {
-	[HttpPost("register")]
+	[HttpPost("user-register")]
 	public async Task<IActionResult> RegisterUserAsync(RegisterUserRequest request)
 	{
 		var baseUrl = httpContext.HttpContext!.Request.Host.Value;

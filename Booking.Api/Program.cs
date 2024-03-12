@@ -50,6 +50,6 @@ app.UseAuthorization();
 
 app.MapControllers();
 
-//UserAndRolesInitializer.SeedData(app);
+UserAndRolesInitializer.SeedData(app);
 
 app.Run();

@@ -1,4 +1,5 @@
-﻿using Booking.Domain.Users;
+﻿using Booking.Domain.Constants;
+using Booking.Domain.Users;
 using Booking.Infrastructure.Common.Persistence;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Identity;
@@ -8,19 +9,8 @@ using Microsoft.Extensions.DependencyInjection;
 namespace Booking.Infrastructure.Common.Initializers;
 
 public static class UserAndRolesInitializer
-{
-	//ToDo Move Roles
-	public static class Roles
-	{
-		public static List<string> All = new()
-		{
-			Admin,
-			User
-		};
-		public const string Admin = "Admin";
-		public const string User = "User";
-	}
-	public static void SeedData(this IApplicationBuilder app)
+{ 
+	public async static void SeedData(this IApplicationBuilder app)
 	{
 		using (var scope = app.ApplicationServices.GetRequiredService<IServiceScopeFactory>().CreateScope())
 		{
@@ -38,15 +28,9 @@ public static class UserAndRolesInitializer
 
 			if (!context.Roles.Any())
 			{
-
-				//ToDo make without foreach
-				foreach (var role in Roles.All)
-				{
-					var result = roleManager.CreateAsync(new IdentityRole<Guid>
-					{
-						Name = role
-					}).Result;
-				}
+				await roleManager.CreateAsync(new IdentityRole<Guid> { Name = Roles.Admin });
+				await roleManager.CreateAsync(new IdentityRole<Guid> { Name = Roles.User });
+				await roleManager.CreateAsync(new IdentityRole<Guid> { Name = Roles.Realtor });
 			}
 
 			if (!context.Users.Any())
