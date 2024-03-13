@@ -16,7 +16,7 @@ public class EmailService(ISmtpService smtpService)
 		var validEmailToken = WebEncoders.Base64UrlEncode(encodedEmailToken);
 
 		//ToDo make EmailBody
-		string url = $"http://{baseUrl}/api/User/ConfirmEmail?userid={userId}&token={validEmailToken}";
+		string url = $"{baseUrl}/authentication/confirm-email?userid={userId}&token={validEmailToken}";
 
 		string emailBody = $"<h1>Confirm your email</h1> <a href='{url}'>Confirm now</a>";
 

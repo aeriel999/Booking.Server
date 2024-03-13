@@ -21,10 +21,12 @@ public class AuthenticationController(ISender mediatr, IMapper mapper, IHttpCont
 	{
 		var baseUrl = httpContext.HttpContext!.Request.Host.Value;
 
+		//var baseUrl = configuration.GetRequiredSection("HostSettings:ClientURL");
+
 		var authResult = await mediatr.Send(mapper.Map<RegisterUserCommand>((request, baseUrl)));
 
 		return authResult.Match(
-			authResult => Ok(authResult),
+			authResult => Ok(),
 			errors => Problem(errors));
 	}
 

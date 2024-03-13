@@ -10,7 +10,7 @@ public abstract class ApiController : ControllerBase
 	{
 		HttpContext.Items["errors"] = errors;
 
-		var firstError = errors[0];
+		var firstError = errors.FirstOrDefault();
 
 		var statusCode = firstError.Type switch
 		{
@@ -20,6 +20,20 @@ public abstract class ApiController : ControllerBase
 			_ => StatusCodes.Status500InternalServerError,
 		};
 
-		return Problem(statusCode: statusCode, title: firstError.Description);
+		var problemDetails = new ProblemDetails
+		{
+			Status = statusCode,
+			Title = "Error",
+			Type = "https://datatracker.ietf.org/doc/html/rfc7231#section-6.6.1",
+			Detail = "Multiple errors occurred", 
+		};
+
+		problemDetails.Extensions["errors"] = errors;
+
+		return new ObjectResult(problemDetails)
+		{
+			StatusCode = statusCode,
+		};
 	}
 }
+

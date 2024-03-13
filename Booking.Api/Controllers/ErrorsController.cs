@@ -7,7 +7,6 @@ namespace Booking.Api.Controllers;
 [ApiController]
 public class ErrorsController : ApiController
 {
-	//ToDo Add loging
 	//ToDo Add Email sends with error data
 	[ApiExplorerSettings(IgnoreApi = true)]
 	[Route("/error-development")]

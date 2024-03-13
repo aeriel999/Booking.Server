@@ -8,6 +8,7 @@ public class RegisterUserCommandValidator : AbstractValidator<RegisterUserComman
 	{
 		RuleFor(r => r.Email).NotEmpty().WithMessage("Field must not be empty")
 		   .EmailAddress().WithMessage("Wrong email format")
+		   .MinimumLength(5)
 		   .MaximumLength(254);
 
 		RuleFor(r => r.Password).NotEmpty().WithMessage("Field must not be empty")
