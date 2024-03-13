@@ -5,6 +5,5 @@ namespace Booking.Application.Common.Interfaces.Authentication;
 
 public interface IJwtTokenGenerator
 {
-	Task<ErrorOr<string>> GenerateJwtTokenAsync(User user);
-
+	Task<ErrorOr<string>> GenerateJwtTokenAsync(User user, string role);
 }

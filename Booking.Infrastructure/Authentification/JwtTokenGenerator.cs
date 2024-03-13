@@ -15,7 +15,8 @@ public class JwtTokenGenerator(IOptions<JwtSettings> jwtOptions, IDateTimeProvid
 {
 	public readonly JwtSettings _jwtSettings = jwtOptions.Value;
 
-	public async Task<ErrorOr<string>> GenerateJwtTokenAsync(User user)
+	//ToDo async method without await
+	public async Task<ErrorOr<string>> GenerateJwtTokenAsync(User user, string role)
 	{
 		var signingCredentials = new SigningCredentials(
 			new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_jwtSettings.Secret)),
@@ -25,9 +26,13 @@ public class JwtTokenGenerator(IOptions<JwtSettings> jwtOptions, IDateTimeProvid
 		{
 			new Claim(JwtRegisteredClaimNames.Jti, Guid.NewGuid().ToString()),
 			new Claim(JwtRegisteredClaimNames.Sub, user.Id.ToString()),
-			//new Claim(JwtRegisteredClaimNames.GivenName, user.Id.ToString()),
-			//new Claim(JwtRegisteredClaimNames.FamilyName, user.Id.ToString()),
-
+			new Claim(JwtRegisteredClaimNames.GivenName, user.FirstName ?? ""),
+			new Claim(JwtRegisteredClaimNames.FamilyName, user.LastName ?? ""),
+			new Claim(JwtRegisteredClaimNames.Email, user.Email!),
+			new Claim("EmailConfirm", user.EmailConfirmed.ToString()),
+			new Claim(ClaimTypes.MobilePhone, user.PhoneNumber ?? ""),
+			new Claim("Avatar", user.Avatar ?? ""),
+			new Claim(ClaimTypes.Role, role),
 		};
 
 		var securityToken = new JwtSecurityToken(
