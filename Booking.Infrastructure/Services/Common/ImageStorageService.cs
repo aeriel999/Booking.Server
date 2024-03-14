@@ -10,7 +10,7 @@ using SixLabors.ImageSharp.Processing;
 namespace Booking.Infrastructure.Services.Common;
 public class ImageStorageService : IImageStorageService
 {
-	public async Task<string> AddAvatarAsync(User user, IFormFile file)
+	public async Task<string> AddAvatarAsync(User user, byte[] file)
 	{
 		string imageName = Path.GetRandomFileName() + ".webp";
 
@@ -31,24 +31,19 @@ public class ImageStorageService : IImageStorageService
 
 		string dirSaveImage = Path.Combine(uploadFolderPath, imageName);
 
-		using (MemoryStream ms = new())
+		using var image = Image.Load(file);
+		image.Mutate(x =>
 		{
-			await file.CopyToAsync(ms);
-
-			using var image = Image.Load(ms.ToArray());
-			image.Mutate(x =>
+			x.Resize(new ResizeOptions
 			{
-				x.Resize(new ResizeOptions
-				{
-					//ToDo In what size save an avatar
-					Size = new Size(1200, 1200),
-					Mode = ResizeMode.Max
-				});
+				//ToDo In what size save an avatar
+				Size = new Size(1200, 1200),
+				Mode = ResizeMode.Max
 			});
+		});
 
-			using var stream = File.Create(dirSaveImage);
-			await image.SaveAsync(stream, new WebpEncoder());
-		}
+		using var stream = File.Create(dirSaveImage);
+		await image.SaveAsync(stream, new WebpEncoder());
 
 		return imageName;
 	}

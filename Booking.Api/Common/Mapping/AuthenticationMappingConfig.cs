@@ -5,6 +5,7 @@ using Booking.Application.Authentication.ConfirmEmail;
 using Booking.Application.Authentication.Login;
 using Booking.Application.Authentication.Register;
 using Mapster;
+using System.IO;
 
 namespace Booking.Api.Common.Mapping;
 
@@ -16,10 +17,12 @@ public class AuthenticationMappingConfig : IRegister
 		.Map(dest => dest.BaseUrl, src => src.BaseUrl)
 		.Map(dest => dest, src => src.registerRequest);
 
-		config.NewConfig<(RegisterRealtorRequest registerRequest, string BaseUrl), RegisterRealtorCommand>()
+		config.NewConfig<(RegisterRealtorRequest registerRequest, string BaseUrl, byte[] Image),
+			RegisterRealtorCommand>()
 		.Map(dest => dest.BaseUrl, src => src.BaseUrl)
+		.Map(dest => dest.Avatar, src => src.Image)
 		.Map(dest => dest, src => src.registerRequest);
-
+		
 		config.NewConfig<ConfirmEmailRequest, ConfirmEmailCommand>();
 
 		config.NewConfig<LoginUserRequest, LoginUserQuery>();
@@ -34,3 +37,5 @@ public class AuthenticationMappingConfig : IRegister
 
 	}
 }
+
+ 

@@ -27,6 +27,7 @@ public record RegisterRealtorRequest
 	[Length(8, 24)]
 	public required string Password { get; init; }
 
+	[Required(ErrorMessage = "{PropertyName} must not be empty")]
 	[Compare("Password",
 		ErrorMessage = "The password and confirmation password do not match.")]
 	[Length(8, 24)]

@@ -13,7 +13,8 @@ public class RegisterRealtorCommandHandler(
 	IUserRepository userRepository, ISender mediator, IImageStorageService imageStorageService) :
 	IRequestHandler<RegisterRealtorCommand, ErrorOr<User>>
 {
-	public async Task<ErrorOr<User>> Handle(RegisterRealtorCommand request, CancellationToken cancellationToken)
+	public async Task<ErrorOr<User>> Handle(RegisterRealtorCommand request, 
+		CancellationToken cancellationToken)
 	{
 		//Check For exist
 		var errorOrUser = await userRepository.FindByEmilAsync(request.Email);

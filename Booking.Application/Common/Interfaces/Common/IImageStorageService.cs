@@ -6,7 +6,7 @@ namespace Booking.Application.Common.Interfaces.Common;
 
 public interface IImageStorageService
 {
-	Task<string> AddAvatarAsync(User user, IFormFile file);
+	Task<string> AddAvatarAsync(User user, byte[] file);
 
 	Task<ErrorOr<string>> SaveImageAsync(IFormFile image);
 

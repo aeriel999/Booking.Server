@@ -1,7 +1,6 @@
 ﻿using Booking.Domain.Users;
 using ErrorOr;
 using MediatR;
-using Microsoft.AspNetCore.Http;
 
 namespace Booking.Application.Authentication.Register;
 
@@ -12,6 +11,6 @@ public record RegisterRealtorCommand(
    string FirstName,
    string LastName,
    string PhoneNumber,
-   IFormFile Avatar,
+   byte[] Avatar,
    string BaseUrl) : IRequest<ErrorOr<User>>;
  
