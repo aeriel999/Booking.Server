@@ -1,4 +1,5 @@
 ﻿using Booking.Application.Common.Interfaces.Authentication;
+using Booking.Application.Common.Interfaces.Users;
 using Booking.Application.Common.Services;
 using Booking.Domain.Users;
 using ErrorOr;

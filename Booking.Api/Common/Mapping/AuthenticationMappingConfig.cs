@@ -16,6 +16,10 @@ public class AuthenticationMappingConfig : IRegister
 		.Map(dest => dest.BaseUrl, src => src.BaseUrl)
 		.Map(dest => dest, src => src.registerRequest);
 
+		config.NewConfig<(RegisterRealtorRequest registerRequest, string BaseUrl), RegisterRealtorCommand>()
+		.Map(dest => dest.BaseUrl, src => src.BaseUrl)
+		.Map(dest => dest, src => src.registerRequest);
+
 		config.NewConfig<ConfirmEmailRequest, ConfirmEmailCommand>();
 
 		config.NewConfig<LoginUserRequest, LoginUserQuery>();

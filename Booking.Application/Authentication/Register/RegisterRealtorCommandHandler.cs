@@ -1,17 +1,19 @@
 ﻿using Booking.Application.Authentication.SendConfirmationEmail;
+using Booking.Application.Common.Interfaces.Common;
 using Booking.Application.Common.Interfaces.Users;
 using Booking.Domain.Constants;
 using Booking.Domain.TypeExtensions;
 using Booking.Domain.Users;
 using ErrorOr;
 using MediatR;
-using System.Data;
 
 namespace Booking.Application.Authentication.Register;
-public class RegisterUserCommandHandler(IUserRepository userRepository, ISender mediator) :
-	IRequestHandler<RegisterUserCommand, ErrorOr<User>>
+
+public class RegisterRealtorCommandHandler(
+	IUserRepository userRepository, ISender mediator, IImageStorageService imageStorageService) :
+	IRequestHandler<RegisterRealtorCommand, ErrorOr<User>>
 {
-	public async Task<ErrorOr<User>> Handle(RegisterUserCommand request, CancellationToken cancellationToken)
+	public async Task<ErrorOr<User>> Handle(RegisterRealtorCommand request, CancellationToken cancellationToken)
 	{
 		//Check For exist
 		var errorOrUser = await userRepository.FindByEmilAsync(request.Email);
@@ -20,17 +22,30 @@ public class RegisterUserCommandHandler(IUserRepository userRepository, ISender 
 			return Error.Validation("User with such email already exists");
 
 		//Create
-		var user = new User { Email = request.Email, UserName = request.Email };
+		var user = new User
+		{
+			Email = request.Email,
+			UserName = request.Email,
+			FirstName = request.FirstName,
+			LastName = request.LastName,
+			PhoneNumber = request.PhoneNumber,
+		};
 
-		var role = Roles.User;
+		var role = Roles.Realtor;
 
 		var createUserResult = await userRepository.CreateUserAsync(user, request.Password, role);
 
 		if (createUserResult.IsError)
 			return createUserResult.Errors;
 
-		//Send Confirmation
+		//Save avatar
+		var imageName = await imageStorageService.AddAvatarAsync(user, request.Avatar);
 
+		//Add avatar to user
+		if (imageName != null)
+			user.Avatar = imageName;
+
+		//Send Confirmation
 		var sendConfirmationResult = await mediator.Send(
 			new SendConfirmationEmailCommand(user.Email, request.BaseUrl));
 

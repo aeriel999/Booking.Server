@@ -30,6 +30,20 @@ public class AuthenticationController(ISender mediatr, IMapper mapper, IHttpCont
 			errors => Problem(errors));
 	}
 
+	[HttpPost("realtor-register")]
+	public async Task<IActionResult> RegisterRealtorAsync(RegisterRealtorRequest request)
+	{
+		var baseUrl = httpContext.HttpContext!.Request.Host.Value;
+
+		//var baseUrl = configuration.GetRequiredSection("HostSettings:ClientURL");
+
+		var authResult = await mediatr.Send(mapper.Map<RegisterRealtorCommand>((request, baseUrl)));
+
+		return authResult.Match(
+			authResult => Ok(),
+			errors => Problem(errors));
+	}
+
 	[HttpGet("confirm-email")]
 	public async Task<IActionResult> ConfirmEmailAsync([FromQuery] ConfirmEmailRequest request)
 	{

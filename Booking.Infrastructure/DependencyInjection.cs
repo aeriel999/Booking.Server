@@ -1,10 +1,12 @@
 ﻿using Booking.Application.Common.Interfaces.Authentication;
-using Booking.Application.Common.Interfaces.Services;
+using Booking.Application.Common.Interfaces.Common;
+using Booking.Application.Common.Interfaces.Users;
 using Booking.Domain.Users;
 using Booking.Infrastructure.Authentification;
 using Booking.Infrastructure.Common.Persistence;
 using Booking.Infrastructure.Repositories;
-using Booking.Infrastructure.Services;
+using Booking.Infrastructure.Services.Common;
+using Booking.Infrastructure.Services.Users;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
@@ -90,8 +92,8 @@ public static class DependencyInjection
 		services.AddScoped<IUserAuthenticationService, UserAuthenticationService>();
 		services.AddTransient<UserAuthenticationService>();
 
-		//services.AddScoped<IJwtTokenGenerator, JwtTokenGenerator>();
-		//services.AddTransient<JwtTokenGenerator>();
+		services.AddScoped<IImageStorageService, ImageStorageService>();
+		services.AddTransient<ImageStorageService>();
 
 		return services;
 	}

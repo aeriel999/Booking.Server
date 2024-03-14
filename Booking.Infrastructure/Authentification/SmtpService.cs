@@ -4,7 +4,7 @@ using Microsoft.Extensions.Configuration;
 using MimeKit;
 using MailKit.Net.Smtp;
 
-namespace Booking.Infrastructure.Services;
+namespace Booking.Infrastructure.Authentification;
 
 public class SmtpService(IConfiguration configuration) : ISmtpService
 {

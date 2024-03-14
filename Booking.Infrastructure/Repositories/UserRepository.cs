@@ -1,4 +1,4 @@
-﻿using Booking.Application.Common.Interfaces.Authentication;
+﻿using Booking.Application.Common.Interfaces.Users;
 using Booking.Domain.Users;
 using ErrorOr;
 using Microsoft.AspNetCore.Identity;
