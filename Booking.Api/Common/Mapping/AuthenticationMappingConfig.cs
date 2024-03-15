@@ -1,7 +1,9 @@
 ﻿using Booking.Api.Contracts.Authetication.ConfirmEmail;
+using Booking.Api.Contracts.Authetication.ForgotPassword;
 using Booking.Api.Contracts.Authetication.Login;
 using Booking.Api.Contracts.Authetication.Register;
 using Booking.Application.Authentication.ConfirmEmail;
+using Booking.Application.Authentication.ForgotPassword;
 using Booking.Application.Authentication.Login;
 using Booking.Application.Authentication.Register;
 using Mapster;
@@ -26,15 +28,11 @@ public class AuthenticationMappingConfig : IRegister
 
 		config.NewConfig<LoginUserRequest, LoginUserQuery>();
 
-	
-		//config.NewConfig<UserTokens, LoginUserResponse>()
-		//	.Map(dest => dest.Token, src => src.Token)
-		//	.Map(dest => dest.RefreshToken, src => src.RefreshToken.Token);
+		config.NewConfig<(ForgotPasswordRequest registerRequest, string BaseUrl), ForgotPasswordQuery>()
+			.Map(dest => dest.BaseUrl, src => src.BaseUrl)
+			.Map(dest => dest, src => src.registerRequest);
 
-		//config.NewConfig<TokenRefreshRequest, TokenRefreshCommand>();
-
-		//config.NewConfig<ForgotPasswordQuery, ForgotPasswordRequest>();
-
+		config.NewConfig<LoginUserRequest, LoginUserQuery>();
 	}
 }
 

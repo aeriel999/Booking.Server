@@ -61,4 +61,11 @@ public class UserAuthenticationService(UserManager<User> userManager, SignInMana
 
         return Result.Success;
     }
+
+	public async Task<string> GeneratePasswordResetTokenAsync(User user)
+	{
+		var token = await userManager.GeneratePasswordResetTokenAsync(user);
+
+        return token;
+	}
 }

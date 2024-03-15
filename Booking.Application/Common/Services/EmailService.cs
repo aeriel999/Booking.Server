@@ -1,7 +1,5 @@
 ﻿using Booking.Application.Common.Interfaces.Authentication;
-using Booking.Domain.Users;
 using ErrorOr;
-using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.WebUtilities;
 using System.Text;
 
@@ -9,7 +7,8 @@ namespace Booking.Application.Common.Services;
 
 public class EmailService(ISmtpService smtpService)
 {
-	public async Task<ErrorOr<Success>> SendEmailConfirmationEmailAsync(Guid userId, string email, string token, string baseUrl)
+	public async Task<ErrorOr<Success>> SendEmailConfirmationEmailAsync(
+		Guid userId, string email, string token, string baseUrl)
 	{
 		var encodedEmailToken = Encoding.UTF8.GetBytes(token);
 
@@ -25,10 +24,20 @@ public class EmailService(ISmtpService smtpService)
 		return Result.Success;
 	}
 
-	public async Task<ErrorOr<Success>> SendResetPasswordEmail()
+	public async Task<ErrorOr<Success>> SendResetPasswordEmail(string email, string baseUrl, string token)
 	{
-		return Result.Success;
+		var encodedToken = Encoding.UTF8.GetBytes(token);
 
+		var validToken = WebEncoders.Base64UrlEncode(encodedToken);
+
+		string url = $"{baseUrl}/authentication/reset-password?email={email}&token={validToken}";
+
+		//ToDo make EmailBody
+		string emailBody = "<h1>Follow the instructions to reset your password</h1>" + $"<p>To reset your password <a href='{url}'>Click here</a></p>";
+
+		await smtpService.SendEmailAsync(email, "Reset password", emailBody);
+
+		return Result.Success;
 	}
 
 }

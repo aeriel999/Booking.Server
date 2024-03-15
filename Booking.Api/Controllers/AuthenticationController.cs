@@ -1,8 +1,11 @@
 ﻿using Booking.Api.Contracts.Authetication.ConfirmEmail;
+using Booking.Api.Contracts.Authetication.ForgotPassword;
 using Booking.Api.Contracts.Authetication.Login;
 using Booking.Api.Contracts.Authetication.Register;
+using Booking.Api.Contracts.Authetication.ResetPassword;
 using Booking.Api.Infrastructure;
 using Booking.Application.Authentication.ConfirmEmail;
+using Booking.Application.Authentication.ForgotPassword;
 using Booking.Application.Authentication.Login;
 using Booking.Application.Authentication.Register;
 using MapsterMapper;
@@ -14,7 +17,7 @@ namespace Booking.Api.Controllers;
 [Route("api/[controller]")]
 [ApiController]
 public class AuthenticationController(
-	ISender mediatr, IMapper mapper, IHttpContextAccessor httpContext, IConfiguration configuration)
+	ISender mediatr, IMapper mapper, IConfiguration configuration)
 	: ApiController
 {
 	[HttpPost("user-register")]
@@ -70,6 +73,28 @@ public class AuthenticationController(
 
 		return loginResult.Match(
 			loginResult => Ok(loginResult),
+			errors => Problem(errors));
+	}
+
+	[HttpPost("forgot-password")]
+	public async Task<IActionResult> ForgotPasswordAsync([FromBody] ForgotPasswordRequest request)
+	{
+		var baseUrl = configuration.GetRequiredSection("HostSettings:ClientURL").Value;
+
+		var forgotPasswordResult = await mediatr.Send(mapper.Map<ForgotPasswordQuery>((request, baseUrl)));
+
+		return forgotPasswordResult.Match(
+			forgotPasswordResult => Ok(forgotPasswordResult),
+			errors => Problem(errors));
+	}
+
+	[HttpPost("reset-password")]
+	public async Task<IActionResult> ResetPasswordAsync([FromBody] ResetPssswordRequest request)
+	{
+		var resetPasswordResult = await mediatr.Send(mapper.Map<ResetPssswordCommand>(request));
+
+		return resetPasswordResult.Match(
+			resetPasswordResult => Ok(resetPasswordResult),
 			errors => Problem(errors));
 	}
 }
