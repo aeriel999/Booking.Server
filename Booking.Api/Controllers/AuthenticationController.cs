@@ -64,7 +64,7 @@ public class AuthenticationController(
 
 		return confirmEmailResult.Match(
 			authResult => Ok(confirmEmailResult),
-			errors => Problem(errors[0].ToString()));
+			errors => Problem(errors));
 	}
 
 	[HttpPost("login")]
@@ -74,6 +74,6 @@ public class AuthenticationController(
 
 		return loginResult.Match(
 			loginResult => Ok(mapper.Map<LoginUserResponse>(loginResult)),
-			errors => Problem(errors[0].ToString()));
+			errors => Problem(errors));
 	}
 }

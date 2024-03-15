@@ -20,15 +20,15 @@ public class UserAuthenticationService(UserManager<User> userManager, SignInMana
     {
 		var signinResult = await signInManager.PasswordSignInAsync(user, password,
 			isPersistent: true, lockoutOnFailure: true);
-
-		if (!signinResult.Succeeded)
-			return Error.Unexpected();
-
+		
 		if (signinResult.IsNotAllowed)
-			return Error.Validation("Email is not confirmed");
+			return Error.Forbidden("Email is not confirmed");
 
 		if (signinResult.IsLockedOut)
-			return Error.Validation("User is blocked");
+			return Error.Forbidden("User is blocked");
+
+        if (!signinResult.Succeeded)
+            return Error.Failure("Wrong password");
 
 		var role = (await userManager.GetRolesAsync(user)).FirstOrDefault();
 

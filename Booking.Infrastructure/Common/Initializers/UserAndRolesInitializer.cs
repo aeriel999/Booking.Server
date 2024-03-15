@@ -41,10 +41,12 @@ public static class UserAndRolesInitializer
 					UserName = "admin@email.com",
 					EmailConfirmed = true,
 				};
+
 				var result = userManager.CreateAsync(user, "Admin+1111").Result;
+
 				if (result.Succeeded)
 				{
-					result = userManager.AddToRoleAsync(user, Roles.Admin).Result;
+					await userManager.AddToRoleAsync(user, Roles.Admin);
 				}
 			}
 
