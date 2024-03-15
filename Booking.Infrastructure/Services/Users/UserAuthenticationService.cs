@@ -6,7 +6,8 @@ using Microsoft.AspNetCore.WebUtilities;
 using System.Text;
 
 namespace Booking.Infrastructure.Services.Users;
-public class UserAuthenticationService(UserManager<User> userManager) : IUserAuthenticationService
+public class UserAuthenticationService(UserManager<User> userManager, SignInManager<User> signInManager) 
+    : IUserAuthenticationService
 {
     public async Task<string> GenerateEmailConfirmationTokenAsync(User user)
     {
@@ -15,10 +16,27 @@ public class UserAuthenticationService(UserManager<User> userManager) : IUserAut
         return token;
     }
 
-    public Task<ErrorOr<string>> LoginUserAsync(string email, string password)
+    public async Task<ErrorOr<string>> LoginUserAsync(User user, string password)
     {
-        throw new NotImplementedException();
-    }
+		var signinResult = await signInManager.PasswordSignInAsync(user, password,
+			isPersistent: true, lockoutOnFailure: true);
+
+		if (!signinResult.Succeeded)
+			return Error.Unexpected();
+
+		if (signinResult.IsNotAllowed)
+			return Error.Validation("Email is not confirmed");
+
+		if (signinResult.IsLockedOut)
+			return Error.Validation("User is blocked");
+
+		var role = (await userManager.GetRolesAsync(user)).FirstOrDefault();
+
+		if (role == null)
+			return Error.NotFound("Role of user is not found");
+
+		return role;
+	}
 
     public Task<ErrorOr<Success>> LogoutUserAsync(Guid userId)
     {

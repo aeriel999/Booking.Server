@@ -16,7 +16,7 @@ public class JwtTokenGenerator(IOptions<JwtSettings> jwtOptions, IDateTimeProvid
 	public readonly JwtSettings _jwtSettings = jwtOptions.Value;
 
 	//ToDo async method without await
-	public async Task<ErrorOr<string>> GenerateJwtTokenAsync(User user, string role)
+	public async Task<string> GenerateJwtTokenAsync(User user, string role)
 	{
 		var signingCredentials = new SigningCredentials(
 			new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_jwtSettings.Secret)),

@@ -5,7 +5,6 @@ using Booking.Application.Authentication.ConfirmEmail;
 using Booking.Application.Authentication.Login;
 using Booking.Application.Authentication.Register;
 using Mapster;
-using System.IO;
 
 namespace Booking.Api.Common.Mapping;
 
@@ -26,6 +25,9 @@ public class AuthenticationMappingConfig : IRegister
 		config.NewConfig<ConfirmEmailRequest, ConfirmEmailCommand>();
 
 		config.NewConfig<LoginUserRequest, LoginUserQuery>();
+
+		config.NewConfig<string, LoginUserResponse>();
+
 
 		//config.NewConfig<UserTokens, LoginUserResponse>()
 		//	.Map(dest => dest.Token, src => src.Token)

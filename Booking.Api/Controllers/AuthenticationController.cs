@@ -8,7 +8,6 @@ using Booking.Application.Authentication.Register;
 using MapsterMapper;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
-using System.IO;
 
 namespace Booking.Api.Controllers;
 
@@ -45,10 +44,8 @@ public class AuthenticationController(
 		{
 			using (MemoryStream memoryStream = new MemoryStream())
 			{
-				// Copy the contents of the file to the memory stream
 				await request.Avatar.CopyToAsync(memoryStream);
 
-				// Return the byte array representation of the memory stream's buffer
 				image = memoryStream.ToArray();
 			}
 		}
@@ -71,14 +68,12 @@ public class AuthenticationController(
 	}
 
 	[HttpPost("login")]
-	public async Task<IActionResult> LoginUserAsync([FromBody] LoginUserRequest request)
+	public async Task<IActionResult> LoginAsync([FromBody] LoginUserRequest request)
 	{
 		var loginResult = await mediatr.Send(mapper.Map<LoginUserQuery>(request));
 
-		//return loginResult.Match(
-		//	loginResult => Ok(mapper.Map<LoginUserResponse>(loginResult)),
-		//	errors => Problem(errors[0].ToString()));
-
-		return Ok();
+		return loginResult.Match(
+			loginResult => Ok(mapper.Map<LoginUserResponse>(loginResult)),
+			errors => Problem(errors[0].ToString()));
 	}
 }
