@@ -20,9 +20,7 @@ public class AuthenticationController(
 	[HttpPost("user-register")]
 	public async Task<IActionResult> RegisterUserAsync(RegisterUserRequest request)
 	{
-		//var baseUrl = httpContext.HttpContext!.Request.Host.Value;
-
-		var baseUrl = configuration.GetRequiredSection("HostSettings:ClientURL");
+		var baseUrl = configuration.GetRequiredSection("HostSettings:ClientURL").Value;
 
 		var authResult = await mediatr.Send(mapper.Map<RegisterUserCommand>((request, baseUrl)));
 
@@ -34,9 +32,7 @@ public class AuthenticationController(
 	[HttpPost("realtor-register")]
 	public async Task<IActionResult> RegisterRealtorAsync(RegisterRealtorRequest request)
 	{
-		var baseUrl = httpContext.HttpContext!.Request.Host.Value;
-
-		//var baseUrl = configuration.GetRequiredSection("HostSettings:ClientURL");
+		var baseUrl = configuration.GetRequiredSection("HostSettings:ClientURL").Value;
 
 		var image = new byte[byte.MaxValue];
 
@@ -73,7 +69,7 @@ public class AuthenticationController(
 		var loginResult = await mediatr.Send(mapper.Map<LoginUserQuery>(request));
 
 		return loginResult.Match(
-			loginResult => Ok(mapper.Map<LoginUserResponse>(loginResult)),
+			loginResult => Ok(loginResult),
 			errors => Problem(errors));
 	}
 }
