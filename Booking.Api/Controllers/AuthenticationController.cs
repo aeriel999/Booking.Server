@@ -8,6 +8,7 @@ using Booking.Application.Authentication.ConfirmEmail;
 using Booking.Application.Authentication.ForgotPassword;
 using Booking.Application.Authentication.Login;
 using Booking.Application.Authentication.Register;
+using Booking.Application.Authentication.ResetPassword;
 using MapsterMapper;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
@@ -91,7 +92,7 @@ public class AuthenticationController(
 	[HttpPost("reset-password")]
 	public async Task<IActionResult> ResetPasswordAsync([FromBody] ResetPssswordRequest request)
 	{
-		var resetPasswordResult = await mediatr.Send(mapper.Map<ResetPssswordCommand>(request));
+		var resetPasswordResult = await mediatr.Send(mapper.Map<ResetPasswordCommand>(request));
 
 		return resetPasswordResult.Match(
 			resetPasswordResult => Ok(resetPasswordResult),

@@ -13,4 +13,5 @@ public record RegisterRealtorCommand(
    string PhoneNumber,
    byte[] Avatar,
    string BaseUrl) : IRequest<ErrorOr<User>>;
+
  

@@ -18,6 +18,3 @@ public record RegisterUserRequest
 	[Length(8, 24)]
 	public required string ConfirmPassword { get; init; }
 }
-
-
-

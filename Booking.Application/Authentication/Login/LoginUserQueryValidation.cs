@@ -1,6 +1,7 @@
 ﻿using FluentValidation;
 
 namespace Booking.Application.Authentication.Login;
+
 public class LoginUserQueryValidation : AbstractValidator<LoginUserQuery>
 {
 	public LoginUserQueryValidation()
@@ -9,7 +10,7 @@ public class LoginUserQueryValidation : AbstractValidator<LoginUserQuery>
 			.EmailAddress().WithMessage("Wrong email format")
 			.MaximumLength(24).MinimumLength(8);
 
-		 
+	 
 		RuleFor(r => r.Password).NotEmpty().WithMessage("Field must not be empty")
 			.MaximumLength(24).MinimumLength(8)
 			.Matches("[A-Z]").WithMessage("Password must contain one or more capital letters.")

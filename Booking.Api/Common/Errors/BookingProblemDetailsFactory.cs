@@ -98,5 +98,3 @@ public class BookingProblemDetailsFactory(IOptions<ApiBehaviorOptions> options) 
 
 	//}
 }
-
-

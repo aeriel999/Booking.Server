@@ -6,6 +6,7 @@ using Microsoft.AspNetCore.WebUtilities;
 using System.Text;
 
 namespace Booking.Infrastructure.Services.Users;
+
 public class UserAuthenticationService(UserManager<User> userManager, SignInManager<User> signInManager) 
     : IUserAuthenticationService
 {
@@ -20,7 +21,7 @@ public class UserAuthenticationService(UserManager<User> userManager, SignInMana
     {
 		var signinResult = await signInManager.PasswordSignInAsync(user, password,
 			isPersistent: true, lockoutOnFailure: true);
-		
+	
 		if (signinResult.IsNotAllowed)
 			return Error.Forbidden("Email is not confirmed");
 
@@ -67,5 +68,18 @@ public class UserAuthenticationService(UserManager<User> userManager, SignInMana
 		var token = await userManager.GeneratePasswordResetTokenAsync(user);
 
         return token;
+	}
+
+    public async Task<ErrorOr<User>> ResetPasswordAsync(User user, string token, string password)
+    {
+		var decodedToken = WebEncoders.Base64UrlDecode(token);
+
+		var normalToken = Encoding.UTF8.GetString(decodedToken);
+
+		var result = await userManager.ResetPasswordAsync(user, normalToken, password);
+
+        if (result.Succeeded)
+            return user;
+        else return Error.Failure("Something went wrong, please, connect with administrator");
 	}
 }

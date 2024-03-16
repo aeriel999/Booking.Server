@@ -8,6 +8,7 @@ using SixLabors.ImageSharp.Formats.Webp;
 using SixLabors.ImageSharp.Processing;
 
 namespace Booking.Infrastructure.Services.Common;
+
 public class ImageStorageService : IImageStorageService
 {
 	public async Task<string> AddAvatarAsync(User user, byte[] file)

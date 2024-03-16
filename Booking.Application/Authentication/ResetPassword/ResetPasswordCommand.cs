@@ -4,7 +4,7 @@ using MediatR;
 
 namespace Booking.Application.Authentication.ResetPassword;
 
-public record ResetPssswordCommandstring(
+public record ResetPasswordCommand(
 	string Email,
 	string Token,
     string Password,

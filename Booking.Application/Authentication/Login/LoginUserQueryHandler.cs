@@ -5,6 +5,7 @@ using MediatR;
 using Microsoft.AspNetCore.Identity;
 
 namespace Booking.Application.Authentication.Login;
+
 public class LoginUserQueryHandler(
 	IUserAuthenticationService authenticationService, 
 	IUserRepository userRepository, 
@@ -35,4 +36,3 @@ public class LoginUserQueryHandler(
 		return token;
 	}
 }
-

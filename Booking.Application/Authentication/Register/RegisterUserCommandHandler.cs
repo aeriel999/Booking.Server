@@ -8,6 +8,7 @@ using MediatR;
 using System.Data;
 
 namespace Booking.Application.Authentication.Register;
+
 public class RegisterUserCommandHandler(IUserRepository userRepository, ISender mediator) :
 	IRequestHandler<RegisterUserCommand, ErrorOr<User>>
 {

@@ -14,27 +14,27 @@ public class LoggerService : ILoggerService
 		_logger.Debug(exception, message);
 	}
 
-	 
+ 
 	public void LogError(Exception exception, string message)
 	{
 		_logger.Debug(exception, message);
 	}
 
-	 
+ 
 
 	public void LogInfo(Exception exception, string message)
 	{
 		_logger.Debug(exception, message);
 	}
 
-	 
+ 
 
 	public void LogTrace(Exception exception, string message)
 	{
 		_logger.Debug(exception, message);
 	}
 
-	 
+ 
 	public void LogWarn(Exception exception, string message)
 	{
 		_logger.Debug(exception, message);

@@ -2,8 +2,8 @@
 
 #nullable disable
 
-namespace Booking.Infrastructure.Migrations
-{
+namespace Booking.Infrastructure.Migrations;
+
     /// <inheritdoc />
     public partial class Test : Migration
     {
@@ -19,4 +19,3 @@ namespace Booking.Infrastructure.Migrations
 
         }
     }
-}

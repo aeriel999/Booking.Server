@@ -1,11 +1,14 @@
 ﻿using FluentValidation;
 
-namespace Booking.Application.Authentication.Register;
+namespace Booking.Application.Authentication.ResetPassword;
 
-public class RegisterUserCommandValidator : AbstractValidator<RegisterUserCommand>
+public class ResetPasswordCommandValidation : AbstractValidator<ResetPasswordCommand>
 {
-	public RegisterUserCommandValidator()
-	{
+    public ResetPasswordCommandValidation()
+    {
+		RuleFor(r => r.Token).NotEmpty().WithMessage("Field must not be empty")
+			.MaximumLength(4096).MinimumLength(256);
+
 		RuleFor(r => r.Email).NotEmpty().WithMessage("{PropertyName} must not be empty")
 		   .EmailAddress().WithMessage("{PropertyName} has wrong format")
 		   .MinimumLength(5)
@@ -22,7 +25,5 @@ public class RegisterUserCommandValidator : AbstractValidator<RegisterUserComman
 		//ToDo ??? Is equal enough for ConfirmPassword
 		RuleFor(r => r.ConfirmPassword).NotEmpty().WithMessage("Required field must not be empty.")
 			.Equal(r => r.Password).WithMessage("Passwords are not matched");
-
-		RuleFor(r => r.BaseUrl).NotEmpty().WithMessage("Required field must not be empty.");
 	}
 }

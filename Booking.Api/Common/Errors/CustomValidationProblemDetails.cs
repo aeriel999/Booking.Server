@@ -56,4 +56,3 @@ public class ValidationError
 
 	public required string Message { get; set; }
 }
-

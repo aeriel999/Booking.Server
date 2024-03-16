@@ -4,6 +4,7 @@ using ErrorOr;
 using Microsoft.AspNetCore.Identity;
 
 namespace Booking.Infrastructure.Repositories;
+
 public class UserRepository(UserManager<User> userManager) : IUserRepository
 {
     public async Task<ErrorOr<User>> CreateUserAsync(User user, string password, string role)

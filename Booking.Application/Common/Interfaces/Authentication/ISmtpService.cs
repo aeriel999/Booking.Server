@@ -23,4 +23,3 @@ public interface ISmtpService
 
 //	Task<ErrorOr<Success>> ConfirmEmailAsync(string userId, string token);
 //}
-

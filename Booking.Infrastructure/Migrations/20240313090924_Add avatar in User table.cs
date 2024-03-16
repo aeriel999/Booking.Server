@@ -2,8 +2,8 @@
 
 #nullable disable
 
-namespace Booking.Infrastructure.Migrations
-{
+namespace Booking.Infrastructure.Migrations;
+
     /// <inheritdoc />
     public partial class AddavatarinUsertable : Migration
     {
@@ -25,4 +25,3 @@ namespace Booking.Infrastructure.Migrations
                 table: "AspNetUsers");
         }
     }
-}

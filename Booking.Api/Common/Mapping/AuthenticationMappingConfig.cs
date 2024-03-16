@@ -2,10 +2,12 @@
 using Booking.Api.Contracts.Authetication.ForgotPassword;
 using Booking.Api.Contracts.Authetication.Login;
 using Booking.Api.Contracts.Authetication.Register;
+using Booking.Api.Contracts.Authetication.ResetPassword;
 using Booking.Application.Authentication.ConfirmEmail;
 using Booking.Application.Authentication.ForgotPassword;
 using Booking.Application.Authentication.Login;
 using Booking.Application.Authentication.Register;
+using Booking.Application.Authentication.ResetPassword;
 using Mapster;
 
 namespace Booking.Api.Common.Mapping;
@@ -23,7 +25,7 @@ public class AuthenticationMappingConfig : IRegister
 		.Map(dest => dest.BaseUrl, src => src.BaseUrl)
 		.Map(dest => dest.Avatar, src => src.Image)
 		.Map(dest => dest, src => src.registerRequest);
-		
+	
 		config.NewConfig<ConfirmEmailRequest, ConfirmEmailCommand>();
 
 		config.NewConfig<LoginUserRequest, LoginUserQuery>();
@@ -32,7 +34,7 @@ public class AuthenticationMappingConfig : IRegister
 			.Map(dest => dest.BaseUrl, src => src.BaseUrl)
 			.Map(dest => dest, src => src.registerRequest);
 
-		config.NewConfig<LoginUserRequest, LoginUserQuery>();
+		config.NewConfig<ResetPssswordRequest, ResetPasswordCommand>();
 	}
 }
 

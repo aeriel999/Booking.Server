@@ -6,4 +6,3 @@ public static class Roles
 	public const string Realtor = "realtor";
 	public const string Admin = "admin";
 }
-

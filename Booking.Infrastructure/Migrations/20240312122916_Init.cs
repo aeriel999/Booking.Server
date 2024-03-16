@@ -4,8 +4,8 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 
 #nullable disable
 
-namespace Booking.Infrastructure.Migrations
-{
+namespace Booking.Infrastructure.Migrations;
+
     /// <inheritdoc />
     public partial class Init : Migration
     {
@@ -220,4 +220,3 @@ namespace Booking.Infrastructure.Migrations
                 name: "AspNetUsers");
         }
     }
-}
