@@ -39,10 +39,12 @@ public class UserAuthenticationService(UserManager<User> userManager, SignInMana
 		return role;
 	}
 
-    public Task<ErrorOr<Success>> LogoutUserAsync(Guid userId)
+    public async Task<ErrorOr<Success>> LogoutUserAsync()
     {
-        throw new NotImplementedException();
-    }
+		await signInManager.SignOutAsync();
+
+		return Result.Success;
+	}
 
     public async Task<ErrorOr<Success>> ConfirmEmailAsync(Guid userId, string token)
     {

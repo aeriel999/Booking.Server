@@ -7,11 +7,15 @@ using Booking.Api.Infrastructure;
 using Booking.Application.Authentication.ConfirmEmail;
 using Booking.Application.Authentication.ForgotPassword;
 using Booking.Application.Authentication.Login;
+using Booking.Application.Authentication.Logout;
 using Booking.Application.Authentication.Register;
 using Booking.Application.Authentication.ResetPassword;
 using MapsterMapper;
 using MediatR;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using System.Security.Claims;
 
 namespace Booking.Api.Controllers;
 
@@ -97,5 +101,16 @@ public class AuthenticationController(
 		return resetPasswordResult.Match(
 			resetPasswordResult => Ok(resetPasswordResult),
 			errors => Problem(errors));
+	}
+
+	[Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
+	[HttpGet("logout")]
+	public async Task<IActionResult> LogoutUserAsync()
+	{
+		var logOutResult = await mediatr.Send(new LogoutUserQuery());
+
+		return logOutResult.Match(
+			logOutResult => Ok(logOutResult),
+			errors => Problem(errors[0].ToString()));
 	}
 }
