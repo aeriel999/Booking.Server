@@ -7,7 +7,7 @@ public class ResetPasswordCommandValidation : AbstractValidator<ResetPasswordCom
     public ResetPasswordCommandValidation()
     {
 		RuleFor(r => r.Token).NotEmpty().WithMessage("Field must not be empty")
-			.MaximumLength(4096).MinimumLength(256);
+			.MaximumLength(4096).MinimumLength(24);
 
 		RuleFor(r => r.Email).NotEmpty().WithMessage("{PropertyName} must not be empty")
 		   .EmailAddress().WithMessage("{PropertyName} has wrong format")

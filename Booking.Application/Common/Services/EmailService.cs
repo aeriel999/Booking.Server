@@ -24,7 +24,7 @@ public class EmailService(ISmtpService smtpService)
 		return Result.Success;
 	}
 
-	public async Task<ErrorOr<Success>> SendResetPasswordEmail(string email, string baseUrl, string token)
+	public async Task<ErrorOr<Success>> SendResetPasswordEmail(string email, string token, string baseUrl)
 	{
 		var encodedToken = Encoding.UTF8.GetBytes(token);
 

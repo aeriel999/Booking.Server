@@ -80,6 +80,6 @@ public class UserAuthenticationService(UserManager<User> userManager, SignInMana
 
         if (result.Succeeded)
             return user;
-        else return Error.Failure("Something went wrong, please, connect with administrator");
+        else return Error.Failure(result.Errors.FirstOrDefault()!.Description.ToString());
 	}
 }

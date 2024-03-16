@@ -10,7 +10,7 @@ public record ResetPssswordRequest
     public required string Email { get; init; }
 
     [Required(ErrorMessage = "{PropertyName} must not be empty")]
-    [Length(256, 4096)]
+    [Length(24, 4096)]
     public required string Token { get; init; }
 
     [Required(ErrorMessage = "{PropertyName} must not be empty")]
