@@ -1,8 +1,5 @@
-﻿using Booking.Api.Common;
-using Booking.Api.Common.Errors;
+﻿using Booking.Api.Common.Errors;
 using Booking.Api.Infrastructure;
-using FluentValidation.AspNetCore;
-using FluentValidation;
 using Microsoft.AspNetCore.Mvc.Infrastructure;
 using Microsoft.OpenApi.Models;
 using Mapster;

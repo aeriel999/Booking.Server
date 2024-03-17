@@ -17,9 +17,17 @@ public class EmailService(ISmtpService smtpService)
 		//ToDo make EmailBody
 		string url = $"{baseUrl}/authentication/confirm-email?userid={userId}&token={validEmailToken}";
 
+		string body = string.Empty;
+
+		using (StreamReader reader = new("./EmailTemplates/email-confirmation.html"))
+		{
+			body = reader.ReadToEnd();
+		}
+
+
 		string emailBody = $"<h1>Confirm your email</h1> <a href='{url}'>Confirm now</a>";
 
-		await smtpService.SendEmailAsync(email, "Email confirmation.", emailBody);
+		await smtpService.SendEmailAsync(email, "Email confirmation.", body);
 
 		return Result.Success;
 	}
@@ -32,10 +40,21 @@ public class EmailService(ISmtpService smtpService)
 
 		string url = $"{baseUrl}/authentication/reset-password?email={email}&token={validToken}";
 
-		//ToDo make EmailBody
-		string emailBody = "<h1>Follow the instructions to reset your password</h1>" + $"<p>To reset your password <a href='{url}'>Click here</a></p>";
+		string body = string.Empty;
 
-		await smtpService.SendEmailAsync(email, "Reset password", emailBody);
+		using (StreamReader reader = new("./EmailTemplates/email-confirmation.html"))
+		{
+			body = reader.ReadToEnd();
+		}
+		string emailBody = $"<p>To reset your password <a href='{url}'>Click here</a></p>";
+
+		body = body.Replace("{{ name }}", email);
+		 
+		body = body.Replace("{{ code }}", emailBody);
+
+
+
+		await smtpService.SendEmailAsync(email, "Reset password", body);
 
 		return Result.Success;
 	}
