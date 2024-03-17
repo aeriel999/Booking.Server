@@ -8,31 +8,34 @@ namespace Booking.Application.Common.Services;
 public class EmailService(ISmtpService smtpService)
 {
 	public async Task<ErrorOr<Success>> SendEmailConfirmationEmailAsync(
-		Guid userId, string email, string token, string baseUrl)
+		Guid userId, string email, string token, string baseUrl, string userName)
 	{
 		var encodedEmailToken = Encoding.UTF8.GetBytes(token);
 
 		var validEmailToken = WebEncoders.Base64UrlEncode(encodedEmailToken);
 
-		//ToDo make EmailBody
 		string url = $"{baseUrl}/authentication/confirm-email?userid={userId}&token={validEmailToken}";
 
-		string body = string.Empty;
+		string confirmationUrl = $" <a href='{url}'>Confirm now</a>";
+
+		string emailBody = string.Empty;
 
 		using (StreamReader reader = new("./EmailTemplates/email-confirmation.html"))
 		{
-			body = reader.ReadToEnd();
+			emailBody = reader.ReadToEnd();
 		}
 
+		emailBody = emailBody.Replace("{{ name }}", userName);
 
-		string emailBody = $"<h1>Confirm your email</h1> <a href='{url}'>Confirm now</a>";
+		emailBody = emailBody.Replace("{{ code }}", confirmationUrl);
 
-		await smtpService.SendEmailAsync(email, "Email confirmation.", body);
+		await smtpService.SendEmailAsync(email, "Email confirmation.", emailBody);
 
 		return Result.Success;
 	}
 
-	public async Task<ErrorOr<Success>> SendResetPasswordEmail(string email, string token, string baseUrl)
+	public async Task<ErrorOr<Success>> SendResetPasswordEmail(
+		string email, string token, string baseUrl, string userName)
 	{
 		var encodedToken = Encoding.UTF8.GetBytes(token);
 
@@ -40,21 +43,18 @@ public class EmailService(ISmtpService smtpService)
 
 		string url = $"{baseUrl}/authentication/reset-password?email={email}&token={validToken}";
 
-		string body = string.Empty;
+		string emailBody = string.Empty;
 
-		using (StreamReader reader = new("./EmailTemplates/email-confirmation.html"))
+		using (StreamReader reader = new("./EmailTemplates/forgot-password.html"))
 		{
-			body = reader.ReadToEnd();
+			emailBody = reader.ReadToEnd();
 		}
-		string emailBody = $"<p>To reset your password <a href='{url}'>Click here</a></p>";
 
-		body = body.Replace("{{ name }}", email);
-		 
-		body = body.Replace("{{ code }}", emailBody);
+		emailBody = emailBody.Replace("{{ name }}", userName);
 
+		emailBody = emailBody.Replace("{{ url }}", url);
 
-
-		await smtpService.SendEmailAsync(email, "Reset password", body);
+		await smtpService.SendEmailAsync(email, "Reset password", emailBody);
 
 		return Result.Success;
 	}

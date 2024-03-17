@@ -24,8 +24,22 @@ public class SendConfirmationEmailCommandHandler(
 		var token = await userAuthenticationService.GenerateEmailConfirmationTokenAsync(user);
 
 		//Send confirmation
+		string? userName;
+
+		if (string.IsNullOrEmpty(user.FirstName) || string.IsNullOrEmpty(user.LastName))
+		{
+			if (string.IsNullOrEmpty(user.LastName) && string.IsNullOrEmpty(user.FirstName))
+				_ = user.Email;
+			else if(string.IsNullOrEmpty(user.LastName))
+				_ = user.FirstName;
+			else
+				_ = user.LastName;
+		}
+
+		userName = user.FirstName + " " + user.LastName;
+
 		var sendEmailResult = await emailService.SendEmailConfirmationEmailAsync(
-			user.Id, user.Email!, token, request.BaseUrl);
+			user.Id, user.Email!, token, request.BaseUrl, userName);
 
 		return sendEmailResult;
 	}
