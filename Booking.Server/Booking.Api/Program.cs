@@ -14,17 +14,18 @@ builder.Services
 	.AddInfrastructure(builder.Configuration);
 
 //NLog
-builder.Logging.ClearProviders();
-builder.Logging.SetMinimumLevel(LogLevel.Trace);
-builder.Host.UseNLog();
+//builder.Logging.ClearProviders();
+//builder.Logging.SetMinimumLevel(LogLevel.Trace);
+//builder.Host.UseNLog();
 
 var app = builder.Build();
 
+app.UseSwagger();
+app.UseSwaggerUI();
 // Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment())
 {
-	app.UseSwagger();
-	app.UseSwaggerUI();
+
 
 	app.UseDeveloperExceptionPage();
 }
