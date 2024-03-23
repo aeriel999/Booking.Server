@@ -1,0 +1,29 @@
+export const EmailValidator = (value: string): string | undefined => {
+    if (!value) return 'Email must not be empty';
+    if (/[а-яА-Я]/.test(value)) return 'Value must not contain Cyrillic characters';
+    if (value.length < 5) return 'Email must be at least 5 characters long';
+    if (value.length > 254) return 'Email must be less than 254 characters long';
+    if (!/^[a-zA-Z0-9._:$!%-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]+$/.test(value)) {
+        return 'Invalid email address format';
+    }
+    return undefined; // Return undefined if validation passes
+};
+
+export const PasswordValidator = (value: string): string | undefined => {
+    if (!value) return 'Password must not be empty';
+    if (value.length < 8) return 'Password must be at least 8 characters long';
+    if (value.length > 24) return 'Password must be less than 24 characters long';
+    if (!/[A-Z]/.test(value)) return 'Password must contain at least one uppercase letter';
+    if (!/[a-z]/.test(value)) return 'Password must contain at least one lowercase letter';
+    if (!/\d/.test(value)) return 'Password must contain at least one digit';
+    if (!/[!"#$%&'()*+,\-./:;<=>?@[\\\]^_`{|}~]/.test(value)) return 'Password must contain at least one special character';
+    if (/[£# “”]/.test(value)) return 'Password must not contain the following characters: £ # “”';
+    if (/[а-яА-Я]/.test(value)) return 'Value must not contain Cyrillic characters';
+    return undefined; // Return undefined if validation passes
+};
+
+export const ConfirmPasswordValidator = (password: string, confirmPassword: string): string | undefined => {
+    if (!confirmPassword) return 'Confirm Password must not be empty';
+    if (confirmPassword !== password) return 'Passwords do not match';
+    return undefined; // Return undefined if validation passes
+};

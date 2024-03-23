@@ -11,7 +11,7 @@ import {IAccountState, IUser} from "../../interfaces/account";
 function isRejectedAction(action: AnyAction): action is RejectedAction {
     return action.type.endsWith('/rejected');
 }
-const updateUserState = (state: IAccountState, token: string): void => {
+const updateLoginUserState = (state: IAccountState, token: string): void => {
     const { name, email, roles } = jwtDecode<IUser>(token);
     state.user = {
         name,
@@ -24,26 +24,28 @@ const updateUserState = (state: IAccountState, token: string): void => {
     addLocalStorage('authToken', token);
 };
 
-//state - нашого редюсера
 const initialState: IAccountState = {
     user: null,
     token: null,
     isLogin: false,
     status: Status.IDLE,
+    // error: null
 };
 
 export const accountsSlice = createSlice({
     name: 'account',
     initialState,
     reducers: {
-        register: (state, action: PayloadAction<string>) => {
-            updateUserState(state, action.payload);
-        },
-        //Залогінити користувача
+        // register: (state, action: PayloadAction<number>) => {
+        //     console.log("accountsSlice action", action)
+        //
+        //     updateRegisterUserState(state, action.payload  );
+        // },
+
         autoLogin: (state, action: PayloadAction<string>) => {
-            updateUserState(state, action.payload);
+            updateLoginUserState(state, action.payload);
         },
-        //провести вихід із системи
+
         logout: (state) => {
             deleteLocalStorage('authToken');
             state.user = null;
@@ -53,25 +55,25 @@ export const accountsSlice = createSlice({
     },
     extraReducers: (builder) => {
         builder
-            //команда завершена - логінимо користувача
             .addCase(login.fulfilled, (state, action) => {
                 const {token} = action.payload;
-                updateUserState(state, token);
+                updateLoginUserState(state, token);
                 state.status = Status.SUCCESS;
             })
-            //режим очікування
             .addCase(login.pending, (state) => {
                 state.status = Status.LOADING;
             })
-            .addCase(register.fulfilled, (state, action) => {
-                const {token} = action.payload;
-                updateUserState(state, token);
+            .addCase(register.fulfilled, (state) => {
                 state.status = Status.SUCCESS;
             })
             .addCase(register.pending, (state) => {
                 state.status = Status.LOADING;
             })
-            //якщо щось пішло не так
+            // .addCase(register.rejected, (state, action) => {
+            //     state.status = Status.ERROR;
+            //     state.error = action.payload;
+            // })
+
             .addMatcher(isRejectedAction, (state) => {
                 state.status = Status.ERROR;
             });

@@ -1,10 +1,10 @@
 import {createAsyncThunk} from '@reduxjs/toolkit';
 import {apiClient} from "../../utils/api/apiClient.ts";
 import {handleAxiosError} from "../../utils/errors";
-import {ILogin, IRegister} from "../../interfaces/account";
+import {ILogin, IUserRegister} from "../../interfaces/account";
 
 export const login = createAsyncThunk(
-    'account/login',
+    'Authentication/login',
     async (payload : ILogin, { rejectWithValue }) => {
         try {
             const response = await apiClient.post('/api/account/login', payload);
@@ -16,13 +16,15 @@ export const login = createAsyncThunk(
 );
 
 export const register = createAsyncThunk(
-    'account/register',
-    async (payload : IRegister, { rejectWithValue }) => {
+    'Authentication/user-register',
+    async (payload : IUserRegister, { rejectWithValue }) => {
         try {
-            const response = await apiClient.post('/api/account/register', payload);
-            return response.data;
+            const response = await apiClient.post('/api/Authentication/user-register', payload);
+            return response.status;
         } catch (error) {
-            return rejectWithValue(handleAxiosError(error, 'Error'));
+
+
+            return rejectWithValue(handleAxiosError(error, "Network error"));
         }
     },
 );
