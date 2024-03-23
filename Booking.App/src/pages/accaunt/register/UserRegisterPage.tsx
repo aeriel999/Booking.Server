@@ -9,20 +9,20 @@ import LockOutlinedIcon from '@mui/icons-material/LockOutlined';
 import Typography from '@mui/material/Typography';
 import Container from '@mui/material/Container';
 import InputGroup from "../../../components/common/InputGroup.tsx";
-import {ConfirmPasswordValidator, EmailValidator, PasswordValidator} from "../../../validatioms/accaunt";
+import {ConfirmPasswordValidator, EmailValidator, PasswordValidator} from "../../../validations/accaunt";
 import { useRef, useState} from "react";
 import {IErrorResponse, IUserRegister} from "../../../interfaces/account";
 import {unwrapResult} from "@reduxjs/toolkit";
 import {useAppDispatch} from "../../../hooks/redux";
 import {register} from "../../../store/accounts/account.actions.ts";
-import OutlinedSuccessAlert from "../../../components/common/SuccessAlert.tsx";
 import OutlinedErrorAlert from "../../../components/common/ErrorAlert.tsx";
+import {useNavigate} from "react-router-dom";
 
 export default function UserRegisterPage() {
     const dispatch = useAppDispatch();
+    const navigate = useNavigate();
     const [password, setPassword] = useState('');
     const [errorMessage, setErrorMessage] = useState<string | undefined >(undefined);
-    const [successMessage, setSuccessMessage] = useState<string | undefined>(undefined);
     const [isFormValid, setIsFormValid] = useState(false);
     const formValid = useRef({ email: false,  password: false, confirmPassword: false});
 
@@ -49,8 +49,9 @@ export default function UserRegisterPage() {
             try {
                 const response = await dispatch(register(model));
                 unwrapResult(response);
-                // ToDo: Make page for registration info
-                setSuccessMessage("Thank you for registration! Check your email for a confirmation letter");
+
+                navigate(`/register-information/${model.email}`);
+
             } catch (error ) {
 
                 console.log("Test", error)
@@ -77,11 +78,8 @@ export default function UserRegisterPage() {
                     setErrorMessage(errorText);
                 }
             }
-
-
         }
     };
-
 
     return (
             <Container component="main" maxWidth="xs">
@@ -96,7 +94,6 @@ export default function UserRegisterPage() {
                 >
 
                     {errorMessage && <OutlinedErrorAlert message={errorMessage} />}
-                    {successMessage && <OutlinedSuccessAlert message={successMessage} />}
 
                     <Avatar sx={{ m: 1, bgcolor: 'secondary.main' }}>
                         <LockOutlinedIcon />
