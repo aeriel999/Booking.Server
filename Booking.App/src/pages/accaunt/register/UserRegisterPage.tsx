@@ -11,12 +11,13 @@ import Container from '@mui/material/Container';
 import InputGroup from "../../../components/common/InputGroup.tsx";
 import {ConfirmPasswordValidator, EmailValidator, PasswordValidator} from "../../../validations/accaunt";
 import { useRef, useState} from "react";
-import {IErrorResponse, IUserRegister} from "../../../interfaces/account";
+import {IUserRegister} from "../../../interfaces/account";
 import {unwrapResult} from "@reduxjs/toolkit";
 import {useAppDispatch} from "../../../hooks/redux";
 import {register} from "../../../store/accounts/account.actions.ts";
 import OutlinedErrorAlert from "../../../components/common/ErrorAlert.tsx";
 import {useNavigate} from "react-router-dom";
+import ErrorHandler from "../../../components/common/ErrorHandler.ts";
 
 export default function UserRegisterPage() {
     const dispatch = useAppDispatch();
@@ -26,7 +27,6 @@ export default function UserRegisterPage() {
     const [isFormValid, setIsFormValid] = useState(false);
     const formValid = useRef({ email: false,  password: false, confirmPassword: false});
 
-    //;
     const confirmPassValidator = (value: string): string | false | undefined => {
         return ConfirmPasswordValidator(password, value);
     };
@@ -50,33 +50,11 @@ export default function UserRegisterPage() {
                 const response = await dispatch(register(model));
                 unwrapResult(response);
 
-                navigate(`/register-information/${model.email}`);
+                navigate(`/authentication/register-information/${model.email}`);
 
             } catch (error ) {
 
-                console.log("Test", error)
-                if(typeof(error) === "string")
-                    setErrorMessage(error);
-                else if((error as IErrorResponse).status == 500)
-                {
-                   if((error as IErrorResponse).title === "System.Net.Sockets.SocketException" ||
-                       (error as IErrorResponse).title === "System.Net.Mail.SmtpException")
-                       setErrorMessage(
-                           "Oops, something went wrong during sending a confirmation to email." +
-                           "Contact an administrator or use form for confirmation")
-
-                    setErrorMessage("Oops, something went wrong. Try again later!")
-                }
-                else
-                {
-                    let errorText : string = "";
-
-                    for (const e of (error as IErrorResponse).errors) {
-                        errorText = errorText + e.description + ": " + e.code + ". ";
-                    }
-
-                    setErrorMessage(errorText);
-                }
+                setErrorMessage(ErrorHandler(error));
             }
         }
     };

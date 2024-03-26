@@ -57,13 +57,13 @@ public class AuthenticationController(
 			errors => Problem(errors));
 	}
 
-	[HttpGet("confirm-email")]
-	public async Task<IActionResult> ConfirmEmailAsync([FromQuery] ConfirmEmailRequest request)
+	[HttpPost("confirm-email")]
+	public async Task<IActionResult> ConfirmEmailAsync(ConfirmEmailRequest request)
 	{
 		var confirmEmailResult = await mediatr.Send(mapper.Map<ConfirmEmailCommand>(request));
 
 		return confirmEmailResult.Match(
-			authResult => Ok(confirmEmailResult),
+			authResult => Ok(confirmEmailResult.Value),
 			errors => Problem(errors));
 	}
 

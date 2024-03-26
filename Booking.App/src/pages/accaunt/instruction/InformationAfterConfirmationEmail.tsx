@@ -1,10 +1,27 @@
-export  default function UserInformationPage(){
+import {useAppSelector} from "../../../hooks/redux";
+import {useEffect, useState} from "react";
+
+
+export  default function InformationAfterConfirmationEmail(){
+    const {user} = useAppSelector(state => state.account);
+    const [isRealtorInfo, setIsRealtorInfo] = useState<boolean>(false);
+
+    useEffect(() => {
+       if(user)
+       {
+           console.log(user)
+           if (user.role.toLowerCase().includes('realtor'))
+               setIsRealtorInfo(true)
+       }
+    }, [user]);
 
     return(
         <>
-            <h1>Instruction for User</h1>
-            <h1>Instruction for realtor</h1>
+            {
+                isRealtorInfo && (<h1>Instruction for realtor</h1>)
+            }
 
+            <h1>Instruction for User</h1>
         </>
     )
 }

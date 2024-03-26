@@ -4,19 +4,21 @@ import {addLocalStorage, deleteLocalStorage} from "../../utils/storage/localStor
 
 import {RejectedAction} from "../../utils/types";
 
-import {login, register} from "./account.actions.ts";
+import {confirmEmail, login, register} from "./account.actions.ts";
 import {Status} from "../../utils/enum";
-import {IAccountState, IUser} from "../../interfaces/account";
+import {IAccountState} from "../../interfaces/account";
 
 function isRejectedAction(action: AnyAction): action is RejectedAction {
     return action.type.endsWith('/rejected');
 }
 const updateLoginUserState = (state: IAccountState, token: string): void => {
-    const { name, email, roles } = jwtDecode<IUser>(token);
+    const decodedToken: { [key: string]: string } = jwtDecode(token);
+    const  email  = decodedToken["email"]
+    const role = decodedToken["http://schemas.microsoft.com/ws/2008/06/identity/claims/role"]
+
     state.user = {
-        name,
         email,
-        roles,
+        role,
     };
     state.token = token;
     state.isLogin = true;
@@ -67,6 +69,14 @@ export const accountsSlice = createSlice({
                 state.status = Status.SUCCESS;
             })
             .addCase(register.pending, (state) => {
+                state.status = Status.LOADING;
+            })
+            .addCase(confirmEmail.fulfilled, (state, action) => {
+                console.log("action.payload", action.payload)
+                updateLoginUserState(state, action.payload);
+                state.status = Status.SUCCESS;
+            })
+            .addCase(confirmEmail.pending, (state) => {
                 state.status = Status.LOADING;
             })
             // .addCase(register.rejected, (state, action) => {

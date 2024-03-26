@@ -11,7 +11,16 @@ export interface IAccountState {
     token: string | null,
     isLogin: boolean,
     status: Status;
-    // error: string | IErrorResponse | null | unknown
+}
+
+export interface IConfirmEmail{
+    userId: string | undefined,
+    token: string | undefined
+}
+
+export interface IUser{
+    email: string,
+    role: string,
 }
 
 export interface IErrorResponse{
@@ -32,12 +41,6 @@ export  interface IServerError{
 export interface ILogin {
     email: string,
     password: string,
-}
-
-export interface IUser{
-    name: string,
-    email: string,
-    roles: string[],
 }
 
 

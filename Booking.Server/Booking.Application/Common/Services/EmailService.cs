@@ -14,7 +14,7 @@ public class EmailService(ISmtpService smtpService)
 
 		var validEmailToken = WebEncoders.Base64UrlEncode(encodedEmailToken);
 
-		string url = $"{baseUrl}/authentication/confirm-email?userid={userId}&token={validEmailToken}";
+		string url = $"{baseUrl}/authentication/confirm-email/{userId}/{validEmailToken}";
 
 		string confirmationUrl = $" <a href='{url}'>Confirm now</a>";
 
@@ -41,7 +41,7 @@ public class EmailService(ISmtpService smtpService)
 
 		var validToken = WebEncoders.Base64UrlEncode(encodedToken);
 
-		string url = $"{baseUrl}/authentication/reset-password?email={email}&token={validToken}";
+		string url = $"{baseUrl}/authentication/reset-password/{email}/{validToken}";
 
 		string emailBody = string.Empty;
 
