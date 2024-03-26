@@ -7,8 +7,6 @@ public interface IUserAuthenticationService
 {
 	Task<ErrorOr<string>> LoginUserAsync(User user, string password);
 
-	Task<ErrorOr<Success>> LogoutUserAsync();
-
 	Task<string> GenerateEmailConfirmationTokenAsync(User user);
 
 	Task<ErrorOr<Success>> ConfirmEmailAsync(Guid userId, string token);

@@ -39,13 +39,6 @@ public class UserAuthenticationService(UserManager<User> userManager, SignInMana
 		return role;
 	}
 
-    public async Task<ErrorOr<Success>> LogoutUserAsync()
-    {
-		await signInManager.SignOutAsync();
-
-		return Result.Success;
-	}
-
     public async Task<ErrorOr<Success>> ConfirmEmailAsync(Guid userId, string token)
     {
         var user = await userManager.FindByIdAsync(userId.ToString());
