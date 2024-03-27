@@ -29,8 +29,12 @@
 	</ItemGroup>
 
 	<ItemGroup>
-		<Folder Include="EmailTemplates\" />
-		<Folder Include="EmailTemplates\" />
+		<!--<Folder Include="EmailTemplates\" />-->
+
+		<Content Include="EmailTemplates\**">
+			<CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+		</Content>
+
 	</ItemGroup>
 
 </Project>
