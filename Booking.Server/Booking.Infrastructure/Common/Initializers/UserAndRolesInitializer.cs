@@ -1,4 +1,5 @@
-﻿using Booking.Domain.Constants;
+﻿using Booking.Domain.Category;
+using Booking.Domain.Constants;
 using Booking.Domain.Users;
 using Booking.Infrastructure.Common.Persistence;
 using Microsoft.AspNetCore.Builder;
@@ -49,6 +50,45 @@ public static class UserAndRolesInitializer
 					await userManager.AddToRoleAsync(user, Roles.Admin);
 				}
 			}
+
+			if (!context.Categories.Any())
+			{
+				CategoryEntity[] categories = new CategoryEntity[]
+				{
+					new CategoryEntity
+					{
+					Name="Будинок"
+					},
+
+					new CategoryEntity
+					{
+					Name="Квартира"
+					},
+
+					 new CategoryEntity
+					{
+					Name="Котедж"
+					},
+
+					new CategoryEntity
+					{
+					Name="Готель"
+					},
+
+					new CategoryEntity
+					{
+					Name="Хостел"
+					},
+
+                    new CategoryEntity
+                    {
+                    Name="Готелі для побачень"
+                    }
+                };
+
+				context.Categories.AddRange(categories);
+				context.SaveChanges();
+            }
 
 
 		}

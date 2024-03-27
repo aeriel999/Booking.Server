@@ -1,4 +1,5 @@
-﻿using Booking.Domain.Users;
+﻿using Booking.Domain.Category;
+using Booking.Domain.Users;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
@@ -9,6 +10,8 @@ public class BookingDbContext : IdentityDbContext<User, IdentityRole<Guid>, Guid
 {
 	public BookingDbContext() : base() { }
 	public BookingDbContext(DbContextOptions<BookingDbContext> options) : base(options) { }
+
+	public DbSet<CategoryEntity> Categories { get; set; }
 
 	protected override void OnModelCreating(ModelBuilder builder)
 	{
