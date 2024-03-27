@@ -16,8 +16,8 @@ services:
     networks:
       - myAppNetwork
     volumes:
-       - c:/web/booking/postgresql:/var/lib/postgresql/data  # Use the volume name msvol here
- #       - /data/postgresql/data:/var/lib/postgresql/data
+    #   - c:/web/booking/postgresql:/var/lib/postgresql/data  # Use the volume name msvol here
+       - /data/postgresql/data:/var/lib/postgresql/data
     deploy:
       restart_policy:
         condition: on-failure
@@ -35,8 +35,8 @@ services:
     depends_on:
       - postgresServerDb
     volumes:
-       - c:/web/booking/images:/app/images  # Use the volume name appvol here
-    # - /data/website/images:/app/images  # Use the volume name appvol here
+ #      - c:/web/booking/images:/app/images  # Use the volume name appvol here
+     - /data/website/images:/app/images  # Use the volume name appvol here
     deploy:
       restart_policy:
         condition: on-failure
