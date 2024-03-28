@@ -29,12 +29,11 @@
 	</ItemGroup>
 
 	<ItemGroup>
-		<!--<Folder Include="EmailTemplates\" />-->
-
-		<Content Include="EmailTemplates\**">
+		<None Update="EmailTemplates\**\*">
+			<CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
 			<CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-		</Content>
-
+		</None>
+		<!-- Other items -->
 	</ItemGroup>
 
 </Project>
