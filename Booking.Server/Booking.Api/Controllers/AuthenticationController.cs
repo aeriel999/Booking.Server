@@ -27,7 +27,7 @@ public class AuthenticationController(
 		var baseUrl = configuration.GetRequiredSection("HostSettings:ClientURL").Value;
 
 		var authResult = await mediatr.Send(mapper.Map<RegisterUserCommand>((request, baseUrl)));
-
+		 
 		return authResult.Match(
 			authResult => Ok(),
 			errors => Problem(errors));
@@ -97,5 +97,11 @@ public class AuthenticationController(
 		return resetPasswordResult.Match(
 			resetPasswordResult => Ok(resetPasswordResult),
 			errors => Problem(errors));
+	}
+
+	[HttpGet("ping")]
+	public IActionResult Ping()
+	{
+		return Ok(DateTime.Now);
 	}
 }

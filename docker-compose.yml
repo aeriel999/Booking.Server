@@ -25,9 +25,10 @@ services:
 
   app:
     container_name: web_booking_container
-    build:
-      context: .
-      dockerfile: Booking.Server/Dockerfile
+   # build:
+   #   context: .
+    #  dockerfile: Booking.Server/Dockerfile
+    image: tanmos/bookingapi
     ports:
       - "5926:8080"
     networks:

@@ -32,7 +32,7 @@ public class JwtTokenGenerator(IOptions<JwtSettings> jwtOptions, IDateTimeProvid
 			new Claim("EmailConfirm", user.EmailConfirmed.ToString()),
 			new Claim(ClaimTypes.MobilePhone, user.PhoneNumber ?? ""),
 			new Claim("Avatar", user.Avatar ?? ""),
-			new Claim(ClaimTypes.Role, role),
+			new Claim("Roles", role),
 		};
 
 		var securityToken = new JwtSecurityToken(
