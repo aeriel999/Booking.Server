@@ -1,4 +1,4 @@
-﻿using Booking.Domain.Category;
+﻿using Booking.Domain.Entity;
 using Booking.Domain.Constants;
 using Booking.Domain.Users;
 using Booking.Infrastructure.Common.Persistence;
@@ -82,7 +82,7 @@ public static class UserAndRolesInitializer
 
                     new CategoryEntity
                     {
-                    Name="Готелі для побачень"
+                    Name="Готель для побачень"
                     }
                 };
 

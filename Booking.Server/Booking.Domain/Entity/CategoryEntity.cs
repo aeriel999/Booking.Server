@@ -4,11 +4,11 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Booking.Domain.Category
+namespace Booking.Domain.Entity
 {
     public class CategoryEntity
     {
-        public int Id { get; set; }
-        public string Name { get; set; }
+        public Guid Id { get; set; }
+        public string? Name { get; set; }
     }
 }

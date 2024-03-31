@@ -1,4 +1,4 @@
-﻿using Booking.Domain.Category;
+﻿using Booking.Domain.Entity;
 using Booking.Domain.Users;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
