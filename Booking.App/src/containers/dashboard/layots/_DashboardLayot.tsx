@@ -18,7 +18,9 @@ import ListItemIcon from '@mui/material/ListItemIcon';
 import ListItemText from '@mui/material/ListItemText';
 import InboxIcon from '@mui/icons-material/MoveToInbox';
 import MailIcon from '@mui/icons-material/Mail';
-import {Outlet} from "@mui/icons-material";
+import {Outlet} from "react-router-dom";
+
+
 
 const drawerWidth = 240;
 
@@ -71,7 +73,7 @@ const DrawerHeader = styled('div')(({ theme }) => ({
     justifyContent: 'flex-end',
 }));
 
-export default function PersistentDrawerLeft() {
+export default function DashboardLayout() {
     const theme = useTheme();
     const [open, setOpen] = React.useState(false);
 
@@ -148,7 +150,7 @@ export default function PersistentDrawerLeft() {
                 </List>
             </Drawer>
             <Main open={open}>
-                {/*<DrawerHeader />*/}
+                <DrawerHeader />
                 <Outlet/>
             </Main>
         </Box>

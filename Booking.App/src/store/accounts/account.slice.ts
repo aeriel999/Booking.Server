@@ -13,13 +13,36 @@ function isRejectedAction(action: AnyAction): action is RejectedAction {
 }
 const updateLoginUserState = (state: IAccountState, token: string): void => {
     const decodedToken: { [key: string]: string } = jwtDecode(token);
+
+    console.log("decodedToken", decodedToken)
     const  email  = decodedToken["email"]
     const role = decodedToken["Roles"]
 
-    state.user = {
-        email,
-        role,
-    };
+    if(role === "realtor")
+    {
+        const firstName = decodedToken["family_name"];
+        const lastName = decodedToken["given_name"];
+        const phoneNumber = decodedToken["mobilephone"];
+        const avatar = decodedToken["mobilephone"];
+
+        state.user = {
+            email: email,
+            role: role,
+            firstName:   firstName,
+            lastName:   lastName,
+            phoneNumber:  phoneNumber,
+            avatar:    null
+        };
+    }else {
+        state.user = {
+            email: email,
+            role: role,
+            firstName:   null,
+            lastName:   null,
+            phoneNumber:  null,
+            avatar:    null
+        };
+    }
     state.token = token;
     state.isLogin = true;
 

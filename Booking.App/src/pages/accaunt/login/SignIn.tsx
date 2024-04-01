@@ -53,7 +53,7 @@ export default function SignInPage() {
                 navigate("/profile");
             }else if(role.toLowerCase().includes('admin'))
             {
-                navigate("/profile");
+                navigate("/dashboard/profile");
             }else {
                 navigate("/#");
             }

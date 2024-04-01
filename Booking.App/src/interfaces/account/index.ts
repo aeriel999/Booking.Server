@@ -21,6 +21,10 @@ export interface IConfirmEmail{
 export interface IUser{
     email: string,
     role: string,
+    firstName: string | null,
+    lastName: string | null,
+    phoneNumber: string | null,
+    avatar:  string | null,
 }
 
 export interface IErrorResponse{

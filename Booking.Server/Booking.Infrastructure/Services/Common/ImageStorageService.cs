@@ -2,6 +2,7 @@
 using Booking.Domain.Users;
 using ErrorOr;
 using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.IdentityModel.Tokens;
 using SixLabors.ImageSharp;
 using SixLabors.ImageSharp.Formats.Webp;
@@ -9,9 +10,9 @@ using SixLabors.ImageSharp.Processing;
 
 namespace Booking.Infrastructure.Services.Common;
 
-public class ImageStorageService : IImageStorageService
+public class ImageStorageService(UserManager<User> userManager) : IImageStorageService
 {
-	public async Task<string> AddAvatarAsync(User user, byte[] file)
+	public async Task<ErrorOr<User>> AddAvatarAsync(User user, byte[] file)
 	{
 		string imageName = Path.GetRandomFileName() + ".webp";
 
@@ -46,7 +47,14 @@ public class ImageStorageService : IImageStorageService
 		using var stream = File.Create(dirSaveImage);
 		await image.SaveAsync(stream, new WebpEncoder());
 
-		return imageName;
+		user.Avatar = imageName;
+
+		var saveResult = await userManager.UpdateAsync(user);
+
+		if (!saveResult.Succeeded)
+			return Error.Failure("Error during save an avatar");
+
+		return user;
 	}
 
 	public async Task<ErrorOr<string>> SaveImageAsync(IFormFile image)
