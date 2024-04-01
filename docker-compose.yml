@@ -44,3 +44,11 @@ services:
         max_attempts: 5
       
 
+  client:
+    container_name: booking_client_container
+#    build:
+#      context: .
+#      dockerfile: my-react-app/Dockerfile
+    image: tanmos/booking_client
+    ports:
+      - "8526:80"

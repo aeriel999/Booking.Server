@@ -9,7 +9,6 @@ export  default function InformationAfterConfirmationEmail(){
     useEffect(() => {
        if(user)
        {
-           console.log(user)
            if (user.role.toLowerCase().includes('realtor'))
                setIsRealtorInfo(true)
        }

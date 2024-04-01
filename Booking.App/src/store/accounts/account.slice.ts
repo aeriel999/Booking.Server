@@ -4,7 +4,7 @@ import {addLocalStorage, deleteLocalStorage} from "../../utils/storage/localStor
 
 import {RejectedAction} from "../../utils/types";
 
-import {confirmEmail, login, register} from "./account.actions.ts";
+import {confirmEmail, forgotPassword, login, realtorRegister, resetPassword, userRegister} from "./account.actions.ts";
 import {Status} from "../../utils/enum";
 import {IAccountState} from "../../interfaces/account";
 
@@ -14,7 +14,7 @@ function isRejectedAction(action: AnyAction): action is RejectedAction {
 const updateLoginUserState = (state: IAccountState, token: string): void => {
     const decodedToken: { [key: string]: string } = jwtDecode(token);
     const  email  = decodedToken["email"]
-    const role = decodedToken["http://schemas.microsoft.com/ws/2008/06/identity/claims/role"]
+    const role = decodedToken["Roles"]
 
     state.user = {
         email,
@@ -31,19 +31,12 @@ const initialState: IAccountState = {
     token: null,
     isLogin: false,
     status: Status.IDLE,
-    // error: null
 };
 
 export const accountsSlice = createSlice({
     name: 'account',
     initialState,
     reducers: {
-        // register: (state, action: PayloadAction<number>) => {
-        //     console.log("accountsSlice action", action)
-        //
-        //     updateRegisterUserState(state, action.payload  );
-        // },
-
         autoLogin: (state, action: PayloadAction<string>) => {
             updateLoginUserState(state, action.payload);
         },
@@ -58,17 +51,16 @@ export const accountsSlice = createSlice({
     extraReducers: (builder) => {
         builder
             .addCase(login.fulfilled, (state, action) => {
-                const {token} = action.payload;
-                updateLoginUserState(state, token);
+                updateLoginUserState(state, action.payload);
                 state.status = Status.SUCCESS;
             })
             .addCase(login.pending, (state) => {
                 state.status = Status.LOADING;
             })
-            .addCase(register.fulfilled, (state) => {
+            .addCase(userRegister.fulfilled, (state) => {
                 state.status = Status.SUCCESS;
             })
-            .addCase(register.pending, (state) => {
+            .addCase(userRegister.pending, (state) => {
                 state.status = Status.LOADING;
             })
             .addCase(confirmEmail.fulfilled, (state, action) => {
@@ -79,11 +71,24 @@ export const accountsSlice = createSlice({
             .addCase(confirmEmail.pending, (state) => {
                 state.status = Status.LOADING;
             })
-            // .addCase(register.rejected, (state, action) => {
-            //     state.status = Status.ERROR;
-            //     state.error = action.payload;
-            // })
-
+            .addCase(realtorRegister.fulfilled, (state) => {
+                state.status = Status.SUCCESS;
+            })
+            .addCase(realtorRegister.pending, (state) => {
+                state.status = Status.LOADING;
+            })
+            .addCase(forgotPassword.fulfilled, (state) => {
+                state.status = Status.SUCCESS;
+            })
+            .addCase(forgotPassword.pending, (state) => {
+                state.status = Status.LOADING;
+            })
+            .addCase(resetPassword.fulfilled, (state) => {
+                state.status = Status.SUCCESS;
+            })
+            .addCase(resetPassword.pending, (state) => {
+                state.status = Status.LOADING;
+            })
             .addMatcher(isRejectedAction, (state) => {
                 state.status = Status.ERROR;
             });

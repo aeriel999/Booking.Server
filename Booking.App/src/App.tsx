@@ -4,9 +4,17 @@ import UserRegisterPage from "./pages/accaunt/register/UserRegisterPage.tsx";
 import RegisterInformationPage from "./pages/accaunt/register/RegisterInformationPage.tsx";
 import ConfirmEmailPage from "./pages/accaunt/confirmation/ConfirmEmailPage.tsx";
 import InformationAfterConfirmationEmail from "./pages/accaunt/instruction/InformationAfterConfirmationEmail.tsx";
+import RealtorRegisterPage from "./pages/accaunt/register/RealtorRegisterPage.tsx";
+import SignInPage from "./pages/accaunt/login/SignIn.tsx";
+import {useAppSelector} from "./hooks/redux";
+import RealtorProfilePage from "./containers/dashboard/RealtorProfilePage.tsx";
+import UserProfilePage from "./containers/client/UserProfilePage.tsx";
+import ForgotPasswordPage from "./pages/accaunt/forgot-password/ForgotPasswordPage.tsx";
+import ForgotPasswordInformationPage from "./pages/accaunt/forgot-password/ForgotPasswordInformationPage.tsx";
+import ResetPasswordPage from "./pages/accaunt/reset-password/ResetPasswordPage.tsx";
 
 const App : React.FC = () => {
-
+    const {isLogin} = useAppSelector(state => state.account);
     return (
         <Routes>
             <Route path="*" element={<NotFound/>} />
@@ -14,8 +22,19 @@ const App : React.FC = () => {
             <Route path="/authentication/register-information/:email" element={<RegisterInformationPage/>} />
             <Route path="/authentication/confirm-email/:userId/:token"  element={<ConfirmEmailPage/>} />
             <Route path="/instructions" element={<InformationAfterConfirmationEmail/>} />
+            <Route path="/authentication/realtor-register" element={<RealtorRegisterPage/>} />
+            <Route path="/authentication/login" element={<SignInPage/>} />
+            <Route path="/authentication/forgot-password" element={<ForgotPasswordPage/>} />
+            <Route path="/authentication/forgot-password-information/:email" element={<ForgotPasswordInformationPage/>} />
+            <Route path="/authentication/reset-password/:email/:token"  element={<ResetPasswordPage/>} />
 
-
+            {isLogin && (
+               <>
+                   <Route path="/dashboard/profile" element={<RealtorProfilePage/>} />
+                   <Route path="/profile" element={<UserProfilePage/>} />
+               </>
+            )}
+            <Route/>
         </Routes>
     );
 }

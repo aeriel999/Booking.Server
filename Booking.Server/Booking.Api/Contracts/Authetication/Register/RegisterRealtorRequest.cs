@@ -33,7 +33,10 @@ public record RegisterRealtorRequest
 	[Length(8, 24)]
 	public required string ConfirmPassword { get; init; }
 
-	[Required(ErrorMessage = "{PropertyName} must not be empty")]
-	[FileSize(2 * 1024 * 1024)]
-	public required IFormFile Avatar { get; init; }
+	//[Required(ErrorMessage = "{PropertyName} must not be empty")]
+	//[FileSize(2 * 1024 * 1024)]
+	//public required IFormFile Avatar { get; init; }
+
+	public IFormFile? Avatar { get; set; }
+
 }

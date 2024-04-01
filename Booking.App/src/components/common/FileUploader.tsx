@@ -4,13 +4,27 @@ import IconButton from '@mui/material/IconButton'
 import CancelIcon from '@mui/icons-material/Cancel'
 import { Grid } from '@mui/material'
 
+export interface IUploadedFile {
+    lastModified: number;
+    lastModifiedDate: Date;
+    name: string;
+    originFileObj: File;
+    percent: number;
+    size: number;
+    thumbUrl: string;
+    type: string;
+    uid: string;
+}
+
+
 type Props = {
     images: File[]
     setImages: (arg: File[]) => void
+    maxImagesUpload: 1
 }
 
 const FileUploader = (props: Props) => {
-    const maxImagesUpload = 10
+    const maxImagesUpload = props.maxImagesUpload;
     const inputId = Math.random().toString(32).substring(2)
 
     const handleOnAddImage = async (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -82,7 +96,7 @@ const FileUploader = (props: Props) => {
     type='file'
     multiple
     accept='image/*,.png,.jpg,.jpeg,.gif'
-    onChange={(e: React.ChangeEvent<HTMLInputElement>) => handleOnAddImage(e)}
+    onChange={(e: React.ChangeEvent<HTMLInputElement>) => handleOnAddImage(e) }
     style={{ display: 'none' }}
     />
     </label>

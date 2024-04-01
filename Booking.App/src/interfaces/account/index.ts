@@ -43,15 +43,25 @@ export interface ILogin {
     password: string,
 }
 
-
-
 export interface IRealtorRegister {
+    firstName: string,
+    lastName: string,
+    phoneNumber: string,
     email: string,
     password: string,
     confirmPassword: string,
-    firstName: string,
-    lastName: string,
-    phone: string,
+    avatar:  File | undefined | null,
+}
+
+export interface IForgotPassword{
+    email: string
+}
+
+export  interface IResetPassword{
+    email: string  | undefined,
+    token: string  | undefined,
+    password: string  | undefined,
+    confirmPassword: string  | undefined,
 }
 
 

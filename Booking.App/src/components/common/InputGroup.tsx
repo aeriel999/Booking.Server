@@ -32,7 +32,6 @@ const InputGroup: FC<InputGroupProps> = ({
         onChange(!errorMessage);
         if(setIncomeValue)
             setIncomeValue(newValue);
-
     };
 
     return (

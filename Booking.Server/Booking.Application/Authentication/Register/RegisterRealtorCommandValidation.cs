@@ -8,11 +8,13 @@ internal class RegisterRealtorCommandValidation : AbstractValidator<RegisterReal
 	{
 		RuleFor(r => r.FirstName)
 				.MinimumLength(3).WithMessage("{PropertyName} must have at least 3 symbols")
+				.MaximumLength(64).WithMessage("{PropertyName} must be less than 64 symbols")
 				.Matches("^[^£# “” \"!@$%^&*(){}:;<>,.?/+_=|'~\\\\-]*$")
 				.WithMessage("{PropertyName} must not contain the following characters £ # “” or spaces.");
 
 		RuleFor(r => r.LastName)
 				.MinimumLength(3).WithMessage("{PropertyName} must have at least 3 symbols")
+				.MaximumLength(64).WithMessage("{PropertyName} must be less than 64 symbols")
 				.Matches("^[^£# “” \"!@$%^&*(){}:;<>,.?/+_=|'~\\\\-]*$")
 				.WithMessage("{PropertyName} must not contain the following characters £ # “” or spaces.");
 

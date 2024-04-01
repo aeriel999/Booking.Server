@@ -14,7 +14,7 @@ import { useRef, useState} from "react";
 import {IUserRegister} from "../../../interfaces/account";
 import {unwrapResult} from "@reduxjs/toolkit";
 import {useAppDispatch} from "../../../hooks/redux";
-import {register} from "../../../store/accounts/account.actions.ts";
+import {userRegister} from "../../../store/accounts/account.actions.ts";
 import OutlinedErrorAlert from "../../../components/common/ErrorAlert.tsx";
 import {useNavigate} from "react-router-dom";
 import ErrorHandler from "../../../components/common/ErrorHandler.ts";
@@ -47,7 +47,7 @@ export default function UserRegisterPage() {
             }
 
             try {
-                const response = await dispatch(register(model));
+                const response = await dispatch(userRegister(model));
                 unwrapResult(response);
 
                 navigate(`/authentication/register-information/${model.email}`);
@@ -124,7 +124,7 @@ export default function UserRegisterPage() {
                         </Button>
                         <Grid container justifyContent="flex-end">
                             <Grid item>
-                                <Link href="#" variant="body2">
+                                <Link href="/authentication/login" variant="body2">
                                     Already have an account? Sign in
                                 </Link>
                             </Grid>

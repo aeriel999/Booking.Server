@@ -27,3 +27,22 @@ export const ConfirmPasswordValidator = (password: string, confirmPassword: stri
     if (confirmPassword !== password) return 'Passwords do not match';
     return undefined; // Return undefined if validation passes
 };
+
+export const FirstNameValidator = (value: string): string | undefined => {
+    if (!value) return 'First Name must not be empty';
+    if (value.length < 3) return 'First Name must be at least 3 characters long';
+    if (value.length > 50) return 'First Name must be less than 50 characters long';
+    if (!/^[A-Za-z\s]+$/.test(value)) return 'First Name must contain only letters and spaces';
+    if (/[£# “”]/.test(value)) return 'First Name must not contain the following characters: £ # “”';
+    return undefined; // Return undefined if validation passes
+};
+
+export const LastNameValidator = (value: string): string | undefined => {
+    if (!value) return 'Last Name must not be empty';
+    if (value.length < 3) return 'Last Name must be at least 3 characters long';
+    if (value.length > 50) return 'Last Name must be less than 50 characters long';
+    if (!/^[A-Za-z\s]+$/.test(value)) return 'Last Name must contain only letters and spaces';
+    if (/[£# “”]/.test(value)) return 'Last Name must not contain the following characters: £ # “”';
+    return undefined; // Return undefined if validation passes
+};
+

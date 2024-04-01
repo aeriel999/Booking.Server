@@ -6,17 +6,17 @@ import {Link} from "react-router-dom";
 
 export default function RegisterInformationPage( ) {
 const {email}  = useParams();
-const [message, setmessage] = useState<string | undefined >(undefined);
+const [message, setMessage] = useState<string | undefined >(undefined);
 
     useEffect(() => {
-        setmessage ("Congratulation! You are successfully registered. We have sent a confirmation email to " +  email +
+        setMessage ("Congratulation! You are successfully registered. We have sent a confirmation email to " +  email +
             ". Please check your inbox and follow the instructions to complete the registration process.");
     }, [email]);
     return(
         <>
             {message && <OutlinedSuccessAlert message={message} />}
             <Link  to={"/"}><Button>Home</Button></Link>
-            <Link to={"/login"}><Button>Login</Button></Link>
+            <Link to={"/authentication/login"}><Button>Login</Button></Link>
         </>
     );
 }

@@ -16,12 +16,17 @@ export default function ErrorHandler(error : unknown){
     }
     else
     {
-        let errorText : string = "";
+         if( (error as IErrorResponse).errors)
+         {
+             let errorText : string = "";
 
-        for (const e of (error as IErrorResponse).errors) {
-            errorText = errorText + e.description + ": " + e.code + ". ";
-        }
+             for (const e of (error as IErrorResponse).errors) {
+                 errorText = errorText + e.description + ": " + e.code + ". ";
+             }
 
-        return errorText;
+             return errorText;
+         }else{
+             return "Unknown Error"
+         }
     }
 }
