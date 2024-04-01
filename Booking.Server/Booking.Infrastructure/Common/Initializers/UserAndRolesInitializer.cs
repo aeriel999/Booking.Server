@@ -271,6 +271,27 @@ public static class UserAndRolesInitializer
                 context.SaveChanges();
             }
 
+            if(!context.Towns.Any())
+            {
+                TownEntity[] towns = new TownEntity[]
+                {
+                    new TownEntity(){NameTown="Рівне"},
+                    new TownEntity(){NameTown="Київ"},
+                    new TownEntity(){NameTown="Луцьк"},
+                    new TownEntity(){NameTown="Львів"},
+                    new TownEntity(){NameTown="Здолбунів"},
+                    new TownEntity(){NameTown="Костопіль"},
+                    new TownEntity(){NameTown="Буковель"},
+                    new TownEntity(){NameTown="Житомир"},
+                    new TownEntity(){NameTown="Одеса"},
+                    new TownEntity(){NameTown="Миколаїв"}
+                };
+
+                context.Towns.AddRange(towns);
+                context.SaveChanges();
+
+            }
+
 
         }
     }

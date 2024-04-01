@@ -12,6 +12,7 @@ public class BookingDbContext : IdentityDbContext<User, IdentityRole<Guid>, Guid
 	public BookingDbContext(DbContextOptions<BookingDbContext> options) : base(options) { }	
 	public DbSet<CategoryEntity> Category { get; set; }
     public DbSet<CountryEntity> Country { get; set; }
+    public DbSet<TownEntity> Towns { get; set; }
     protected override void OnModelCreating(ModelBuilder builder)
 	{
 		base.OnModelCreating(builder);
