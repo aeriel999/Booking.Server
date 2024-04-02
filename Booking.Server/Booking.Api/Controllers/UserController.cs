@@ -1,4 +1,5 @@
 ﻿using Booking.Api.Contracts.Authetication.Register;
+using Booking.Api.Contracts.Users.Realtor.Get;
 using Booking.Api.Infrastructure;
 using Booking.Application.Authentication.Register;
 using MapsterMapper;
@@ -19,12 +20,14 @@ public class UserController(
 	[HttpPost("realtor-profile")]
 	public async Task<IActionResult> EditRealtorPrifileInfoAsync(EditRealtorPrifileInfoRequest request)
 	{
-		var baseUrl = configuration.GetRequiredSection("HostSettings:ClientURL").Value;
+		//var baseUrl = configuration.GetRequiredSection("HostSettings:ClientURL").Value;
 
-		var authResult = await mediatr.Send(mapper.Map<RegisterUserCommand>((request, baseUrl)));
+		//var authResult = await mediatr.Send(mapper.Map<RegisterUserCommand>((request, baseUrl)));
 
-		return authResult.Match(
-			authResult => Ok(),
-			errors => Problem(errors));
+		//return authResult.Match(
+		//	authResult => Ok(),
+		//	errors => Problem(errors));
+
+		return Ok();
 	}
 }

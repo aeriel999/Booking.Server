@@ -28,8 +28,9 @@ public class UserAuthenticationService(UserManager<User> userManager, SignInMana
 		if (signinResult.IsLockedOut)
 			return Error.Forbidden("User is blocked");
 
+        //ToDo Error.Failure
         if (!signinResult.Succeeded)
-            return Error.Failure("Wrong password");
+            return Error.Forbidden("Wrong password");
 
 		var role = (await userManager.GetRolesAsync(user)).FirstOrDefault();
 

@@ -22,8 +22,8 @@ const updateLoginUserState = (state: IAccountState, token: string): void => {
     {
         const firstName = decodedToken["family_name"];
         const lastName = decodedToken["given_name"];
-        const phoneNumber = decodedToken["mobilephone"];
-        const avatar = decodedToken["mobilephone"];
+        const phoneNumber = decodedToken["http://schemas.xmlsoap.org/ws/2005/05/identity/claims/mobilephone"];
+        const avatar = decodedToken["Avatar"];
 
         state.user = {
             email: email,
@@ -31,7 +31,7 @@ const updateLoginUserState = (state: IAccountState, token: string): void => {
             firstName:   firstName,
             lastName:   lastName,
             phoneNumber:  phoneNumber,
-            avatar:    null
+            avatar:  "/images/avatars/" +  avatar
         };
     }else {
         state.user = {
