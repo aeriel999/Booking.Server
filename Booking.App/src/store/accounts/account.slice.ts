@@ -16,7 +16,7 @@ const updateLoginUserState = (state: IAccountState, token: string): void => {
 
     console.log("decodedToken", decodedToken)
     const  email  = decodedToken["email"]
-    const role = decodedToken["Roles"]
+    const role = decodedToken["Role"]
 
     if(role === "realtor")
     {
@@ -24,6 +24,8 @@ const updateLoginUserState = (state: IAccountState, token: string): void => {
         const lastName = decodedToken["given_name"];
         const phoneNumber = decodedToken["http://schemas.xmlsoap.org/ws/2005/05/identity/claims/mobilephone"];
         const avatar = decodedToken["Avatar"];
+        const rating = decodedToken["Rating"];
+
 
         state.user = {
             email: email,
@@ -31,7 +33,8 @@ const updateLoginUserState = (state: IAccountState, token: string): void => {
             firstName:   firstName,
             lastName:   lastName,
             phoneNumber:  phoneNumber,
-            avatar:  "/images/avatars/" +  avatar
+            avatar:  "/images/avatars/" +  avatar,
+            rating: Number(rating)
         };
     }else {
         state.user = {
@@ -40,7 +43,8 @@ const updateLoginUserState = (state: IAccountState, token: string): void => {
             firstName:   null,
             lastName:   null,
             phoneNumber:  null,
-            avatar:    null
+            avatar:    null,
+            rating: null
         };
     }
     state.token = token;

@@ -10,9 +10,9 @@ using SixLabors.ImageSharp.Processing;
 
 namespace Booking.Infrastructure.Services.Common;
 
-public class ImageStorageService(UserManager<User> userManager) : IImageStorageService
+public class ImageStorageService : IImageStorageService
 {
-	public async Task<ErrorOr<User>> AddAvatarAsync(User user, byte[] file)
+	public async Task<string> AddAvatarAsync(User user, byte[] file)
 	{
 		string imageName = Path.GetRandomFileName() + ".webp";
 
@@ -47,14 +47,7 @@ public class ImageStorageService(UserManager<User> userManager) : IImageStorageS
 		using var stream = File.Create(dirSaveImage);
 		await image.SaveAsync(stream, new WebpEncoder());
 
-		user.Avatar = imageName;
-
-		var saveResult = await userManager.UpdateAsync(user);
-
-		if (!saveResult.Succeeded)
-			return Error.Failure("Error during save an avatar");
-
-		return user;
+		return imageName;
 	}
 
 	public async Task<ErrorOr<string>> SaveImageAsync(IFormFile image)

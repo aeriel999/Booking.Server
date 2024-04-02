@@ -17,7 +17,13 @@ public class UserAuthenticationService(UserManager<User> userManager, SignInMana
         return token;
     }
 
-    public async Task<ErrorOr<string>> LoginUserAsync(User user, string password)
+    public async Task<string> GenerateEmailChangeTokenAsync(User user, string email)
+    {
+        var token = await userManager.GenerateChangeEmailTokenAsync(user, email);
+
+		return token;
+	}
+	public async Task<ErrorOr<string>> LoginUserAsync(User user, string password)
     {
 		var signinResult = await signInManager.PasswordSignInAsync(user, password,
 			isPersistent: true, lockoutOnFailure: true);
@@ -30,7 +36,7 @@ public class UserAuthenticationService(UserManager<User> userManager, SignInMana
 
         //ToDo Error.Failure
         if (!signinResult.Succeeded)
-            return Error.Forbidden("Wrong password");
+            return Error.Validation("Wrong password");
 
 		var role = (await userManager.GetRolesAsync(user)).FirstOrDefault();
 

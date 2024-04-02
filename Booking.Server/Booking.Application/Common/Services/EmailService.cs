@@ -34,7 +34,7 @@ public class EmailService(ISmtpService smtpService)
 		return Result.Success;
 	}
 
-	public async Task<ErrorOr<Success>> SendResetPasswordEmail(
+	public async Task<ErrorOr<Success>> SendResetPasswordEmailAysync(
 		string email, string token, string baseUrl, string userName)
 	{
 		var encodedToken = Encoding.UTF8.GetBytes(token);
@@ -59,4 +59,28 @@ public class EmailService(ISmtpService smtpService)
 		return Result.Success;
 	}
 
+	public async Task<ErrorOr<Success>> SendChangeEmailEmailAsync(
+		string email, string token, string baseUrl, string userName)
+	{
+		var encodedToken = Encoding.UTF8.GetBytes(token);
+
+		var validToken = WebEncoders.Base64UrlEncode(encodedToken);
+
+		string url = $"{baseUrl}/authentication/change-email/{email}/{validToken}";
+
+		string emailBody = string.Empty;
+
+		using (StreamReader reader = new("./EmailTemplates/email-change.html"))
+		{
+			emailBody = reader.ReadToEnd();
+		}
+
+		emailBody = emailBody.Replace("{{ name }}", userName);
+
+		emailBody = emailBody.Replace("{{ url }}", url);
+
+		await smtpService.SendEmailAsync(email, "Change Email", emailBody);
+
+		return Result.Success;
+	}
 }

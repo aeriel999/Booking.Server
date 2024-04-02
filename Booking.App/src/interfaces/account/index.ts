@@ -25,6 +25,7 @@ export interface IUser{
     lastName: string | null,
     phoneNumber: string | null,
     avatar:  string | null,
+    rating: number | null
 }
 
 export interface IErrorResponse{

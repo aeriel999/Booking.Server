@@ -22,7 +22,17 @@ public class UserRepository(UserManager<User> userManager) : IUserRepository
         return user;
     }
 
-    public Task<ErrorOr<Deleted>> DeleteUserAsync(string userId)
+	public async Task<ErrorOr<User>> SaveUserAsync(User user)
+	{
+		var saveResult = await userManager.UpdateAsync(user);
+
+		if (!saveResult.Succeeded)
+			return Error.Unexpected("Error saving user");
+
+		return user;
+	}
+
+	public Task<ErrorOr<Deleted>> DeleteUserAsync(string userId)
     {
         throw new NotImplementedException();
     }
@@ -42,9 +52,9 @@ public class UserRepository(UserManager<User> userManager) : IUserRepository
         return user;
     }
 
-    public async Task<ErrorOr<User>> FindByIdAsync(Guid userId)
+    public async Task<ErrorOr<User>> FindByIdAsync(string userId)
     {
-		var user = await userManager.FindByIdAsync(userId.ToString());
+		var user = await userManager.FindByIdAsync(userId);
 
         if (user == null)
             return Error.NotFound();

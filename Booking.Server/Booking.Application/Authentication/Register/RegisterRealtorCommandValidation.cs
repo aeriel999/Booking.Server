@@ -6,20 +6,21 @@ internal class RegisterRealtorCommandValidation : AbstractValidator<RegisterReal
 {
 	public RegisterRealtorCommandValidation()
 	{
-		RuleFor(r => r.FirstName)
+		RuleFor(r => r.FirstName).NotEmpty().WithMessage("Field must not be empty")
 				.MinimumLength(3).WithMessage("{PropertyName} must have at least 3 symbols")
 				.MaximumLength(64).WithMessage("{PropertyName} must be less than 64 symbols")
 				.Matches("^[^£# “” \"!@$%^&*(){}:;<>,.?/+_=|'~\\\\-]*$")
 				.WithMessage("{PropertyName} must not contain the following characters £ # “” or spaces.");
 
-		RuleFor(r => r.LastName)
+		RuleFor(r => r.LastName).NotEmpty().WithMessage("Field must not be empty")
 				.MinimumLength(3).WithMessage("{PropertyName} must have at least 3 symbols")
 				.MaximumLength(64).WithMessage("{PropertyName} must be less than 64 symbols")
 				.Matches("^[^£# “” \"!@$%^&*(){}:;<>,.?/+_=|'~\\\\-]*$")
 				.WithMessage("{PropertyName} must not contain the following characters £ # “” or spaces.");
 
-		RuleFor(r => r.PhoneNumber)
+		RuleFor(r => r.PhoneNumber).NotEmpty().WithMessage("Field must not be empty")
 			.MinimumLength(10).WithMessage("{PropertyName} must have at least 3 symbols")
+			.MaximumLength(24).WithMessage("{PropertyName} must be less than 64 symbols")
 			.Matches("^[^£# “” \"!@$%^&*(){}:;<>,.?/_=|'~\\\\ A-Z a-z]*$")
 			.WithMessage("{PropertyName} must not contain the following characters £ # “” or spaces.");
 
@@ -39,9 +40,8 @@ internal class RegisterRealtorCommandValidation : AbstractValidator<RegisterReal
 		RuleFor(r => r.ConfirmPassword).NotEmpty().WithMessage("Required field must not be empty.")
 			.Equal(r => r.Password).WithMessage("Passwords are not matched");
 
-		//RuleFor(file => file.Avatar).NotNull().WithMessage("{PropertyName} must not be empty")
-		//	.Must(file => file.Length <= (5 * 1024 * 1024)).WithMessage("File size must not exceed 5MB")
-		//	.Must(file => IsFileExtensionValid(file.FileName)).WithMessage("Invalid file extension");
+		RuleFor(file => file.Avatar).NotNull().WithMessage("{PropertyName} must not be empty")
+			.Must(file => file.Length <= (2 * 1024 * 1024)).WithMessage("File size must not exceed 2MB");
 	}
 
 	private static bool IsFileExtensionValid(string fileName)

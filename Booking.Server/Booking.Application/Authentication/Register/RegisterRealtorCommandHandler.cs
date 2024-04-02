@@ -40,10 +40,18 @@ public class RegisterRealtorCommandHandler(
 			return createUserResult.Errors;
 
 		//Save avatar
-		var saveImageResult = await imageStorageService.AddAvatarAsync(user, request.Avatar);
+		var imageName = await imageStorageService.AddAvatarAsync(user, request.Avatar);
 
-		if (saveImageResult.IsError) 
-			return saveImageResult.Errors;
+		if (imageName == null)
+			return Error.Unexpected("Error in avatar saving");
+
+		//Add Avatar to table
+		user.Avatar = imageName;
+
+		var resultOfAvatarSaving = await userRepository.SaveUserAsync(user);
+
+		if (resultOfAvatarSaving.IsError) 
+			return resultOfAvatarSaving;
 
 		//Send Confirmation
 		var sendConfirmationResult = await mediator.Send(

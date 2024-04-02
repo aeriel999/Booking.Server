@@ -25,23 +25,23 @@ public class ForgotPasswordQueryHandler(
 		//Generate token
 		var token = await userAuthenticationService.GeneratePasswordResetTokenAsync(user);
 
-		//Send Link for email
+		//Make Link for email
 		string? userName;
 
 		if (string.IsNullOrEmpty(user.FirstName) || string.IsNullOrEmpty(user.LastName))
 		{
 			if (string.IsNullOrEmpty(user.LastName) && string.IsNullOrEmpty(user.FirstName))
-				_ = user.Email;
+				userName = user.Email;
 			else if (string.IsNullOrEmpty(user.LastName))
-				_ = user.FirstName;
+				userName = user.FirstName;
 			else
-				_ = user.LastName;
+				userName = user.LastName;
 		}
+		else
+			userName = user.FirstName + " " + user.LastName;
 
-		userName = user.FirstName + " " + user.LastName;
-
-		var sendEmailResult = await emailService.SendResetPasswordEmail(
-			user.Email!, token, request.BaseUrl, userName);
+		var sendEmailResult = await emailService.SendResetPasswordEmailAysync(
+			user.Email!, token, request.BaseUrl, userName!);
 
 		return sendEmailResult;
 	}

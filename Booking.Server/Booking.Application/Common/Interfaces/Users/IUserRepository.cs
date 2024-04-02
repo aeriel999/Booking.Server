@@ -7,7 +7,7 @@ public interface IUserRepository
 {
 	Task<ErrorOr<User>> FindByEmilAsync(string email);
 
-	Task<ErrorOr<User>> FindByIdAsync(Guid userId);
+	Task<ErrorOr<User>> FindByIdAsync(string userId);
 
 	Task<ErrorOr<List<string>>> FindRolesByUserIdAsync(User user);
 
@@ -22,4 +22,6 @@ public interface IUserRepository
 	Task<ErrorOr<User>> GetUserAsync(string userId);
 
 	Task<ErrorOr<User>> EditUserAsync(User user);
+
+	Task<ErrorOr<User>> SaveUserAsync(User user);
 }
