@@ -67,6 +67,8 @@ public static class UserAndRolesInitializer
                 context.SaveChanges();
             }
 
+
+
             if (!context.Country.Any())
             {
                 CountryEntity[] countries = new CountryEntity[]
@@ -271,25 +273,27 @@ public static class UserAndRolesInitializer
                 context.SaveChanges();
             }
 
-            //if(!context.Towns.Any())
-            //{
-            //    TownEntity[] towns = new TownEntity[]
-            //    {
-            //        new TownEntity(){NameTown="Рівне", StreetsId=new StreetEntity},
-            //        new TownEntity(){NameTown="Київ"},
-            //        new TownEntity(){NameTown="Луцьк"},
-            //        new TownEntity(){NameTown="Львів"},
-            //        new TownEntity(){NameTown="Здолбунів"},
-            //        new TownEntity(){NameTown="Костопіль"},
-            //        new TownEntity(){NameTown="Буковель"},
-            //        new TownEntity(){NameTown="Житомир"},
-            //        new TownEntity(){NameTown="Одеса"},
-            //        new TownEntity(){NameTown="Миколаїв"}
-            //    };
+            if (!context.Towns.Any())
+            {
+                Guid ukraineId = context.Country.Single(c => c.NameCountry == "Україна").Id;
 
-            //    context.Towns.AddRange(towns);
-            //    context.SaveChanges();
-            //}
+                TownEntity[] towns = new TownEntity[]
+                {
+                    new TownEntity(){NameTown="Рівне", CountryId=ukraineId},
+                    new TownEntity(){NameTown="Київ", CountryId=ukraineId},
+                    new TownEntity(){NameTown="Луцьк", CountryId=ukraineId},
+                    new TownEntity(){NameTown="Львів", CountryId=ukraineId},
+                    new TownEntity(){NameTown="Здолбунів", CountryId = ukraineId},
+                    new TownEntity(){NameTown="Костопіль", CountryId = ukraineId},
+                    new TownEntity(){NameTown="Буковель", CountryId = ukraineId},
+                    new TownEntity(){NameTown="Житомир", CountryId=ukraineId},
+                    new TownEntity(){NameTown="Одеса", CountryId=ukraineId},
+                    new TownEntity(){NameTown="Миколаїв", CountryId = ukraineId}
+                };
+
+                context.Towns.AddRange(towns);
+                context.SaveChanges();
+            }
 
             //if (!context.Streets.Any())
             //{

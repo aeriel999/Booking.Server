@@ -8,10 +8,13 @@ using System.Threading.Tasks;
 
 namespace Booking.Domain.Models
 {
-    public class CountryEntity
+    public class TownEntity
     {
         [Key]
         public Guid Id { get; set; }
-        public string? NameCountry { get; set; }        
+        public string? NameTown { get; set; }
+        [ForeignKey("CountryEntity")]
+        public Guid CountryId { get; set; }
+        public CountryEntity Country { get; set; }
     }
 }
