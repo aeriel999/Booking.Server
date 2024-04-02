@@ -14,7 +14,8 @@ public class BookingDbContext : IdentityDbContext<User, IdentityRole<Guid>, Guid
 	public DbSet<CountryEntity> Country { get; set; }
 	public DbSet<TownEntity> Towns { get; set; }
 	public DbSet<StreetEntity> Streets { get; set; }
-	//public DbSet<ImagesPostEntity> Images { get; set; }
+    public DbSet<PostEntity> Posts { get; set; }
+	public DbSet<ImagesPostEntity> Images { get; set; }
 	protected override void OnModelCreating(ModelBuilder builder)
 	{
 		base.OnModelCreating(builder);
