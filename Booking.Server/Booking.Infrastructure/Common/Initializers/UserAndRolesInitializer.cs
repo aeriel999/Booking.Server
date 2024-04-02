@@ -295,27 +295,30 @@ public static class UserAndRolesInitializer
                 context.SaveChanges();
             }
 
-            //if (!context.Streets.Any())
-            //{
-            //    StreetEntity[] streets = new StreetEntity[]
-            //    {
-            //        new StreetEntity(){NameStreet="Генерала Безручка"},
-            //        new StreetEntity(){NameStreet="Берегова"},
-            //        new StreetEntity(){NameStreet="Максима Березовського"},
-            //        new StreetEntity(){NameStreet="Якова Бичківського"},
-            //        new StreetEntity(){NameStreet="Басівкутська"},
-            //        new StreetEntity(){NameStreet="Біла"},
-            //        new StreetEntity(){NameStreet="Боярка"},
-            //        new StreetEntity(){NameStreet="Волинської дивізії"},
-            //        new StreetEntity(){NameStreet="Соборна"},
-            //        new StreetEntity(){NameStreet="16 липня"},
-            //        new StreetEntity(){NameStreet="Дворецька"},
-            //        new StreetEntity(){NameStreet="Дубенська"},
-            //        new StreetEntity(){NameStreet="Енергетиків"}
-            //    };
-            //}
+            if (!context.Streets.Any())
+            {
+                Guid RivneId = context.Towns.Single(c => c.NameTown == "Рівне").Id;
 
+                StreetEntity[] streets = new StreetEntity[]
+                {
+                    new StreetEntity(){NameStreet="Генерала Безручка", TownId=RivneId},
+                    new StreetEntity(){NameStreet="Берегова", TownId=RivneId},
+                    new StreetEntity(){NameStreet="Максима Березовського", TownId = RivneId},
+                    new StreetEntity(){NameStreet="Якова Бичківського", TownId = RivneId},
+                    new StreetEntity(){NameStreet="Басівкутська", TownId = RivneId},
+                    new StreetEntity(){NameStreet="Біла", TownId = RivneId},
+                    new StreetEntity(){NameStreet="Боярка", TownId = RivneId},
+                    new StreetEntity(){NameStreet="Волинської дивізії", TownId = RivneId},
+                    new StreetEntity(){NameStreet="Соборна", TownId = RivneId},
+                    new StreetEntity(){NameStreet="16 липня", TownId = RivneId},
+                    new StreetEntity(){NameStreet="Дворецька", TownId = RivneId},
+                    new StreetEntity(){NameStreet="Дубенська", TownId = RivneId},
+                    new StreetEntity(){NameStreet="Енергетиків", TownId = RivneId}
+                };
 
+                context.Streets.AddRange(streets);
+                context.SaveChanges();
+            }
         }
     }
 }
