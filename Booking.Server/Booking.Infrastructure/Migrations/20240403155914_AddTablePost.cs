@@ -6,7 +6,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 namespace Booking.Infrastructure.Migrations
 {
     /// <inheritdoc />
-    public partial class TablePost : Migration
+    public partial class AddTablePost : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
@@ -20,8 +20,6 @@ namespace Booking.Infrastructure.Migrations
                     CategoryId = table.Column<Guid>(type: "uuid", nullable: false),
                     Description = table.Column<string>(type: "text", nullable: true),
                     TypeOfRent = table.Column<int>(type: "integer", nullable: false),
-                    CountryId = table.Column<Guid>(type: "uuid", nullable: false),
-                    TownId = table.Column<Guid>(type: "uuid", nullable: false),
                     StreetId = table.Column<Guid>(type: "uuid", nullable: false),
                     NumberOfBuilding = table.Column<string>(type: "text", nullable: true),
                     NumberOfRooms = table.Column<int>(type: "integer", nullable: true),
@@ -46,21 +44,9 @@ namespace Booking.Infrastructure.Migrations
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
                     table.ForeignKey(
-                        name: "FK_Posts_Country_CountryId",
-                        column: x => x.CountryId,
-                        principalTable: "Country",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
-                    table.ForeignKey(
                         name: "FK_Posts_Streets_StreetId",
                         column: x => x.StreetId,
                         principalTable: "Streets",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
-                    table.ForeignKey(
-                        name: "FK_Posts_Towns_TownId",
-                        column: x => x.TownId,
-                        principalTable: "Towns",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
                 });
@@ -71,19 +57,9 @@ namespace Booking.Infrastructure.Migrations
                 column: "CategoryId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_Posts_CountryId",
-                table: "Posts",
-                column: "CountryId");
-
-            migrationBuilder.CreateIndex(
                 name: "IX_Posts_StreetId",
                 table: "Posts",
                 column: "StreetId");
-
-            migrationBuilder.CreateIndex(
-                name: "IX_Posts_TownId",
-                table: "Posts",
-                column: "TownId");
 
             migrationBuilder.CreateIndex(
                 name: "IX_Posts_UserId",

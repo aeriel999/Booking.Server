@@ -12,8 +12,8 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace Booking.Infrastructure.Migrations
 {
     [DbContext(typeof(BookingDbContext))]
-    [Migration("20240402135258_TablePost")]
-    partial class TablePost
+    [Migration("20240403155914_AddTablePost")]
+    partial class AddTablePost
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -66,9 +66,6 @@ namespace Booking.Infrastructure.Migrations
                     b.Property<Guid>("CategoryId")
                         .HasColumnType("uuid");
 
-                    b.Property<Guid>("CountryId")
-                        .HasColumnType("uuid");
-
                     b.Property<string>("Description")
                         .HasColumnType("text");
 
@@ -87,9 +84,6 @@ namespace Booking.Infrastructure.Migrations
                     b.Property<Guid>("StreetId")
                         .HasColumnType("uuid");
 
-                    b.Property<Guid>("TownId")
-                        .HasColumnType("uuid");
-
                     b.Property<int>("TypeOfRent")
                         .HasColumnType("integer");
 
@@ -103,11 +97,7 @@ namespace Booking.Infrastructure.Migrations
 
                     b.HasIndex("CategoryId");
 
-                    b.HasIndex("CountryId");
-
                     b.HasIndex("StreetId");
-
-                    b.HasIndex("TownId");
 
                     b.HasIndex("UserId");
 
@@ -365,21 +355,9 @@ namespace Booking.Infrastructure.Migrations
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("Booking.Domain.Models.CountryEntity", "Country")
-                        .WithMany()
-                        .HasForeignKey("CountryId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
                     b.HasOne("Booking.Domain.Models.StreetEntity", "Street")
                         .WithMany()
                         .HasForeignKey("StreetId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.HasOne("Booking.Domain.Models.TownEntity", "Town")
-                        .WithMany()
-                        .HasForeignKey("TownId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
@@ -391,11 +369,7 @@ namespace Booking.Infrastructure.Migrations
 
                     b.Navigation("Category");
 
-                    b.Navigation("Country");
-
                     b.Navigation("Street");
-
-                    b.Navigation("Town");
 
                     b.Navigation("User");
                 });

@@ -18,12 +18,6 @@ namespace Booking.Domain.Models
         public CategoryEntity Category { get; set; }
         public string? Description { get; set; }
         public TypeOfRent TypeOfRent { get; set; }
-        [ForeignKey("CountryEntity")]
-        public Guid CountryId { get; set; }
-        public CountryEntity Country { get; set; }
-        [ForeignKey("TownEntity")]
-        public Guid TownId { get; set; }
-        public TownEntity Town { get; set; }
         [ForeignKey("StreetEntity")]
         public Guid StreetId { get; set; }
         public StreetEntity Street { get; set; }
