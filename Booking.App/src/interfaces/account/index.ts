@@ -69,4 +69,11 @@ export  interface IResetPassword{
     confirmPassword: string  | undefined,
 }
 
+export interface IEditRealtorInfo{
+    firstName: string | null,
+    lastName: string | null,
+    phoneNumber: string | null,
+    email: string | null,
+    avatar:  File | undefined | null,
+}
 

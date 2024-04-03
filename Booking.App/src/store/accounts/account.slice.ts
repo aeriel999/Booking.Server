@@ -1,10 +1,16 @@
 import {AnyAction, createSlice, PayloadAction} from '@reduxjs/toolkit';
 import {jwtDecode} from 'jwt-decode';
 import {addLocalStorage, deleteLocalStorage} from "../../utils/storage/localStorageUtils.ts";
-
 import {RejectedAction} from "../../utils/types";
-
-import {confirmEmail, forgotPassword, login, realtorRegister, resetPassword, userRegister} from "./account.actions.ts";
+import {
+    confirmEmail,
+    editProfile,
+    forgotPassword,
+    login,
+    realtorRegister,
+    resetPassword,
+    userRegister
+} from "./account.actions.ts";
 import {Status} from "../../utils/enum";
 import {IAccountState} from "../../interfaces/account";
 
@@ -16,7 +22,7 @@ const updateLoginUserState = (state: IAccountState, token: string): void => {
 
     console.log("decodedToken", decodedToken)
     const  email  = decodedToken["email"]
-    const role = decodedToken["Role"]
+    const role = decodedToken["http://schemas.microsoft.com/ws/2008/06/identity/claims/role"]
 
     if(role === "realtor")
     {
@@ -114,6 +120,14 @@ export const accountsSlice = createSlice({
                 state.status = Status.SUCCESS;
             })
             .addCase(resetPassword.pending, (state) => {
+                state.status = Status.LOADING;
+            })
+            .addCase(editProfile.fulfilled, (state, action) => {
+               const {token} = action.payload;
+                updateLoginUserState(state, token);
+                state.status = Status.SUCCESS;
+            })
+            .addCase(editProfile.pending, (state) => {
                 state.status = Status.LOADING;
             })
             .addMatcher(isRejectedAction, (state) => {

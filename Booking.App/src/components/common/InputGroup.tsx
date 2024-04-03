@@ -5,10 +5,10 @@ interface InputGroupProps{
     label: string,
     type?: "text" | "password" | "email" | "number",
     field: string,
-    validator: (value: string) => string | false | undefined;
-    onChange: (isValid: boolean) => void;
-    setIncomeValue?: (value: string) => void;
-
+    validator: (value: string) => string | false | undefined,
+    onChange: (isValid: boolean) => void,
+    setIncomeValue?: (value: string) => void,
+    defaultValue?: string | null
 }
 
 const InputGroup: FC<InputGroupProps> = ({
@@ -18,10 +18,10 @@ const InputGroup: FC<InputGroupProps> = ({
                                              onChange,
                                              validator,
                                              setIncomeValue,
-
+                                             defaultValue
                                          }) => {
 
-    const [value, setValue] = useState("");
+    const [value, setValue] = useState(defaultValue ?? "");
     const [error, setError] = useState<string | false | undefined>(false);
 
     const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {

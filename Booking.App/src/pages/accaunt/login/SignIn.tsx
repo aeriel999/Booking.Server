@@ -43,7 +43,7 @@ export default function SignInPage() {
 
             const decodedToken: { [key: string]: string } = jwtDecode(response.payload);
 
-            const role = decodedToken["Roles"]
+            const role = decodedToken["http://schemas.microsoft.com/ws/2008/06/identity/claims/role"]
 
             if (role.toLowerCase().includes('realtor'))
             {

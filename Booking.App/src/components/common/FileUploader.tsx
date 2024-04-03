@@ -4,23 +4,11 @@ import IconButton from '@mui/material/IconButton'
 import CancelIcon from '@mui/icons-material/Cancel'
 import { Grid } from '@mui/material'
 
-export interface IUploadedFile {
-    lastModified: number;
-    lastModifiedDate: Date;
-    name: string;
-    originFileObj: File;
-    percent: number;
-    size: number;
-    thumbUrl: string;
-    type: string;
-    uid: string;
-}
-
-
 type Props = {
-    images: File[]
-    setImages: (arg: File[]) => void
-    maxImagesUpload: 1
+    images: File[];
+    setImages: (arg: File[]) => void;
+    maxImagesUpload: number;
+    defaultImage?: string | undefined; // New prop for default image
 }
 
 const FileUploader = (props: Props) => {
@@ -48,60 +36,72 @@ const FileUploader = (props: Props) => {
     return (
         <>
             <Grid container spacing={{ xs: 2, md: 3 }} columns={{ xs: 8, sm: 12, md: 12 }}>
-    {props.images.map((image, i) => (
-        <Grid
-            item
-        xs={4}
-        sm={4}
-        md={4}
-        key={i}
-        sx={{
-        display: 'flex',
-            justifyContent: 'start',
-            alignItems: 'center',
-            position: 'relative'
-    }}
-    >
-        <IconButton
-            aria-label='delete image'
-        style={{
-        position: 'absolute',
-            top: 10,
-            right: 0,
-            color: '#aaa'
-    }}
-        onClick={() => handleOnRemoveImage(i)}
-    >
-        <CancelIcon />
-        </IconButton>
-        <img
-        src={URL.createObjectURL(image)}
-        style={{
-        width: '100%',
-            height: '100%',
-            objectFit: 'contain',
-            aspectRatio: '1 / 1'
-    }}
-        alt=''
-            />
+                {props.images.map((image, i) => (
+                    <Grid
+                        item
+                        xs={4}
+                        sm={4}
+                        md={4}
+                        key={i}
+                        sx={{
+                            display: 'flex',
+                            justifyContent: 'start',
+                            alignItems: 'center',
+                            position: 'relative'
+                        }}
+                    >
+                        <IconButton
+                            aria-label='delete image'
+                            style={{
+                                position: 'absolute',
+                                top: 10,
+                                right: 0,
+                                color: '#aaa'
+                            }}
+                            onClick={() => handleOnRemoveImage(i)}
+                        >
+                            <CancelIcon />
+                        </IconButton>
+                        <img
+                            src={URL.createObjectURL(image)}
+                            style={{
+                                width: '100%',
+                                height: '100%',
+                                objectFit: 'contain',
+                                aspectRatio: '1 / 1'
+                            }}
+                            alt=''
+                        />
+                    </Grid>
+                ))}
             </Grid>
-    ))}
-    </Grid>
-    <label htmlFor={inputId}>
-    <Button variant='contained' disabled={props.images.length >= maxImagesUpload} component='span' sx={{ mt: 4 }}>
-    Upload Files
-    </Button>
-    <input
-    id={inputId}
-    type='file'
-    multiple
-    accept='image/*,.png,.jpg,.jpeg,.gif'
-    onChange={(e: React.ChangeEvent<HTMLInputElement>) => handleOnAddImage(e) }
-    style={{ display: 'none' }}
-    />
-    </label>
-    </>
-)
+            {props.images.length === 0 && ( // Display default image if no images are uploaded
+                <img
+                    src={props.defaultImage}
+                    alt='Default'
+                    style={{
+                        width: '100%',
+                        height: '100%',
+                        objectFit: 'contain',
+                        aspectRatio: '1 / 1'
+                    }}
+                />
+            )}
+            <label htmlFor={inputId}>
+                <Button variant='contained' disabled={props.images.length >= maxImagesUpload} component='span' sx={{ mt: 4 }}>
+                    Upload Files
+                </Button>
+                <input
+                    id={inputId}
+                    type='file'
+                    multiple
+                    accept='image/*,.png,.jpg,.jpeg,.gif'
+                    onChange={(e: React.ChangeEvent<HTMLInputElement>) => handleOnAddImage(e)}
+                    style={{ display: 'none' }}
+                />
+            </label>
+        </>
+    )
 }
 
 export default FileUploader

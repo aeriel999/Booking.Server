@@ -2,7 +2,7 @@ import {createAsyncThunk} from '@reduxjs/toolkit';
 import {apiClient, apiMediaClient} from "../../utils/api/apiClient.ts";
 import {handleAxiosError} from "../../utils/errors";
 import {
-    IConfirmEmail,
+    IConfirmEmail, IEditRealtorInfo,
     IForgotPassword,
     ILogin,
     IRealtorRegister,
@@ -80,6 +80,18 @@ export const resetPassword = createAsyncThunk(
         try {
             const response = await apiClient.post('/api/Authentication/reset-password', payload);
 
+            return response.data;
+        } catch (error) {
+            return rejectWithValue(handleAxiosError(error, "Network error"));
+        }
+    },
+);
+
+export const editProfile = createAsyncThunk(
+    'User/realtor-profile',
+    async (payload : IEditRealtorInfo, { rejectWithValue }) => {
+        try {
+            const response = await apiMediaClient.post('/api/User/realtor-profile', payload);
             return response.data;
         } catch (error) {
             return rejectWithValue(handleAxiosError(error, "Network error"));

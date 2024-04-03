@@ -9,6 +9,7 @@ import {useAppSelector} from "../../hooks/redux";
 import {APP_ENV} from "../../env";
 
 import {useEffect, useState} from "react";
+import {Link} from "react-router-dom";
 
 // STYLES
 const styles = {
@@ -27,11 +28,14 @@ const styles = {
 export default function RealtorProfilePage() {
     const {user} = useAppSelector(state => state.account);
     const [avatarUrl, setAvatarUrl] = useState<string>();
+    const [rating, setRating] = useState<number>(user?.rating ?? 0);
+
 
     useEffect(() => {
-        if(user?.avatar)
+        if(user)
         {
             setAvatarUrl( APP_ENV.BASE_URL + user?.avatar);
+            setRating(user?.rating ?? 0);
         }
 
     }, [user]);
@@ -73,7 +77,7 @@ export default function RealtorProfilePage() {
                     <Typography variant="h6">{user?.lastName}</Typography>
                     <Typography color="text.secondary">{user?.firstName}</Typography>
                     <Typography component="legend">Rating</Typography>
-                    <Rating name="half-rating-read" defaultValue={2.5} precision={0.5} readOnly />
+                    <Rating name="read-only" value={rating} readOnly />
                 </Grid>
                 {/* CARD HEADER END */}
 
@@ -95,13 +99,15 @@ export default function RealtorProfilePage() {
 
                 {/* BUTTON */}
                 <Grid item style={styles.details} sx={{ width: "100%" }}>
-                    <Button
-                        variant="contained"
-                        color="primary"
-                        sx={{ width: "99%", p: 1, my: 2 }}
-                    >
-                        Edit profile
-                    </Button>
+                    <Link to={"/dashboard/profile/edit"}>
+                        <Button
+                            variant="contained"
+                            color="primary"
+                            sx={{ width: "99%", p: 1, my: 2 }}
+                        >
+                            Edit profile
+                        </Button>
+                    </Link>
                 </Grid>
             </Grid>
         </Card>

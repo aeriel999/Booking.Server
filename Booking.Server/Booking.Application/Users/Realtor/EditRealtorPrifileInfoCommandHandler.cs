@@ -3,10 +3,8 @@ using Booking.Application.Common.Interfaces.Common;
 using Booking.Application.Common.Interfaces.Users;
 using Booking.Application.Common.Services;
 using Booking.Domain.Constants;
-using Booking.Domain.Users;
 using ErrorOr;
 using MediatR;
-using System.Security.Claims;
 
 namespace Booking.Application.Users.Realtor;
 
@@ -22,8 +20,6 @@ public class EditRealtorPrifileInfoCommandHandler(
 		EditRealtorPrifileInfoCommand request, 
 		CancellationToken cancellationToken)
 	{
-		 
-
 		//Get user
 		var errorOrUser = await userRepository.FindByIdAsync(request.UserId);
 
@@ -33,17 +29,17 @@ public class EditRealtorPrifileInfoCommandHandler(
 		var user = errorOrUser.Value;
 
 		//Update fields
-		if (request.FirstName != null)
+		if (request.FirstName != user.FirstName)
 		{ 
 			user.FirstName = request.FirstName;	
 		}
 
-		if (request.LastName != null)
+		if (request.LastName != user.LastName)
 		{
 			user.LastName = request.LastName;
 		}
 
-		if (request.PhoneNumber != null)
+		if (request.PhoneNumber != user.PhoneNumber)
 		{
 			user.PhoneNumber = request.PhoneNumber;
 		}
@@ -69,11 +65,11 @@ public class EditRealtorPrifileInfoCommandHandler(
 
 		var isEmailchange = false;
 
-		if (request.Email != null) 
+		if (request.Email != user.Email) 
 		{
 			//Make token
 			var tokenForConfirmEmail = await userAuthenticationService.GenerateEmailChangeTokenAsync(
-				user, request.Email);
+				user, request.Email!);
 
 			//Make Link for email
 			string? userName;

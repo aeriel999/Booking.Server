@@ -13,10 +13,10 @@ import ForgotPasswordPage from "./pages/accaunt/forgot-password/ForgotPasswordPa
 import ForgotPasswordInformationPage from "./pages/accaunt/forgot-password/ForgotPasswordInformationPage.tsx";
 import ResetPasswordPage from "./pages/accaunt/reset-password/ResetPasswordPage.tsx";
 import DashboardLayout from "./containers/dashboard/layots/_DashboardLayot.tsx";
+import RealtorProfileEditPage from "./containers/dashboard/RealtorProfileEditPage.tsx";
 
 const App : React.FC = () => {
     const {isLogin, user} = useAppSelector(state => state.account);
-
 
    const role = () =>{
        if (user?.role.toLowerCase().includes('realtor'))
@@ -43,8 +43,6 @@ const App : React.FC = () => {
             <Route path="/authentication/forgot-password-information/:email" element={<ForgotPasswordInformationPage/>} />
             <Route path="/authentication/reset-password/:email/:token"  element={<ResetPasswordPage/>} />
 
-
-
             {isLogin && (
                <>
                    <Route path="/instructions" element={<InformationAfterConfirmationEmail/>} />
@@ -53,6 +51,7 @@ const App : React.FC = () => {
                        <Route path="/dashboard"  element={<DashboardLayout/>} >
                            <Route index element={<RealtorProfilePage />} />
                            <Route path="/dashboard/profile" element={<RealtorProfilePage/>} />
+                           <Route path="/dashboard/profile/edit" element={<RealtorProfileEditPage/>} />
                        </Route>
                    )}
 
