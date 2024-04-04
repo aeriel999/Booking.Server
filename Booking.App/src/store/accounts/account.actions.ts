@@ -106,9 +106,12 @@ export const changeEmail = createAsyncThunk(
     async (payload : IChangeEmail, { rejectWithValue }) => {
         try {
             const response = await apiClient.post('/api/Authentication/change-email', payload);
+            console.log("response", response)
 
-            return response.data;
+            return response.status;
         } catch (error) {
+            console.log("error", error)
+
             return rejectWithValue(handleAxiosError(error, "Network error"));
         }
     },

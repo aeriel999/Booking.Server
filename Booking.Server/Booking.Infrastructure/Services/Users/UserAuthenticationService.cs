@@ -19,14 +19,18 @@ public class UserAuthenticationService(UserManager<User> userManager, SignInMana
 
     public async Task<string> GenerateEmailChangeTokenAsync(User user, string email)
     {
-        var token = await userManager.GenerateChangeEmailTokenAsync(user, email);
+		var token = await userManager.GenerateChangeEmailTokenAsync(user, email);
 
 		return token;
 	}
 
 	public async Task<ErrorOr<User>> ChangeEmailAsync(User user, string email, string token)
 	{
-        var changeEmailResult = await userManager.ChangeEmailAsync(user, email, token);
+		var decoderToken = WebEncoders.Base64UrlDecode(token);
+
+		var normalToken = Encoding.UTF8.GetString(decoderToken);
+
+		var changeEmailResult = await userManager.ChangeEmailAsync(user, email, normalToken);
 
         if (!changeEmailResult.Succeeded)
             return Error.Validation(changeEmailResult.Errors.FirstOrDefault()!.Description.ToString());

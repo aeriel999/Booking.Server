@@ -27,14 +27,16 @@ export  default function ChangeEmailPage (){
 
             navigate(`/authentication/login`);
         } catch (error ){
-           
+
             setErrorMessage(ErrorHandler(error));
         }
     }
 
     useEffect(() => {
-        confirmEmailAction(changeEmailInfo);
-    }, [changeEmailInfo]);
+
+        console.log("changeEmailInfo", changeEmailInfo)
+       confirmEmailAction(changeEmailInfo);
+    }, [email, token]);
 
     return(
         <>

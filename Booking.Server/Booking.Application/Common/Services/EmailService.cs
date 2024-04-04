@@ -60,13 +60,13 @@ public class EmailService(ISmtpService smtpService)
 	}
 
 	public async Task<ErrorOr<Success>> SendChangeEmailEmailAsync(
-		string email, string token, string baseUrl, string userName)
+		string email, string token, string baseUrl, string userName, string userId)
 	{
 		var encodedToken = Encoding.UTF8.GetBytes(token);
 
 		var validToken = WebEncoders.Base64UrlEncode(encodedToken);
 
-		string url = $"{baseUrl}/authentication/change-email/{email}/{validToken}";
+		string url = $"{baseUrl}/authentication/change-email/{userId}/{email}/{validToken}";
 
 		string emailBody = string.Empty;
 

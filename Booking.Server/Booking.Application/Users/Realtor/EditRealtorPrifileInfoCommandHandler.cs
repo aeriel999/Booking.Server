@@ -89,7 +89,7 @@ public class EditRealtorPrifileInfoCommandHandler(
 			}
 
 			var sendEmailResult = await emailService.SendChangeEmailEmailAsync(
-				request.Email!, tokenForConfirmEmail, request.BaseUrl, userName!);
+				request.Email!, tokenForConfirmEmail, request.BaseUrl, userName!, user.Id.ToString());
 
 			if (sendEmailResult.IsError) return sendEmailResult.Errors;
 
