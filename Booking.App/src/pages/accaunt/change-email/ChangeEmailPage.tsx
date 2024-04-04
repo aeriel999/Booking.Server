@@ -1,5 +1,5 @@
 import {useNavigate, useParams} from "react-router-dom";
-import {useAppDispatch, useAppSelector} from "../../../hooks/redux";
+import {useAppDispatch} from "../../../hooks/redux";
 import {useEffect, useState} from "react";
 import {IChangeEmail} from "../../../interfaces/account";
 import {changeEmail} from "../../../store/accounts/account.actions.ts";
@@ -8,20 +8,22 @@ import ErrorHandler from "../../../components/common/ErrorHandler.ts";
 import OutlinedErrorAlert from "../../../components/common/ErrorAlert.tsx";
 
 export  default function ChangeEmailPage (){
-    const { email, token } = useParams();
-    const{user} = useAppSelector(state => state.account);
+    const { userId, email, token } = useParams();
     const dispatch = useAppDispatch();
     const [errorMessage, setErrorMessage] = useState<string | undefined >(undefined);
     const navigate = useNavigate();
 
-    const changeEmailInfo: IChangeEmail = {
-        id: user?.id,
-        email: email,
-        token: token
-    }
 
-    const confirmEmailAction = async (changeEmailInfo : IChangeEmail) =>{
+
+    const confirmEmailAction = async () =>{
         try {
+            const changeEmailInfo: IChangeEmail = {
+                email: email,
+                token: token,
+                userId: userId,
+            }
+
+            console.log("changeEmailInfo", changeEmailInfo)
             const response = await dispatch(changeEmail(changeEmailInfo));
             unwrapResult(response);
 
@@ -34,9 +36,9 @@ export  default function ChangeEmailPage (){
 
     useEffect(() => {
 
-        console.log("changeEmailInfo", changeEmailInfo)
-       confirmEmailAction(changeEmailInfo);
-    }, [email, token]);
+
+       confirmEmailAction();
+    }, [userId, email, token]);
 
     return(
         <>

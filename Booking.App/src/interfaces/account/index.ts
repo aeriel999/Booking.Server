@@ -79,8 +79,8 @@ export interface IEditRealtorInfo{
 }
 
 export interface IChangeEmail{
-    id: string | undefined,
     email: string | undefined,
-    token: string | undefined
+    token: string | undefined,
+    userId: string | undefined,
 }
 

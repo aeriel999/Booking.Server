@@ -105,6 +105,8 @@ export const changeEmail = createAsyncThunk(
     'Authentication/change-email',
     async (payload : IChangeEmail, { rejectWithValue }) => {
         try {
+            console.log("payload", payload)
+
             const response = await apiClient.post('/api/Authentication/change-email', payload);
             console.log("response", response)
 
