@@ -1,8 +1,10 @@
-﻿using Booking.Api.Contracts.Authetication.ConfirmEmail;
+﻿using Booking.Api.Contracts.Authetication.ChangeEmail;
+using Booking.Api.Contracts.Authetication.ConfirmEmail;
 using Booking.Api.Contracts.Authetication.ForgotPassword;
 using Booking.Api.Contracts.Authetication.Login;
 using Booking.Api.Contracts.Authetication.Register;
 using Booking.Api.Contracts.Authetication.ResetPassword;
+using Booking.Application.Authentication.ChangeEmail;
 using Booking.Application.Authentication.ConfirmEmail;
 using Booking.Application.Authentication.ForgotPassword;
 using Booking.Application.Authentication.Login;
@@ -35,6 +37,8 @@ public class AuthenticationMappingConfig : IRegister
 			.Map(dest => dest, src => src.registerRequest);
 
 		config.NewConfig<ResetPssswordRequest, ResetPasswordCommand>();
+
+		config.NewConfig<ChangeEmailRequest, ChangeEmailCommand>();
 	}
 }
 

@@ -1,9 +1,11 @@
-﻿using Booking.Api.Contracts.Authetication.ConfirmEmail;
+﻿using Booking.Api.Contracts.Authetication.ChangeEmail;
+using Booking.Api.Contracts.Authetication.ConfirmEmail;
 using Booking.Api.Contracts.Authetication.ForgotPassword;
 using Booking.Api.Contracts.Authetication.Login;
 using Booking.Api.Contracts.Authetication.Register;
 using Booking.Api.Contracts.Authetication.ResetPassword;
 using Booking.Api.Infrastructure;
+using Booking.Application.Authentication.ChangeEmail;
 using Booking.Application.Authentication.ConfirmEmail;
 using Booking.Application.Authentication.ForgotPassword;
 using Booking.Application.Authentication.Login;
@@ -12,6 +14,7 @@ using Booking.Application.Authentication.ResetPassword;
 using MapsterMapper;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
+using System.Security.Claims;
 
 namespace Booking.Api.Controllers;
 
@@ -96,6 +99,16 @@ public class AuthenticationController(
 
 		return resetPasswordResult.Match(
 			resetPasswordResult => Ok(resetPasswordResult),
+			errors => Problem(errors));
+	}
+
+	[HttpPost("change-email")]
+	public async Task<IActionResult> ChangeEmailAsync([FromBody] ChangeEmailRequest request)
+	{
+		var changeEmailResult = await mediatr.Send(mapper.Map<ChangeEmailCommand>(request));
+
+		return changeEmailResult.Match(
+			changeEmailResult => Ok(),
 			errors => Problem(errors));
 	}
 

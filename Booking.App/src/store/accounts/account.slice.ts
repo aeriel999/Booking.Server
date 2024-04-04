@@ -3,6 +3,7 @@ import {jwtDecode} from 'jwt-decode';
 import {addLocalStorage, deleteLocalStorage} from "../../utils/storage/localStorageUtils.ts";
 import {RejectedAction} from "../../utils/types";
 import {
+    changeEmail,
     confirmEmail,
     editProfile,
     forgotPassword,
@@ -23,6 +24,7 @@ const updateLoginUserState = (state: IAccountState, token: string): void => {
     console.log("decodedToken", decodedToken)
     const  email  = decodedToken["email"]
     const role = decodedToken["http://schemas.microsoft.com/ws/2008/06/identity/claims/role"]
+    const  id = decodedToken["sub"];
 
     if(role === "realtor")
     {
@@ -32,8 +34,8 @@ const updateLoginUserState = (state: IAccountState, token: string): void => {
         const avatar = decodedToken["Avatar"];
         const rating = decodedToken["Rating"];
 
-
         state.user = {
+            id: id,
             email: email,
             role: role,
             firstName:   firstName,
@@ -44,6 +46,7 @@ const updateLoginUserState = (state: IAccountState, token: string): void => {
         };
     }else {
         state.user = {
+            id: id,
             email: email,
             role: role,
             firstName:   null,
@@ -128,6 +131,12 @@ export const accountsSlice = createSlice({
                 state.status = Status.SUCCESS;
             })
             .addCase(editProfile.pending, (state) => {
+                state.status = Status.LOADING;
+            })
+            .addCase(changeEmail.fulfilled, (state) => {
+                state.status = Status.SUCCESS;
+            })
+            .addCase(changeEmail.pending, (state) => {
                 state.status = Status.LOADING;
             })
             .addMatcher(isRejectedAction, (state) => {

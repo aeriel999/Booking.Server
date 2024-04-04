@@ -19,6 +19,7 @@ export interface IConfirmEmail{
 }
 
 export interface IUser{
+    id: string,
     email: string,
     role: string,
     firstName: string | null,
@@ -75,5 +76,11 @@ export interface IEditRealtorInfo{
     phoneNumber: string | null,
     email: string | null,
     avatar:  File | undefined | null,
+}
+
+export interface IChangeEmail{
+    id: string | undefined,
+    email: string | undefined,
+    token: string | undefined
 }
 

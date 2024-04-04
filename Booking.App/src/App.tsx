@@ -14,6 +14,7 @@ import ForgotPasswordInformationPage from "./pages/accaunt/forgot-password/Forgo
 import ResetPasswordPage from "./pages/accaunt/reset-password/ResetPasswordPage.tsx";
 import DashboardLayout from "./containers/dashboard/layots/_DashboardLayot.tsx";
 import RealtorProfileEditPage from "./containers/dashboard/RealtorProfileEditPage.tsx";
+import ChangeEmailPage from "./pages/accaunt/change-email/ChangeEmailPage.tsx";
 
 
 const App : React.FC = () => {
@@ -43,7 +44,7 @@ const App : React.FC = () => {
             <Route path="/authentication/forgot-password" element={<ForgotPasswordPage/>} />
             <Route path="/authentication/forgot-password-information/:email" element={<ForgotPasswordInformationPage/>} />
             <Route path="/authentication/reset-password/:email/:token"  element={<ResetPasswordPage/>} />
-            {/*<Route path="test" element={<CustomizedDialogs/>} />*/}
+            <Route path="/authentication/change-email" element={<ChangeEmailPage/>} />
 
             {isLogin && (
                <>

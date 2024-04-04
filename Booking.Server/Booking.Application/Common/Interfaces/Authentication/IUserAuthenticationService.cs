@@ -16,4 +16,6 @@ public interface IUserAuthenticationService
 	Task<ErrorOr<User>> ResetPasswordAsync(User user, string token, string password);
 
 	Task<string> GenerateEmailChangeTokenAsync(User user, string email);
+
+	Task<ErrorOr<User>> ChangeEmailAsync(User user, string email, string token);
 }

@@ -23,16 +23,27 @@ public class UserAuthenticationService(UserManager<User> userManager, SignInMana
 
 		return token;
 	}
+
+	public async Task<ErrorOr<User>> ChangeEmailAsync(User user, string email, string token)
+	{
+        var changeEmailResult = await userManager.ChangeEmailAsync(user, email, token);
+
+        if (!changeEmailResult.Succeeded)
+            return Error.Validation(changeEmailResult.Errors.FirstOrDefault()!.Description.ToString());
+
+		return user;
+	}
+
 	public async Task<ErrorOr<string>> LoginUserAsync(User user, string password)
     {
 		var signinResult = await signInManager.PasswordSignInAsync(user, password,
 			isPersistent: true, lockoutOnFailure: true);
 	
 		if (signinResult.IsNotAllowed)
-			return Error.Forbidden("Email is not confirmed");
+			return Error.Validation("Email is not confirmed");
 
 		if (signinResult.IsLockedOut)
-			return Error.Forbidden("User is blocked");
+			return Error.Validation("User is blocked");
 
         //ToDo Error.Failure
         if (!signinResult.Succeeded)
@@ -60,7 +71,7 @@ public class UserAuthenticationService(UserManager<User> userManager, SignInMana
         var confirmEmailResult = await userManager.ConfirmEmailAsync(user, normalToken);
 
         if (!confirmEmailResult.Succeeded)
-            return Error.Failure("User email is not confirmed!");
+            return Error.Validation("User email is not confirmed!");
 
         return Result.Success;
     }
@@ -82,6 +93,6 @@ public class UserAuthenticationService(UserManager<User> userManager, SignInMana
 
         if (result.Succeeded)
             return user;
-        else return Error.Failure(result.Errors.FirstOrDefault()!.Description.ToString());
+        else return Error.Validation(result.Errors.FirstOrDefault()!.Description.ToString());
 	}
 }
