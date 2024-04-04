@@ -2,7 +2,6 @@ import * as React from 'react';
 import Avatar from '@mui/material/Avatar';
 import Button from '@mui/material/Button';
 import CssBaseline from '@mui/material/CssBaseline';
-
 import Link from '@mui/material/Link';
 import Grid from '@mui/material/Grid';
 import Box from '@mui/material/Box';
@@ -25,8 +24,8 @@ export default function SignInPage() {
     const dispatch = useAppDispatch();
     const [errorMessage, setErrorMessage] = useState<string | undefined >(undefined);
     const formValid = useRef({ email: false,  password: false});
-
     const navigate = useNavigate();
+
     const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
         event.preventDefault();
 
@@ -59,6 +58,7 @@ export default function SignInPage() {
             }
         } catch (error ) {
             setErrorMessage(ErrorHandler(error));
+
         }
     };
 

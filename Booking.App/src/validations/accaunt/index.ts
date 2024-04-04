@@ -46,3 +46,14 @@ export const LastNameValidator = (value: string): string | undefined => {
     return undefined; // Return undefined if validation passes
 };
 
+export const AvatarValidator = (files: File[]): string | undefined => {
+    if (files.length === 0) return 'Files are required';
+
+    const maxSizeInBytes = 5 * 1024 * 1024; // 2 MB in bytes
+    for (const file of files) {
+        if (file.size > maxSizeInBytes) return 'File size must not exceed 2 MB';
+    }
+    return undefined;
+};
+
+

@@ -10,10 +10,10 @@ import {
     IUserRegister
 } from "../../interfaces/account";
 
+
 export const login = createAsyncThunk(
     'Authentication/login',
     async (payload : ILogin, { rejectWithValue }) => {
-
         try {
             const response = await apiClient.post('/api/Authentication/login', payload);
             return response.data;

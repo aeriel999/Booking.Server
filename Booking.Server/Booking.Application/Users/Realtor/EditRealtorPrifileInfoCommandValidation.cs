@@ -42,8 +42,8 @@ public class EditRealtorPrifileInfoCommandValidation : AbstractValidator<EditRea
 			RuleFor(r => r.PhoneNumber)
 				.MinimumLength(10).WithMessage("{PropertyName} must have at least 3 symbols")
 				.MaximumLength(24).WithMessage("{PropertyName} must be less than 64 symbols")
-				.Matches("^[^£# “” \"!@$%^&*{}:;<>,.?/_=|~\\\\ A-Z a-z]*$")
-			.WithMessage("{PropertyName} must not contain the following characters £ # “” or spaces.");
+				.Matches(@"^[+0-9() ]*$")
+				.WithMessage("{PropertyName} must only contain digits, plus sign, parentheses, and space");
 		});
 
 		When(r => r.Avatar != null, () =>

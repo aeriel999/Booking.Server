@@ -3,7 +3,6 @@ import accountReducer from "./accounts/account.slice.ts";
 
 export const store = configureStore({
     reducer: {
-        //category: categoryReducer,
         account: accountReducer
     },
 });

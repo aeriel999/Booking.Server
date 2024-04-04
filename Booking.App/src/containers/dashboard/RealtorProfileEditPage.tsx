@@ -4,7 +4,7 @@ import {APP_ENV} from "../../env";
 import Box from "@mui/material/Box";
 import Grid from "@mui/material/Grid";
 import InputGroup from "../../components/common/InputGroup.tsx";
-import {EmailValidator, FirstNameValidator, LastNameValidator} from "../../validations/accaunt";
+import {AvatarValidator, EmailValidator, FirstNameValidator, LastNameValidator} from "../../validations/accaunt";
 import MuiPhoneNumber from "mui-phone-number";
 import {isValidPhoneNumber} from "libphonenumber-js";
 import FileUploader from "../../components/common/FileUploader.tsx";
@@ -14,21 +14,25 @@ import {IEditRealtorInfo} from "../../interfaces/account";
 import {editProfile} from "../../store/accounts/account.actions.ts";
 import {unwrapResult} from "@reduxjs/toolkit";
 import ErrorHandler from "../../components/common/ErrorHandler.ts";
-import {Link, useNavigate} from "react-router-dom";
+import {Link} from "react-router-dom";
 import OutlinedErrorAlert from "../../components/common/ErrorAlert.tsx";
-
+import {Breadcrumbs} from "@mui/material";
+import Typography from "@mui/material/Typography";
+import CustomizedDialogs from "../../components/common/Dialog.tsx";
 
 export  default function RealtorProfileEditPage(){
     const {user} = useAppSelector(state => state.account);
     const dispatch = useAppDispatch();
-    const navigate = useNavigate();
     const [avatarUrl, setAvatarUrl] = useState<string>();
     const [errorMessage, setErrorMessage] = useState<string | undefined >(undefined);
     const [isFormValid, setIsFormValid] = useState(false);
-    const formValid = useRef({ email: true, firstName: true, lastName: true});
+    const formValid = useRef({ email: true, firstName: true, lastName: true, avatar: true, phoneNumber: true});
     const [isPhoneValid, setIsPhoneValid] = useState(true);
     const [images, setImages] = useState<File[]>([])
     const [phone, setPhone] = useState<string>( user?.phoneNumber ?? "" )
+    const [open, setOpen] = useState<boolean>(false)
+    const message = "Please note that your email will be changed once you confirm the update. " +
+        "We'll send a confirmation link to your new email address shortly. Thank you for your patience."
 
     useEffect(() => {
         if(user)
@@ -59,18 +63,31 @@ export  default function RealtorProfileEditPage(){
                 const response = await dispatch(editProfile(model));
                 unwrapResult(response);
 
-                navigate(`/authentication/register-information/${model.email}`);
+                const {isEmailChanged} = response.payload;
 
+                setOpen(isEmailChanged)
             } catch (error ) {
 
+                console.log(error)
                 setErrorMessage(ErrorHandler(error));
             }
         }
     };
 
-    console.log("user", user)
     return(
         <>
+           < CustomizedDialogs  message={message} isOpen={open} setOpen={setOpen} navigate={"/dashboard/profile"}/>
+
+            <Breadcrumbs aria-label="breadcrumb" style={{marginBottom: "20px"}}>
+                <Link to={"/dashboard/profile"}>
+                    <Typography variant="h6" color="text.primary">Dashboard</Typography>
+                </Link>
+                <Link to={"/dashboard/profile"}>
+                    <Typography variant="h6" color="text.primary">Profile</Typography>
+                </Link>
+                <Typography variant="h6" color="text.primary">Edit</Typography>
+            </Breadcrumbs>
+
             <Box component="form" noValidate onSubmit={handleSubmit} sx={{ mt: 3 }} onChange={handleChange}>
 
                 {errorMessage && <OutlinedErrorAlert message={errorMessage} />}
@@ -83,6 +100,9 @@ export  default function RealtorProfileEditPage(){
                                 setImages={setImages}
                                 maxImagesUpload={1}
                                 defaultImage={avatarUrl}
+                                validator={AvatarValidator}
+                                onChange={isValid => (formValid.current.avatar = isValid)}
+                                onDelete={handleChange}
                             ></FileUploader>
 
                         </Grid>
@@ -110,8 +130,10 @@ export  default function RealtorProfileEditPage(){
                             <MuiPhoneNumber defaultCountry={'ua'}
                                             value={phone}
                                             onChange={(e) => {
+                                                formValid.current.phoneNumber = isValidPhoneNumber(e as string)
                                                 setIsPhoneValid(isValidPhoneNumber(e as string))
-                                                setPhone(e as string)}}
+                                                setPhone(e as string)
+                                                handleChange();}}
                                             error={!isPhoneValid}
                             />
                         </Grid>

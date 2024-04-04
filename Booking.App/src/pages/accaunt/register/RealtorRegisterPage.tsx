@@ -10,6 +10,7 @@ import Typography from '@mui/material/Typography';
 import Container from '@mui/material/Container';
 import InputGroup from "../../../components/common/InputGroup.tsx";
 import {
+    AvatarValidator,
     ConfirmPasswordValidator,
     EmailValidator,
     FirstNameValidator, LastNameValidator,
@@ -47,7 +48,7 @@ export default function RealtorRegisterPage() {
     const [errorMessage, setErrorMessage] = useState<string | undefined >(undefined);
     const [isFormValid, setIsFormValid] = useState(false);
     const formValid = useRef({ email: false,  password: false, confirmPassword: false, firstName: false,
-        lastName: false});
+        lastName: false, phoneNumber: false, avatar: false});
     const[isPhoneValid, setIsPhoneValid] = useState(true);
     const [images, setImages] = useState<File[]>([])
     const [phone, setPhone] = useState<string>("")
@@ -58,6 +59,9 @@ export default function RealtorRegisterPage() {
 
     function handleChange() {
         setIsFormValid(Object.values(formValid.current).every(isValid => isValid));
+        console.log("formValid.current", formValid.current)
+        console.log("TestValid", Object.values(formValid.current).every(isValid => isValid))
+
     }
 
     const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
@@ -87,7 +91,7 @@ export default function RealtorRegisterPage() {
             }
         }
     };
-
+    console.log("isFormValidt", isFormValid)
     return (
         <Container component="main" maxWidth="xs">
             <CssBaseline />
@@ -129,8 +133,11 @@ export default function RealtorRegisterPage() {
                         <Grid item xs={12}>
                             <MuiPhoneNumber defaultCountry={'ua'}
                                             onChange={(e) => {
+                                                formValid.current.phoneNumber = isValidPhoneNumber(e as string)
                                                 setIsPhoneValid(isValidPhoneNumber(e as string))
-                                                setPhone(e as string)}}
+                                                setPhone(e as string)
+                                                handleChange();
+                                            }}
                                             error={!isPhoneValid}
                             />
                         </Grid>
@@ -139,6 +146,9 @@ export default function RealtorRegisterPage() {
                                 images={images}
                                 setImages={setImages}
                                 maxImagesUpload={1}
+                                validator={AvatarValidator}
+                                onChange={isValid => (formValid.current.avatar = isValid)}
+                                onDelete={ handleChange}
                             ></FileUploader>
 
                         </Grid>

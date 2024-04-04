@@ -21,8 +21,8 @@ internal class RegisterRealtorCommandValidation : AbstractValidator<RegisterReal
 		RuleFor(r => r.PhoneNumber).NotEmpty().WithMessage("Field must not be empty")
 			.MinimumLength(10).WithMessage("{PropertyName} must have at least 3 symbols")
 			.MaximumLength(24).WithMessage("{PropertyName} must be less than 64 symbols")
-			.Matches("^[^£# “” \"!@$%^&*{}:;<>,.?/_=|~\\\\ A-Z a-z]*$")
-			.WithMessage("{PropertyName} must not contain the following characters £ # “” or spaces.");
+			.Matches(@"^[+0-9() ]*$")
+			.WithMessage("{PropertyName} must only contain digits, plus sign, parentheses, and space");
 
 		RuleFor(r => r.Email).NotEmpty().WithMessage("{PropertyName} must not be empty")
 		   .EmailAddress().WithMessage("Wrong email format")
