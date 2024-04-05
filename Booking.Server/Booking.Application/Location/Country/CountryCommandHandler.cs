@@ -1,7 +1,9 @@
 ﻿using Booking.Application.Common.Interfaces;
 using Booking.Application.Common.Interfaces.Authentication;
+using Booking.Application.Common.Interfaces.Locations;
 using Booking.Application.Common.Interfaces.Users;
 using Booking.Domain.Models;
+using ErrorOr;
 using MediatR;
 using System;
 using System.Collections.Generic;
@@ -11,13 +13,12 @@ using System.Threading.Tasks;
 
 namespace Booking.Application.Location.Country
 {
-    public class CountryCommandHandler(
-    IRepository<CountryEntity> countryRepository)
+    public class CountryCommandHandler(ICountryRepository countryRepository)
     : IRequestHandler<CountryListCommand, List<CountryEntity>>
     {
-        public Task<List<CountryEntity>> Handle(CountryListCommand request, CancellationToken cancellationToken)
+        public async Task<List<CountryEntity>> Handle(CountryListCommand request, CancellationToken cancellationToken)
         {
-            throw new NotImplementedException();
+            return await countryRepository.GetAllAsync();
         }
     }
 }
