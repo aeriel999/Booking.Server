@@ -7,9 +7,10 @@ import Badge from "@mui/material/Badge";
 import Button from "@mui/material/Button";
 import {useAppSelector} from "../../hooks/redux";
 import {APP_ENV} from "../../env";
-
 import {useEffect, useState} from "react";
 import {Link} from "react-router-dom";
+import Divider from "@mui/material/Divider";
+
 
 // STYLES
 const styles = {
@@ -47,7 +48,7 @@ export default function RealtorProfilePage() {
                 </Link>
                 <Typography variant="h6" color="text.primary">Profile</Typography>
             </Breadcrumbs>
-
+            <Divider />
             <Card variant="outlined">
                 <Grid
                     container
@@ -105,7 +106,8 @@ export default function RealtorProfilePage() {
                     </Grid>
 
                     {/* BUTTON */}
-                    <Grid item style={styles.details} sx={{width: "100%"}}>
+                    <Grid container>
+                        <Grid item xs={6} >
                         <Link to={"/dashboard/profile/edit"}>
                             <Button
                                 variant="contained"
@@ -115,6 +117,18 @@ export default function RealtorProfilePage() {
                                 Edit profile
                             </Button>
                         </Link>
+                        </Grid>
+                        <Grid item xs={6} sx={{textAlign: "end"}}>
+                        <Link to={"/dashboard/profile/change-password"}>
+                            <Button
+                                variant="contained"
+                                color="primary"
+                                sx={{width: "99%", p: 1, my: 2}}
+                            >
+                               Change password
+                            </Button>
+                        </Link>
+                        </Grid>
                     </Grid>
                 </Grid>
             </Card>

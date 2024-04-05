@@ -15,6 +15,7 @@ import ResetPasswordPage from "./pages/accaunt/reset-password/ResetPasswordPage.
 import DashboardLayout from "./containers/dashboard/layots/_DashboardLayot.tsx";
 import RealtorProfileEditPage from "./containers/dashboard/RealtorProfileEditPage.tsx";
 import ChangeEmailPage from "./pages/accaunt/change-email/ChangeEmailPage.tsx";
+import ChangePasswordPage from "./containers/dashboard/ChangePasswordPage.tsx";
 
 
 const App : React.FC = () => {
@@ -35,6 +36,27 @@ const App : React.FC = () => {
 
     return (
         <Routes>
+            {isLogin && (
+               <>
+                   <Route path="/instructions" element={<InformationAfterConfirmationEmail/>} />
+
+                   {role() === "realtor" && (
+                       <Route path="/dashboard"  element={<DashboardLayout/>} >
+                           <Route index element={<RealtorProfilePage />} />
+                           <Route path="/dashboard/profile" element={<RealtorProfilePage/>} />
+                           <Route path="/dashboard/profile/edit" element={<RealtorProfileEditPage/>} />
+                           <Route path="/dashboard/profile/change-password" element={<ChangePasswordPage/>} />
+                       </Route>
+                   )}
+
+                   <Route path="/profile" element={<UserProfilePage/>} />
+               </>
+            )}
+            <Route/>
+
+            <Route path="/dashboard/profile" element={<SignInPage/>} />
+            <Route path="/dashboard/profile/edit" element={<SignInPage/>} />
+            <Route path="/dashboard/profile/change-password" element={<SignInPage/>} />
             <Route path="*" element={<NotFound/>} />
             <Route path="/authentication/user-register" element={<UserRegisterPage/>} />
             <Route path="/authentication/register-information/:email" element={<RegisterInformationPage/>} />
@@ -45,25 +67,6 @@ const App : React.FC = () => {
             <Route path="/authentication/forgot-password-information/:email" element={<ForgotPasswordInformationPage/>} />
             <Route path="/authentication/reset-password/:email/:token"  element={<ResetPasswordPage/>} />
             <Route path="/authentication/change-email/:userId/:email/:token" element={<ChangeEmailPage/>} />
-
-            {/*<Route path="/dashboard/profile" element={<SignInPage/>} />*/}
-
-            {isLogin && (
-               <>
-                   <Route path="/instructions" element={<InformationAfterConfirmationEmail/>} />
-
-                   {role() === "realtor" && (
-                       <Route path="/dashboard"  element={<DashboardLayout/>} >
-                           <Route index element={<RealtorProfilePage />} />
-                           <Route path="/dashboard/profile" element={<RealtorProfilePage/>} />
-                           <Route path="/dashboard/profile/edit" element={<RealtorProfileEditPage/>} />
-                       </Route>
-                   )}
-
-                   <Route path="/profile" element={<UserProfilePage/>} />
-               </>
-            )}
-            <Route/>
         </Routes>
     );
 }

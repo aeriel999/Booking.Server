@@ -1,6 +1,8 @@
 ﻿using Booking.Api.Contracts.Authetication.Register;
+using Booking.Api.Contracts.Users.Common.ChangePassword;
 using Booking.Api.Contracts.Users.Realtor.Edit;
 using Booking.Application.Authentication.Register;
+using Booking.Application.Users.Common.ChangePassword;
 using Booking.Application.Users.Realtor;
 using Mapster;
 
@@ -19,5 +21,10 @@ public class UserMappingConfig : IRegister
 		.Map(dest => dest, src => src.editRealtorPrifileInfo);
 
 		config.NewConfig<EditRealtorPrifileInfoCommandResult, EditRealtorPrifileInfoResponse>();
+
+		config.NewConfig<(ChangePasswordRequest changePassword, string UserId),	ChangePasswordCommand>()
+		.Map(dest => dest.UserId, src => src.UserId)
+		.Map(dest => dest, src => src.changePassword);
+		
 	}
 }

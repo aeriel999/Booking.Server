@@ -25,6 +25,15 @@ public class ChangeEmailCommandHandler(
 		var changeEmailResult = await userAuthenticationService.ChangeEmailAsync(
 			user, request.Email, request.Token);
 
-		return changeEmailResult;
+		if (changeEmailResult.IsError)
+			return changeEmailResult;
+
+		//change of userName
+		user.UserName = request.Email;
+		user.NormalizedUserName = request.Email.ToLower();
+
+		var resultOfUserUpdate = await userRepository.SaveUserAsync(user);
+
+        return resultOfUserUpdate;
 	}
 }

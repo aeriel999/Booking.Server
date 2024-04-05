@@ -14,7 +14,6 @@ using Booking.Application.Authentication.ResetPassword;
 using MapsterMapper;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
-using System.Security.Claims;
 
 namespace Booking.Api.Controllers;
 

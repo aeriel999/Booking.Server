@@ -10,6 +10,15 @@ namespace Booking.Infrastructure.Services.Users;
 public class UserAuthenticationService(UserManager<User> userManager, SignInManager<User> signInManager) 
     : IUserAuthenticationService
 {
+    public async Task<ErrorOr<User>> ChangePasswordAsync(User user, string currentPassword, string newPassword)
+    {
+        var changePasswordResult = await userManager.ChangePasswordAsync(user, currentPassword, newPassword);
+
+        if (!changePasswordResult.Succeeded)
+            return Error.Validation(changePasswordResult.Errors.FirstOrDefault()!.Description.ToString());
+
+        return user;
+	}
     public async Task<string> GenerateEmailConfirmationTokenAsync(User user)
     {
         var token = await userManager.GenerateEmailConfirmationTokenAsync(user);

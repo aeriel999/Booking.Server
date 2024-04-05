@@ -19,6 +19,7 @@ import OutlinedErrorAlert from "../../components/common/ErrorAlert.tsx";
 import {Breadcrumbs} from "@mui/material";
 import Typography from "@mui/material/Typography";
 import CustomizedDialogs from "../../components/common/Dialog.tsx";
+import Divider from "@mui/material/Divider";
 
 export  default function RealtorProfileEditPage(){
     const {user} = useAppSelector(state => state.account);
@@ -58,7 +59,6 @@ export  default function RealtorProfileEditPage(){
                 phoneNumber: phone,
                 avatar: images[0]
             }
-
             try {
                 const response = await dispatch(editProfile(model));
                 unwrapResult(response);
@@ -87,11 +87,9 @@ export  default function RealtorProfileEditPage(){
                 </Link>
                 <Typography variant="h6" color="text.primary">Edit</Typography>
             </Breadcrumbs>
-
+            <Divider />
+            {errorMessage && <OutlinedErrorAlert message={errorMessage} />}
             <Box component="form" noValidate onSubmit={handleSubmit} sx={{ mt: 3 }} onChange={handleChange}>
-
-                {errorMessage && <OutlinedErrorAlert message={errorMessage} />}
-
                 <Grid container spacing={2}>
                     <Grid container spacing={2} item xs={6}>
                         <Grid item xs={5}>

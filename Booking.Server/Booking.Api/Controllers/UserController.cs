@@ -1,7 +1,7 @@
-﻿using Booking.Api.Contracts.Authetication.Register;
+﻿using Booking.Api.Contracts.Users.Common.ChangePassword;
 using Booking.Api.Contracts.Users.Realtor.Edit;
 using Booking.Api.Infrastructure;
-using Booking.Application.Authentication.Register;
+using Booking.Application.Users.Common.ChangePassword;
 using Booking.Application.Users.Realtor;
 using MapsterMapper;
 using MediatR;
@@ -39,6 +39,18 @@ public class UserController(ISender mediatr, IMapper mapper, IConfiguration conf
 
 		return editResult.Match(
 			authResult => Ok(mapper.Map<EditRealtorPrifileInfoResponse>(editResult.Value)),
+			errors => Problem(errors));
+	}
+
+	[HttpPost("change-password")]
+	public async Task<IActionResult> ChangePasswordAsync([FromBody] ChangePasswordRequest request)
+	{
+		string userId = User.Claims.First(u => u.Type == ClaimTypes.NameIdentifier).Value;
+
+		var changeEmailResult = await mediatr.Send(mapper.Map<ChangePasswordCommand>((request, userId)));
+
+		return changeEmailResult.Match(
+			changeEmailResult => Ok(),
 			errors => Problem(errors));
 	}
 }
