@@ -29,17 +29,17 @@ public class SendConfirmationEmailCommandHandler(
 		if (string.IsNullOrEmpty(user.FirstName) || string.IsNullOrEmpty(user.LastName))
 		{
 			if (string.IsNullOrEmpty(user.LastName) && string.IsNullOrEmpty(user.FirstName))
-				_ = user.Email;
+				userName = user.Email;
 			else if(string.IsNullOrEmpty(user.LastName))
-				_ = user.FirstName;
+				userName = user.FirstName;
 			else
-				_ = user.LastName;
+				userName = user.LastName;
 		}
-
-		userName = user.FirstName + " " + user.LastName;
+		else
+			userName = user.FirstName + " " + user.LastName;
 
 		var sendEmailResult = await emailService.SendEmailConfirmationEmailAsync(
-			user.Id, user.Email!, token, request.BaseUrl, userName);
+			user.Id, user.Email!, token, request.BaseUrl, userName!);
 
 		return sendEmailResult;
 	}
