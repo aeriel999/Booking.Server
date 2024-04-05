@@ -3,6 +3,7 @@ using System;
 using Booking.Infrastructure.Common.Persistence;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 
@@ -11,9 +12,11 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace Booking.Infrastructure.Migrations
 {
     [DbContext(typeof(BookingDbContext))]
-    partial class BookingDbContextModelSnapshot : ModelSnapshot
+    [Migration("20240402133357_AddStreetTable")]
+    partial class AddStreetTable
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -49,79 +52,6 @@ namespace Booking.Infrastructure.Migrations
                     b.HasKey("Id");
 
                     b.ToTable("Country");
-                });
-
-            modelBuilder.Entity("Booking.Domain.Models.ImagesPostEntity", b =>
-                {
-                    b.Property<Guid>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("uuid");
-
-                    b.Property<string>("NameImage")
-                        .IsRequired()
-                        .HasColumnType("text");
-
-                    b.Property<Guid>("PostId")
-                        .HasColumnType("uuid");
-
-                    b.Property<int>("PriorityImage")
-                        .HasColumnType("integer");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("PostId");
-
-                    b.ToTable("Images");
-                });
-
-            modelBuilder.Entity("Booking.Domain.Models.PostEntity", b =>
-                {
-                    b.Property<Guid>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("uuid");
-
-                    b.Property<int?>("Area")
-                        .HasColumnType("integer");
-
-                    b.Property<Guid>("CategoryId")
-                        .HasColumnType("uuid");
-
-                    b.Property<string>("Description")
-                        .HasColumnType("text");
-
-                    b.Property<string>("NamePost")
-                        .HasColumnType("text");
-
-                    b.Property<int?>("NearlyСost")
-                        .HasColumnType("integer");
-
-                    b.Property<string>("NumberOfBuilding")
-                        .HasColumnType("text");
-
-                    b.Property<int?>("NumberOfRooms")
-                        .HasColumnType("integer");
-
-                    b.Property<Guid>("StreetId")
-                        .HasColumnType("uuid");
-
-                    b.Property<int>("TypeOfRent")
-                        .HasColumnType("integer");
-
-                    b.Property<Guid>("UserId")
-                        .HasColumnType("uuid");
-
-                    b.Property<bool>("isArhive")
-                        .HasColumnType("boolean");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("CategoryId");
-
-                    b.HasIndex("StreetId");
-
-                    b.HasIndex("UserId");
-
-                    b.ToTable("Posts");
                 });
 
             modelBuilder.Entity("Booking.Domain.Models.StreetEntity", b =>
@@ -214,9 +144,6 @@ namespace Booking.Infrastructure.Migrations
 
                     b.Property<bool>("PhoneNumberConfirmed")
                         .HasColumnType("boolean");
-
-                    b.Property<int?>("Rating")
-                        .HasColumnType("integer");
 
                     b.Property<string>("SecurityStamp")
                         .HasColumnType("text");
@@ -370,44 +297,6 @@ namespace Booking.Infrastructure.Migrations
                     b.ToTable("AspNetUserTokens", (string)null);
                 });
 
-            modelBuilder.Entity("Booking.Domain.Models.ImagesPostEntity", b =>
-                {
-                    b.HasOne("Booking.Domain.Models.PostEntity", "Post")
-                        .WithMany("ImagesPost")
-                        .HasForeignKey("PostId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("Post");
-                });
-
-            modelBuilder.Entity("Booking.Domain.Models.PostEntity", b =>
-                {
-                    b.HasOne("Booking.Domain.Models.CategoryEntity", "Category")
-                        .WithMany()
-                        .HasForeignKey("CategoryId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.HasOne("Booking.Domain.Models.StreetEntity", "Street")
-                        .WithMany()
-                        .HasForeignKey("StreetId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.HasOne("Booking.Domain.Users.User", "User")
-                        .WithMany()
-                        .HasForeignKey("UserId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("Category");
-
-                    b.Navigation("Street");
-
-                    b.Navigation("User");
-                });
-
             modelBuilder.Entity("Booking.Domain.Models.StreetEntity", b =>
                 {
                     b.HasOne("Booking.Domain.Models.TownEntity", "Town")
@@ -479,11 +368,6 @@ namespace Booking.Infrastructure.Migrations
                         .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
-                });
-
-            modelBuilder.Entity("Booking.Domain.Models.PostEntity", b =>
-                {
-                    b.Navigation("ImagesPost");
                 });
 #pragma warning restore 612, 618
         }
