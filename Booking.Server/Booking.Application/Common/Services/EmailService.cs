@@ -14,7 +14,7 @@ public class EmailService(ISmtpService smtpService)
 
 		var validEmailToken = WebEncoders.Base64UrlEncode(encodedEmailToken);
 
-		string url = $"{baseUrl}/authentication/confirm-email?userid={userId}&token={validEmailToken}";
+		string url = $"{baseUrl}/authentication/confirm-email/{userId}/{validEmailToken}";
 
 		string confirmationUrl = $" <a href='{url}'>Confirm now</a>";
 
@@ -34,14 +34,14 @@ public class EmailService(ISmtpService smtpService)
 		return Result.Success;
 	}
 
-	public async Task<ErrorOr<Success>> SendResetPasswordEmail(
+	public async Task<ErrorOr<Success>> SendResetPasswordEmailAysync(
 		string email, string token, string baseUrl, string userName)
 	{
 		var encodedToken = Encoding.UTF8.GetBytes(token);
 
 		var validToken = WebEncoders.Base64UrlEncode(encodedToken);
 
-		string url = $"{baseUrl}/authentication/reset-password?email={email}&token={validToken}";
+		string url = $"{baseUrl}/authentication/reset-password/{email}/{validToken}";
 
 		string emailBody = string.Empty;
 
@@ -59,4 +59,28 @@ public class EmailService(ISmtpService smtpService)
 		return Result.Success;
 	}
 
+	public async Task<ErrorOr<Success>> SendChangeEmailEmailAsync(
+		string email, string token, string baseUrl, string userName, string userId)
+	{
+		var encodedToken = Encoding.UTF8.GetBytes(token);
+
+		var validToken = WebEncoders.Base64UrlEncode(encodedToken);
+
+		string url = $"{baseUrl}/authentication/change-email/{userId}/{email}/{validToken}";
+
+		string emailBody = string.Empty;
+
+		using (StreamReader reader = new("./EmailTemplates/email-change.html"))
+		{
+			emailBody = reader.ReadToEnd();
+		}
+
+		emailBody = emailBody.Replace("{{ name }}", userName);
+
+		emailBody = emailBody.Replace("{{ url }}", url);
+
+		await smtpService.SendEmailAsync(email, "Change Email", emailBody);
+
+		return Result.Success;
+	}
 }

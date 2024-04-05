@@ -10,6 +10,15 @@ namespace Booking.Infrastructure.Services.Users;
 public class UserAuthenticationService(UserManager<User> userManager, SignInManager<User> signInManager) 
     : IUserAuthenticationService
 {
+    public async Task<ErrorOr<User>> ChangePasswordAsync(User user, string currentPassword, string newPassword)
+    {
+        var changePasswordResult = await userManager.ChangePasswordAsync(user, currentPassword, newPassword);
+
+        if (!changePasswordResult.Succeeded)
+            return Error.Validation(changePasswordResult.Errors.FirstOrDefault()!.Description.ToString());
+
+        return user;
+	}
     public async Task<string> GenerateEmailConfirmationTokenAsync(User user)
     {
         var token = await userManager.GenerateEmailConfirmationTokenAsync(user);
@@ -17,19 +26,41 @@ public class UserAuthenticationService(UserManager<User> userManager, SignInMana
         return token;
     }
 
-    public async Task<ErrorOr<string>> LoginUserAsync(User user, string password)
+    public async Task<string> GenerateEmailChangeTokenAsync(User user, string email)
+    {
+		var token = await userManager.GenerateChangeEmailTokenAsync(user, email);
+
+		return token;
+	}
+
+	public async Task<ErrorOr<User>> ChangeEmailAsync(User user, string email, string token)
+	{
+		var decoderToken = WebEncoders.Base64UrlDecode(token);
+
+		var normalToken = Encoding.UTF8.GetString(decoderToken);
+
+		var changeEmailResult = await userManager.ChangeEmailAsync(user, email, normalToken);
+
+        if (!changeEmailResult.Succeeded)
+            return Error.Validation(changeEmailResult.Errors.FirstOrDefault()!.Description.ToString());
+
+		return user;
+	}
+
+	public async Task<ErrorOr<string>> LoginUserAsync(User user, string password)
     {
 		var signinResult = await signInManager.PasswordSignInAsync(user, password,
 			isPersistent: true, lockoutOnFailure: true);
 	
 		if (signinResult.IsNotAllowed)
-			return Error.Forbidden("Email is not confirmed");
+			return Error.Validation("Email is not confirmed");
 
 		if (signinResult.IsLockedOut)
-			return Error.Forbidden("User is blocked");
+			return Error.Validation("User is blocked");
 
+        //ToDo Error.Failure
         if (!signinResult.Succeeded)
-            return Error.Failure("Wrong password");
+            return Error.Validation("Wrong password");
 
 		var role = (await userManager.GetRolesAsync(user)).FirstOrDefault();
 
@@ -37,13 +68,6 @@ public class UserAuthenticationService(UserManager<User> userManager, SignInMana
 			return Error.NotFound("Role of user is not found");
 
 		return role;
-	}
-
-    public async Task<ErrorOr<Success>> LogoutUserAsync()
-    {
-		await signInManager.SignOutAsync();
-
-		return Result.Success;
 	}
 
     public async Task<ErrorOr<Success>> ConfirmEmailAsync(Guid userId, string token)
@@ -60,7 +84,7 @@ public class UserAuthenticationService(UserManager<User> userManager, SignInMana
         var confirmEmailResult = await userManager.ConfirmEmailAsync(user, normalToken);
 
         if (!confirmEmailResult.Succeeded)
-            return Error.Failure("User email is not confirmed!");
+            return Error.Validation("User email is not confirmed!");
 
         return Result.Success;
     }
@@ -82,6 +106,6 @@ public class UserAuthenticationService(UserManager<User> userManager, SignInMana
 
         if (result.Succeeded)
             return user;
-        else return Error.Failure(result.Errors.FirstOrDefault()!.Description.ToString());
+        else return Error.Validation(result.Errors.FirstOrDefault()!.Description.ToString());
 	}
 }

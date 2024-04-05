@@ -2,6 +2,7 @@
 using Booking.Domain.Users;
 using ErrorOr;
 using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.IdentityModel.Tokens;
 using SixLabors.ImageSharp;
 using SixLabors.ImageSharp.Formats.Webp;

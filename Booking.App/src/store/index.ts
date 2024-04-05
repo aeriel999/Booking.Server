@@ -1,10 +1,11 @@
 import { configureStore } from '@reduxjs/toolkit';
 import accountReducer from "./accounts/account.slice.ts";
+import userReducer from "./users/user.slice.ts";
 
 export const store = configureStore({
     reducer: {
-        //category: categoryReducer,
-        account: accountReducer
+        account: accountReducer,
+        user: userReducer
     },
 });
 

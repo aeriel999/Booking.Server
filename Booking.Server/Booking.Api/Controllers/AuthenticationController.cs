@@ -1,21 +1,19 @@
-﻿using Booking.Api.Contracts.Authetication.ConfirmEmail;
+﻿using Booking.Api.Contracts.Authetication.ChangeEmail;
+using Booking.Api.Contracts.Authetication.ConfirmEmail;
 using Booking.Api.Contracts.Authetication.ForgotPassword;
 using Booking.Api.Contracts.Authetication.Login;
 using Booking.Api.Contracts.Authetication.Register;
 using Booking.Api.Contracts.Authetication.ResetPassword;
 using Booking.Api.Infrastructure;
+using Booking.Application.Authentication.ChangeEmail;
 using Booking.Application.Authentication.ConfirmEmail;
 using Booking.Application.Authentication.ForgotPassword;
 using Booking.Application.Authentication.Login;
-using Booking.Application.Authentication.Logout;
 using Booking.Application.Authentication.Register;
 using Booking.Application.Authentication.ResetPassword;
 using MapsterMapper;
 using MediatR;
-using Microsoft.AspNetCore.Authentication.JwtBearer;
-using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using System.Security.Claims;
 
 namespace Booking.Api.Controllers;
 
@@ -31,7 +29,7 @@ public class AuthenticationController(
 		var baseUrl = configuration.GetRequiredSection("HostSettings:ClientURL").Value;
 
 		var authResult = await mediatr.Send(mapper.Map<RegisterUserCommand>((request, baseUrl)));
-
+		 
 		return authResult.Match(
 			authResult => Ok(),
 			errors => Problem(errors));
@@ -61,13 +59,13 @@ public class AuthenticationController(
 			errors => Problem(errors));
 	}
 
-	[HttpGet("confirm-email")]
-	public async Task<IActionResult> ConfirmEmailAsync([FromQuery] ConfirmEmailRequest request)
+	[HttpPost("confirm-email")]
+	public async Task<IActionResult> ConfirmEmailAsync(ConfirmEmailRequest request)
 	{
 		var confirmEmailResult = await mediatr.Send(mapper.Map<ConfirmEmailCommand>(request));
 
 		return confirmEmailResult.Match(
-			authResult => Ok(confirmEmailResult),
+			authResult => Ok(confirmEmailResult.Value),
 			errors => Problem(errors));
 	}
 
@@ -103,14 +101,19 @@ public class AuthenticationController(
 			errors => Problem(errors));
 	}
 
-	[Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
-	[HttpGet("logout")]
-	public async Task<IActionResult> LogoutUserAsync()
+	[HttpPost("change-email")]
+	public async Task<IActionResult> ChangeEmailAsync([FromBody] ChangeEmailRequest request)
 	{
-		var logOutResult = await mediatr.Send(new LogoutUserQuery());
+		var changeEmailResult = await mediatr.Send(mapper.Map<ChangeEmailCommand>(request));
 
-		return logOutResult.Match(
-			logOutResult => Ok(logOutResult),
-			errors => Problem(errors[0].ToString()));
+		return changeEmailResult.Match(
+			changeEmailResult => Ok(),
+			errors => Problem(errors));
+	}
+
+	[HttpGet("ping")]
+	public IActionResult Ping()
+	{
+		return Ok(DateTime.Now);
 	}
 }
