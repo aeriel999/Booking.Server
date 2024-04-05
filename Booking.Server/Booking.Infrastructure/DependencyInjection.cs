@@ -1,4 +1,5 @@
-﻿using Booking.Application.Common.Interfaces.Authentication;
+﻿using Booking.Application.Common.Interfaces;
+using Booking.Application.Common.Interfaces.Authentication;
 using Booking.Application.Common.Interfaces.Common;
 using Booking.Application.Common.Interfaces.Users;
 using Booking.Domain.Users;
@@ -73,12 +74,13 @@ public static class DependencyInjection
 	private static IServiceCollection AddRepositories(this IServiceCollection services)
 	{
 		services.AddScoped<IUserRepository, UserRepository>();
-		//services.AddScoped<IApartmentsRepository, ApartmentsRepository>();
-		//services.AddScoped<IImageRepository, ImageRepository>();
-		//services.AddScoped<IStreetRepository, StreetRepository>();
-		//services.AddScoped<IRefreshTokenRepository, RefreshTokenRepository>();
+        services.AddScoped(typeof(IRepository<>), typeof(Repository<>));
+        //services.AddScoped<IApartmentsRepository, ApartmentsRepository>();
+        //services.AddScoped<IImageRepository, ImageRepository>();
+        //services.AddScoped<IStreetRepository, StreetRepository>();
+        //services.AddScoped<IRefreshTokenRepository, RefreshTokenRepository>();
 
-		return services;
+        return services;
 	}
 
 	private static IServiceCollection AddInfrastructureServices(this IServiceCollection services)
