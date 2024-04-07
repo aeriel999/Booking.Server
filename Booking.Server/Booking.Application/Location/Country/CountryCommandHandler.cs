@@ -13,7 +13,7 @@ using System.Threading.Tasks;
 
 namespace Booking.Application.Location.Country
 {
-    public class CountryCommandHandler(ICountryRepository countryRepository)
+    public class TownCommandHandler(ICountryRepository countryRepository)
     : IRequestHandler<CountryListCommand, List<CountryEntity>>
     {
         public async Task<List<CountryEntity>> Handle(CountryListCommand request, CancellationToken cancellationToken)

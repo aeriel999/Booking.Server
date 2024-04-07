@@ -24,7 +24,6 @@ public class UserMappingConfig : IRegister
 
 		config.NewConfig<(ChangePasswordRequest changePassword, string UserId),	ChangePasswordCommand>()
 		.Map(dest => dest.UserId, src => src.UserId)
-		.Map(dest => dest, src => src.changePassword);
-		
+		.Map(dest => dest, src => src.changePassword);		
 	}
 }

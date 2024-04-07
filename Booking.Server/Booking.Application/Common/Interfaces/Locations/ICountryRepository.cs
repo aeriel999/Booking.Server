@@ -6,6 +6,5 @@ namespace Booking.Application.Common.Interfaces.Locations;
 
 public interface ICountryRepository
 {
-	Task<List<CountryEntity>> GetAllAsync();
-	
+	Task<List<CountryEntity>> GetAllAsync();	
 }

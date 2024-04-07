@@ -76,6 +76,10 @@ public static class DependencyInjection
 	{
 		services.AddScoped<IUserRepository, UserRepository>();
 		services.AddScoped<ICountryRepository, CountryRepository>();
+		services.AddScoped<ITownRepository, TownRepository>();
+		
+
+
         services.AddScoped(typeof(IRepository<>), typeof(Repository<>));
         //services.AddScoped<IApartmentsRepository, ApartmentsRepository>();
         //services.AddScoped<IImageRepository, ImageRepository>();

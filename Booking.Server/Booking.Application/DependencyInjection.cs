@@ -1,5 +1,7 @@
 ﻿using Booking.Application.Common.Behaviors;
 using Booking.Application.Common.Services;
+using Booking.Application.Location.Town;
+using Booking.Domain.Models;
 using FluentValidation;
 using Mapster;
 using MapsterMapper;
@@ -15,9 +17,9 @@ public static class DependencyInjection
 {
 	public static IServiceCollection AddApplication(this IServiceCollection services)
 	{
-		services.AddMappings();
+		services.AddMappings();        
 
-		services.AddMediatR(cfg => cfg.RegisterServicesFromAssemblies(AppDomain.CurrentDomain.GetAssemblies()));
+        services.AddMediatR(cfg => cfg.RegisterServicesFromAssemblies(AppDomain.CurrentDomain.GetAssemblies()));
 
 		services.AddScoped(typeof(IPipelineBehavior<,>), typeof(ValidationBehavior<,>));
 
