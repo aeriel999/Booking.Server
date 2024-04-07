@@ -56,7 +56,7 @@ namespace Booking.Api.Controllers
         {
             var value = mapper.Map<TownEntity>(editTownDto);
 
-            await mediatr.Send(new EditTownCommand(value));
+            await mediatr.Send(new EditCategoryCommand(value));
             return Ok();
         }
     }

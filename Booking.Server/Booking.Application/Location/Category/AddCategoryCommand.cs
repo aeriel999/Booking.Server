@@ -1,4 +1,5 @@
 ﻿using Booking.Domain.Models;
+using ErrorOr;
 using MediatR;
 using System;
 using System.Collections.Generic;
@@ -6,7 +7,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Booking.Application.Location.Town
+namespace Booking.Application.Location.Category
 {
-    public record EditCategoryCommand(TownEntity entity) : IRequest<Unit>;
+    public record AddCategoryCommand(CategoryEntity entity) : IRequest<Unit>;    
 }

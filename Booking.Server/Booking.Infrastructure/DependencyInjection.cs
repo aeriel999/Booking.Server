@@ -2,6 +2,7 @@
 using Booking.Application.Common.Interfaces.Authentication;
 using Booking.Application.Common.Interfaces.Common;
 using Booking.Application.Common.Interfaces.Locations;
+using Booking.Application.Common.Interfaces.Post;
 using Booking.Application.Common.Interfaces.Users;
 using Booking.Domain.Users;
 using Booking.Infrastructure.Authentification;
@@ -77,8 +78,10 @@ public static class DependencyInjection
 		services.AddScoped<IUserRepository, UserRepository>();
 		services.AddScoped<ICountryRepository, CountryRepository>();
 		services.AddScoped<ITownRepository, TownRepository>();
-		
-
+		services.AddScoped<ICategoryRepository, CategoryRepository>();
+        services.AddScoped(typeof(IStreetRepository<>), typeof(StreetRepository<>));
+        services.AddScoped(typeof(IPostRepository<>), typeof(PostRepository<>));
+        services.AddScoped<IImagesPostRepository, ImagesPostRepository>();
 
         services.AddScoped(typeof(IRepository<>), typeof(Repository<>));
         //services.AddScoped<IApartmentsRepository, ApartmentsRepository>();

@@ -6,7 +6,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Booking.Application.Location.Town
+namespace Booking.Application.Location.Category
 {
-    public record EditCategoryCommand(TownEntity entity) : IRequest<Unit>;
+    public record DeleteCategoryCommand(Guid id) : IRequest<Unit>;
 }

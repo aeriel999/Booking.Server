@@ -6,7 +6,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Booking.Application.Location.Town
-{
-    public record EditCategoryCommand(TownEntity entity) : IRequest<Unit>;
+namespace Booking.Application.Posts
+{   
+    public record GetPostByIdCommand(Guid postId) : IRequest<PostEntity>;    
 }

@@ -18,7 +18,7 @@ namespace Booking.Application.Location.Town
       IRequestHandler<GetTownByIdCommand, TownEntity>,        
       IRequestHandler<AddTownCommand, Unit>,
       IRequestHandler<DeleteTownCommand, Unit>,
-      IRequestHandler<EditTownCommand, Unit>
+      IRequestHandler<EditCategoryCommand, Unit>
     {
         public async Task<List<TownEntity>> Handle(TownListCommand request, CancellationToken cancellationToken)
         {
@@ -42,7 +42,7 @@ namespace Booking.Application.Location.Town
             return Unit.Value;
         }
 
-        public async Task<Unit> Handle(EditTownCommand request, CancellationToken cancellationToken)
+        public async Task<Unit> Handle(EditCategoryCommand request, CancellationToken cancellationToken)
         {
             await townRepository.EditTown(request.entity);
             return Unit.Value;
