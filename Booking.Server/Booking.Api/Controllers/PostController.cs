@@ -78,6 +78,7 @@ namespace Booking.Api.Controllers
                             });
                     }                   
                 }
+                await mediatr.Send(new EditPostCommand(post));
             }
 
             return Ok();
