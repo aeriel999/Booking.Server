@@ -1,5 +1,8 @@
-﻿using Booking.Application.Common.Interfaces.Post;
+﻿using Ardalis.Specification.EntityFrameworkCore;
+using Booking.Application.Common.Interfaces.Post;
 using Booking.Domain.Models;
+using Booking.Infrastructure.Common.Persistence;
+using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -8,39 +11,35 @@ using System.Threading.Tasks;
 
 namespace Booking.Infrastructure.Repositories
 {
-    public class ImagesPostRepository: IImagesPostRepository
-    {
-        private List<ImagesPostEntity> _imagesPosts;
-
-        public ImagesPostRepository()
+    public class ImagesPostRepository(BookingDbContext bookingDbContext) : IImagesPostRepository
+    {     
+        public async Task<ImagesPostEntity> GetByIdAsync(Guid id)
         {
-            _imagesPosts = new List<ImagesPostEntity>();
+            return await bookingDbContext.Images.FirstOrDefaultAsync(p => p.PostId == id);
         }
 
-        public Task<ImagesPostEntity> GetByIdAsync(Guid id)
-        {
-            return Task.FromResult(_imagesPosts.FirstOrDefault(p => p.PostId == id));
+        public async Task<IEnumerable<ImagesPostEntity>> GetAllAsync()
+        {           
+            
+            return await bookingDbContext.Images.ToListAsync();
         }
 
-        public Task<IEnumerable<ImagesPostEntity>> GetAllAsync()
+        public async Task<IEnumerable<ImagesPostEntity>> GetByPostIdAsync(Guid postId)
         {
-            return Task.FromResult<IEnumerable<ImagesPostEntity>>(_imagesPosts);
+            return await bookingDbContext.Images.Where(p => p.PostId == postId).ToListAsync();
         }
 
-        public Task<IEnumerable<ImagesPostEntity>> GetByPostIdAsync(Guid postId)
+        public async Task AddAsync(ImagesPostEntity entity)
         {
-            return Task.FromResult(_imagesPosts.Where(p => p.PostId == postId));
-        }
-
-        public Task AddAsync(ImagesPostEntity entity)
-        {
-            _imagesPosts.Add(entity);
-            return  Task.CompletedTask;
+            bookingDbContext.Images.Add(entity);
+           
+            await bookingDbContext.SaveChangesAsync();
+           
         }
 
         public Task UpdateAsync(ImagesPostEntity entity)
         {
-            var existingEntity = _imagesPosts.FirstOrDefault(p => p.PostId == entity.PostId);
+            var existingEntity = bookingDbContext.Images.FirstOrDefault(p => p.PostId == entity.PostId);
             if (existingEntity != null)
             {
                 existingEntity.NameImage = entity.NameImage;
@@ -51,10 +50,10 @@ namespace Booking.Infrastructure.Repositories
 
         public Task DeleteAsync(Guid id)
         {
-            var entityToRemove = _imagesPosts.FirstOrDefault(p => p.PostId == id);
+            var entityToRemove = bookingDbContext.Images.FirstOrDefault(p => p.PostId == id);
             if (entityToRemove != null)
             {
-                _imagesPosts.Remove(entityToRemove);
+                bookingDbContext.Images.Remove(entityToRemove);
             }
             return Task.CompletedTask;
         }

@@ -69,13 +69,14 @@ namespace Booking.Api.Controllers
                     if (result.IsSuccess())
                     {
                         var nameImage = result.Value;
-                        await _imagesPostRepository.AddAsync(
-                            new ImagesPostEntity
-                            {
-                                NameImage = nameImage,
-                                PostId = Guid.NewGuid(),
-                                PriorityImage = dtoPost.Images.Count
-                            });
+                        var img = new ImagesPostEntity
+                        {
+                            NameImage = nameImage,
+                            PostId = post.Id,
+                            PriorityImage = dtoPost.Images.Count
+                        };
+
+                        await _imagesPostRepository.AddAsync(img);
                     }                   
                 }
                 await mediatr.Send(new EditPostCommand(post));
