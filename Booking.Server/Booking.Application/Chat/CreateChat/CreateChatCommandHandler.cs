@@ -1,0 +1,52 @@
+﻿using Booking.Application.Common.Interfaces.Chat;
+using Booking.Application.Common.Interfaces.Post;
+using Booking.Application.Common.Interfaces.Users;
+using Booking.Domain.Chat;
+using ErrorOr;
+using MediatR;
+
+namespace Booking.Application.Chat.CreateChat;
+
+public class CreateChatCommandHandler(
+	IChatRegystryService chatRegystryService,
+	IUserRepository userRepository,
+	IPostRepository postRepositories,
+	IChatRoomRepository chatRoomRepositories)
+	: IRequestHandler<CreateChatCommand, ErrorOr<Guid>>
+{
+	public async Task<ErrorOr<Guid>> Handle(
+		CreateChatCommand request, CancellationToken cancellationToken)
+	{
+		//Get user
+		var userOrError = await userRepository.FindByIdAsync(request.UserId);
+
+		if (userOrError.IsError)
+			return userOrError.Errors;
+
+		var user = userOrError.Value;
+
+		//Get Post
+		var post = await postRepositories.GetPostByIdAsync(request.PostId);
+
+		if (post == null)
+			return Error.NotFound();
+
+		//Create chatRoom
+		var chatRoom = new ChatRoom
+		{
+			ChatRoomId = Guid.NewGuid(),
+			ClientId = Guid.Parse(request.UserId),
+			RealtorId = Guid.Parse(request.UserId),
+			PostId = request.PostId,
+			Post = post
+		};
+
+		await chatRoomRepositories.CreateChatRoomAsync(chatRoom);
+
+		await chatRoomRepositories.SaveChatRoomAsync();
+
+		chatRegystryService.CreateRoom(chatRoom.ChatRoomId);
+
+		return chatRoom.ChatRoomId;
+	}
+}

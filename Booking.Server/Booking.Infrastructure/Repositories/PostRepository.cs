@@ -1,0 +1,123 @@
+﻿using Booking.Application.Common.Interfaces.Post;
+using Booking.Domain.Chat;
+using Booking.Domain.Posts;
+using Booking.Infrastructure.Common.Persistence;
+using Microsoft.EntityFrameworkCore;
+
+namespace Booking.Infrastructure.Repositories;
+
+public class PostRepository(BookingDbContext context) : IPostRepository
+{
+	private readonly DbSet<Post> _dbSet = context.Set<Post>();
+
+	public async Task  CreatePostAsync(Post post)
+	{
+		await _dbSet.AddAsync(post);
+	}
+
+	public async Task SavePostAsync()
+	{
+		await context.SaveChangesAsync();
+	}
+
+	public async Task<Post?> GetPostByIdAsync(Guid postId)
+	{
+		return await _dbSet.FindAsync(postId);
+	}
+
+	//      public async Task<List<Guid>> GetPostIdListByRealtorIdAsync(Guid realtorId)
+	//      {
+	//	return await _bookingDbContext.Posts
+	//	.Where(c => c.UserId == realtorId)
+	//	.Select(c => c.Id)
+	//	.ToListAsync();
+	//}
+
+	//      public PostRepository(BookingDbContext bookingDbContext)
+	//      {
+	//          _bookingDbContext = bookingDbContext;
+	//      }
+
+	//      public IQueryable<TEntity> GetIQueryable()
+	//      {
+	//          return _bookingDbContext.Set<TEntity>().AsQueryable();
+	//      }
+
+	//      public async Task<Post> GetPostOfId(Guid id)
+	//      {
+	//          var post = await _bookingDbContext.Posts.FirstOrDefaultAsync(x => x.Id == id);
+
+	//          if (post != null)
+	//          {
+	//              return post;
+	//          }
+	//          else
+	//          {
+	//              throw new InvalidOperationException("Такого оголошення не існує!");
+	//          }
+	//      }
+
+	//      public async Task<List<Post>> GetAllAsync()
+	//      {
+	//          var posts = await _bookingDbContext.Posts.ToListAsync();
+	//          return posts;
+	//      }
+
+
+	//      public async Task AddNewPost(Post entity)
+	//      {
+	//          var check = await _bookingDbContext.Posts.FirstOrDefaultAsync(x => x.Id == entity.Id);
+
+	//          if (check == null)
+	//          {
+	//              _bookingDbContext.Posts.Add(entity);
+	//              await _bookingDbContext.SaveChangesAsync();
+	//          }
+	//          else
+	//          {
+	//              throw new InvalidOperationException("Таке оголошення уже існує!");
+	//          }
+	//      }
+
+	//      public async Task DeletePost(Guid id)
+	//      {
+	//          var post = await _bookingDbContext.Posts.FirstOrDefaultAsync(x => x.Id == id);
+
+	//          if (post != null)
+	//          {
+	//              _bookingDbContext.Posts.Remove(post);
+	//              await _bookingDbContext.SaveChangesAsync();
+	//          }
+	//          else
+	//          {
+	//              throw new InvalidOperationException("Видалення немодливе. Такого оголошення не існує!");
+	//          }
+	//      }
+
+	//      public async Task EditPost(Post updatedPost)
+	//      {
+	//          var existingPost = await _bookingDbContext.Posts.FirstOrDefaultAsync(x => x.Id == updatedPost.Id);
+
+	//          if (existingPost != null)
+	//          {
+	//              existingPost.Name = updatedPost.Name;
+	//              existingPost.CategoryId=updatedPost.CategoryId;
+	//              existingPost.Description=updatedPost.Description;
+	//              existingPost.TypeOfRent=updatedPost.TypeOfRent;
+	//              existingPost.StreetId = updatedPost.StreetId;
+	//              existingPost.BuildingNumber = updatedPost.BuildingNumber;
+	//              existingPost.NumberOfRooms = updatedPost.NumberOfRooms;
+	//              existingPost.Area = updatedPost.Area;
+	//              existingPost.Area = updatedPost.Area;
+	//              existingPost.UserId = updatedPost.UserId;
+	//              existingPost.IsArhive=updatedPost.IsArhive;
+	//              existingPost.Price = updatedPost.Price;
+	//              await _bookingDbContext.SaveChangesAsync();
+	//          }
+	//          else
+	//          {
+	//              throw new InvalidOperationException("Редагування неможливе. Такого оголошення не існує!");
+	//          }
+	//      }
+	//  }
+}
