@@ -20,6 +20,10 @@ import {jwtDecode} from "jwt-decode";
 import InputGroup from "../../../components/common/InputGroup.tsx";
 import {EmailValidator, PasswordValidator} from "../../../validations/account";
 
+import {CredentialResponse, GoogleLogin} from "@react-oauth/google";
+import { googleLogin} from "../../../store/accounts/account.slice.ts";
+
+
 export default function SignInPage() {
     const dispatch = useAppDispatch();
     const [errorMessage, setErrorMessage] = useState<string | undefined >(undefined);
@@ -62,8 +66,17 @@ export default function SignInPage() {
         }
     };
 
+    const handleLoginSuccess =   (response: CredentialResponse) => {
+        // Handle successful login (e.g., store user data)
+        console.log('Logged in successfully:', response);
+
+        dispatch(googleLogin(response.credential as string));
+        navigate("/profile");
+
+    };
+
     return (
-        <Container component="main" maxWidth="xs">
+        <Container component="main" maxWidth="md">
             <CssBaseline />
             <Box
                 sx={{
@@ -74,58 +87,69 @@ export default function SignInPage() {
                 }}
             >
                 {errorMessage && <OutlinedErrorAlert message={errorMessage} />}
-
                 <Avatar sx={{ m: 1, bgcolor: 'secondary.main' }}>
                     <LockOutlinedIcon />
                 </Avatar>
                 <Typography component="h1" variant="h5">
                     Sign in
                 </Typography>
-                <Box component="form" onSubmit={handleSubmit} noValidate sx={{ mt: 1 }}>
-                    <Grid container spacing={2}>
-                        <Grid item xs={12}>
-                            <InputGroup
-                                label="Email"
-                                field="email"
-                                type= "email"
-                                validator={EmailValidator}
-                                onChange={isValid => (formValid.current.email = isValid)}
-                            />
-                        </Grid>
-                        <Grid item xs={12}>
-                            <InputGroup
-                                label="Password"
-                                field="password"
-                                type= "password"
-                                validator={PasswordValidator}
-                                onChange={isValid => (formValid.current.password = isValid)}
-
-                            />
-                        </Grid>
+                <Grid container spacing={2} sx={{ mt: 1 }}>
+                    <Grid item xs={12} md={6}>
+                        <Box
+                            component="form"
+                            onSubmit={handleSubmit}
+                            noValidate
+                            sx={{ display: 'flex', flexDirection: 'column', alignItems: 'center' }}
+                        >
+                            <Grid container spacing={2}>
+                                <Grid item xs={12}>
+                                    <InputGroup
+                                        label="Email"
+                                        field="email"
+                                        type="email"
+                                        validator={EmailValidator}
+                                        onChange={(isValid) => (formValid.current.email = isValid)}
+                                    />
+                                </Grid>
+                                <Grid item xs={12}>
+                                    <InputGroup
+                                        label="Password"
+                                        field="password"
+                                        type="password"
+                                        validator={PasswordValidator}
+                                        onChange={(isValid) => (formValid.current.password = isValid)}
+                                    />
+                                </Grid>
+                            </Grid>
+                            <Button
+                                type="submit"
+                                fullWidth
+                                variant="contained"
+                                sx={{ mt: 3, mb: 2 }}
+                            >
+                                Sign In
+                            </Button>
+                            <Grid container>
+                                <Grid item xs>
+                                    <Link href="/authentication/forgot-password" variant="body2">
+                                        Forgot password?
+                                    </Link>
+                                </Grid>
+                                <Grid item>
+                                    <Link href="#" variant="body2">
+                                        {"Don't get a confirmation letter?"}
+                                    </Link>
+                                </Grid>
+                            </Grid>
+                        </Box>
                     </Grid>
-                    <Button
-                        type="submit"
-                        fullWidth
-                        variant="contained"
-                        sx={{ mt: 3, mb: 2 }}
-                    >
-                        Sign In
-                    </Button>
-                    <Grid container>
-                        <Grid item xs>
-                            <Link href="/authentication/forgot-password" variant="body2">
-                                Forgot password?
-                            </Link>
-                        </Grid>
-                        <Grid item>
-                            <Link href="#" variant="body2">
-                                {"Don't get a confirmation letter?"}
-                            </Link>
-                        </Grid>
+                    <Grid item xs={12} md={6} sx={{ display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
+                        <GoogleLogin
+                            onSuccess={handleLoginSuccess}
+                        />
                     </Grid>
-                </Box>
+                </Grid>
             </Box>
-
         </Container>
     );
 }

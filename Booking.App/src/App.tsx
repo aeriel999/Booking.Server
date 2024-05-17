@@ -18,7 +18,6 @@ import ForgotPasswordInformationPage from "./pages/accaunt/forgot-password/Forgo
 import ResetPasswordPage from "./pages/accaunt/reset-password/ResetPasswordPage.tsx";
 import ReConfirmEmailPage from "./pages/reconfirm-email/ReConfirmEmailPage.tsx";
 import ChatRoom  from "./containers/common/ChatRoom.tsx";
-
 import {TestPost} from "./containers/client/TestPost.tsx";
 import ClientDashboardLayout from "./containers/client/layouts/_ClientDashboardLayout.tsx";
 import {AddNewPost} from "./containers/dashboard/AddNewPost.tsx";
@@ -82,6 +81,9 @@ const App : React.FC = () => {
     const {isLogin, user} = useAppSelector(state => state.account);
 
    const role = () =>{
+       console.log("user", user)
+       console.log("isLogin", isLogin)
+
        if (user?.role.toLowerCase().includes('realtor'))
        {
           return 'realtor'
@@ -127,7 +129,6 @@ const App : React.FC = () => {
             {/*{!connection*/}
             {/*    ? <Route path="/test" element={<WaitingRoom joinChatRoom={joinChatRoom} />} />*/}
             {/*    : <Route path="/test" element={<ChatRoom messages={messages} sendMSG={sendMSG} />} />}*/}
-
 
             <Route path="*" element={<SignInPage/>} />
 

@@ -53,6 +53,8 @@ export function AddNewPost(){
                                                                     description: false,
                                                                     buildingNumber: false,
                                                                     numberOfRooms: false,
+                                                                    city: false,
+                                                                    street: false,
                                                                     area: false,
                                                                     price: false,
                                                                     images: false});

@@ -21,46 +21,81 @@ function isRejectedAction(action: AnyAction): action is RejectedAction {
 const updateLoginUserState = (state: IAccountState, token: string): void => {
     const decodedToken: { [key: string]: string } = jwtDecode(token);
 
-    console.log("decodedToken", decodedToken)
+    const iss = decodedToken["iss"];
+
+    if (iss === "https://accounts.google.com")
+    {
+        console.log("iss", iss)
+        updateGoogleLoginUserState(state, token);
+    }else{
+        const  email  = decodedToken["email"]
+        const role = decodedToken["http://schemas.microsoft.com/ws/2008/06/identity/claims/role"]
+        const  id = decodedToken["sub"];
+
+        if(role === "realtor")
+        {
+            const firstName = decodedToken["family_name"];
+            const lastName = decodedToken["given_name"];
+            const phoneNumber = decodedToken["http://schemas.xmlsoap.org/ws/2005/05/identity/claims/mobilephone"];
+            const avatar = decodedToken["Avatar"];
+            const rating = decodedToken["Rating"];
+
+            state.user = {
+                id: id,
+                email: email,
+                role: role,
+                firstName:   firstName,
+                lastName:   lastName,
+                phoneNumber:  phoneNumber,
+                avatar:  "/images/avatars/" +  avatar,
+                rating: Number(rating)
+            };
+        }else {
+            state.user = {
+                id: id,
+                email: email,
+                role: role,
+                firstName:   null,
+                lastName:   null,
+                phoneNumber:  null,
+                avatar:    null,
+                rating: null
+            };
+        }
+        state.token = token;
+        state.isLogin = true;
+
+        addLocalStorage('authToken', token);
+    }
+
+
+};
+
+const updateGoogleLoginUserState = (state: IAccountState, token: string): void =>{
+    const decodedToken: { [key: string]: string } = jwtDecode(token);
+
     const  email  = decodedToken["email"]
-    const role = decodedToken["http://schemas.microsoft.com/ws/2008/06/identity/claims/role"]
+    const firstName = decodedToken["family_name"];
+    const lastName = decodedToken["given_name"];
+    const avatar = decodedToken["picture"];
     const  id = decodedToken["sub"];
 
-    if(role === "realtor")
-    {
-        const firstName = decodedToken["family_name"];
-        const lastName = decodedToken["given_name"];
-        const phoneNumber = decodedToken["http://schemas.xmlsoap.org/ws/2005/05/identity/claims/mobilephone"];
-        const avatar = decodedToken["Avatar"];
-        const rating = decodedToken["Rating"];
+    state.user = {
+        id: id,
+        email: email,
+        role: "user",
+        firstName:   firstName,
+        lastName:   lastName,
+        phoneNumber:  null,
+        avatar:    avatar,
+        rating: null
+    };
 
-        state.user = {
-            id: id,
-            email: email,
-            role: role,
-            firstName:   firstName,
-            lastName:   lastName,
-            phoneNumber:  phoneNumber,
-            avatar:  "/images/avatars/" +  avatar,
-            rating: Number(rating)
-        };
-    }else {
-        state.user = {
-            id: id,
-            email: email,
-            role: role,
-            firstName:   null,
-            lastName:   null,
-            phoneNumber:  null,
-            avatar:    null,
-            rating: null
-        };
-    }
     state.token = token;
     state.isLogin = true;
 
     addLocalStorage('authToken', token);
-};
+}
 
 const initialState: IAccountState = {
     user: null,
@@ -74,6 +109,7 @@ export const accountsSlice = createSlice({
     initialState,
     reducers: {
         autoLogin: (state, action: PayloadAction<string>) => {
+
             updateLoginUserState(state, action.payload);
         },
 
@@ -83,6 +119,11 @@ export const accountsSlice = createSlice({
             state.token = null;
             state.isLogin = false;
         },
+        googleLogin:(state, action: PayloadAction<string>)=>{
+            console.log("action", action);
+
+            updateGoogleLoginUserState(state, action.payload);
+        }
     },
     extraReducers: (builder) => {
         builder
@@ -145,5 +186,7 @@ export const accountsSlice = createSlice({
     },
 });
 
-export const { autoLogin, logout } = accountsSlice.actions;
+export const { autoLogin,
+                logout,
+                googleLogin } = accountsSlice.actions;
 export default accountsSlice.reducer;
