@@ -29,9 +29,27 @@ export interface ITypeOfRent {
     id: string,
     name: string
 }
+export interface IPageOfPosts{
+    items: {
+        $id: string,
+        $values: IPost[]
+    },
+    page:number,
+    sizeOfPage:number,
+    totalCount:number
+}
 
+export interface IPost{
+    id: number,
+    name:string;
+    category:string,
+    user:string,
+    price:number,
+    imagePost:string
+}
 export  interface IPostState{
     status: Status
+    posts: IPageOfPosts | null,
     categories: ICategory[] | null,
     countries: ICountry[] | null,
     cities: ICity[] | null,
