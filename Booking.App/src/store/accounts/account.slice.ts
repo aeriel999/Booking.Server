@@ -6,7 +6,7 @@ import {
     changeEmail,
     confirmEmail,
     editProfile,
-    forgotPassword,
+    forgotPassword, googleLogin,
     login,
     realtorRegister,
     resetPassword,
@@ -21,46 +21,47 @@ function isRejectedAction(action: AnyAction): action is RejectedAction {
 const updateLoginUserState = (state: IAccountState, token: string): void => {
     const decodedToken: { [key: string]: string } = jwtDecode(token);
 
-    console.log("decodedToken", decodedToken)
+
     const  email  = decodedToken["email"]
     const role = decodedToken["http://schemas.microsoft.com/ws/2008/06/identity/claims/role"]
     const  id = decodedToken["sub"];
 
-    if(role === "realtor")
-    {
-        const firstName = decodedToken["family_name"];
-        const lastName = decodedToken["given_name"];
-        const phoneNumber = decodedToken["http://schemas.xmlsoap.org/ws/2005/05/identity/claims/mobilephone"];
-        const avatar = decodedToken["Avatar"];
-        const rating = decodedToken["Rating"];
+        if(role === "realtor")
+        {
+            const firstName = decodedToken["family_name"];
+            const lastName = decodedToken["given_name"];
+            const phoneNumber = decodedToken["http://schemas.xmlsoap.org/ws/2005/05/identity/claims/mobilephone"];
+            const avatar = decodedToken["Avatar"];
+            const rating = decodedToken["Rating"];
 
-        state.user = {
-            id: id,
-            email: email,
-            role: role,
-            firstName:   firstName,
-            lastName:   lastName,
-            phoneNumber:  phoneNumber,
-            avatar:  "/images/avatars/" +  avatar,
-            rating: Number(rating)
-        };
-    }else {
-        state.user = {
-            id: id,
-            email: email,
-            role: role,
-            firstName:   null,
-            lastName:   null,
-            phoneNumber:  null,
-            avatar:    null,
-            rating: null
-        };
-    }
-    state.token = token;
-    state.isLogin = true;
+            state.user = {
+                id: id,
+                email: email,
+                role: role,
+                firstName:   firstName,
+                lastName:   lastName,
+                phoneNumber:  phoneNumber,
+                avatar:  "/images/avatars/" +  avatar,
+                rating: Number(rating)
+            };
+        }else {
+            state.user = {
+                id: id,
+                email: email,
+                role: role,
+                firstName: null,
+                lastName: null,
+                phoneNumber: null,
+                avatar: null,
+                rating: null
+            };
+        }
+        state.token = token;
+        state.isLogin = true;
 
-    addLocalStorage('authToken', token);
+        addLocalStorage('authToken', token);
 };
+
 
 const initialState: IAccountState = {
     user: null,
@@ -74,6 +75,7 @@ export const accountsSlice = createSlice({
     initialState,
     reducers: {
         autoLogin: (state, action: PayloadAction<string>) => {
+
             updateLoginUserState(state, action.payload);
         },
 
@@ -83,6 +85,7 @@ export const accountsSlice = createSlice({
             state.token = null;
             state.isLogin = false;
         },
+
     },
     extraReducers: (builder) => {
         builder
@@ -91,6 +94,13 @@ export const accountsSlice = createSlice({
                 state.status = Status.SUCCESS;
             })
             .addCase(login.pending, (state) => {
+                state.status = Status.LOADING;
+            })
+            .addCase(googleLogin.fulfilled, (state, action) => {
+                updateLoginUserState(state, action.payload);
+                state.status = Status.SUCCESS;
+            })
+            .addCase(googleLogin.pending, (state) => {
                 state.status = Status.LOADING;
             })
             .addCase(userRegister.fulfilled, (state) => {
@@ -145,5 +155,6 @@ export const accountsSlice = createSlice({
     },
 });
 
-export const { autoLogin, logout } = accountsSlice.actions;
+export const { autoLogin,
+                logout} = accountsSlice.actions;
 export default accountsSlice.reducer;

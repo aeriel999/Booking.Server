@@ -12,7 +12,7 @@ public record CreatePostCommand(
 	Guid CountryId,
 	Guid? CityId,
 	string? CityName,
-	Guid StreetId,
+	Guid? StreetId,
 	string? StreetName,
 	string BuildingNumber,
 	int? NumberOfRooms,

@@ -80,7 +80,7 @@ public static class DependencyInjection
 		services.AddScoped<IPostCountryRepository, PostCountryRepository>();
 		services.AddScoped<IPostCityRepository, PostCityRepository>();
 		services.AddScoped<IPostCategoryRepository, PostCategoryRepository>();
-        services.AddScoped<IStreetRepository, StreetRepository>();
+        services.AddScoped<IPostStreetRepository, PostStreetRepository>();
         services.AddScoped<IPostRepository, PostRepository>();
         services.AddScoped<IPostImageRepository, PostImageRepository>();
         services.AddScoped<IChatRoomRepository, ChatRoomRepository>();
@@ -119,8 +119,15 @@ public static class DependencyInjection
 		services.AddSingleton(Options.Create(jwtSettings));
 		services.AddSingleton<IJwtTokenGenerator, JwtTokenGenerator>();
 
-		services.AddAuthentication(defaultScheme: JwtBearerDefaults.AuthenticationScheme)
+		services.AddAuthentication(options =>
+		{
+			// Identity made Cookie authentication the default.
+			// However, we want JWT Bearer Auth to be the default.
+			options.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
+			options.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
+		})
 			.AddJwtBearer(options => {
+				options.RequireHttpsMetadata = false;
 				options.TokenValidationParameters = new TokenValidationParameters
 				{
 					ValidateIssuer = true,
@@ -133,7 +140,24 @@ public static class DependencyInjection
 						Encoding.UTF8.GetBytes(jwtSettings.Secret)),
 					ClockSkew = TimeSpan.Zero,
 				};
-				
+
+				options.Events = new JwtBearerEvents
+				{
+					OnMessageReceived = context =>
+					{
+						var accessToken = context.Request.Query["access_token"];
+
+						var path = context.HttpContext.Request.Path;
+
+						if (!string.IsNullOrEmpty(accessToken) &&
+							(path.StartsWithSegments("/chat")))
+						{
+							context.Token = accessToken;
+						}
+						return Task.CompletedTask;
+					}
+				};
+
 			});
 
 		

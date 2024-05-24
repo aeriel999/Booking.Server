@@ -27,7 +27,7 @@ public class ChatController(ISender mediatr) : ApiController
 	//}
 
 	[HttpGet("chat-list")]
-	public async Task<IActionResult> GetListOfRoomsNameAsync()
+	public async Task<IActionResult> GetListOfChatsAsync()
 	{
 		var userId = User.Claims.First(u => u.Type == ClaimTypes.NameIdentifier).Value;
 		var useRole = User.Claims.First(u => u.Type == ClaimTypes.Role).Value;

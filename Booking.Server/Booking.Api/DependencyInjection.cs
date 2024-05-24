@@ -13,12 +13,14 @@ namespace Booking.Api;
 
 public static class DependencyInjection
 {
-	public static IServiceCollection AddPresentation(this IServiceCollection services)
+	public static IServiceCollection AddPresentation(this IServiceCollection services,
+		IConfiguration configuration)
 	{
 		services.AddControllers()
 			 .AddJsonOptions(options =>
 			 {
-				 options.JsonSerializerOptions.ReferenceHandler = System.Text.Json.Serialization.ReferenceHandler.Preserve;
+				 options.JsonSerializerOptions.ReferenceHandler = 
+				 System.Text.Json.Serialization.ReferenceHandler.Preserve;
 			 });
 
 		services.AddSingleton<ProblemDetailsFactory, BookingProblemDetailsFactory>();
@@ -32,7 +34,15 @@ public static class DependencyInjection
 
 		services.AddMappings();
 
-		services.AddCustomSignalR();
+		services.AddCustomSignalR(configuration);
+
+
+		//services.AddAuthentication()
+		//		.AddGoogle(options =>
+		//		{
+		//			options.ClientId = "684180662007-h02th8plar344nq8g66407g9qq27dvjr.apps.googleusercontent.com";
+		//			options.ClientSecret = "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";
+		//		});
 
 		return services;
 	}
@@ -87,8 +97,10 @@ public static class DependencyInjection
 		return services;
 	}
 
-	public static IServiceCollection AddCustomSignalR(this IServiceCollection services)
+	public static IServiceCollection AddCustomSignalR(this IServiceCollection services,
+		IConfiguration configuration)
 	{
+		string clientUrl = configuration["HostSettings:ClientURL"]!;
 
 		services.AddSignalR();
 
@@ -96,7 +108,7 @@ public static class DependencyInjection
 		{
 			opt.AddPolicy("reactApp", builder =>
 			{
-				builder.WithOrigins("http://localhost:5173")
+				builder.WithOrigins(clientUrl)
 				.AllowAnyHeader()
 				.AllowAnyMethod()
 				.AllowCredentials();

@@ -11,4 +11,6 @@ public interface IPostCityRepository
 	Task SaveCityAsync();
 
 	Task<PostCity?> FindCityByNameAndCountryIdAsync(string name, Guid countryId);
+
+	Task<PostCity?> GetCityByIdAsync(Guid? cityId);
 }

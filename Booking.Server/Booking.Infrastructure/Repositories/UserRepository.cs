@@ -22,6 +22,21 @@ public class UserRepository(UserManager<User> userManager) : IUserRepository
 		return user;
     }
 
+	public async Task<ErrorOr<User>> CreateUserAsync(User user, string role)
+	{
+		var createUserResult = await userManager.CreateAsync(user);
+
+		if (!createUserResult.Succeeded)
+			return Error.Validation("Error creating user");
+
+		var addToRoleResult = await userManager.AddToRoleAsync(user, role);
+
+		if (!addToRoleResult.Succeeded)
+			return Error.Validation("Error creating user");
+
+		return user;
+	}
+
 	public async Task<ErrorOr<User>> SaveUserAsync(User user)
 	{
 		var saveResult = await userManager.UpdateAsync(user);
@@ -101,4 +116,14 @@ public class UserRepository(UserManager<User> userManager) : IUserRepository
     {
         throw new NotImplementedException();
     }
+
+	public async Task<User?> FindByLoginAsync(string loginProvider, string providerKey)
+	{
+        return await userManager.FindByLoginAsync(loginProvider, providerKey);
+	}
+
+	public async Task<IdentityResult> AddLoginAsync(User user, UserLoginInfo userLoginInfo)
+	{
+		return await userManager.AddLoginAsync(user, userLoginInfo);
+	}
 }

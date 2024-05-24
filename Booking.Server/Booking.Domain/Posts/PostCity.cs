@@ -14,4 +14,9 @@ public class PostCity
 	public PostCountry? Country { get; set; }
 
 	public ICollection<PostStreet>? Streets { get; set; }
+
+	public static implicit operator PostCity?(List<PostCity>? v)
+	{
+		throw new NotImplementedException();
+	}
 }
