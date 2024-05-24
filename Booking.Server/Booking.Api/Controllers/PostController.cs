@@ -2,13 +2,18 @@
 using Booking.Api.Contracts.Post.GetCategories;
 using Booking.Api.Contracts.Post.GetCities;
 using Booking.Api.Contracts.Post.GetCountries;
+using Booking.Api.Contracts.Post.GetListOfPost;
+using Booking.Api.Contracts.Post.GetPost;
 using Booking.Api.Contracts.Post.GetStreets;
 using Booking.Api.Contracts.Post.GetTypeOfPost;
 using Booking.Api.Infrastructure;
+using Booking.Application.Common.Behaviors;
 using Booking.Application.Posts.CreatePost;
 using Booking.Application.Posts.GetCategoriesList;
 using Booking.Application.Posts.GetCities;
 using Booking.Application.Posts.GetCountries;
+using Booking.Application.Posts.GetListOfPost;
+using Booking.Application.Posts.GetPostById;
 using Booking.Application.Posts.GetStreets;
 using Booking.Application.Posts.GetTypeOfRent;
 using MapsterMapper;
@@ -52,8 +57,24 @@ public class PostController(ISender mediatr, IMapper mapper) : ApiController
 			createPostResult => Ok(createPostResult),
 			errors => Problem(errors));
 	}
-
-	[HttpGet("get-type-of-rent-list")]
+	[AllowAnonymous]
+	[HttpGet("get-list-of-post")]
+    public async Task<IActionResult> GetListOfPostAsync([FromQuery]int page, int sizeOfPage)
+    {
+        var getlistOfPostResult = await mediatr.Send(new GetListOfPostQuery(page,sizeOfPage));
+        return getlistOfPostResult.Match(
+            getlistOfPostResult => Ok(mapper.Map<PagedList<GetListOfPostResponse>>(getlistOfPostResult)),
+            errors => Problem(errors));
+    }
+    [HttpGet("get-post-by-id-{id}")]
+    public async Task<IActionResult> GetPostByIdAsync([FromRoute] Guid id)
+    {
+        var getPostResult = await mediatr.Send(new GetPostByIdQuery(id));
+        return getPostResult.Match(
+            getPostResult => Ok(mapper.Map<GetPostResponse>(getPostResult)),
+            errors => Problem(errors));
+    }
+    [HttpGet("get-type-of-rent-list")]
 	public async Task<IActionResult> GetTypeOfRentListAsync()
 	{
 		var getTypeOfPostListResult = await mediatr.Send(new GetTypeOfRentListQuery());

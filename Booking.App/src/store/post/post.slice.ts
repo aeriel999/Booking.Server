@@ -1,12 +1,12 @@
-import {AnyAction, createSlice} from "@reduxjs/toolkit";
+import {AnyAction, createSlice, PayloadAction} from "@reduxjs/toolkit";
 import {RejectedAction} from "../../utils/types";
 import {Status} from "../../utils/enum";
-import {IPostState} from "../../interfaces/post";
+import {IPageOfPosts, IPostState} from "../../interfaces/post";
 import {
     createPost,
     getListOfCategories,
     getListOfCitiesByCountryId,
-    getListOfCountries,
+    getListOfCountries, getListOfPosts,
     getListOfStreetsByCityId, getTypesOfRentList
 } from "./post.actions.ts";
 
@@ -14,14 +14,20 @@ function isRejectedAction(action: AnyAction): action is RejectedAction {
     return action.type.endsWith('/rejected');
 }
 
+
 const initialState: IPostState = {
     status: Status.IDLE,
+    posts:null,
     categories: null,
     countries: null,
     cities: null,
     streets: null,
     typeOfRent: null
+
 };
+
+
+
 
 export const postSlice = createSlice({
     name: 'post',
@@ -36,6 +42,13 @@ export const postSlice = createSlice({
                 state.status = Status.SUCCESS;
             })
             .addCase(getTypesOfRentList.pending, (state) => {
+            state.status = Status.LOADING;
+            })
+            .addCase(getListOfPosts.fulfilled,(state, action:PayloadAction<IPageOfPosts>) => {
+                state.posts = action.payload;
+                state.status = Status.SUCCESS;
+            })
+            .addCase(getListOfPosts.pending, (state) => {
                 state.status = Status.LOADING;
             })
             .addCase(getListOfCategories.fulfilled, (state, action) => {

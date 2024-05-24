@@ -177,9 +177,9 @@ export default function DashboardLayout() {
                     <Rating name="read-only" value={rating} readOnly/>
 
                     <Button
-                        onClick={async ()=>{
+                        onClick={ ()=>{
                         dispatch(logout());
-                        await endListening()
+                      //  await endListening()
                         navigate("/authentication/login");
                     }}
                     startIcon={<LogoutIcon/>}

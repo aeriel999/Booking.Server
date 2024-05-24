@@ -17,10 +17,11 @@ import ForgotPasswordPage from "./pages/accaunt/forgot-password/ForgotPasswordPa
 import ForgotPasswordInformationPage from "./pages/accaunt/forgot-password/ForgotPasswordInformationPage.tsx";
 import ResetPasswordPage from "./pages/accaunt/reset-password/ResetPasswordPage.tsx";
 import ReConfirmEmailPage from "./pages/reconfirm-email/ReConfirmEmailPage.tsx";
-import ChatRoom  from "./containers/common/ChatRoom.tsx";
-import {TestPost} from "./containers/client/TestPost.tsx";
+//import ChatRoom  from "./containers/common/ChatRoom.tsx";
 import ClientDashboardLayout from "./containers/client/layouts/_ClientDashboardLayout.tsx";
 import {AddNewPost} from "./containers/dashboard/AddNewPost.tsx";
+import ListOfPostPage from "./containers/client/ListOfPostPage.tsx";
+import AnonymousDashboardLayout from "./containers/anonymous/layouts/AnonymousDashboardLayout.tsx";
 
 
 const App : React.FC = () => {
@@ -118,8 +119,8 @@ const App : React.FC = () => {
                        <Route path="/"  element={<ClientDashboardLayout/>} >
                            <Route index element={<UserProfilePage />} />
                            <Route path="/profile" element={<UserProfilePage/>} />
-                           <Route path="/post" element={<TestPost/>} />
-                           <Route path="/dashboard/chat/:postId" element={<ChatRoom/>} />
+                           <Route path="/posts" element={<ListOfPostPage/>} />
+                           {/*<Route path="/dashboard/chat/:postId" element={<ChatRoom/>} />*/}
                        </Route>
                    )}
 
@@ -131,7 +132,11 @@ const App : React.FC = () => {
             {/*    ? <Route path="/test" element={<WaitingRoom joinChatRoom={joinChatRoom} />} />*/}
             {/*    : <Route path="/test" element={<ChatRoom messages={messages} sendMSG={sendMSG} />} />}*/}
 
-            <Route path="*" element={<SignInPage/>} />
+            <Route path="/"  element={<AnonymousDashboardLayout/>} >
+                <Route index element={<ListOfPostPage />} />
+                <Route path="*" element={<SignInPage />} />
+
+            </Route>
 
 
             <Route path="/dashboard/profile" element={<SignInPage/>} />
