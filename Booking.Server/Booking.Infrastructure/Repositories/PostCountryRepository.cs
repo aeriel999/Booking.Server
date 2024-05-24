@@ -18,6 +18,6 @@ public class PostCountryRepository(BookingDbContext context) : IPostCountryRepos
 
 	public async Task<PostCountry?> GetPostCountryByIdAsync(Guid id)
 	{
-		return await _dbSet.FindAsync(); 
+		return await _dbSet.FindAsync(id); 
 	}
 }

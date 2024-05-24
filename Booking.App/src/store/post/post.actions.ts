@@ -3,6 +3,8 @@ import {apiClient, apiMediaClient} from "../../utils/api/apiClient.ts";
 import {handleAxiosError} from "../../utils/errors";
 import {IPostCreate} from "../../interfaces/post";
 
+
+
 export const getTypesOfRentList = createAsyncThunk(
     'Post/get-type-of-rent-list',
     async (_, { rejectWithValue }) => {
@@ -26,6 +28,21 @@ export const getListOfCategories = createAsyncThunk(
         }
     },
 );
+
+export interface IFetchData{
+    page:number,
+    sizeOfPage:number
+}
+
+export const  getListOfPosts=createAsyncThunk(
+    'Post/get-list-of-posts',
+    async (data:IFetchData) => {
+            const response = await apiClient.get(`/api/Post/get-list-of-post?page=${data.page}&sizeOfPage=${data.sizeOfPage}`);
+            return response.data;
+
+    },
+
+)
 
 export const getListOfCountries = createAsyncThunk(
     'Post/get-countries-list',

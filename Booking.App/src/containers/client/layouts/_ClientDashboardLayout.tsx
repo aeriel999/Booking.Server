@@ -168,7 +168,7 @@ export default function ClientDashboardLayout() {
                     <Button
                         onClick={()=>{
                             dispatch(logout());
-                            navigate("/authentication/login");
+                            navigate("*");
                         }}
                         startIcon={<LogoutIcon/>}
                         color={"inherit"}
@@ -180,6 +180,7 @@ export default function ClientDashboardLayout() {
 
                     <Button onClick={addConnection} color={"inherit"}>Add connection</Button>
                     <Button onClick={disconnect} color={"inherit"}>End connection</Button>
+                    <Button onClick={navigate("/posts")} color={"inherit"}>Posts</Button>
 
                 </Toolbar>
             </AppBar>
