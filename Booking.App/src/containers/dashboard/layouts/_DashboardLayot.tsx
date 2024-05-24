@@ -27,11 +27,11 @@ import {Rating} from "@mui/material";
 import Button from "@mui/material/Button";
 import {logout} from "../../../store/accounts/account.slice.ts";
 import LogoutIcon from '@mui/icons-material/Logout';
-import {  startListening} from "../../../SignalR";
-import {getListOfChatRooms} from "../../../store/chat/chat.action.ts";
-import { unwrapResult} from "@reduxjs/toolkit";
+import {endListening, startListening} from "../../../SignalR";
+// import {getListOfChatRooms} from "../../../store/chat/chat.action.ts";
+// import { unwrapResult} from "@reduxjs/toolkit";
 import {DotBadge} from "../../common/Badge.tsx";
-import {addNewPostState, deleteNewPostState} from "../../../store/chat/chat.slice";
+
 import AccountBoxTwoToneIcon from '@mui/icons-material/AccountBoxTwoTone';
 import DynamicFeedTwoToneIcon from '@mui/icons-material/DynamicFeedTwoTone';
 import AddBoxTwoToneIcon from '@mui/icons-material/AddBoxTwoTone';
@@ -109,17 +109,18 @@ export default function DashboardLayout() {
             setAvatarUrl( APP_ENV.BASE_URL + user?.avatar);
             setRating(user?.rating ?? 0);
 
-            const getRooms = async ()=>{
-                try {
-                    const response = await dispatch(getListOfChatRooms());
-                    unwrapResult(response);
-                }catch (e)
-                {
-                    console.log(e)
-                }
-            }
+            // const getRooms = async ()=>{
+            //     try {
+            //         const response = await dispatch(getListOfChatRooms());
+            //         unwrapResult(response);
+            //     }catch (e)
+            //     {
+            //         console.log(e)
+            //     }
+            // }
+            //
+            // getRooms()
 
-            getRooms()
         }
 
     }, [dispatch, user]);
@@ -140,14 +141,16 @@ export default function DashboardLayout() {
     const addConnection = async () =>{
         console.log("Connect ///////////////")
       // await joinForPostListening("5c57dae8-39f3-41da-9bc8-521221e4bf44");
-        dispatch(addNewPostState());
+      //  dispatch(addNewPostState());
+
+      await  startListening();
     }
 
     const  disconnect = async () =>{
 
        // await leave("5c57dae8-39f3-41da-9bc8-521221e4bf44");
 
-        dispatch(deleteNewPostState());
+        await endListening();
     }
 
     return (
@@ -174,8 +177,9 @@ export default function DashboardLayout() {
                     <Rating name="read-only" value={rating} readOnly/>
 
                     <Button
-                        onClick={()=>{
+                        onClick={async ()=>{
                         dispatch(logout());
+                        await endListening()
                         navigate("/authentication/login");
                     }}
                     startIcon={<LogoutIcon/>}

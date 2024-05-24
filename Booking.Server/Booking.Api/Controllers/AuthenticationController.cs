@@ -9,6 +9,7 @@ using Booking.Api.Infrastructure;
 using Booking.Application.Authentication.ChangeEmail;
 using Booking.Application.Authentication.ConfirmEmail;
 using Booking.Application.Authentication.ForgotPassword;
+using Booking.Application.Authentication.GoogleLogin;
 using Booking.Application.Authentication.Login;
 using Booking.Application.Authentication.Register;
 using Booking.Application.Authentication.ResetPassword;
@@ -78,6 +79,16 @@ public class AuthenticationController(
 
 		return loginResult.Match(
 			loginResult => Ok(loginResult),
+			errors => Problem(errors));
+	}
+
+	[HttpPost("google-login")]
+	public async Task<IActionResult> GoogleLoginAsync([FromBody] GoogleLoginUserRequest request)
+	{
+		var googleLoginResult = await mediatr.Send(mapper.Map<GoogleLoginUserCommand>(request));
+
+		return googleLoginResult.Match(
+			loginResult => Ok(googleLoginResult.Value),
 			errors => Problem(errors));
 	}
 

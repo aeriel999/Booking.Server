@@ -6,7 +6,7 @@ import {
     changeEmail,
     confirmEmail,
     editProfile,
-    forgotPassword,
+    forgotPassword, googleLogin,
     login,
     realtorRegister,
     resetPassword,
@@ -21,16 +21,10 @@ function isRejectedAction(action: AnyAction): action is RejectedAction {
 const updateLoginUserState = (state: IAccountState, token: string): void => {
     const decodedToken: { [key: string]: string } = jwtDecode(token);
 
-    const iss = decodedToken["iss"];
 
-    if (iss === "https://accounts.google.com")
-    {
-        console.log("iss", iss)
-        updateGoogleLoginUserState(state, token);
-    }else{
-        const  email  = decodedToken["email"]
-        const role = decodedToken["http://schemas.microsoft.com/ws/2008/06/identity/claims/role"]
-        const  id = decodedToken["sub"];
+    const  email  = decodedToken["email"]
+    const role = decodedToken["http://schemas.microsoft.com/ws/2008/06/identity/claims/role"]
+    const  id = decodedToken["sub"];
 
         if(role === "realtor")
         {
@@ -55,10 +49,10 @@ const updateLoginUserState = (state: IAccountState, token: string): void => {
                 id: id,
                 email: email,
                 role: role,
-                firstName:   null,
-                lastName:   null,
-                phoneNumber:  null,
-                avatar:    null,
+                firstName: null,
+                lastName: null,
+                phoneNumber: null,
+                avatar: null,
                 rating: null
             };
         }
@@ -66,36 +60,8 @@ const updateLoginUserState = (state: IAccountState, token: string): void => {
         state.isLogin = true;
 
         addLocalStorage('authToken', token);
-    }
-
-
 };
 
-const updateGoogleLoginUserState = (state: IAccountState, token: string): void =>{
-    const decodedToken: { [key: string]: string } = jwtDecode(token);
-
-    const  email  = decodedToken["email"]
-    const firstName = decodedToken["family_name"];
-    const lastName = decodedToken["given_name"];
-    const avatar = decodedToken["picture"];
-    const  id = decodedToken["sub"];
-
-    state.user = {
-        id: id,
-        email: email,
-        role: "user",
-        firstName:   firstName,
-        lastName:   lastName,
-        phoneNumber:  null,
-        avatar:    avatar,
-        rating: null
-    };
-
-    state.token = token;
-    state.isLogin = true;
-
-    addLocalStorage('authToken', token);
-}
 
 const initialState: IAccountState = {
     user: null,
@@ -119,11 +85,7 @@ export const accountsSlice = createSlice({
             state.token = null;
             state.isLogin = false;
         },
-        googleLogin:(state, action: PayloadAction<string>)=>{
-            console.log("action", action);
 
-            updateGoogleLoginUserState(state, action.payload);
-        }
     },
     extraReducers: (builder) => {
         builder
@@ -132,6 +94,13 @@ export const accountsSlice = createSlice({
                 state.status = Status.SUCCESS;
             })
             .addCase(login.pending, (state) => {
+                state.status = Status.LOADING;
+            })
+            .addCase(googleLogin.fulfilled, (state, action) => {
+                updateLoginUserState(state, action.payload);
+                state.status = Status.SUCCESS;
+            })
+            .addCase(googleLogin.pending, (state) => {
                 state.status = Status.LOADING;
             })
             .addCase(userRegister.fulfilled, (state) => {
@@ -187,6 +156,5 @@ export const accountsSlice = createSlice({
 });
 
 export const { autoLogin,
-                logout,
-                googleLogin } = accountsSlice.actions;
+                logout} = accountsSlice.actions;
 export default accountsSlice.reducer;

@@ -86,6 +86,7 @@ const App : React.FC = () => {
 
        if (user?.role.toLowerCase().includes('realtor'))
        {
+
           return 'realtor'
        }else if(user?.role.toLowerCase().includes('user'))
        {

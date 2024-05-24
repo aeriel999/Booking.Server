@@ -31,6 +31,7 @@ import FileUploader from "../../components/common/FileUploader.tsx";
 import {AvatarValidator} from "../../validations/account";
 import Button from "@mui/material/Button";
 import * as React from "react";
+import {joinForPostListening} from "../../SignalR";
 
 
 export function AddNewPost(){
@@ -189,11 +190,11 @@ export function AddNewPost(){
             images: images
         }
 
-        console.log("model", model)
-
         try{
            const response = await dispatch(createPost(model));
            unwrapResult(response);
+
+           await joinForPostListening(response.payload.Id)
 
         }catch(error){
             setErrorMessage(ErrorHandler(error));

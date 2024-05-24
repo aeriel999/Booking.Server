@@ -11,7 +11,7 @@ var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
 builder.Services
-	.AddPresentation()
+	.AddPresentation(builder.Configuration)
 	.AddApplication()
 	.AddInfrastructure(builder.Configuration);
 
@@ -54,8 +54,6 @@ app.MapControllers();
 
 BookingInitializer.SeedUserAndRoleData(app);
 BookingInitializer.SeedPostDataAsync(app);
-
-
 
 //For SignalR
 app.UseDefaultFiles();

@@ -28,6 +28,11 @@ public class PostCityRepository(BookingDbContext context) : IPostCityRepository
 			.ToListAsync();
 	}
 
+	public async Task<PostCity?> GetCityByIdAsync(Guid? cityId)
+	{
+		return await _dbSet.FindAsync(cityId);
+	}
+
 	public async Task SaveCityAsync()
 	{
 		await context.SaveChangesAsync();

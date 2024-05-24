@@ -9,7 +9,7 @@ import LockOutlinedIcon from '@mui/icons-material/LockOutlined';
 import Typography from '@mui/material/Typography';
 import Container from '@mui/material/Container';
 import {ILogin} from "../../../interfaces/account";
-import {login} from "../../../store/accounts/account.actions.ts";
+import {googleLogin, login} from "../../../store/accounts/account.actions.ts";
 import {unwrapResult} from "@reduxjs/toolkit";
 import ErrorHandler from "../../../components/common/ErrorHandler.ts";
 import {useAppDispatch} from "../../../hooks/redux";
@@ -21,8 +21,12 @@ import InputGroup from "../../../components/common/InputGroup.tsx";
 import {EmailValidator, PasswordValidator} from "../../../validations/account";
 
 import {CredentialResponse, GoogleLogin} from "@react-oauth/google";
-import { googleLogin} from "../../../store/accounts/account.slice.ts";
+import {startListening} from "../../../SignalR";
+import {getListOfChatRooms} from "../../../store/chat/chat.action.ts";
 
+export interface IGoogleLogin{
+    googleToken: string
+}
 
 export default function SignInPage() {
     const dispatch = useAppDispatch();
@@ -40,40 +44,66 @@ export default function SignInPage() {
             password: data.get("password")  as string,
         }
 
+
         try {
             const response = await dispatch(login(model));
             unwrapResult(response);
 
-            const decodedToken: { [key: string]: string } = jwtDecode(response.payload);
+            await  afterLogin(response.payload)
 
-            const role = decodedToken["http://schemas.microsoft.com/ws/2008/06/identity/claims/role"]
-
-            if (role.toLowerCase().includes('realtor'))
-            {
-                navigate("/dashboard/profile");
-            }else if(role.toLowerCase().includes('user'))
-            {
-                navigate("/profile");
-            }else if(role.toLowerCase().includes('admin'))
-            {
-                navigate("/dashboard/profile");
-            }else {
-                navigate("/#");
-            }
         } catch (error ) {
             setErrorMessage(ErrorHandler(error));
 
         }
     };
 
-    const handleLoginSuccess =   (response: CredentialResponse) => {
+    const handleLoginSuccess =  async (response: CredentialResponse) => {
         // Handle successful login (e.g., store user data)
         console.log('Logged in successfully:', response);
 
-        dispatch(googleLogin(response.credential as string));
-        navigate("/profile");
+        const token : IGoogleLogin = {
+            googleToken: response.credential as string
+        }
+        try {
+            const resp = await dispatch(googleLogin(token));
 
+            unwrapResult(resp);
+
+            await  afterLogin(resp.payload);
+
+        } catch (error ) {
+            setErrorMessage(ErrorHandler(error));
+        }
     };
+
+     const  afterLogin  = async (token : string) =>{
+
+        await startListening();
+
+        const decodedToken: { [key: string]: string } = jwtDecode(token);
+
+        const role = decodedToken["http://schemas.microsoft.com/ws/2008/06/identity/claims/role"]
+
+        if (role.toLowerCase().includes('realtor'))
+        {
+            navigate("/dashboard/profile");
+        }else if(role.toLowerCase().includes('user'))
+        {
+            navigate("/profile");
+        }else if(role.toLowerCase().includes('admin'))
+        {
+            navigate("/dashboard/profile");
+        }else {
+            navigate("/#");
+        }
+
+        try {
+            const response = await dispatch(getListOfChatRooms());
+            unwrapResult(response);
+        }catch (error)                 {
+             setErrorMessage(ErrorHandler(error));
+        }
+    }
 
     return (
         <Container component="main" maxWidth="md">
