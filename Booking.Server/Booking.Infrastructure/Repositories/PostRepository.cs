@@ -35,7 +35,7 @@ public class PostRepository(BookingDbContext context) : IPostRepository
     {
         var posts = await GetIncludeListAsync();
         var list = PagedList<Post>.getPagedList(posts, page, sizeOfPage);
-        list.items = list.items.OrderBy(item => item.DateOfPlacement).ToList();
+        list.items = list.items.OrderBy(item => item.PostAt).ToList();
         return list;
     }
     public async Task<PagedList<Post>> GetSortedListByNumberOfRoomsAsync(int page, int sizeOfPage)

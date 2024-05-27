@@ -89,9 +89,6 @@ namespace Booking.Infrastructure.Migrations
                     b.Property<Guid>("CategoryId")
                         .HasColumnType("uuid");
 
-                    b.Property<DateTime>("DateOfPlacement")
-                        .HasColumnType("timestamp with time zone");
-
                     b.Property<string>("Description")
                         .HasColumnType("text");
 
