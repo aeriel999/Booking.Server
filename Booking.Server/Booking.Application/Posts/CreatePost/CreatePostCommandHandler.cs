@@ -111,6 +111,7 @@ public class CreatePostCommandHandler(
 			NumberOfRooms = request.NumberOfRooms,
 			Area = request.Area,
 			Price = request.Price,
+			PostAt = DateTime.Now.ToUniversalTime(),
 		};
 
 		await postRepository.CreatePostAsync(post);

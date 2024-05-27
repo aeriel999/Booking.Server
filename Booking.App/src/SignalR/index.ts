@@ -15,16 +15,20 @@ const connection = new signalR.HubConnectionBuilder()
                 { accessTokenFactory: () => (getLocalStorage('authToken') as string) } )
     .build();
 
-export const startListening = () =>connection.start();
+export const startListening = () =>connection.start()
+.then(() => {console.log("Conected")});
     // .then(() => {
     //     connection.on('send_notify', joinNewChatRoom)
     //     connection.on('send_message', logMessage)
     // });
 
-export const endListening = () =>connection.stop();
+export const endListening = () =>connection.stop()
+.then(() => {console.log("Disconnected")});
 
 export const joinForPostListening = (roomId: string) =>
-    connection.invoke('JoinPostChanelForNotifyByRealtor', {roomId});
+ 
+    connection.invoke('JoinPostChanelForNotifyByRealtor', {roomId})
+    .then(() => {console.log("joinForPostListening")});
 
 // export const send = (message: string, roomId : string) =>
 //     connection.send('SendMessage', {message, roomId})
@@ -79,7 +83,8 @@ export const joinForPostListening = (roomId: string) =>
 
 
 export  const  joinPostListening = (roomId: string) =>  connection.start()
-    .then(() =>  connection.invoke('JoinRoom', {roomId}));
+    .then(() =>  connection.invoke('JoinRoom', {roomId}))
+    .then(() => {console.log("joinPostListening")});
 // export const joinChatRoom = async ({userName, chatRoom}) => {
 //
 //

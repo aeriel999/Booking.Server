@@ -7,7 +7,6 @@ export const getListOfChatRooms = createAsyncThunk(
     async (_, { rejectWithValue }) => {
         try {
             const response = await apiClient.get('/api/Chat/chat-list');
-            console.log("response", response)
             return response.data;
         } catch (error) {
             console.log("response error", error)

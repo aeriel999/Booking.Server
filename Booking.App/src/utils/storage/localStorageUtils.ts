@@ -6,13 +6,11 @@ export const deleteLocalStorage = (keyStorage: string): void => {
     localStorage.removeItem(keyStorage);
 };
 
-export const getLocalStorage = (keyStorage: string) : string | null => {
+export const getLocalStorage = (keyStorage: string): string | null => {
     const storedValue = localStorage.getItem(keyStorage);
-    console.log("storedValue", storedValue)
     if (storedValue !== null) {
         return JSON.parse(storedValue);
-    }
-    else {
+    } else {
         return null;
     }
 };

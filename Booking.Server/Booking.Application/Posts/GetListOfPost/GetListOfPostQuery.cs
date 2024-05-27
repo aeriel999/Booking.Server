@@ -8,6 +8,8 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
+//TODO Nazar 
+
 namespace Booking.Application.Posts.GetListOfPost
 {
     public record GetListOfPostQuery(int page, int sizeOfPage) : IRequest<ErrorOr<PagedList<Post>>>;
