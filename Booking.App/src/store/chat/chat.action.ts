@@ -3,7 +3,7 @@ import {apiClient} from "../../utils/api/apiClient.ts";
 import {handleAxiosError} from "../../utils/errors";
 
 export const getListOfChatRooms = createAsyncThunk(
-    'Chat/chat-list',
+    'chat/chat-list',
     async (_, { rejectWithValue }) => {
         try {
             const response = await apiClient.get('/api/Chat/chat-list');
