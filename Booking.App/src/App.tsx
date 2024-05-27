@@ -132,9 +132,10 @@ const App : React.FC = () => {
             {/*    ? <Route path="/test" element={<WaitingRoom joinChatRoom={joinChatRoom} />} />*/}
             {/*    : <Route path="/test" element={<ChatRoom messages={messages} sendMSG={sendMSG} />} />}*/}
 
+            {/* <Route path="*" element={<SignInPage />} /> */}
+            
             <Route path="/"  element={<AnonymousDashboardLayout/>} >
                 <Route index element={<ListOfPostPage />} />
-                <Route path="*" element={<SignInPage />} />
 
             </Route>
 

@@ -41,4 +41,8 @@
 		<!-- Other items -->
 	</ItemGroup>
 
+	<ItemGroup>
+	  <Folder Include="images\posts\" />
+	</ItemGroup>
+
 </Project>
