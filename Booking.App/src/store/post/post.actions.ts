@@ -1,7 +1,7 @@
 import {createAsyncThunk} from "@reduxjs/toolkit";
 import {apiClient, apiMediaClient} from "../../utils/api/apiClient.ts";
 import {handleAxiosError} from "../../utils/errors";
-import {IPostCreate} from "../../interfaces/post";
+import {IFetchData, IFetchDataByName, IPostCreate} from "../../interfaces/post";
 
 
 
@@ -29,10 +29,7 @@ export const getListOfCategories = createAsyncThunk(
     },
 );
 
-export interface IFetchData{
-    page:number,
-    sizeOfPage:number
-}
+
 
 export const  getListOfPosts=createAsyncThunk(
     'Post/get-list-of-posts',
@@ -41,6 +38,33 @@ export const  getListOfPosts=createAsyncThunk(
             return response.data;
 
     },
+
+)
+
+export const  getListOfPostsName=createAsyncThunk(
+    'Post/get-list-of-posts-name',
+    async (data:string) => {
+        const response = await apiClient.get(`/api/Post/get-name-of-post?name=${data}`);
+        return response.data;
+
+    },
+
+)
+export const  getListOfPostsByName=createAsyncThunk(
+    'Post/get-list-of-posts-by-name',
+    async (data:IFetchDataByName) => {
+        const response = await apiClient.get(`/api/Post/get-post-by-name?name=${data.name}&page=${data.pages.page}&sizeOfPage=${data.pages.sizeOfPage}`);
+        return response.data;
+
+    },
+
+)
+export const getPostById=createAsyncThunk(
+    'Post/get-post-by-id',
+    async (id)=>{
+        const response = await apiClient.get(`api/Post/get-post-by-id-${id}`);
+        return response.data;
+    }
 
 )
 

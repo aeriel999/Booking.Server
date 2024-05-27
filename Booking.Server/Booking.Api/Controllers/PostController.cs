@@ -12,12 +12,11 @@ using Booking.Application.Posts.CreatePost;
 using Booking.Application.Posts.GetCategoriesList;
 using Booking.Application.Posts.GetCities;
 using Booking.Application.Posts.GetCountries;
+using Booking.Application.Posts.GetFilteredList;
 using Booking.Application.Posts.GetListOfPost;
+using Booking.Application.Posts.GetNameOfPost;
 using Booking.Application.Posts.GetPostById;
-using Booking.Application.Posts.GetSortedList.ByCategory;
-using Booking.Application.Posts.GetSortedList.ByNumberOfRooms;
-using Booking.Application.Posts.GetSortedList.ByPrice;
-using Booking.Application.Posts.GetSortedList.ByRealtor;
+using Booking.Application.Posts.GetPostByName;
 using Booking.Application.Posts.GetStreets;
 using Booking.Application.Posts.GetTypeOfRent;
 using MapsterMapper;
@@ -71,46 +70,8 @@ public class PostController(ISender mediatr, IMapper mapper) : ApiController
             getlistOfPostResult => Ok(mapper.Map<PagedList<GetListOfPostResponse>>(getlistOfPostResult)),
             errors => Problem(errors));
     }
+    
     [AllowAnonymous]
-    [HttpGet("get-sorted-list-by-number-of-rooms")]
-    public async Task<IActionResult> GetSortedListByNumberOfRoomsAsync([FromQuery] int page, int sizeOfPage)
-    {
-        var getlistOfPostResult = await mediatr.Send(new GetSortedListByNumberOfRoomsQuery(page, sizeOfPage));
-
-        return getlistOfPostResult.Match(
-            getlistOfPostResult => Ok(mapper.Map<PagedList<GetListOfPostResponse>>(getlistOfPostResult)),
-            errors => Problem(errors));
-    }
-    [AllowAnonymous]
-    [HttpGet("get-sorted-list-by-price")]
-    public async Task<IActionResult> GetSortedListByPriceAsync([FromQuery] int page, int sizeOfPage)
-    {
-        var getlistOfPostResult = await mediatr.Send(new GetSortedListByPriceQuery(page, sizeOfPage));
-
-        return getlistOfPostResult.Match(
-            getlistOfPostResult => Ok(mapper.Map<PagedList<GetListOfPostResponse>>(getlistOfPostResult)),
-            errors => Problem(errors));
-    }
-    [AllowAnonymous]
-    [HttpGet("get-sorted-list-by-category")]
-    public async Task<IActionResult> GetSortedListByCategoryAsync([FromQuery] int page, int sizeOfPage)
-    {
-        var getlistOfPostResult = await mediatr.Send(new GetSortedListByCategoryQuery(page, sizeOfPage)); 
-
-        return getlistOfPostResult.Match(
-            getlistOfPostResult => Ok(mapper.Map<PagedList<GetListOfPostResponse>>(getlistOfPostResult)),
-            errors => Problem(errors));
-    }
-    [AllowAnonymous]
-    [HttpGet("get-sorted-list-by-realtor")]
-    public async Task<IActionResult> GetSortedListByRealtorAsync([FromQuery] int page, int sizeOfPage)
-    {
-        var getlistOfPostResult = await mediatr.Send(new GetSortedListByRealtorQuery(page, sizeOfPage));
-
-        return getlistOfPostResult.Match(
-            getlistOfPostResult => Ok(mapper.Map<PagedList<GetListOfPostResponse>>(getlistOfPostResult)),
-            errors => Problem(errors));
-    }
     [HttpGet("get-post-by-id-{id}")]
     public async Task<IActionResult> GetPostByIdAsync([FromRoute] Guid id)
     {
@@ -118,6 +79,36 @@ public class PostController(ISender mediatr, IMapper mapper) : ApiController
 
         return getPostResult.Match(
             getPostResult => Ok(mapper.Map<GetPostResponse>(getPostResult)),
+            errors => Problem(errors));
+    }
+    [AllowAnonymous]
+    [HttpGet("get-post-by-name")]
+    public async Task<IActionResult> GetPostByNameAsync([FromQuery] string name, int page, int sizeOfPage)
+    {
+        var getPostResult = await mediatr.Send(new GetPostByNameQuery(name,page,sizeOfPage));
+
+        return getPostResult.Match(
+            getPostResult => Ok(mapper.Map<PagedList<GetListOfPostResponse>>(getPostResult)),
+            errors => Problem(errors));
+    }
+    [AllowAnonymous]
+    [HttpGet("get-name-of-post")]
+    public async Task<IActionResult> GetNameOfPostAsync([FromQuery] string name="")
+    {
+        var getPostResult = await mediatr.Send(new GetNameOfPostQuery(name));
+
+        return getPostResult.Match(
+            getPostResult => Ok(getPostResult),
+            errors => Problem(errors));
+    }
+    [AllowAnonymous]
+    [HttpGet("get-filtered-list-by-{type}")]
+    public async Task<IActionResult> GetPostByIdAsync([FromRoute] string type, [FromQuery] int page, int sizeOfPage,Guid id)
+    {
+        var getlistOfPostResult = await mediatr.Send(new GetFilteredListQuery(type,page,sizeOfPage,id));
+
+        return getlistOfPostResult.Match(
+            getlistOfPostResult => Ok(mapper.Map<PagedList<GetListOfPostResponse>>(getlistOfPostResult)),
             errors => Problem(errors));
     }
     [HttpGet("get-type-of-rent-list")]

@@ -23,6 +23,7 @@ import { AddNewPost } from "./containers/dashboard/AddNewPost.tsx";
 import ListOfPostPage from "./containers/client/ListOfPostPage.tsx";
 import AnonymousDashboardLayout from "./containers/anonymous/layouts/AnonymousDashboardLayout.tsx";
 import {MessageRight} from "./components/chat/Message.tsx";
+import PostPage from "./containers/client/PostPage.tsx";
 // import {  MessageRight } from "./components/chat/Message.tsx";
 //import { MessageLeft } from "./components/chat/Message.tsx";
 
@@ -133,7 +134,10 @@ const App: React.FC = () => {
                                 path="/profile"
                                 element={<UserProfilePage />}
                             />
-                            <Route path="/posts" element={<ListOfPostPage />} />
+                            <Route path="/posts" element={<ListOfPostPage />}>
+
+                            </Route>
+                            <Route path={"/posts/:id"} element={<PostPage/>}></Route>
                             {/*<Route path="/dashboard/chat/:postId" element={<ChatRoom/>} />*/}
                         </Route>
                     )}
@@ -148,7 +152,7 @@ const App: React.FC = () => {
             {/*    : <Route path="/test" element={<ChatRoom messages={messages} sendMSG={sendMSG} />} />}*/}
             {/* <Route path="*" element={<SignInPage />} /> */}
             <Route path="/" element={<AnonymousDashboardLayout />}>
-                <Route index element={<ListOfPostPage />} />
+                <Route index element={<ListOfPostPage />}/>
             </Route>
             <Route path="/dashboard/profile" element={<SignInPage />} />
             <Route path="/dashboard/profile/edit" element={<SignInPage />} />

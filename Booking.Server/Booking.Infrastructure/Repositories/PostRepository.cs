@@ -4,6 +4,7 @@ using Booking.Domain.Chat;
 using Booking.Domain.Posts;
 using Booking.Infrastructure.Common.Persistence;
 using Microsoft.EntityFrameworkCore;
+using System.Text.RegularExpressions;
 
 namespace Booking.Infrastructure.Repositories;
 
@@ -35,38 +36,80 @@ public class PostRepository(BookingDbContext context) : IPostRepository
     {
         var posts = await GetIncludeListAsync();
         var list = PagedList<Post>.getPagedList(posts, page, sizeOfPage);
-        list.items = list.items.OrderBy(item => item.DateOfPlacement).ToList();
+        list.items = list.items.OrderBy(item => item.PostAt).ToList();
         return list;
     }
-    public async Task<PagedList<Post>> GetSortedListByNumberOfRoomsAsync(int page, int sizeOfPage)
+    public async Task<PagedList<Post>> GetFilteredListAsync(string type,int page, int sizeOfPage,Guid id)
     {
-        var posts = await GetAllAsync(page,sizeOfPage);
-        posts.items = posts.items.OrderBy(item=>item.NumberOfRooms).ToList();
-        return posts;
+        var posts = await GetIncludeListAsync();
+        PagedList<Post> list = new PagedList<Post>();
+        if (type.Equals("category"))
+        {
+            list = PagedList<Post>.getPagedList(posts.
+                Where(p=>p.CategoryId==id).
+                OrderBy(item => item.PostAt).
+                Select(p=>p), page, sizeOfPage);
+        }
+        else if (type.Equals("country"))
+        {
+            list = PagedList<Post>.getPagedList(posts.
+                Where(p => p.Street.City.CountryId == id).
+                OrderBy(item => item.PostAt).
+                Select(p => p), page, sizeOfPage);
+        }
+        else if (type.Equals("city"))
+        {
+            list = PagedList<Post>.getPagedList(posts.
+                Where(p => p.Street.CityId == id).
+                OrderBy(item => item.PostAt).
+                Select(p => p), page, sizeOfPage);
+        }
+        else if (type.Equals("street"))
+        {
+            list = PagedList<Post>.getPagedList(posts.Where(p => p.StreetId == id).
+                OrderBy(item => item.PostAt).
+                Select(p => p), page, sizeOfPage);
+        }
+        else if (type.Equals("realtor"))
+        {
+            list = PagedList<Post>.getPagedList(posts.Where(p => p.UserId == id).
+                OrderBy(item => item.PostAt).
+                Select(p => p), page, sizeOfPage);
+        }
+        return list;
     }
-    public async Task<PagedList<Post>> GetSortedListByPriceAsync(int page, int sizeOfPage)
+   public async Task<PagedList<Post>> GetPostByNameAsync(string name, int page, int sizeOfPage)
     {
-        var posts = await GetAllAsync(page, sizeOfPage);
-        posts.items = posts.items.OrderBy(item => item.Price).ToList();
-        return posts;
+        var posts = await GetIncludeListAsync();
+        
+        var list = PagedList<Post>.getPagedList(posts
+            .Where(p=>p.Name.ToLower().Equals(name.ToLower()))
+            .Select(p=>p).
+            ToList(),page,sizeOfPage);
+
+        return list;
     }
-    public async Task<PagedList<Post>> GetSortedListByCategoryAsync(int page, int sizeOfPage)
+    public async Task<List<string>> GetNameOfPostAsync(string name)
     {
-        var posts = await GetAllAsync(page, sizeOfPage);
-        posts.items = posts.items.OrderBy(item => item.Category.Name).ToList();
-        return posts;
-    }
-    public async Task<PagedList<Post>> GetSortedListByRealtorAsync(int page, int sizeOfPage)
-    {
-        var posts = await GetAllAsync(page, sizeOfPage);
-        posts.items = posts.items.OrderBy(item => item.User.FirstName + item.User.LastName).ToList();
-        return posts;
+        if (String.IsNullOrEmpty(name)) return new List<string>();
+
+        var posts = await GetIncludeListAsync();
+        Regex regex = new Regex($@"(^|\s){name.ToLower()}");
+        var list = posts
+            .Where(p => regex.IsMatch(p.Name.ToLower()))
+            .Select(p=>p.Name)
+            .Take(10)
+            .ToList();
+
+        return list;
     }
     public async Task<List<Post>> GetIncludeListAsync()
     {
         return await context.Posts
             .Include(post => post.PostTypeOfRent)
             .Include(post => post.Category)
+            .Include(post=>post.Street.City.Country)
+            .Include(post => post.Street.City)
             .Include(post => post.Street)
             .Include(post => post.User)
             .Include(post => post.ImagesPost)
