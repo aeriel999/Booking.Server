@@ -4,7 +4,7 @@ using MediatR;
 
 namespace Booking.Application.Posts.GetStreets;
 
-public class GetStreetsListByCityIdQueryHandler(IStreetRepository streetRepository)
+public class GetStreetsListByCityIdQueryHandler(IPostStreetRepository streetRepository)
 	: IRequestHandler<GetStreetsListByCityIdQuery, List<PostStreet>?>
 {
 	public async Task<List<PostStreet>?> Handle(

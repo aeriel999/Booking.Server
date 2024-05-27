@@ -27,7 +27,7 @@ import Button from "@mui/material/Button";
 import {logout} from "../../../store/accounts/account.slice.ts";
 import LogoutIcon from '@mui/icons-material/Logout';
 
-import { joinForPostListening, leave, startListening} from "../../../SignalR";
+import { joinForPostListening,startListening} from "../../../SignalR";
 import {getListOfChatRooms} from "../../../store/chat/chat.action.ts";
 import {unwrapResult} from "@reduxjs/toolkit";
 
@@ -141,7 +141,7 @@ export default function ClientDashboardLayout() {
 
         console.log("Disconnect///////")
 
-        await leave("5c57dae8-39f3-41da-9bc8-521221e4bf44");
+      //  await leave("5c57dae8-39f3-41da-9bc8-521221e4bf44");
     }
 
     return (
@@ -180,7 +180,7 @@ export default function ClientDashboardLayout() {
 
                     <Button onClick={addConnection} color={"inherit"}>Add connection</Button>
                     <Button onClick={disconnect} color={"inherit"}>End connection</Button>
-                    <Button onClick={navigate("/posts")} color={"inherit"}>Posts</Button>
+                    {/*<Button onClick={navigate("/posts")} color={"inherit"}>Posts</Button>*/}
 
                 </Toolbar>
             </AppBar>

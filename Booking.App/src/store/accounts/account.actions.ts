@@ -10,6 +10,7 @@ import {
     IResetPassword,
     IUserRegister
 } from "../../interfaces/account";
+import {IGoogleLogin} from "../../pages/accaunt/login/SignIn.tsx";
 
 
 export const login = createAsyncThunk(
@@ -19,6 +20,21 @@ export const login = createAsyncThunk(
             const response = await apiClient.post('/api/Authentication/login', payload);
             return response.data;
         } catch (error) {
+            return rejectWithValue(handleAxiosError(error, 'Error'));
+        }
+    },
+);
+
+export const googleLogin = createAsyncThunk(
+    'Authentication/google-login',
+    async (payload : IGoogleLogin, { rejectWithValue }) => {
+        try {
+            console.log("payload", payload);
+
+            const response = await apiClient.post('/api/Authentication/google-login', payload);
+            return response.data;
+        } catch (error) {
+            console.log("error", error);
             return rejectWithValue(handleAxiosError(error, 'Error'));
         }
     },

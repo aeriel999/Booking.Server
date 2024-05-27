@@ -46,5 +46,8 @@ public class Post
 	public ICollection<PostImage>? ImagesPost { get; set; }
 
 	public ICollection<ChatRoom>? ChatRooms { get; set; }
-	public required DateTime DateOfPlacement { get; set; }
+
+	public required DateTime PostAt { get; set; }
+
+	public DateTime? EditAt { get; set; }
 }

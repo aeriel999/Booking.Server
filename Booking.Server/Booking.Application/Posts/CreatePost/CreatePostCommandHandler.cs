@@ -11,7 +11,7 @@ public class CreatePostCommandHandler(
 	IImageStorageService imageStorageService,
 	IPostImageRepository postImageRepository,
 	IPostCategoryRepository postCategoryRepository,
-	IStreetRepository streetRepository,
+	IPostStreetRepository streetRepository,
 	IPostTypeOfRentRepository postTypeOfRentRepository,
 	IPostCountryRepository postCountryRepository,
 	IPostCityRepository postCityRepository)
@@ -39,10 +39,13 @@ public class CreatePostCommandHandler(
 		if(country == null)
 			return Error.NotFound("Country is not found");
 
+		//City
+		PostCity? city = null;
+
 		//Add new city if it not exist
 		if (request.CityId == null && request.CityName != null)
 		{
-			var city = await postCityRepository.FindCityByNameAndCountryIdAsync(
+			city = await postCityRepository.FindCityByNameAndCountryIdAsync(
 				request.CityName, request.CountryId);
 
 			if (city == null)
@@ -57,14 +60,43 @@ public class CreatePostCommandHandler(
 				await postCityRepository.SaveCityAsync();
 			}
 		}
+		else  
+		{
+			//Check city for existing
+			city = await postCityRepository.GetCityByIdAsync(request.CityId);
 
-		//Check street for existing
-		var street = await streetRepository.GetStreetByIdAsync(request.StreetId);
+			if (city == null)
+				return Error.NotFound("City is not found");
+		}
 
-		if (street == null)
-			return Error.NotFound("Street is not found");
+		//Street
+		PostStreet? street = null;
 
+		if (request.StreetId == null && request.StreetName != null)
+		{
+			street = await streetRepository.FindStreetByNameAndCityIdAsync(
+				request.StreetName, city.Id);
 
+			if (street == null)
+			{
+				street = new PostStreet
+				{
+					Name = request.StreetName,
+					CityId = city.Id,
+				};
+
+				await streetRepository.CreateStreetAsync(street);
+				await streetRepository.SaveStreetAsync();
+			}
+		}
+		else 
+		{
+			//Check street for existing
+			street = await streetRepository.GetStreetByIdAsync(request.StreetId);
+
+			if (street == null)
+				return Error.NotFound("Street is not found");
+		}
 
 		//Create and save new post
 		var post = new Post
@@ -74,12 +106,12 @@ public class CreatePostCommandHandler(
 			CategoryId = request.CategoryId,
 			Description = request.Description,
 			PostTypeOfRentId = request.PostTypeOfRentId,
-			StreetId = request.StreetId,
+			StreetId = street.Id,
 			BuildingNumber = request.BuildingNumber,
 			NumberOfRooms = request.NumberOfRooms,
 			Area = request.Area,
 			Price = request.Price,
-			DateOfPlacement = DateTime.Now
+			PostAt = DateTime.Now.ToUniversalTime(),
 		};
 
 		await postRepository.CreatePostAsync(post);
@@ -108,7 +140,6 @@ public class CreatePostCommandHandler(
 				await postImageRepository.CraetePostImageAsync(postImage);
 				await postImageRepository.SavePostImageAsync();
 			}
-
 		}
 
 		return post;

@@ -1,41 +1,52 @@
 import Container from "@mui/material/Container";
 import Box from "@mui/material/Box";
 import Typography from "@mui/material/Typography";
-import {Breadcrumbs, Grid} from "@mui/material";
-import {Link} from "react-router-dom";
+import { Breadcrumbs, Grid } from "@mui/material";
+import { Link, useNavigate } from "react-router-dom";
 import Divider from "@mui/material/Divider";
 import ComboBox from "../../components/common/ComboBox.tsx";
-import {useEffect, useRef, useState} from "react";
-import {useAppDispatch} from "../../hooks/redux";
-import {unwrapResult} from "@reduxjs/toolkit";
+import { useEffect, useRef, useState } from "react";
+import { useAppDispatch } from "../../hooks/redux";
+import { unwrapResult } from "@reduxjs/toolkit";
 import {
     createPost,
     getListOfCategories,
     getListOfCitiesByCountryId,
     getListOfCountries,
-    getListOfStreetsByCityId, getTypesOfRentList
+    getListOfStreetsByCityId,
+    getTypesOfRentList,
 } from "../../store/post/post.actions.ts";
 import ErrorHandler from "../../components/common/ErrorHandler.ts";
 import OutlinedErrorAlert from "../../components/common/ErrorAlert.tsx";
-import {ICategory, ICity, ICountry, IPostCreate, ITypeOfRent} from "../../interfaces/post";
+import {
+    ICategory,
+    ICity,
+    ICountry,
+    IPostCreate,
+    ITypeOfRent,
+} from "../../interfaces/post";
 import InputGroup from "../../components/common/InputGroup.tsx";
 import {
     AreaValidator,
     BuildingNumberValidator,
     CityNameValidator,
-    DescriptionValidator, NumberOfRoomsValidator,
-    PostNameValidator, PriceValidator,
-    StreetNameValidator
+    DescriptionValidator,
+    NumberOfRoomsValidator,
+    PostNameValidator,
+    PriceValidator,
+    StreetNameValidator,
 } from "../../validations/post";
 import FileUploader from "../../components/common/FileUploader.tsx";
-import {AvatarValidator} from "../../validations/account";
+import { AvatarValidator } from "../../validations/account";
 import Button from "@mui/material/Button";
 import * as React from "react";
+import { joinForPostListening } from "../../SignalR";
 
-
-export function AddNewPost(){
+export function AddNewPost() {
     const dispatch = useAppDispatch();
-    const [errorMessage, setErrorMessage] = useState<string | undefined >(undefined);
+    const [errorMessage, setErrorMessage] = useState<string | undefined>(
+        undefined
+    );
     const [typeOfRentList, setTypeOfRentList] = useState<ITypeOfRent[]>([]);
     const [typeOfRent, setTypeOfRent] = useState<ITypeOfRent>();
     const [categoryList, setCategoryList] = useState<ICategory[]>([]);
@@ -47,115 +58,114 @@ export function AddNewPost(){
     const [streetList, setStreetList] = useState<ICity[]>([]);
     const [street, setStreet] = useState<ICity>();
     const formValid = useRef({
-                                                                    cityName: false,
-                                                                    streetName: false,
-                                                                    name: false,
-                                                                    description: false,
-                                                                    buildingNumber: false,
-                                                                    numberOfRooms: false,
-                                                                    area: false,
-                                                                    price: false,
-                                                                    images: false});
+        cityName: false,
+        streetName: false,
+        name: false,
+        description: false,
+        buildingNumber: false,
+        numberOfRooms: false,
+        city: false,
+        street: false,
+        area: false,
+        price: false,
+        images: false,
+    });
     const [images, setImages] = useState<File[]>([]);
     const [isFormValid, setIsFormValid] = useState(false);
-   // const navigate = useNavigate();
-//ToDo make hasCountOfRooms and hasArea
+    const navigate = useNavigate();
+    //ToDo make hasCountOfRooms and hasArea
     //ToDo request.CityId == null && request.CityName != null
 
-    const getTypeOfRentList = async ()=>{
-        try{
+    const getTypeOfRentList = async () => {
+        try {
             const response = await dispatch(getTypesOfRentList());
             unwrapResult(response);
             return response;
-        }catch(error){
+        } catch (error) {
             setErrorMessage(ErrorHandler(error));
         }
-    }
+    };
 
-    const getCategoryList = async ()=>{
-        try{
+    const getCategoryList = async () => {
+        try {
             const response = await dispatch(getListOfCategories());
             unwrapResult(response);
             return response;
-        }catch(error){
+        } catch (error) {
             setErrorMessage(ErrorHandler(error));
         }
-    }
+    };
 
-    const getCountryList = async ()=>{
-        try{
+    const getCountryList = async () => {
+        try {
             const response = await dispatch(getListOfCountries());
             unwrapResult(response);
             return response;
-        }catch(error){
+        } catch (error) {
             setErrorMessage(ErrorHandler(error));
         }
-    }
+    };
 
-    const getCityList = async (countryId: string)=>{
-        try{
-            const response = await dispatch(getListOfCitiesByCountryId(countryId));
+    const getCityList = async (countryId: string) => {
+        try {
+            const response = await dispatch(
+                getListOfCitiesByCountryId(countryId)
+            );
             unwrapResult(response);
             return response;
-        }catch(error){
+        } catch (error) {
             setErrorMessage(ErrorHandler(error));
         }
-    }
+    };
 
-    const getStreetList = async (cityId: string)=>{
-        try{
+    const getStreetList = async (cityId: string) => {
+        try {
             const response = await dispatch(getListOfStreetsByCityId(cityId));
             unwrapResult(response);
             return response;
-        }catch(error){
+        } catch (error) {
             setErrorMessage(ErrorHandler(error));
         }
-    }
+    };
 
     useEffect(() => {
-        getTypeOfRentList()
-            .then((history) => {
-                setTypeOfRentList(history?.payload.$values);
-            });
+        getTypeOfRentList().then((history) => {
+            setTypeOfRentList(history?.payload.$values);
+        });
 
-        getCategoryList()
-            .then((history) => {
-                setCategoryList(history?.payload.$values);
-            });
+        getCategoryList().then((history) => {
+            setCategoryList(history?.payload.$values);
+        });
 
-        getCountryList()
-            .then((history) => {
-                setCountryList(history?.payload.$values);
-            });
+        getCountryList().then((history) => {
+            setCountryList(history?.payload.$values);
+        });
     }, []);
 
     useEffect(() => {
-        if(country)
-        {
-            getCityList(country.id)
-                .then((history) => {
-                     if(history?.payload.$values !=null){
-                         setCityList(history?.payload.$values)
-                     }
-                });
+        if (country) {
+            getCityList(country.id).then((history) => {
+                if (history?.payload.$values != null) {
+                    setCityList(history?.payload.$values);
+                }
+            });
         }
-
     }, [country]);
 
     useEffect(() => {
-        if(city)
-        {
-            getStreetList(city.id)
-                .then((history) => {
-                    if(history?.payload.$values !=null){
-                        setStreetList(history?.payload.$values)
-                    }
-                });
+        if (city) {
+            getStreetList(city.id).then((history) => {
+                if (history?.payload.$values != null) {
+                    setStreetList(history?.payload.$values);
+                }
+            });
         }
     }, [city]);
 
     function handleChange() {
-        setIsFormValid(Object.values(formValid.current).every(isValid => isValid));
+        setIsFormValid(
+            Object.values(formValid.current).every((isValid) => isValid)
+        );
         console.log("isFormValid", isFormValid);
     }
 
@@ -164,13 +174,17 @@ export function AddNewPost(){
 
         const data = new FormData(event.currentTarget);
 
-        const numberOfRoomsResult = (data.get("numberOfRooms") as string) == ""
-            ?  null : parseInt(data.get("numberOfRooms") as string, 10);
+        const numberOfRoomsResult =
+            (data.get("numberOfRooms") as string) == ""
+                ? null
+                : parseInt(data.get("numberOfRooms") as string, 10);
 
-        const areaResult = (data.get("area") as string)  == ""
-            ?  null : parseInt(data.get("area") as string, 10);
+        const areaResult =
+            (data.get("area") as string) == ""
+                ? null
+                : parseInt(data.get("area") as string, 10);
 
-        const model : IPostCreate = {
+        const model: IPostCreate = {
             name: data.get("name") as string,
             postTypeOfRentId: typeOfRent!.id,
             categoryId: category!.id,
@@ -184,29 +198,40 @@ export function AddNewPost(){
             area: areaResult,
             price: parseFloat(data.get("price") as string),
             description: data.get("description") as string,
-            images: images
-        }
+            images: images,
+        };
 
-        console.log("model", model)
+        try {
+            const response = await dispatch(createPost(model));
+            unwrapResult(response);
 
-        try{
-           const response = await dispatch(createPost(model));
-           unwrapResult(response);
+            console.log("response.payload.Id", response);
+            await joinForPostListening(response.payload.id);
 
-        }catch(error){
+            navigate("/dashboard");
+        } catch (error) {
             setErrorMessage(ErrorHandler(error));
         }
-    }
-    return(
+    };
+    return (
         <>
-            <Breadcrumbs aria-label="breadcrumb" style={{marginBottom: "20px"}}>
+            <Breadcrumbs
+                aria-label="breadcrumb"
+                style={{ marginBottom: "20px" }}
+            >
                 <Link to={"/dashboard/profile"}>
-                    <Typography variant="h6" color="text.primary">Dashboard</Typography>
+                    <Typography variant="h6" color="text.primary">
+                        Dashboard
+                    </Typography>
                 </Link>
                 <Link to={"/dashboard/profile"}>
-                    <Typography variant="h6" color="text.primary">Profile</Typography>
+                    <Typography variant="h6" color="text.primary">
+                        Profile
+                    </Typography>
                 </Link>
-                <Typography variant="h6" color="text.primary">Add New Post</Typography>
+                <Typography variant="h6" color="text.primary">
+                    Add New Post
+                </Typography>
             </Breadcrumbs>
             <Divider />
 
@@ -216,89 +241,129 @@ export function AddNewPost(){
                 <Box
                     sx={{
                         marginTop: 8,
-                        display: 'flex',
-                        flexDirection: 'column',
-                        alignItems: 'center',
+                        display: "flex",
+                        flexDirection: "column",
+                        alignItems: "center",
                     }}
                 >
                     <Typography component="h1" variant="h5">
                         Add New Post
                     </Typography>
-                    <Box component="form" onSubmit={handleSubmit} noValidate sx={{ mt: 1 }}>
+                    <Box
+                        component="form"
+                        onSubmit={handleSubmit}
+                        noValidate
+                        sx={{ mt: 1 }}
+                    >
                         <Grid container spacing={2}>
-
                             <Grid item xs={12}>
-
                                 <InputGroup
                                     label="Enter title for your post"
                                     field="name"
-                                    type= "text"
+                                    type="text"
                                     validator={PostNameValidator}
-                                    onChange={isValid => (formValid.current.name = isValid)}
+                                    onChange={(isValid) =>
+                                        (formValid.current.name = isValid)
+                                    }
                                 />
                             </Grid>
 
                             <Grid item xs={12}>
-                                <ComboBox options={typeOfRentList} onChange={setTypeOfRent} label={"Type Of Rent"}/>
+                                <ComboBox
+                                    options={typeOfRentList}
+                                    onChange={setTypeOfRent}
+                                    label={"Type Of Rent"}
+                                />
                             </Grid>
 
                             <Grid item xs={12}>
-                                <ComboBox options={categoryList} onChange={setCategory} label={"Category"}/>
+                                <ComboBox
+                                    options={categoryList}
+                                    onChange={setCategory}
+                                    label={"Category"}
+                                />
                             </Grid>
 
                             <Grid item xs={12}>
-                                <ComboBox options={countryList} onChange={setCountry} label={"Country"}/>
+                                <ComboBox
+                                    options={countryList}
+                                    onChange={setCountry}
+                                    label={"Country"}
+                                />
                             </Grid>
 
-                            {cityList.length > 0 &&
-                                ( <Grid item xs={12}>
-                                    <Typography variant="subtitle1" color="text.primary">
-                                        Select City from the list or enter it in a field.
+                            {cityList.length > 0 && (
+                                <Grid item xs={12}>
+                                    <Typography
+                                        variant="subtitle1"
+                                        color="text.primary"
+                                    >
+                                        Select City from the list or enter it in
+                                        a field.
                                     </Typography>
-                                    <ComboBox options={cityList} onChange={setCity} label={"City"}/>
-                                </Grid>)}
+                                    <ComboBox
+                                        options={cityList}
+                                        onChange={setCity}
+                                        label={"City"}
+                                    />
+                                </Grid>
+                            )}
 
-                            {city === undefined &&
-                                (
-                                    <Grid item xs={12}>
-                                        <InputGroup
-                                            label="City"
-                                            field="cityName"
-                                            type= "text"
-                                            validator={CityNameValidator}
-                                            onChange={isValid => (formValid.current.city = isValid)}
-                                        />
-                                    </Grid>
-                                )}
+                            {city === undefined && (
+                                <Grid item xs={12}>
+                                    <InputGroup
+                                        label="City"
+                                        field="cityName"
+                                        type="text"
+                                        validator={CityNameValidator}
+                                        onChange={(isValid) =>
+                                            (formValid.current.city = isValid)
+                                        }
+                                    />
+                                </Grid>
+                            )}
 
-                            {streetList.length > 0 &&
-                                ( <Grid item xs={12}>
-                                    <Typography variant="subtitle1" color="text.primary">
-                                        Select Street from the list or enter it in a field.
+                            {streetList.length > 0 && (
+                                <Grid item xs={12}>
+                                    <Typography
+                                        variant="subtitle1"
+                                        color="text.primary"
+                                    >
+                                        Select Street from the list or enter it
+                                        in a field.
                                     </Typography>
-                                    <ComboBox options={streetList} onChange={setStreet} label={"Street"}/>
-                                </Grid>)}
+                                    <ComboBox
+                                        options={streetList}
+                                        onChange={setStreet}
+                                        label={"Street"}
+                                    />
+                                </Grid>
+                            )}
 
-                            {street === undefined  &&
-                                (
-                                    <Grid item xs={12}>
-                                        <InputGroup
-                                            label="Street"
-                                            field="streetName"
-                                            type= "text"
-                                            validator={StreetNameValidator}
-                                            onChange={isValid => (formValid.current.street = isValid)}
-                                        />
-                                    </Grid>
-                                )}
+                            {street === undefined && (
+                                <Grid item xs={12}>
+                                    <InputGroup
+                                        label="Street"
+                                        field="streetName"
+                                        type="text"
+                                        validator={StreetNameValidator}
+                                        onChange={(isValid) =>
+                                            (formValid.current.street = isValid)
+                                        }
+                                    />
+                                </Grid>
+                            )}
 
                             <Grid item xs={12}>
                                 <InputGroup
                                     label="Bulding number"
                                     field="buildingNumber"
-                                    type= "text"
+                                    type="text"
                                     validator={BuildingNumberValidator}
-                                    onChange={isValid => (formValid.current.buildingNumber = isValid)}
+                                    onChange={(isValid) =>
+                                        (formValid.current.buildingNumber =
+                                            isValid)
+                                    }
                                 />
                             </Grid>
 
@@ -306,9 +371,12 @@ export function AddNewPost(){
                                 <InputGroup
                                     label="Number of Rooms"
                                     field="numberOfRooms"
-                                    type= "number"
+                                    type="number"
                                     validator={NumberOfRoomsValidator}
-                                    onChange={isValid => (formValid.current.numberOfRooms = isValid)}
+                                    onChange={(isValid) =>
+                                        (formValid.current.numberOfRooms =
+                                            isValid)
+                                    }
                                 />
                             </Grid>
 
@@ -316,9 +384,11 @@ export function AddNewPost(){
                                 <InputGroup
                                     label="Area"
                                     field="area"
-                                    type= "number"
+                                    type="number"
                                     validator={AreaValidator}
-                                    onChange={isValid => (formValid.current.area = isValid)}
+                                    onChange={(isValid) =>
+                                        (formValid.current.area = isValid)
+                                    }
                                 />
                             </Grid>
 
@@ -326,9 +396,11 @@ export function AddNewPost(){
                                 <InputGroup
                                     label="Price"
                                     field="price"
-                                    type= "number"
+                                    type="number"
                                     validator={PriceValidator}
-                                    onChange={isValid => (formValid.current.price = isValid)}
+                                    onChange={(isValid) =>
+                                        (formValid.current.price = isValid)
+                                    }
                                 />
                             </Grid>
 
@@ -336,9 +408,12 @@ export function AddNewPost(){
                                 <InputGroup
                                     label="Description"
                                     field="description"
-                                    type= "text"
+                                    type="text"
                                     validator={DescriptionValidator}
-                                    onChange={isValid => (formValid.current.description = isValid)}
+                                    onChange={(isValid) =>
+                                        (formValid.current.description =
+                                            isValid)
+                                    }
                                     rowsCount={7}
                                     isMultiline={true}
                                 />
@@ -350,10 +425,11 @@ export function AddNewPost(){
                                     setImages={setImages}
                                     maxImagesUpload={10}
                                     validator={AvatarValidator}
-                                    onChange={isValid => (formValid.current.images = isValid)}
-                                    onDelete={ handleChange}
+                                    onChange={(isValid) =>
+                                        (formValid.current.images = isValid)
+                                    }
+                                    onDelete={handleChange}
                                 ></FileUploader>
-
                             </Grid>
                         </Grid>
                         <Button
@@ -367,8 +443,7 @@ export function AddNewPost(){
                         </Button>
                     </Box>
                 </Box>
-
             </Container>
         </>
-    )
+    );
 }
