@@ -22,7 +22,7 @@ import ClientDashboardLayout from "./containers/client/layouts/_ClientDashboardL
 import { AddNewPost } from "./containers/dashboard/AddNewPost.tsx";
 import ListOfPostPage from "./containers/client/ListOfPostPage.tsx";
 import AnonymousDashboardLayout from "./containers/anonymous/layouts/AnonymousDashboardLayout.tsx";
-import {MessageRight} from "./components/Chat/Message.tsx";
+import {MessageRight} from "./components/chat/Message.tsx";
 // import {  MessageRight } from "./components/chat/Message.tsx";
 //import { MessageLeft } from "./components/chat/Message.tsx";
 
