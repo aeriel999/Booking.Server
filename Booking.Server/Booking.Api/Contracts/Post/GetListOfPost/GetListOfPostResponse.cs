@@ -8,5 +8,6 @@
         public string User { get; set; }
         public decimal Price { get; set; }
         public string ImagePost { get; set; }
+        public DateTime PostAt { get; set; }
     }
 }

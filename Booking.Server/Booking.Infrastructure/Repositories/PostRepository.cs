@@ -35,7 +35,32 @@ public class PostRepository(BookingDbContext context) : IPostRepository
     {
         var posts = await GetIncludeListAsync();
         var list = PagedList<Post>.getPagedList(posts, page, sizeOfPage);
+        list.items = list.items.OrderBy(item => item.PostAt).ToList();
         return list;
+    }
+    public async Task<PagedList<Post>> GetSortedListByNumberOfRoomsAsync(int page, int sizeOfPage)
+    {
+        var posts = await GetAllAsync(page,sizeOfPage);
+        posts.items = posts.items.OrderBy(item=>item.NumberOfRooms).ToList();
+        return posts;
+    }
+    public async Task<PagedList<Post>> GetSortedListByPriceAsync(int page, int sizeOfPage)
+    {
+        var posts = await GetAllAsync(page, sizeOfPage);
+        posts.items = posts.items.OrderBy(item => item.Price).ToList();
+        return posts;
+    }
+    public async Task<PagedList<Post>> GetSortedListByCategoryAsync(int page, int sizeOfPage)
+    {
+        var posts = await GetAllAsync(page, sizeOfPage);
+        posts.items = posts.items.OrderBy(item => item.Category.Name).ToList();
+        return posts;
+    }
+    public async Task<PagedList<Post>> GetSortedListByRealtorAsync(int page, int sizeOfPage)
+    {
+        var posts = await GetAllAsync(page, sizeOfPage);
+        posts.items = posts.items.OrderBy(item => item.User.FirstName + item.User.LastName).ToList();
+        return posts;
     }
     public async Task<List<Post>> GetIncludeListAsync()
     {
