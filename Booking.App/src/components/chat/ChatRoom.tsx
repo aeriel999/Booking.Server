@@ -1,8 +1,7 @@
 export const ChatRoom = () =>{
 
+    
     return (
-        <>
-            
-        </>
+        
     );
 }

@@ -8,6 +8,8 @@ public class UserMessage
 
 	public required string UserName { get; set; }
 
+	public required Guid UserId { get; set; }
+
 	public required string Message { get; set; }
 
 	public Guid ChatRoomId { get; set; }
