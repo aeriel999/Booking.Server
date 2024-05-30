@@ -34,6 +34,10 @@ namespace Booking.Infrastructure.Migrations
                     b.Property<Guid>("PostId")
                         .HasColumnType("uuid");
 
+                    b.Property<string>("PostName")
+                        .IsRequired()
+                        .HasColumnType("text");
+
                     b.Property<Guid>("RealtorId")
                         .HasColumnType("uuid");
 
@@ -65,10 +69,6 @@ namespace Booking.Infrastructure.Migrations
 
                     b.Property<Guid>("UserId")
                         .HasColumnType("uuid");
-
-                    b.Property<string>("UserName")
-                        .IsRequired()
-                        .HasColumnType("text");
 
                     b.HasKey("Id");
 

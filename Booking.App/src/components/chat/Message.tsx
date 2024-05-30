@@ -1,8 +1,7 @@
-import { Avatar } from "@mui/material";
+//import { Avatar } from "@mui/material";
 import { styled } from "@mui/system";
-import { deepOrange } from "@mui/material/colors";
+
 import { IUserMessage } from "../../interfaces/chat";
-import UAvatar from "../../assets/avatar-profile-icon-vector-illustration_276184-165.jpg";
 const MessageRow = styled("div")({
     display: "flex",
 });
@@ -96,49 +95,35 @@ const MessageTimeStampRight = styled("div")({
     right: "5px",
 });
 
-const StyledAvatar = styled(Avatar)({
-    color: "#fff",
-    backgroundColor: deepOrange[500],
-    width: "32px",
-    height: "32px",
-});
 
-const DisplayName = styled("div")({
-    marginLeft: "20px",
-});
+
+// const DisplayName = styled("div")({
+//     marginLeft: "20px",
+// });
 
 // MessageLeft component
 export const MessageLeft = (userMsg: IUserMessage) => {
     return (
         <MessageRow>
-            <StyledAvatar
-                alt={userMsg.user.email}
-                src={
-                    userMsg.user.avatar == null ? UAvatar : userMsg.user.avatar
-                }
-            />
-            <div>
-                <DisplayName>{userMsg.user.email}</DisplayName>
-                <MessageBlue>
-                    <div>
-                        <MessageContent>{userMsg.message}</MessageContent>
-                    </div>
-                    <MessageTimeStampRight>
-                        {userMsg.sentAt}
-                    </MessageTimeStampRight>
-                </MessageBlue>
-            </div>
+            {/* <DisplayName>{userMsg.userName}</DisplayName> */}
+            <MessageBlue>
+                <div>
+                    <MessageContent>{userMsg.message}</MessageContent>
+                </div>
+                <MessageTimeStampRight>{userMsg.sentAt}</MessageTimeStampRight>
+            </MessageBlue>
         </MessageRow>
     );
 };
 
 // MessageRight component
-export const MessageRight = ({ message = "no message", timestamp = "" }) => {
+export const MessageRight = (userMsg: IUserMessage) => {
     return (
         <MessageRowRight>
+            {/* <DisplayName>{userMsg.userName}</DisplayName> */}
             <MessageOrange>
-                <MessageContent>{message}</MessageContent>
-                <MessageTimeStampRight>{timestamp}</MessageTimeStampRight>
+                <MessageContent>{userMsg.message}</MessageContent>
+                <MessageTimeStampRight>{userMsg.sentAt}</MessageTimeStampRight>
             </MessageOrange>
         </MessageRowRight>
     );

@@ -38,7 +38,7 @@ public class CreateChatCommandHandler(
 			ClientId = Guid.Parse(request.UserId),
 			RealtorId = Guid.Parse(request.UserId),
 			PostId = request.PostId,
-			Post = post
+			PostName = post.Name
 		};
 
 		await chatRoomRepositories.CreateChatRoomAsync(chatRoom);
