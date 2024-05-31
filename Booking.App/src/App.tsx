@@ -22,64 +22,12 @@ import ClientDashboardLayout from "./containers/client/layouts/_ClientDashboardL
 import { AddNewPost } from "./containers/dashboard/AddNewPost.tsx";
 import ListOfPostPage from "./containers/client/ListOfPostPage.tsx";
 import AnonymousDashboardLayout from "./containers/anonymous/layouts/AnonymousDashboardLayout.tsx";
-import {MessageRight} from "./components/chat/Message.tsx";
+import ChatRoom from "./components/chat/ChatRoom.tsx";
 // import {  MessageRight } from "./components/chat/Message.tsx";
 //import { MessageLeft } from "./components/chat/Message.tsx";
 
 const App: React.FC = () => {
-    // const [connection, setConnection] = useState<any>({});
-    // const [messages, setMessages] = useState<IMessage[]>([]);
-    //
-    // const index = async ({userName, chatRoom}) => {
-    //     try {
-    //         const conn = new HubConnectionBuilder()
-    //             .withUrl("http://localhost:5095/chat")
-    //             .configureLogging(LogLevel.Information)
-    //             .build();
-    //
-    //         conn.on("JoinChat",(userName, msg) => {
-    //             setMessages(messages => [...messages, {userName, msg}]);
-    //
-    //         } );
-    //
-    //         conn.on("ReceiveSpecificMessage",(userName, msg) => {
-    //             console.log("{  msg} ",msg )
-    //             console.log("{  userName} ",userName )
-    //
-    //             setMessages(messages => [...messages, {userName, msg}]);
-    //         } );
-    //
-    //         conn.onclose(e =>{
-    //             setConnection({});
-    //             setMessages([]);
-    //         })
-    //
-    //         await  conn.start();
-    //         await conn.invoke("JoinChat", {userName, chatRoom});
-    //
-    //         setConnection(conn);
-    //
-    //     }catch (e){
-    //         console.log(e)
-    //     }
-    // }
-    //
-    // const closeConnection = async () =>{
-    //     try {
-    //         await connection.stop();
-    //     }catch (e){
-    //         console.log(e)
-    //     }
-    // }
-    //
-    // const sendMSG = async (message : string) =>{
-    //     try {
-    //         await  connection.invoke("SendMessage", message);
-    //     }catch (e){
-    //         console.log(e)
-    //     }
-    // }
-
+     
     const { isLogin, user } = useAppSelector((state) => state.account);
 
     const role = () => {
@@ -123,6 +71,7 @@ const App: React.FC = () => {
                                 path="/dashboard/post/add"
                                 element={<AddNewPost />}
                             />
+                             <Route path="chat-room/:roomId" element={<ChatRoom />} />
                         </Route>
                     )}
 
@@ -139,7 +88,7 @@ const App: React.FC = () => {
                     )}
 
                     {/* <Route path="test" element={<MessageLeft />} /> */}
-                    <Route path="test2" element={<MessageRight />} />
+                   
                 </>
             )}
             <Route />

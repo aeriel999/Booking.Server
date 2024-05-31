@@ -1,6 +1,7 @@
 ﻿using Ardalis.Specification;
 using Booking.Application.Common.Interfaces.Chat;
 using Booking.Domain.Chat;
+using Booking.Domain.Users;
 using Booking.Infrastructure.Common.Persistence;
 using Microsoft.EntityFrameworkCore;
 
@@ -25,7 +26,7 @@ public class ChatRoomRepository(BookingDbContext context) : IChatRoomRepository
 		return await _dbSet.FindAsync(roomId);
 	}
 
-	public async Task<List<ChatRoom>> GetChatRoomListWithMessagesByRealtorIdAsync(Guid realtorId)
+	public async Task<List<ChatRoom>> GetChatRoomListWithPostsByRealtorIdAsync(Guid realtorId)
 	{
 		return await _dbSet
 			.Where(c => c.RealtorId == realtorId)
@@ -33,11 +34,11 @@ public class ChatRoomRepository(BookingDbContext context) : IChatRoomRepository
 			.ToListAsync();
 	}
 
-	public async Task<List<ChatRoom>> GetChatRoomListWithMessagesByUserIdAsync(Guid userId)
+	public async Task<List<ChatRoom>> GetChatRoomListWithPostByUserIdAsync(Guid userId)
 	{
 		return await _dbSet
 			.Where(c => c.ClientId == userId)
-			 .Include(c => c.UserMessages)
+			.Include(c => c.UserMessages)
 			.ToListAsync();
 	}
 
@@ -46,5 +47,13 @@ public class ChatRoomRepository(BookingDbContext context) : IChatRoomRepository
 		return await _dbSet
 				.Where(c => c.PostId == postId && c.ClientId == userId)
 				.FirstOrDefaultAsync();
+	}
+
+	public async Task<List<ChatRoom>?> GetChatRoomListByPostId(Guid postId)
+	{
+		return await _dbSet
+			.Where(c => c.PostId == postId)
+			.Include(c => c.UserMessages)
+			.ToListAsync();
 	}
 }
