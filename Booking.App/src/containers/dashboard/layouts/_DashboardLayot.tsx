@@ -42,7 +42,7 @@ import ExpandMore from "@mui/icons-material/ExpandMore";
 import {
     IChatRoomInfo,
     IChatRoomList,
-    IPostChatsInfo,
+    IChatsForPostListInfo,
 } from "../../../interfaces/chat/index.ts";
 
 const drawerWidth = 240;
@@ -150,20 +150,18 @@ export default function DashboardLayout() {
         },
     ];
 
-    const testPostChatsInfo: IPostChatsInfo[] = [
+    const testPostChatsInfo: IChatsForPostListInfo[] = [
         {
             hasNewMsg: true,
             postName: "Hotel",
             postId: "string",
             chatRoomsInfoList: testChatRoomInfo1,
-             
         },
         {
             hasNewMsg: false,
             postName: "Room",
             postId: "string",
             chatRoomsInfoList: testChatRoomInfo2,
-             
         },
     ];
 

@@ -6,7 +6,7 @@ import Container from "@mui/material/Container";
 import Box from "@mui/material/Box";
 import {Button, CardActions, CardContent, CardMedia, Pagination, Typography} from "@mui/material";
 import Card from "@mui/material/Card";
-import Stack from "@mui/material/Stack";
+// import Stack from "@mui/material/Stack";
 
 
 
@@ -27,7 +27,9 @@ export default function ListOfPostPage (){
 
     }, []);
     const changePage = async(event: React.ChangeEvent<unknown>,value: number)=>{
-        console.log("Next page",value);
+        console.log("Next page", value);
+        console.log("Next page", event);
+
         setPage(value);
         const nextPage:IFetchData={
             page:value,
@@ -41,7 +43,7 @@ export default function ListOfPostPage (){
         <Container fixed>
             <Box sx={{ boxShadow: 'rgba(0, 0, 0, 0.35) 0px 5px 15px', height: '100vh',display:'flex',flexDirection:"row",flexWrap:"wrap",padding:15,position:'relative',justifyContent:'space-around' }}>
 
-                {listOfPosts != null ? listOfPosts.items.$values.map((item, index) => (
+                {listOfPosts != null ? listOfPosts.items.$values.map((item) => (
                     <Card sx={{ width: '40%' ,height:345}}>
                         <CardMedia
                             sx={{ height: 140 }}

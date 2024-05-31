@@ -83,7 +83,7 @@ const App: React.FC = () => {
                                 element={<UserProfilePage />}
                             />
                             <Route path="/posts" element={<ListOfPostPage />} />
-                            {/*<Route path="/dashboard/chat/:postId" element={<ChatRoom/>} />*/}
+                            {/* <Route path="/dashboard/chat/:postId" element={<ChatRoom/>} /> */}
                         </Route>
                     )}
 

@@ -21,5 +21,5 @@ public interface IPostRepository
 
 	Task<PagedList<Post>> GetSortedListByRealtorAsync(int page, int sizeOfPage);
 
-	Task<List<Guid>?> GetListPostIdByRealtorIdAsync(Guid realltorId);
+	Task<List<Post>?> GetListPostByRealtorIdAsync(Guid realtorId);
 }

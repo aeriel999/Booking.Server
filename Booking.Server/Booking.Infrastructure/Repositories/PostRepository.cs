@@ -74,10 +74,13 @@ public class PostRepository(BookingDbContext context) : IPostRepository
             .ToListAsync();
     }
 
-	public Task<List<Guid>?> GetListPostIdByRealtorIdAsync(Guid realltorId)
+	public async Task<List<Post>?> GetListPostByRealtorIdAsync(Guid realtorId)
 	{
-		throw new NotImplementedException();
+		return await _dbSet
+			.Where(c => c.UserId == realtorId)
+			.ToListAsync();
 	}
+ 
 	//      public async Task<List<Guid>> GetPostIdListByRealtorIdAsync(Guid realtorId)
 	//      {
 	//	return await _bookingDbContext.Posts
