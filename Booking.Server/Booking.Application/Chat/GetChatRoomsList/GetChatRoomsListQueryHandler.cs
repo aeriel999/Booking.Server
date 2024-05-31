@@ -31,5 +31,7 @@ public class GetChatRoomsListQueryHandler(
 		{
 			
 		}
+
+		return Error.NotFound();
 	}
 }
