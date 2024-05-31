@@ -17,13 +17,13 @@ import ListItemButton from "@mui/material/ListItemButton";
 import ListItemIcon from "@mui/material/ListItemIcon";
 import ListItemText from "@mui/material/ListItemText";
 import InboxIcon from "@mui/icons-material/MoveToInbox";
-import MailIcon from "@mui/icons-material/Mail";
+//import MailIcon from "@mui/icons-material/Mail";
 import { Outlet, useNavigate } from "react-router-dom";
 import { useAppDispatch, useAppSelector } from "../../../hooks/redux";
 import Avatar from "@mui/material/Avatar";
 import { useEffect, useState } from "react";
 import { APP_ENV } from "../../../env";
-import { Rating } from "@mui/material";
+import { Collapse, Rating } from "@mui/material";
 import Button from "@mui/material/Button";
 import { logout } from "../../../store/accounts/account.slice.ts";
 import LogoutIcon from "@mui/icons-material/Logout";
@@ -36,6 +36,14 @@ import AccountBoxTwoToneIcon from "@mui/icons-material/AccountBoxTwoTone";
 import DynamicFeedTwoToneIcon from "@mui/icons-material/DynamicFeedTwoTone";
 import AddBoxTwoToneIcon from "@mui/icons-material/AddBoxTwoTone";
 import Inventory2TwoToneIcon from "@mui/icons-material/Inventory2TwoTone";
+import ExpandLess from "@mui/icons-material/ExpandLess";
+import ExpandMore from "@mui/icons-material/ExpandMore";
+//import StarBorder from "@mui/icons-material/StarBorder";
+import {
+    IChatRoomInfo,
+    IChatRoomList,
+    IPostChatsInfo,
+} from "../../../interfaces/chat/index.ts";
 
 const drawerWidth = 240;
 
@@ -102,6 +110,67 @@ export default function DashboardLayout() {
     const navigate = useNavigate();
     // const [isActive, setIsActive] = useState<IActive | undefined>();
     const { hasNewPosts } = useAppSelector((state) => state.chat);
+    const [openPostChatList, setOpenPostChatList] = useState(false);
+    const [openPosts, setOpenPosts] = useState<Record<string, boolean>>({});
+
+    const handleClick = () => {
+        setOpenPostChatList(!openPostChatList);
+    };
+
+    const handlePostClick = (postName: string) => {
+        setOpenPosts((prevOpenPosts) => ({
+            ...prevOpenPosts,
+            [postName]: !prevOpenPosts[postName],
+        }));
+    };
+
+    const testChatRoomInfo1: IChatRoomInfo[] = [
+        {
+            hasNewMsg: true,
+            chatRoomName: "Bob",
+            chatRoomId: "string",
+        },
+        {
+            hasNewMsg: false,
+            chatRoomName: "Ann",
+            chatRoomId: "string",
+        },
+    ];
+
+    const testChatRoomInfo2: IChatRoomInfo[] = [
+        {
+            hasNewMsg: false,
+            chatRoomName: "Mary",
+            chatRoomId: "string",
+        },
+        {
+            hasNewMsg: false,
+            chatRoomName: "Alex",
+            chatRoomId: "string",
+        },
+    ];
+
+    const testPostChatsInfo: IPostChatsInfo[] = [
+        {
+            hasNewMsg: true,
+            postName: "Hotel",
+            postId: "string",
+            chatRoomsInfoList: testChatRoomInfo1,
+             
+        },
+        {
+            hasNewMsg: false,
+            postName: "Room",
+            postId: "string",
+            chatRoomsInfoList: testChatRoomInfo2,
+             
+        },
+    ];
+
+    const testInfo: IChatRoomList = {
+        hasNewMsg: true,
+        postChatRoomsInfoList: testPostChatsInfo,
+    };
 
     useEffect(() => {
         if (user) {
@@ -133,6 +202,17 @@ export default function DashboardLayout() {
     const handleDrawerClose = () => {
         setOpen(false);
     };
+
+    // const handleClick = () => {
+    //     setOpenPostChatList(!openPostChatList);
+    // };
+
+    // const handlePostClick = (postName: string) => {
+    //     setOpenPosts((prevOpenPosts) => ({
+    //       ...prevOpenPosts,
+    //       [postName]: !prevOpenPosts[postName],
+    //     }));
+    //   };
 
     // const addConnection = async () =>{
     //     console.log("Connect ///////////////")
@@ -272,21 +352,81 @@ export default function DashboardLayout() {
                     </ListItem>
                 </List>
                 <Divider />
+
                 <List>
-                    {["All mail", "Trash", "Spam"].map((text, index) => (
-                        <ListItem key={text} disablePadding>
-                            <ListItemButton>
-                                <ListItemIcon>
-                                    {index % 2 === 0 ? (
-                                        <InboxIcon />
-                                    ) : (
-                                        <MailIcon />
-                                    )}
-                                </ListItemIcon>
-                                <ListItemText primary={text} />
-                            </ListItemButton>
-                        </ListItem>
-                    ))}
+                    <ListItemButton onClick={handleClick}>
+                        <ListItemIcon>
+                            <InboxIcon />
+                        </ListItemIcon>
+                        <ListItemText primary="Inbox" />
+                        {openPostChatList ? <ExpandLess /> : <ExpandMore />}
+                    </ListItemButton>
+
+                    <Collapse
+                        in={openPostChatList}
+                        timeout="auto"
+                        unmountOnExit
+                    >
+                        <List component="div" disablePadding>
+                            {testInfo.postChatRoomsInfoList.map((post) => (
+                                <React.Fragment key={post.postName}>
+                                    <ListItemButton
+                                        onClick={() =>
+                                            handlePostClick(post.postName)
+                                        }
+                                    >
+                                        <ListItemIcon>
+                                            <DotBadge
+                                                isActive={post.hasNewMsg}
+                                            />
+                                        </ListItemIcon>
+                                        <ListItemText primary={post.postName} />
+                                        {openPosts[post.postName] ? (
+                                            <ExpandLess />
+                                        ) : (
+                                            <ExpandMore />
+                                        )}
+                                    </ListItemButton>
+
+                                    <Collapse
+                                        in={!!openPosts[post.postName]}
+                                        timeout="auto"
+                                        unmountOnExit
+                                    >
+                                        <List component="div" disablePadding>
+                                            {post.chatRoomsInfoList.map(
+                                                (chat) => (
+                                                    <ListItem
+                                                        key={chat.chatRoomName}
+                                                        disablePadding
+                                                    >
+                                                        <ListItemButton
+                                                            onClick={() =>
+                                                                navigate("#")
+                                                            }
+                                                        >
+                                                            <ListItemIcon>
+                                                                <DotBadge
+                                                                    isActive={
+                                                                        chat.hasNewMsg
+                                                                    }
+                                                                />
+                                                            </ListItemIcon>
+                                                            <ListItemText
+                                                                primary={
+                                                                    chat.chatRoomName
+                                                                }
+                                                            />
+                                                        </ListItemButton>
+                                                    </ListItem>
+                                                )
+                                            )}
+                                        </List>
+                                    </Collapse>
+                                </React.Fragment>
+                            ))}
+                        </List>
+                    </Collapse>
                 </List>
             </Drawer>
             <Main open={open}>

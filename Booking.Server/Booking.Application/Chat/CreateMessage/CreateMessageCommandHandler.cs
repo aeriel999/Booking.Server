@@ -12,7 +12,8 @@ public class CreateMessageCommandHandler(
 	IChatRoomRepository chatRoomRepository)
 	: IRequestHandler<CreateMessageCommand, ErrorOr<string>>
 {
-	public async Task<ErrorOr<string>> Handle(CreateMessageCommand request, CancellationToken cancellationToken)
+	public async Task<ErrorOr<string>> Handle(
+		CreateMessageCommand request, CancellationToken cancellationToken)
 	{
 		//Find User
 		var userOrError = await userRepository.FindByIdAsync(request.UserId);

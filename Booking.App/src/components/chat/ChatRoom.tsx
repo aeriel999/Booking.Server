@@ -4,8 +4,8 @@ import { IChatRoom, IUserMessage } from "../../interfaces/chat";
 import { Avatar, Breadcrumbs, Button, Divider, Typography } from "@mui/material";
 import { useAppSelector } from "../../hooks/redux";
 import { MessageLeft, MessageRight } from "./Message";
-import { ChatTextInput } from "./ChatTextInpet";
-import { Link, useParams } from "react-router-dom";
+import { ChatTextInput } from "./ChatTextInput";
+import { Link } from "react-router-dom";
 import UAvatar from "../../assets/avatar-profile-icon-vector-illustration_276184-165.jpg";
 import { deepOrange } from "@mui/material/colors";
 const Container = styled("div")({
@@ -90,7 +90,7 @@ const props: IChatRoom = {
 };
 
 export default function ChatRoom() {
-    const { roomId } = useParams();
+  //  const { roomId } = useParams();
     const { user } = useAppSelector((state) => state.account);
 
     return (
@@ -124,7 +124,7 @@ export default function ChatRoom() {
                                 : props.sendUserAvatar
                         }
                     />
-                    
+
                     <Typography variant="h6" color="text.primary">
                         {props.sendUserName}
                     </Typography>

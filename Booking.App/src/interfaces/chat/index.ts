@@ -6,6 +6,24 @@ export interface IChatState {
     status: Status;
 }
 
+export interface IChatRoomList {
+    hasNewMsg: boolean;
+    postChatRoomsInfoList: IPostChatsInfo[];
+}
+
+export interface IPostChatsInfo {
+    hasNewMsg: boolean;
+    postName: string;
+    postId: string;
+    chatRoomsInfoList: IChatRoomInfo[];
+}
+
+export interface IChatRoomInfo {
+    hasNewMsg: boolean;
+    chatRoomName: string;
+    chatRoomId: string;
+}
+
 export interface IChatRoom {
     chatRoomId: string;
     clientId: string;
