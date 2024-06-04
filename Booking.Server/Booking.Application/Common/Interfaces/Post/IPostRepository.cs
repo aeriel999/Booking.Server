@@ -9,6 +9,8 @@ public interface IPostRepository
 
 	Task SavePostAsync();
 
+	Task<List<Post>> GetPostListByRealtorIdAsync(Guid realtorId);
+
 	Task<Post?> GetPostByIdAsync(Guid postId);
 
 	Task<PagedList<Post>> GetAllAsync(int page, int sizeOfPage);

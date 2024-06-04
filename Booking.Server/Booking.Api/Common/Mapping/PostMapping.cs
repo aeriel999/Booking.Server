@@ -4,15 +4,16 @@ using Booking.Api.Contracts.Post.GetCities;
 using Booking.Api.Contracts.Post.GetCountries;
 using Booking.Api.Contracts.Post.GetListOfPost;
 using Booking.Api.Contracts.Post.GetPost;
+using Booking.Api.Contracts.Post.GetPostListForRealtor;
 using Booking.Api.Contracts.Post.GetStreets;
 using Booking.Api.Contracts.Post.GetTypeOfPost;
 using Booking.Application.Common.Behaviors;
 using Booking.Application.Posts.CreatePost;
 using Booking.Application.Posts.GetCities;
+using Booking.Application.Posts.GetPostListForRealtor;
 using Booking.Application.Posts.GetStreets;
 using Booking.Domain.Posts;
 using Mapster;
-using System.Linq;
 
 namespace Booking.Api.Common.Mapping;
 
@@ -27,17 +28,17 @@ public class PostMapping : IRegister
 		.Map(dest => dest, src => src.createPostRequest);
 
 		config.NewConfig<Post, GetPostResponse>()
-			.Map(desp => desp.Category, src => src.Category.Name)
-			.Map(desp => desp.PostTypeOfRent, src => src.PostTypeOfRent.Name)
-			.Map(desp => desp.Street, src => src.Street.Name)
-			.Map(desp => desp.User, src => $"{src.User.FirstName} {src.User.LastName}")
-			.Map(desp => desp.ImagePost, src => src.ImagesPost.FirstOrDefault(img => img.Priority == 1).Name)
-			.Map(desp => desp.ChatRoomsId, src => src.ChatRooms.Select(x=>x.ChatRoomId).ToList());
+			.Map(desp => desp.Category, src => src.Category!.Name)
+			.Map(desp => desp.PostTypeOfRent, src => src.PostTypeOfRent!.Name)
+			.Map(desp => desp.Street, src => src.Street!.Name)
+			.Map(desp => desp.User, src => $"{src.User!.FirstName} {src.User.LastName}")
+			.Map(desp => desp.ImagePost, src => src.ImagesPost!.FirstOrDefault(img => img.Priority == 1)!.Name)
+			.Map(desp => desp.ChatRoomsId, src => src.ChatRooms!.Select(x=>x.ChatRoomId).ToList());
 
         config.NewConfig<Post, GetListOfPostResponse>()
-            .Map(desp => desp.Category, src => src.Category.Name)
-            .Map(desp => desp.User, src => $"{src.User.FirstName} {src.User.LastName}")
-            .Map(desp => desp.ImagePost, src => src.ImagesPost.FirstOrDefault(img => img.Priority == 1).Name);
+            .Map(desp => desp.Category, src => src.Category!.Name)
+            .Map(desp => desp.User, src => $"{src.User!.FirstName} {src.User.LastName}")
+            .Map(desp => desp.ImagePost, src => src.ImagesPost!.FirstOrDefault(img => img.Priority == 1)!.Name);
 
         config.NewConfig<PagedList<GetListOfPostResponse>, PagedList<Post>>()
 			.Map(desp => desp.items, src => src.items.Adapt<List<GetListOfPostResponse>>());
@@ -63,5 +64,9 @@ public class PostMapping : IRegister
 
 		config.NewConfig<PostTypeOfRent, GetTypeOfPostResponse>();
 		config.NewConfig<List<PostTypeOfRent>, List<GetTypeOfPostResponse>>();
+
+		config.NewConfig<GetPostListForRealtorQueryResult, GetPostListForRealtorResponse>();
+		config.NewConfig<PagedList<GetPostListForRealtorQueryResult>, PagedList<GetPostListForRealtorResponse>>();
+
 	}
 }

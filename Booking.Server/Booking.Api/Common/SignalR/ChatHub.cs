@@ -34,7 +34,7 @@ namespace Booking.Api.Common.SignalR
 
 			//Create and save chatRoom in DB
 			var createChatResult = await mediatr
-					.Send(new CreateChatCommand(request.RoomId, userId));
+					.Send(new CreateChatCommand(request.RoomId, Guid.Parse(userId)));
 
 			string roomName = "";
 

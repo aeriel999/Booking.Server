@@ -23,6 +23,7 @@ import { AddNewPost } from "./containers/dashboard/AddNewPost.tsx";
 import ListOfPostPage from "./containers/client/ListOfPostPage.tsx";
 import AnonymousDashboardLayout from "./containers/anonymous/layouts/AnonymousDashboardLayout.tsx";
 import ChatRoom from "./components/chat/ChatRoom.tsx";
+import AllPostList from "./containers/dashboard/AllPostList.tsx";
 // import {  MessageRight } from "./components/chat/Message.tsx";
 //import { MessageLeft } from "./components/chat/Message.tsx";
 
@@ -70,6 +71,11 @@ const App: React.FC = () => {
                             <Route
                                 path="/dashboard/post/add"
                                 element={<AddNewPost />}
+                            />
+
+                                <Route
+                                path="/dashboard/shaw-all-post"
+                                element={<AllPostList />}
                             />
                              <Route path="chat-room/:roomId" element={<ChatRoom />} />
                         </Route>

@@ -4,6 +4,7 @@ using Booking.Api.Contracts.Post.GetCities;
 using Booking.Api.Contracts.Post.GetCountries;
 using Booking.Api.Contracts.Post.GetListOfPost;
 using Booking.Api.Contracts.Post.GetPost;
+using Booking.Api.Contracts.Post.GetPostListForRealtor;
 using Booking.Api.Contracts.Post.GetStreets;
 using Booking.Api.Contracts.Post.GetTypeOfPost;
 using Booking.Api.Infrastructure;
@@ -14,6 +15,7 @@ using Booking.Application.Posts.GetCities;
 using Booking.Application.Posts.GetCountries;
 using Booking.Application.Posts.GetListOfPost;
 using Booking.Application.Posts.GetPostById;
+using Booking.Application.Posts.GetPostListForRealtor;
 using Booking.Application.Posts.GetSortedList.ByCategory;
 using Booking.Application.Posts.GetSortedList.ByNumberOfRooms;
 using Booking.Application.Posts.GetSortedList.ByPrice;
@@ -61,6 +63,7 @@ public class PostController(ISender mediatr, IMapper mapper) : ApiController
 			createPostResult => Ok(createPostResult),
 			errors => Problem(errors));
 	}
+
 	[AllowAnonymous]
 	[HttpGet("get-list-of-post")]
     public async Task<IActionResult> GetListOfPostAsync([FromQuery]int page, int sizeOfPage)
@@ -71,6 +74,7 @@ public class PostController(ISender mediatr, IMapper mapper) : ApiController
             getlistOfPostResult => Ok(mapper.Map<PagedList<GetListOfPostResponse>>(getlistOfPostResult)),
             errors => Problem(errors));
     }
+
     [AllowAnonymous]
     [HttpGet("get-sorted-list-by-number-of-rooms")]
     public async Task<IActionResult> GetSortedListByNumberOfRoomsAsync([FromQuery] int page, int sizeOfPage)
@@ -81,6 +85,7 @@ public class PostController(ISender mediatr, IMapper mapper) : ApiController
             getlistOfPostResult => Ok(mapper.Map<PagedList<GetListOfPostResponse>>(getlistOfPostResult)),
             errors => Problem(errors));
     }
+
     [AllowAnonymous]
     [HttpGet("get-sorted-list-by-price")]
     public async Task<IActionResult> GetSortedListByPriceAsync([FromQuery] int page, int sizeOfPage)
@@ -91,6 +96,7 @@ public class PostController(ISender mediatr, IMapper mapper) : ApiController
             getlistOfPostResult => Ok(mapper.Map<PagedList<GetListOfPostResponse>>(getlistOfPostResult)),
             errors => Problem(errors));
     }
+
     [AllowAnonymous]
     [HttpGet("get-sorted-list-by-category")]
     public async Task<IActionResult> GetSortedListByCategoryAsync([FromQuery] int page, int sizeOfPage)
@@ -101,6 +107,7 @@ public class PostController(ISender mediatr, IMapper mapper) : ApiController
             getlistOfPostResult => Ok(mapper.Map<PagedList<GetListOfPostResponse>>(getlistOfPostResult)),
             errors => Problem(errors));
     }
+
     [AllowAnonymous]
     [HttpGet("get-sorted-list-by-realtor")]
     public async Task<IActionResult> GetSortedListByRealtorAsync([FromQuery] int page, int sizeOfPage)
@@ -111,6 +118,7 @@ public class PostController(ISender mediatr, IMapper mapper) : ApiController
             getlistOfPostResult => Ok(mapper.Map<PagedList<GetListOfPostResponse>>(getlistOfPostResult)),
             errors => Problem(errors));
     }
+
     [HttpGet("get-post-by-id-{id}")]
     public async Task<IActionResult> GetPostByIdAsync([FromRoute] Guid id)
     {
@@ -120,6 +128,7 @@ public class PostController(ISender mediatr, IMapper mapper) : ApiController
             getPostResult => Ok(mapper.Map<GetPostResponse>(getPostResult)),
             errors => Problem(errors));
     }
+
     [HttpGet("get-type-of-rent-list")]
 	public async Task<IActionResult> GetTypeOfRentListAsync()
 	{
@@ -172,5 +181,19 @@ public class PostController(ISender mediatr, IMapper mapper) : ApiController
 			: mapper.Map<List<GetStreetResponse>>(getStreetsListResult);
 
 		return Ok(response);
+	}
+
+	[HttpGet("get-post-list")]
+	public async Task<IActionResult> GetPostListForRealtorAsync(
+	[FromQuery] int page, int sizeOfPage)
+	{
+		string userId = User.Claims.First(u => u.Type == ClaimTypes.NameIdentifier).Value;
+
+		var getPostListForRealtor = await mediatr.Send(new GetPostListForRealtorQuery(
+			page, sizeOfPage, Guid.Parse(userId)));
+
+		return getPostListForRealtor.Match(
+			getPostListForRealtor => Ok(mapper.Map<PagedList<GetPostListForRealtorResponse>>(getPostListForRealtor)),
+			errors => Problem(errors));
 	}
 }

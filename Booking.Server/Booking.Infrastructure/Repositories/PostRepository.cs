@@ -38,7 +38,9 @@ public class PostRepository(BookingDbContext context) : IPostRepository
         list.items = list.items.OrderBy(item => item.PostAt).ToList();
         return list;
     }
-    public async Task<PagedList<Post>> GetSortedListByNumberOfRoomsAsync(int page, int sizeOfPage)
+
+	 
+	public async Task<PagedList<Post>> GetSortedListByNumberOfRoomsAsync(int page, int sizeOfPage)
     {
         var posts = await GetAllAsync(page,sizeOfPage);
         posts.items = posts.items.OrderBy(item=>item.NumberOfRooms).ToList();
@@ -73,6 +75,16 @@ public class PostRepository(BookingDbContext context) : IPostRepository
             .Include(post => post.ChatRooms)
             .ToListAsync();
     }
+
+	public async Task<List<Post>> GetPostListByRealtorIdAsync(Guid realtorId)
+	{
+		return await context.Posts
+			.Where(c => c.UserId == realtorId)
+			.Include(post => post.PostTypeOfRent)
+			.Include(post => post.Category)
+			.Include(post => post.Street!.City!.Country)
+			.ToListAsync();
+	}
 
 	public async Task<List<Post>?> GetListPostByRealtorIdAsync(Guid realtorId)
 	{
