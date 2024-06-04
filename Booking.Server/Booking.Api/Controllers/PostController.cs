@@ -183,7 +183,7 @@ public class PostController(ISender mediatr, IMapper mapper) : ApiController
 		return Ok(response);
 	}
 
-	[HttpGet("get-post-list")]
+	[HttpGet("get-post-list-for-realtor")]
 	public async Task<IActionResult> GetPostListForRealtorAsync(
 	[FromQuery] int page, int sizeOfPage)
 	{
@@ -193,7 +193,8 @@ public class PostController(ISender mediatr, IMapper mapper) : ApiController
 			page, sizeOfPage, Guid.Parse(userId)));
 
 		return getPostListForRealtor.Match(
-			getPostListForRealtor => Ok(mapper.Map<PagedList<GetPostListForRealtorResponse>>(getPostListForRealtor)),
+			getPostListForRealtor => Ok(
+				mapper.Map<PagedList<GetPostListForRealtorResponse>>(getPostListForRealtor)),
 			errors => Problem(errors));
 	}
 }

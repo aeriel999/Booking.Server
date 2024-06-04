@@ -1,5 +1,10 @@
 import { Status } from "../../utils/enum";
 
+export interface IFetchData{
+    page:number,
+    sizeOfPage:number
+}
+
 export interface IListForCombobox {
     id: string;
     name: string;
@@ -56,6 +61,7 @@ export interface IPostState {
     cities: ICity[] | null;
     streets: IStreet[] | null;
     typeOfRent: ITypeOfRent[] | null;
+    postInfoList: IPageOfPostsForRealtor | null
 }
 
 export interface IPostCreate {

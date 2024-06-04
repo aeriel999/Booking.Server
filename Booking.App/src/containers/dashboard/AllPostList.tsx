@@ -15,10 +15,15 @@ import FirstPageIcon from "@mui/icons-material/FirstPage";
 import KeyboardArrowLeft from "@mui/icons-material/KeyboardArrowLeft";
 import KeyboardArrowRight from "@mui/icons-material/KeyboardArrowRight";
 import LastPageIcon from "@mui/icons-material/LastPage";
-import { Breadcrumbs, Divider, Typography } from "@mui/material";
+import { Breadcrumbs, Button, Divider, Typography } from "@mui/material";
 import OutlinedErrorAlert from "../../components/common/ErrorAlert";
 import { Link } from "react-router-dom";
-import { useState } from "react";
+import { useState, useEffect } from "react";
+import { useAppDispatch } from "../../hooks/redux";
+import { unwrapResult } from "@reduxjs/toolkit";
+import { IFetchData, IPostInfoForRealtor } from "../../interfaces/post";
+import { getListPostsForRealtor } from "../../store/post/post.actions";
+import ErrorHandler from "../../components/common/ErrorHandler";
 
 interface TablePaginationActionsProps {
     count: number;
@@ -128,35 +133,18 @@ const StyledTableRow = styled(TableRow)(({ theme }) => ({
     },
 }));
 
-function createData(name: string, calories: number, fat: number) {
-    return { name, calories, fat };
-}
-
-const rows = [
-    createData("Cupcake", 305, 3.7),
-    createData("Donut", 452, 25.0),
-    createData("Eclair", 262, 16.0),
-    createData("Frozen yoghurt", 159, 6.0),
-    createData("Gingerbread", 356, 16.0),
-    createData("Honeycomb", 408, 3.2),
-    createData("Ice cream sandwich", 237, 9.0),
-    createData("Jelly Bean", 375, 0.0),
-    createData("KitKat", 518, 26.0),
-    createData("Lollipop", 392, 0.2),
-    createData("Marshmallow", 318, 0),
-    createData("Nougat", 360, 19.0),
-    createData("Oreo", 437, 18.0),
-].sort((a, b) => (a.calories < b.calories ? -1 : 1));
-
 export default function AllPostList() {
-    const [page, setPage] = React.useState(0);
-    const [rowsPerPage, setRowsPerPage] = React.useState(5);
+    const [page, setPage] = React.useState(1);
+    const [rowsPerPage, setRowsPerPage] = useState(5);
+    const [totalCount, setTotalCount] = useState(0);
+    const [rows, setRows] = useState<IPostInfoForRealtor[]>();
     const [errorMessage, setErrorMessage] = useState<string | undefined>(
         undefined
     );
-    // Avoid a layout jump when reaching the last page with empty rows.
+    const dispatch = useAppDispatch();
+
     const emptyRows =
-        page > 0 ? Math.max(0, (1 + page) * rowsPerPage - rows.length) : 0;
+        page > 0 ? Math.max(0, (1 + page) * rowsPerPage - totalCount) : 0;
 
     const handleChangePage = (
         event: React.MouseEvent<HTMLButtonElement> | null,
@@ -170,6 +158,40 @@ export default function AllPostList() {
     ) => {
         setRowsPerPage(parseInt(event.target.value, 10));
         setPage(0);
+    };
+
+    const getDataForPage = async (model: IFetchData) => {
+        try {
+            const response = await dispatch(getListPostsForRealtor(model));
+            unwrapResult(response);
+            return response;
+        } catch (error) {
+            setErrorMessage(ErrorHandler(error));
+        }
+    };
+
+    useEffect(() => {
+        const model: IFetchData = {
+            page: page,
+            sizeOfPage: rowsPerPage,
+        };
+
+        getDataForPage(model).then((history) => {
+            console.log("history", history?.payload);
+            setPage(history?.payload.page);
+            setRowsPerPage(history?.payload.sizeOfPage);
+            setRows(history?.payload.items.$values);
+            setTotalCount(history?.payload.totalCount);
+        });
+    }, [page, rowsPerPage]);
+
+    const formatTimestamp = (timestamp: string) => {
+        const date = new Date(timestamp);
+        const hours = String(date.getUTCHours()).padStart(2, "0");
+        const minutes = String(date.getUTCMinutes()).padStart(2, "0");
+        const formattedTime = `${hours}:${minutes}`;
+        const formattedDate = date.toISOString().split("T")[0];
+        return `${formattedTime} / ${formattedDate}`;
     };
 
     return (
@@ -202,59 +224,78 @@ export default function AllPostList() {
                 >
                     <TableHead>
                         <TableRow>
-                            <StyledTableCell>
-                            Category 
-                            </StyledTableCell>
-                            <StyledTableCell>
-                            Type Of Rent
-                            </StyledTableCell>
-                            <StyledTableCell>
-                            Adress 
-                            </StyledTableCell>
-                            <StyledTableCell>
-                            Name 
-                            </StyledTableCell>
-                            <StyledTableCell>
-                            Price 
-                            </StyledTableCell>
-                            <StyledTableCell>
-                            Date of post 
-                            </StyledTableCell>
-                            <StyledTableCell>
-                            Date of edit 
-                            </StyledTableCell>
-                           
+                            <StyledTableCell>Category</StyledTableCell>
+                            <StyledTableCell>Type Of Rent</StyledTableCell>
+                            <StyledTableCell>Adress</StyledTableCell>
+                            <StyledTableCell>Name</StyledTableCell>
+                            <StyledTableCell>Price</StyledTableCell>
+                            <StyledTableCell>Date of post</StyledTableCell>
+                            <StyledTableCell>Date of edit</StyledTableCell>
+
                             <StyledTableCell align="right">
-                               Is Active 
+                                Is Active
                             </StyledTableCell>
                             <StyledTableCell align="right">
-                                Arhive
+                                Is Archived
                             </StyledTableCell>
                             <StyledTableCell align="right">
-                               Edit
+                                Edit
+                            </StyledTableCell>
+                            <StyledTableCell align="right">
+                                Archive
                             </StyledTableCell>
                         </TableRow>
                     </TableHead>
                     <TableBody>
-                        {(rowsPerPage > 0
-                            ? rows.slice(
-                                  page * rowsPerPage,
-                                  page * rowsPerPage + rowsPerPage
-                              )
-                            : rows
-                        ).map((row) => (
-                            <StyledTableRow key={row.name}>
-                                <StyledTableCell component="th" scope="row">
-                                    {row.name}
-                                </StyledTableCell>
-                                <StyledTableCell align="right">
-                                    {row.calories}
-                                </StyledTableCell>
-                                <StyledTableCell align="right">
-                                    {row.fat}
-                                </StyledTableCell>
-                            </StyledTableRow>
-                        ))}
+                        {
+                            // (rowsPerPage > 0
+                            //     ? rows.slice(
+                            //           page * rowsPerPage,
+                            //           page * rowsPerPage + rowsPerPage
+                            //       )
+                            //     : rows
+                            // )
+
+                            rows?.map((row) => (
+                                <StyledTableRow key={row.id}>
+                                    <StyledTableCell component="th" scope="row">
+                                        {row.category}
+                                    </StyledTableCell>
+                                    <StyledTableCell align="right">
+                                        {row.typeOfRent}
+                                    </StyledTableCell>
+                                    <StyledTableCell align="right">
+                                        {row.adress}
+                                    </StyledTableCell>
+                                    <StyledTableCell align="right">
+                                        {row.name}
+                                    </StyledTableCell>
+                                    <StyledTableCell align="right">
+                                        {"$" + row.price}
+                                    </StyledTableCell>
+                                    <StyledTableCell align="right">
+                                        {formatTimestamp(row.dateOfPost)}
+                                    </StyledTableCell>
+                                    <StyledTableCell align="right">
+                                        {row.dateOfEdit === null
+                                            ? "-"
+                                            : formatTimestamp(row.dateOfEdit)}
+                                    </StyledTableCell>
+                                    <StyledTableCell align="right">
+                                        {row.isActive === true ? "Yes" : "No"}
+                                    </StyledTableCell>
+                                    <StyledTableCell align="right">
+                                        {row.isArhive === true ? "Yes" : "No"}
+                                    </StyledTableCell>
+                                    <StyledTableCell align="right">
+                                        <Button>Edit</Button>
+                                    </StyledTableCell>
+                                    <StyledTableCell align="right">
+                                        <Button>Archive</Button>
+                                    </StyledTableCell>
+                                </StyledTableRow>
+                            ))
+                        }
                         {emptyRows > 0 && (
                             <TableRow style={{ height: 53 * emptyRows }}>
                                 <TableCell colSpan={6} />
@@ -271,8 +312,8 @@ export default function AllPostList() {
                                     { label: "All", value: -1 },
                                 ]}
                                 colSpan={3}
-                                count={rows.length}
-                                rowsPerPage={rowsPerPage}
+                                count={totalCount}
+                                rowsPerPage={rowsPerPage - 1}
                                 page={page}
                                 slotProps={{
                                     select: {

@@ -1,7 +1,7 @@
 import {createAsyncThunk} from "@reduxjs/toolkit";
 import {apiClient, apiMediaClient} from "../../utils/api/apiClient.ts";
 import {handleAxiosError} from "../../utils/errors";
-import {IPostCreate} from "../../interfaces/post";
+import {IFetchData, IPostCreate} from "../../interfaces/post";
 
 
 
@@ -29,10 +29,7 @@ export const getListOfCategories = createAsyncThunk(
     },
 );
 
-export interface IFetchData{
-    page:number,
-    sizeOfPage:number
-}
+
 
 export const  getListOfPosts=createAsyncThunk(
     'Post/get-list-of-posts',
@@ -88,6 +85,19 @@ export const createPost = createAsyncThunk(
         try {
             console.log("handleSubmit", payload)
             const response = await apiMediaClient.post('/api/Post/create-post', payload);
+            return response.data;
+        } catch (error) {
+            return rejectWithValue(handleAxiosError(error, "Network error"));
+        }
+    },
+);
+
+export const getListPostsForRealtor = createAsyncThunk(
+    'Post/get-post-list-for-realtor',
+    async (payload : IFetchData, { rejectWithValue }) => {
+        try {
+            const response = await apiClient.get(
+                `/api/Post/get-post-list-for-realtor?page=${payload.page}&sizeOfPage=${payload.sizeOfPage}`);
             return response.data;
         } catch (error) {
             return rejectWithValue(handleAxiosError(error, "Network error"));

@@ -7,13 +7,12 @@ import {
     getListOfCategories,
     getListOfCitiesByCountryId,
     getListOfCountries, getListOfPosts,
-    getListOfStreetsByCityId, getTypesOfRentList
+    getListOfStreetsByCityId, getListPostsForRealtor, getTypesOfRentList
 } from "./post.actions.ts";
 
 function isRejectedAction(action: AnyAction): action is RejectedAction {
     return action.type.endsWith('/rejected');
 }
-
 
 const initialState: IPostState = {
     status: Status.IDLE,
@@ -22,12 +21,9 @@ const initialState: IPostState = {
     countries: null,
     cities: null,
     streets: null,
-    typeOfRent: null
-
+    typeOfRent: null,
+    postInfoList: null
 };
-
-
-
 
 export const postSlice = createSlice({
     name: 'post',
@@ -83,6 +79,13 @@ export const postSlice = createSlice({
                 state.status = Status.SUCCESS;
             })
             .addCase(createPost.pending, (state) => {
+                state.status = Status.LOADING;
+            })
+            .addCase(getListPostsForRealtor.fulfilled, (state, action) => {
+                state.status = Status.SUCCESS;
+                state.postInfoList = action.payload;
+            })
+            .addCase(getListPostsForRealtor.pending, (state) => {
                 state.status = Status.LOADING;
             })
             .addMatcher(isRejectedAction, (state) => {
