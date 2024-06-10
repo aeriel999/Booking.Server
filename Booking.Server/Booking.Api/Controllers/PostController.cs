@@ -2,6 +2,7 @@
 using Booking.Api.Contracts.Post.GetCategories;
 using Booking.Api.Contracts.Post.GetCities;
 using Booking.Api.Contracts.Post.GetCountries;
+using Booking.Api.Contracts.Post.GetFilteredList;
 using Booking.Api.Contracts.Post.GetListOfPost;
 using Booking.Api.Contracts.Post.GetPost;
 using Booking.Api.Contracts.Post.GetStreets;
@@ -83,9 +84,9 @@ public class PostController(ISender mediatr, IMapper mapper) : ApiController
     }
     [AllowAnonymous]
     [HttpGet("get-post-by-name")]
-    public async Task<IActionResult> GetPostByNameAsync([FromQuery] string name, int page, int sizeOfPage)
+    public async Task<IActionResult> GetPostByNameAsync([FromQuery] GetFilteredListRequest types, string name, int page, int sizeOfPage)
     {
-        var getPostResult = await mediatr.Send(new GetPostByNameQuery(name,page,sizeOfPage));
+        var getPostResult = await mediatr.Send(mapper.Map<GetPostByNameQuery>((types, name,page,sizeOfPage)));
 
         return getPostResult.Match(
             getPostResult => Ok(mapper.Map<PagedList<GetListOfPostResponse>>(getPostResult)),
@@ -93,24 +94,25 @@ public class PostController(ISender mediatr, IMapper mapper) : ApiController
     }
     [AllowAnonymous]
     [HttpGet("get-name-of-post")]
-    public async Task<IActionResult> GetNameOfPostAsync([FromQuery] string name="")
+    public async Task<IActionResult> GetNameOfPostAsync([FromQuery] GetFilteredListRequest types,string name="")
     {
-        var getPostResult = await mediatr.Send(new GetNameOfPostQuery(name));
+        var getPostResult = await mediatr.Send(mapper.Map<GetNameOfPostQuery>((types,name)));
 
         return getPostResult.Match(
             getPostResult => Ok(getPostResult),
             errors => Problem(errors));
     }
     [AllowAnonymous]
-    [HttpGet("get-filtered-list-by-{type}")]
-    public async Task<IActionResult> GetPostByIdAsync([FromRoute] string type, [FromQuery] int page, int sizeOfPage,Guid id)
+    [HttpGet("get-filtered-list-by-type")]
+    public async Task<IActionResult> GetFilteredListAsync([FromQuery] GetFilteredListRequest types, int page, int sizeOfPage)
     {
-        var getlistOfPostResult = await mediatr.Send(new GetFilteredListQuery(type,page,sizeOfPage,id));
+        var getlistOfPostResult = await mediatr.Send(mapper.Map<GetFilteredListQuery>((types,page,sizeOfPage)));
 
         return getlistOfPostResult.Match(
             getlistOfPostResult => Ok(mapper.Map<PagedList<GetListOfPostResponse>>(getlistOfPostResult)),
             errors => Problem(errors));
     }
+    [AllowAnonymous]
     [HttpGet("get-type-of-rent-list")]
 	public async Task<IActionResult> GetTypeOfRentListAsync()
 	{
@@ -120,8 +122,8 @@ public class PostController(ISender mediatr, IMapper mapper) : ApiController
 			getTypeOfPostListResult => Ok(mapper.Map<List<GetTypeOfPostResponse>>(getTypeOfPostListResult)),
 			errors => Problem(errors));
 	}
-
-	[HttpGet("get-categories-list")]
+    [AllowAnonymous]
+    [HttpGet("get-categories-list")]
 	public async Task<IActionResult> GetCategoriesListAsync()
 	{
 		var getCategoriesListResult = await mediatr.Send(new GetCategoriesListQuery());
@@ -131,6 +133,7 @@ public class PostController(ISender mediatr, IMapper mapper) : ApiController
 			errors => Problem(errors));
 	}
 
+	[AllowAnonymous]
 	[HttpGet("get-countries-list")]
 	public async Task<IActionResult> GetCountriesListAsync()
 	{
@@ -141,7 +144,8 @@ public class PostController(ISender mediatr, IMapper mapper) : ApiController
 			errors => Problem(errors));
 	}
 
-	[HttpGet("get-cities-list")]
+    [AllowAnonymous]
+    [HttpGet("get-cities-list")]
 	public async Task<IActionResult> GetCitiesListByCountryIdAsync(
 		[FromQuery]GetCitiesListByCountryIdRequest request)
 	{

@@ -68,14 +68,15 @@ export default function PostPage(){
                                 Area :
                             </Typography>
                             <Typography sx={{ fontSize: 21, textAlign:"center" }} color="text.secondary" gutterBottom>
-                                Description :
-                            </Typography>
-                            <Typography sx={{ fontSize: 21, textAlign:"center" }} color="text.secondary" gutterBottom>
                                 Price :
                             </Typography>
                             <Typography sx={{ fontSize: 21, textAlign:"center" }} color="text.secondary" gutterBottom>
                                 Realtor :
                             </Typography>
+                            <Typography sx={{ fontSize: 21, textAlign:"center" }} color="text.secondary" gutterBottom>
+                                Description :
+                            </Typography>
+
                         </Stack>
 
 
@@ -88,40 +89,40 @@ export default function PostPage(){
                                 {post.name}
                             </Typography>
                             <Typography sx={{ fontSize: 21, textAlign:"center" }} color="text.secondary" gutterBottom>
-                                {post.category}
+                                {post.category==null?"none":post.category}
                             </Typography>
                             <Typography sx={{ fontSize: 21, textAlign:"center" }} color="text.secondary" gutterBottom>
-                                {post.postTypeOfRent}
+                                {post.postTypeOfRent==null?"none":post.postTypeOfRent}
                             </Typography>
                             <Typography sx={{ fontSize: 21, textAlign:"center" }} color="text.secondary" gutterBottom>
                                 {post.isArchive?"Yes":"No"}
                             </Typography>
                             <Typography sx={{ fontSize: 21, textAlign:"center" }} color="text.secondary" gutterBottom>
-                                {post.numberOfRooms}
+                                {post.numberOfRooms==null?"none":post.numberOfRooms}
                             </Typography>
                             <Typography sx={{ fontSize: 21, textAlign:"center" }} color="text.secondary" gutterBottom>
-                                {post.country}
+                                {post.country==null?"none":post.country}
                             </Typography>
                             <Typography sx={{ fontSize: 21, textAlign:"center" }} color="text.secondary" gutterBottom>
-                                {post.city}
+                                {post.city==null?"none":post.city}
                             </Typography>
                             <Typography sx={{ fontSize: 21, textAlign:"center" }} color="text.secondary" gutterBottom>
-                                {post.street}
+                                {post.street==null?"none":post.street}
                             </Typography>
                             <Typography sx={{ fontSize: 21, textAlign:"center" }} color="text.secondary" gutterBottom>
-                                {post.buildingNumber}
+                                {post.buildingNumber==null?"none":post.buildingNumber}
                             </Typography>
                             <Typography sx={{ fontSize: 21, textAlign:"center" }} color="text.secondary" gutterBottom>
-                                {post.area}
-                            </Typography>
-                            <Typography sx={{ fontSize: 21, textAlign:"center",overflow:"hidden" }} color="text.secondary" gutterBottom>
-                                {post.description}
+                                {post.area==null?"none":post.area}
                             </Typography>
                             <Typography sx={{ fontSize: 21, textAlign:"center" }} color="text.secondary" gutterBottom>
                                 {post.price} UAH
                             </Typography>
                             <Typography sx={{ fontSize: 21, textAlign:"center" }} color="text.secondary" gutterBottom>
                                 {post.user}
+                            </Typography>
+                            <Typography sx={{ fontSize: 21, textAlign:"center",overflow:"hidden" }} color="text.secondary" gutterBottom>
+                                {post.description==null?"none":post.description}
                             </Typography>
                         </Stack>
                     </Grid>

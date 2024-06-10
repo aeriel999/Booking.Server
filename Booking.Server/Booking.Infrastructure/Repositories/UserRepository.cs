@@ -1,4 +1,5 @@
 ﻿using Booking.Application.Common.Interfaces.Users;
+using Booking.Domain.Constants;
 using Booking.Domain.Users;
 using ErrorOr;
 using Microsoft.AspNetCore.Identity;
@@ -7,6 +8,13 @@ namespace Booking.Infrastructure.Repositories;
 
 public class UserRepository(UserManager<User> userManager) : IUserRepository
 {
+	public async Task<List<User>> GetRealtorsAsync()
+	{
+		IList<User> list = await userManager.GetUsersInRoleAsync(Roles.Realtor);
+
+        return list.ToList();
+	}
+
     public async Task<ErrorOr<User>> CreateUserAsync(User user, string password, string role)
     {
         var createUserResult = await userManager.CreateAsync(user, password);

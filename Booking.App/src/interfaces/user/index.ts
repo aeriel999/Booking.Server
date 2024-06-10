@@ -8,4 +8,10 @@ export interface IChangePassword{
 
 export  interface IUserState{
     status: Status;
+    realtors : IRealtor[] | null
+}
+
+export interface IRealtor{
+    id:string,
+    name:string
 }

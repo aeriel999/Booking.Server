@@ -3,7 +3,7 @@ import {RejectedAction} from "../../utils/types";
 import {Status} from "../../utils/enum";
 import {IPageOfPosts, IPostInformation, IPostState} from "../../interfaces/post";
 import {
-    createPost,
+    createPost, getFilteredListByType,
     getListOfCategories,
     getListOfCitiesByCountryId,
     getListOfCountries, getListOfPosts, getListOfPostsByName, getListOfPostsName,
@@ -64,6 +64,13 @@ export const postSlice = createSlice({
                 state.status = Status.SUCCESS;
             })
             .addCase(getListOfPostsName.pending, (state) => {
+                state.status = Status.LOADING;
+            })
+            .addCase(getFilteredListByType.fulfilled,(state, action:PayloadAction<IPageOfPosts>) => {
+                state.posts = action.payload;
+                state.status = Status.SUCCESS;
+            })
+            .addCase(getFilteredListByType.pending, (state) => {
                 state.status = Status.LOADING;
             })
             .addCase(getListOfPostsByName.fulfilled,(state, action:PayloadAction<IPageOfPosts>) => {
