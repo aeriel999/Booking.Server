@@ -38,6 +38,20 @@ export interface IPageOfPosts{
     sizeOfPage:number,
     totalCount:number
 }
+export interface IFilteredRequest {
+    filter:IFilter|null,
+    pages:IFetchData
+}
+export interface IFilter{
+    category:string | null,
+    country:string | null,
+    city:string | null,
+    realtor:string | null
+}
+export interface IFilteredRequestName {
+    filter:IFilter|null,
+    name:string | null
+}
 
 export interface IPost{
     id: number,
@@ -47,14 +61,47 @@ export interface IPost{
     price:number,
     imagePost:string
 }
+export interface ICharRoomId{
+    id:string
+}
+export interface IPostInformation{
+    id: number,
+    name:string;
+    category:string,
+    description:string,
+    postTypeOfRent:string,
+    country:string,
+    city:string,
+    street:string,
+    buildingNumber:string,
+    numberOfRooms:number,
+    area:number,
+    user:string,
+    isArchive:boolean,
+    price:number,
+    imagePost:string,
+    charRoomsId:ICharRoomId[]|null
+}
 export  interface IPostState{
     status: Status
+    post:IPostInformation | null,
     posts: IPageOfPosts | null,
     categories: ICategory[] | null,
     countries: ICountry[] | null,
     cities: ICity[] | null,
     streets: IStreet[] | null,
     typeOfRent: ITypeOfRent[] | null,
+    searchPost:string[]
+}
+export interface IFetchData{
+    page:number,
+    sizeOfPage:number
+}
+
+export interface IFetchDataByName{
+     filter:IFilter,
+     name:string,
+     pages:IFetchData
 }
 
 export  interface IPostCreate {

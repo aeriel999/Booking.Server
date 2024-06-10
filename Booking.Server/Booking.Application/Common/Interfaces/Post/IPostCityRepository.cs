@@ -4,7 +4,7 @@ namespace Booking.Application.Common.Interfaces.Post;
 
 public interface IPostCityRepository
 {
-	Task<List<PostCity>?> GetCitiesListByCountryIdAsync(Guid countryId);
+	Task<List<PostCity>?> GetCitiesListByCountryIdAsync(Guid? countryId);
 
 	Task CreateCityAsync(PostCity city);
 

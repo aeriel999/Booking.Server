@@ -14,3 +14,15 @@ export const changePassword = createAsyncThunk(
         }
     },
 );
+
+export const getListOfRealtors = createAsyncThunk(
+    'User/get-realtors-list',
+    async (_, { rejectWithValue }) => {
+        try {
+            const response = await apiClient.get('/api/User/get-realtors-list');
+            return response.data; // assuming the realtors are in $values
+        } catch (error) {
+            return rejectWithValue(handleAxiosError(error, "Network error"));
+        }
+    },
+);
