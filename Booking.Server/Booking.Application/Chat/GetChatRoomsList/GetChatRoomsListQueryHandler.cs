@@ -16,27 +16,22 @@ public class GetChatRoomsListQueryHandler(
 		List<ChatRoom> chatRoomList = new();
 
 		if (request.UserRole == Roles.Realtor)
-			chatRoomList = await chatRoomRepository.GetChatRoomListWithMessagesByRealtorIdAsync(
+			chatRoomList = await chatRoomRepository.GetChatRoomListWithPostsByRealtorIdAsync(
 				request.UserId);
 
 		if (request.UserRole == Roles.User)
-			chatRoomList = await chatRoomRepository.GetChatRoomListWithMessagesByUserIdAsync(
+			chatRoomList = await chatRoomRepository.GetChatRoomListWithPostByUserIdAsync(
 				request.UserId);
 
-		if(chatRoomList != null)
+		var postChatRooms = new List<PostChatRoomInfo>();
+
+		var chatList = new List<ChatRoomInfo>();
+
+		foreach (ChatRoom chatRoom in chatRoomList)
 		{
-			foreach (var chatRoom in chatRoomList)
-			{
-				foreach (var message in chatRoom.UserMessages!)
-				{
-					if (!message.IsRead)
-					{
-						return new GetChatRoomsListQueryResult(chatRoomList, true);
-					}
-				}
-			}
+			
 		}
 
-		return new GetChatRoomsListQueryResult(chatRoomList, false);
+		return Error.NotFound();
 	}
 }
