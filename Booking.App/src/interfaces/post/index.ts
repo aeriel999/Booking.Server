@@ -38,6 +38,20 @@ export interface IPageOfPosts{
     sizeOfPage:number,
     totalCount:number
 }
+export interface IFilteredRequest {
+    filter:IFilter|null,
+    pages:IFetchData
+}
+export interface IFilter{
+    category:string | null,
+    country:string | null,
+    city:string | null,
+    realtor:string | null
+}
+export interface IFilteredRequestName {
+    filter:IFilter|null,
+    name:string | null
+}
 
 export interface IPost{
     id: number,
@@ -85,6 +99,7 @@ export interface IFetchData{
 }
 
 export interface IFetchDataByName{
+     filter:IFilter,
      name:string,
      pages:IFetchData
 }

@@ -6,8 +6,8 @@ public class GetPostByNameQueryValidation:AbstractValidator<GetPostByNameQuery>
 {
     public GetPostByNameQueryValidation()
     {
-        RuleFor(x => x.name)
-            .NotEmpty().WithMessage("{PropertyName} must not be empty");
+       /*RuleFor(x => x.name)
+            .NotEmpty().WithMessage("{PropertyName} must not be empty");*/
 
         RuleFor(x => x.page)
             .NotEmpty().WithMessage("{PropertyName} must not be empty")

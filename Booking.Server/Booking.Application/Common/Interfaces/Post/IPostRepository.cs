@@ -11,7 +11,8 @@ public interface IPostRepository
 
 	Task<Post?> GetPostByIdAsync(Guid postId);
 	Task<PagedList<Post>> GetAllAsync(int page, int sizeOfPage);
-	Task<PagedList<Post>> GetFilteredListAsync(string type, int page, int sizeOfPage, Guid id);
-	Task<PagedList<Post>> GetPostByNameAsync(string name, int page, int sizeOfPage);
-	Task<List<string>> GetNameOfPostAsync(string name);
+	Task<PagedList<Post>> GetFilteredListAsync(Guid? category, Guid? country, Guid? city, Guid? realtor, int page, int sizeOfPage);
+	Task<PagedList<Post>> GetPostByNameAsync(Guid? category, Guid? country, Guid? city, Guid? realtor, string name, int page, int sizeOfPage);
+
+    Task<List<string>> GetNameOfPostAsync(Guid? category, Guid? country, Guid? city, Guid? realtor, string name);
 }

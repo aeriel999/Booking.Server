@@ -7,7 +7,7 @@ public class GetNameOfPostQueryHandler(IPostRepository repository) : IRequestHan
 {
     public async Task<ErrorOr<List<string>>> Handle(GetNameOfPostQuery request, CancellationToken cancellationToken)
     {
-        var result = await repository.GetNameOfPostAsync(request.name);
+        var result = await repository.GetNameOfPostAsync(request.category,request.country,request.city,request.realtor,request.name);
 
         if (result == null) return Error.NotFound("Names not found");
 

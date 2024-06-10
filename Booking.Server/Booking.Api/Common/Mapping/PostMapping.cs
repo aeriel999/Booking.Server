@@ -2,6 +2,7 @@
 using Booking.Api.Contracts.Post.GetCategories;
 using Booking.Api.Contracts.Post.GetCities;
 using Booking.Api.Contracts.Post.GetCountries;
+using Booking.Api.Contracts.Post.GetFilteredList;
 using Booking.Api.Contracts.Post.GetListOfPost;
 using Booking.Api.Contracts.Post.GetPost;
 using Booking.Api.Contracts.Post.GetStreets;
@@ -9,6 +10,9 @@ using Booking.Api.Contracts.Post.GetTypeOfPost;
 using Booking.Application.Common.Behaviors;
 using Booking.Application.Posts.CreatePost;
 using Booking.Application.Posts.GetCities;
+using Booking.Application.Posts.GetFilteredList;
+using Booking.Application.Posts.GetNameOfPost;
+using Booking.Application.Posts.GetPostByName;
 using Booking.Application.Posts.GetStreets;
 using Booking.Domain.Posts;
 using Mapster;
@@ -44,6 +48,29 @@ public class PostMapping : IRegister
         config.NewConfig<PagedList<GetListOfPostResponse>, PagedList<Post>>()
 			.Map(desp => desp.items, src => src.items.Adapt<List<GetListOfPostResponse>>());
 
+        config.NewConfig<(GetFilteredListRequest request, string name), GetNameOfPostQuery>()
+            .Map(dest => dest.category, src => src.request.category)
+            .Map(dest => dest.country, src => src.request.country)
+            .Map(dest => dest.city, src => src.request.city)
+            .Map(dest => dest.realtor, src => src.request.realtor)
+            .Map(dest => dest.name, src => src.name);
+
+        config.NewConfig<(GetFilteredListRequest request, int page, int sizeOfPage), GetFilteredListQuery>()
+			.Map(dest => dest.category, src => src.request.category)
+			.Map(dest => dest.country, src => src.request.country)
+			.Map(dest => dest.city, src => src.request.city)
+			.Map(dest => dest.realtor, src => src.request.realtor)
+			.Map(dest => dest.page, src => src.page)
+            .Map(dest => dest.sizeOfPage, src => src.sizeOfPage);
+
+        config.NewConfig<(GetFilteredListRequest request,string name, int page, int sizeOfPage), GetPostByNameQuery>()
+            .Map(dest => dest.category, src => src.request.category)
+            .Map(dest => dest.country, src => src.request.country)
+            .Map(dest => dest.city, src => src.request.city)
+            .Map(dest => dest.realtor, src => src.request.realtor)
+            .Map(dest => dest.name, src => src.name)
+            .Map(dest => dest.page, src => src.page)
+            .Map(dest => dest.sizeOfPage, src => src.sizeOfPage);
 
         config.NewConfig<PostCategory, GetCategoryResponse>();
 		config.NewConfig<List<PostCategory>, List<GetCategoryResponse>>();

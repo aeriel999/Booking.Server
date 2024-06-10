@@ -1,8 +1,10 @@
 ﻿using Booking.Api.Contracts.Users.Common.ChangePassword;
 using Booking.Api.Contracts.Users.Realtor.Edit;
+using Booking.Api.Contracts.Users.Realtor.Get;
 using Booking.Api.Infrastructure;
 using Booking.Application.Users.Common.ChangePassword;
 using Booking.Application.Users.Realtor;
+using Booking.Application.Users.Realtor.GetRealtorsList;
 using MapsterMapper;
 using MediatR;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
@@ -17,7 +19,18 @@ namespace Booking.Api.Controllers;
 [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
 public class UserController(ISender mediatr, IMapper mapper, IConfiguration configuration) : ApiController
 {
-	[HttpPost("realtor-profile")]
+    [AllowAnonymous]
+    [HttpGet("get-realtors-list")]
+    public async Task<IActionResult> GetRealtorsListAsync()
+    {
+        var getRealtorsListResult = await mediatr.Send(new GetRealtorsListQuery());
+
+        return getRealtorsListResult.Match(
+            getRealtorsListResult => Ok(mapper.Map<List<GetRealtorResponse>>(getRealtorsListResult)),
+            errors => Problem(errors));
+    }
+
+    [HttpPost("realtor-profile")]
 	public async Task<IActionResult> EditRealtorPrifileInfoAsync(EditRealtorPrifileInfoRequest request)
 	{
 		string userId = User.Claims.First(u => u.Type == ClaimTypes.NameIdentifier).Value;
