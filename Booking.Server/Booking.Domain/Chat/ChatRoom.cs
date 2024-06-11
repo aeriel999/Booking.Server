@@ -5,18 +5,19 @@ namespace Booking.Domain.Chat;
 
 public class ChatRoom
 {
-	public Guid ChatRoomId { get; set; }
+	public required Guid ChatRoomId { get; set; }
 
-	public Guid ClientId { get; set; }
+	public required Guid ClientId { get; set; }
 
-	public Guid RealtorId { get; set; }
+	public required Guid RealtorId { get; set; }
 
-	public Guid PostId { get; set; }
+	public required Guid PostId { get; set; }
 
-	//ToDo Error in ading of Posts
+	public required string PostName { get; set; }	
+
 
 	[ForeignKey(nameof(PostId))]
-	public required Post Post { get; set; }
+	public Post? Post { get; set; }
 
 	public ICollection<UserMessage>? UserMessages { get; set; }
 }

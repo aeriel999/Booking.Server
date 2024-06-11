@@ -12,7 +12,8 @@ public class CreateMessageCommandHandler(
 	IChatRoomRepository chatRoomRepository)
 	: IRequestHandler<CreateMessageCommand, ErrorOr<string>>
 {
-	public async Task<ErrorOr<string>> Handle(CreateMessageCommand request, CancellationToken cancellationToken)
+	public async Task<ErrorOr<string>> Handle(
+		CreateMessageCommand request, CancellationToken cancellationToken)
 	{
 		//Find User
 		var userOrError = await userRepository.FindByIdAsync(request.UserId);
@@ -32,10 +33,10 @@ public class CreateMessageCommandHandler(
 		var userMessage = new UserMessage
 		{
 			Id = Guid.NewGuid(),
-			UserName = userName,
+			UserId = Guid.Parse(request.UserId),
 			Message = request.Message,
 			ChatRoomId = request.RoomId,
-			ChatRoom = room,
+			ChatRoom = room!,
 			SentAt = DateTime.Now.ToUniversalTime(),
 			IsRead = false,
 		};

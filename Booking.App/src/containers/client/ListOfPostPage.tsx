@@ -92,7 +92,9 @@ export default function ListOfPostPage (){
         console.log("Filter - "+filter.category)
     }, [filter]);
     const changePage = async(event: React.ChangeEvent<unknown>,value: number)=>{
-        console.log("Next page",value);
+        console.log("Next page", value);
+        console.log("Next page", event);
+
         setPage(value);
         const nextPage:IFetchData={
             page:value,

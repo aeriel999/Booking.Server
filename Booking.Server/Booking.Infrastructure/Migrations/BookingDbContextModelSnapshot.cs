@@ -34,6 +34,10 @@ namespace Booking.Infrastructure.Migrations
                     b.Property<Guid>("PostId")
                         .HasColumnType("uuid");
 
+                    b.Property<string>("PostName")
+                        .IsRequired()
+                        .HasColumnType("text");
+
                     b.Property<Guid>("RealtorId")
                         .HasColumnType("uuid");
 
@@ -63,9 +67,8 @@ namespace Booking.Infrastructure.Migrations
                     b.Property<DateTime>("SentAt")
                         .HasColumnType("timestamp with time zone");
 
-                    b.Property<string>("UserName")
-                        .IsRequired()
-                        .HasColumnType("text");
+                    b.Property<Guid>("UserId")
+                        .HasColumnType("uuid");
 
                     b.HasKey("Id");
 
@@ -94,6 +97,9 @@ namespace Booking.Infrastructure.Migrations
 
                     b.Property<DateTime?>("EditAt")
                         .HasColumnType("timestamp with time zone");
+
+                    b.Property<bool>("IsActive")
+                        .HasColumnType("boolean");
 
                     b.Property<bool>("IsArhive")
                         .HasColumnType("boolean");

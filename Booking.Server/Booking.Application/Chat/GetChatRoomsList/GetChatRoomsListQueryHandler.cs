@@ -1,4 +1,6 @@
 ﻿using Booking.Application.Common.Interfaces.Chat;
+using Booking.Application.Common.Interfaces.Post;
+using Booking.Application.Common.Interfaces.Users;
 using Booking.Domain.Chat;
 using Booking.Domain.Constants;
 using ErrorOr;
@@ -7,36 +9,76 @@ using MediatR;
 namespace Booking.Application.Chat.GetChatRoomsList;
 
 public class GetChatRoomsListQueryHandler(
-	IChatRoomRepository chatRoomRepository)
+	IChatRoomRepository chatRoomRepository,
+	IPostRepository postRepository,
+	IUserRepository userRepository)
 	: IRequestHandler<GetChatRoomsListQuery, ErrorOr<GetChatRoomsListQueryResult>>
 {
 	public async Task<ErrorOr<GetChatRoomsListQueryResult>> Handle(
 		GetChatRoomsListQuery request, CancellationToken cancellationToken)
 	{
-		List<ChatRoom> chatRoomList = new();
+		//Create 
+		List<ChatsForPostListInfo> chatsForPosts  = new();
+
+		var hasNewMsg = false;
 
 		if (request.UserRole == Roles.Realtor)
-			chatRoomList = await chatRoomRepository.GetChatRoomListWithMessagesByRealtorIdAsync(
-				request.UserId);
-
-		if (request.UserRole == Roles.User)
-			chatRoomList = await chatRoomRepository.GetChatRoomListWithMessagesByUserIdAsync(
-				request.UserId);
-
-		if(chatRoomList != null)
 		{
-			foreach (var chatRoom in chatRoomList)
+			//Get list of post of realtor
+			var listOfPost = await postRepository.GetListPostByRealtorIdAsync(request.UserId);
+
+			if (listOfPost == null)
+				return new GetChatRoomsListQueryResult(null, false);
+
+			foreach (var post in listOfPost)
 			{
-				foreach (var message in chatRoom.UserMessages!)
+				//Get List of chats for current post
+				var chatRoomList = await chatRoomRepository.GetChatRoomListByPostId(post.Id);
+
+				if (chatRoomList == null)
+					continue;
+
+				List<ChatRoomInfo> chatRoomInfoList = new();
+
+				foreach (var chat in chatRoomList)
 				{
-					if (!message.IsRead)
+					foreach (var msg in chat.UserMessages)
 					{
-						return new GetChatRoomsListQueryResult(chatRoomList, true);
+						if (!msg.IsRead)
+						{
+							hasNewMsg = true;
+							break;
+						}
 					}
+
+					var user = await userRepository.FindByIdAsync(chat.ClientId.ToString());
+
+					var userName = await userRepository.GetUserNameByUserAsync(user.Value);
+
+					var chatRoomInfo = new ChatRoomInfo(hasNewMsg, userName, chat.ChatRoomId);
+
+					chatRoomInfoList.Add(chatRoomInfo);
 				}
+
+				var postChat = new ChatsForPostListInfo(hasNewMsg, post.Name, post.Id, chatRoomInfoList);
+
+				chatsForPosts.Add(postChat);
 			}
 		}
 
-		return new GetChatRoomsListQueryResult(chatRoomList, false);
+		//if (request.UserRole == Roles.User)
+		//	chatRoomList = await chatRoomRepository.GetChatRoomListWithPostByUserIdAsync(
+		//		request.UserId);
+
+		//var postChatRooms = new List<ChatsForPostListInfo>();
+
+		//var chatList = new List<ChatRoomInfo>();
+
+		//foreach (ChatRoom chatRoom in chatRoomList)
+		//{
+			
+		//}
+
+		return new GetChatRoomsListQueryResult(chatsForPosts, hasNewMsg);
 	}
 }

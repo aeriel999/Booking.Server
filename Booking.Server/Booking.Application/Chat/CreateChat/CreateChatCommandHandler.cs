@@ -18,7 +18,7 @@ public class CreateChatCommandHandler(
 		CreateChatCommand request, CancellationToken cancellationToken)
 	{
 		//Get user
-		var userOrError = await userRepository.FindByIdAsync(request.UserId);
+		var userOrError = await userRepository.FindByIdAsync(request.UserId.ToString());
 
 		if (userOrError.IsError)
 			return userOrError.Errors;
@@ -35,10 +35,10 @@ public class CreateChatCommandHandler(
 		var chatRoom = new ChatRoom
 		{
 			ChatRoomId = Guid.NewGuid(),
-			ClientId = Guid.Parse(request.UserId),
-			RealtorId = Guid.Parse(request.UserId),
+			ClientId = request.UserId,
+			RealtorId = request.UserId,
 			PostId = request.PostId,
-			Post = post
+			PostName = post.Name
 		};
 
 		await chatRoomRepositories.CreateChatRoomAsync(chatRoom);
