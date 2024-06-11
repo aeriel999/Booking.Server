@@ -17,7 +17,7 @@ import KeyboardArrowRight from "@mui/icons-material/KeyboardArrowRight";
 import LastPageIcon from "@mui/icons-material/LastPage";
 import { Breadcrumbs, Button, Divider, Typography } from "@mui/material";
 import OutlinedErrorAlert from "../../components/common/ErrorAlert";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { useState, useEffect } from "react";
 import { useAppDispatch } from "../../hooks/redux";
 import { unwrapResult } from "@reduxjs/toolkit";
@@ -142,6 +142,7 @@ export default function AllPostList() {
         undefined
     );
     const dispatch = useAppDispatch();
+    const navigate = useNavigate();
 
     const emptyRows =
         page > 0 ? Math.max(0, (1 + page) * rowsPerPage - totalCount) : 0;
@@ -288,7 +289,10 @@ export default function AllPostList() {
                                         {row.isArhive === true ? "Yes" : "No"}
                                     </StyledTableCell>
                                     <StyledTableCell align="right">
-                                        <Button>Edit</Button>
+                                        <Button   onClick={() => {
+                                navigate(`/dashboard/edit-post/${row.id}`);
+                            }}>
+                                            Edit</Button>
                                     </StyledTableCell>
                                     <StyledTableCell align="right">
                                         <Button>Archive</Button>

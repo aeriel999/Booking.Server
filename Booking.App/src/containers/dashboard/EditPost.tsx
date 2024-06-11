@@ -2,11 +2,11 @@ import Container from "@mui/material/Container";
 import Box from "@mui/material/Box";
 import Typography from "@mui/material/Typography";
 import { Breadcrumbs, Grid } from "@mui/material";
-import { Link, useNavigate } from "react-router-dom";
+import { Link, useNavigate, useParams } from "react-router-dom";
 import Divider from "@mui/material/Divider";
 import ComboBox from "../../components/common/ComboBox.tsx";
 import { useEffect, useRef, useState } from "react";
-import { useAppDispatch } from "../../hooks/redux";
+import { useAppDispatch, useAppSelector } from "../../hooks/redux";
 import { unwrapResult } from "@reduxjs/toolkit";
 import {
     createPost,
@@ -14,6 +14,7 @@ import {
     getListOfCitiesByCountryId,
     getListOfCountries,
     getListOfStreetsByCityId,
+    getPostById,
     getTypesOfRentList,
 } from "../../store/post/post.actions.ts";
 import ErrorHandler from "../../components/common/ErrorHandler.ts";
@@ -23,6 +24,7 @@ import {
     ICity,
     ICountry,
     IPostCreate,
+    IPostInformation,
     ITypeOfRent,
 } from "../../interfaces/post";
 import InputGroup from "../../components/common/InputGroup.tsx";
@@ -42,7 +44,9 @@ import Button from "@mui/material/Button";
 import * as React from "react";
 import { joinForPostListening } from "../../SignalR";
 
-export function AddNewPost() {
+export function EditPost() {
+    const { post } = useAppSelector((state) => state.post);
+    const { postId } = useParams();
     const dispatch = useAppDispatch();
     const [errorMessage, setErrorMessage] = useState<string | undefined>(
         undefined
@@ -73,8 +77,44 @@ export function AddNewPost() {
     const [images, setImages] = useState<File[]>([]);
     const [isFormValid, setIsFormValid] = useState(false);
     const navigate = useNavigate();
+    const [postRealtor, setPostRealtor] = useState<IPostInformation>(post!);
+
     //ToDo make hasCountOfRooms and hasArea
     //ToDo request.CityId == null && request.CityName != null
+
+    const getPost = async (id: string) => {
+        try {
+            const response = await dispatch(getPostById(id));
+            unwrapResult(response);
+            return response;
+        } catch (error) {
+            setErrorMessage(ErrorHandler(error));
+        }
+    };
+
+    useEffect(() => {
+        getPost(postId as string).then((history) => {
+            setPostRealtor(history?.payload);
+        });
+
+        if (post?.countryId) {
+            getCityList(post?.countryId).then((history) => {
+                if (history?.payload.$values != null) {
+                    setCityList(history?.payload.$values);
+                }
+            });
+        }
+
+        if (post?.cityId) {
+            getStreetList(post?.cityId).then((history) => {
+                if (history?.payload.$values != null) {
+                    setStreetList(history?.payload.$values);
+                }
+            });
+        }
+    }, [postId]);
+
+    console.log("history", post);
 
     const getTypeOfRentList = async () => {
         try {
@@ -247,7 +287,7 @@ export function AddNewPost() {
                     }}
                 >
                     <Typography component="h1" variant="h5">
-                        Add New Post
+                        Edit Post
                     </Typography>
                     <Box
                         component="form"
@@ -265,6 +305,7 @@ export function AddNewPost() {
                                     onChange={(isValid) =>
                                         (formValid.current.name = isValid)
                                     }
+                                    defaultValue={postRealtor?.name}
                                 />
                             </Grid>
 
@@ -273,7 +314,7 @@ export function AddNewPost() {
                                     options={typeOfRentList}
                                     onChange={setTypeOfRent}
                                     label={"Type Of Rent"}
-                                    defaultValue ={null}
+                                    defaultValue={postRealtor?.postTypeOfRent}
                                 />
                             </Grid>
 
@@ -282,7 +323,7 @@ export function AddNewPost() {
                                     options={categoryList}
                                     onChange={setCategory}
                                     label={"Category"}
-                                    defaultValue ={null}
+                                    defaultValue={postRealtor?.category}
                                 />
                             </Grid>
 
@@ -291,7 +332,7 @@ export function AddNewPost() {
                                     options={countryList}
                                     onChange={setCountry}
                                     label={"Country"}
-                                    defaultValue ={null}
+                                    defaultValue={postRealtor?.countryName}
                                 />
                             </Grid>
 
@@ -308,7 +349,7 @@ export function AddNewPost() {
                                         options={cityList}
                                         onChange={setCity}
                                         label={"City"}
-                                        defaultValue ={null}
+                                        defaultValue={postRealtor?.cityName}
                                     />
                                 </Grid>
                             )}
@@ -340,7 +381,7 @@ export function AddNewPost() {
                                         options={streetList}
                                         onChange={setStreet}
                                         label={"Street"}
-                                        defaultValue ={null}
+                                        defaultValue={postRealtor?.street}
                                     />
                                 </Grid>
                             )}
@@ -369,6 +410,7 @@ export function AddNewPost() {
                                         (formValid.current.buildingNumber =
                                             isValid)
                                     }
+                                    defaultValue={postRealtor?.buildingNumber}
                                 />
                             </Grid>
 
@@ -382,6 +424,11 @@ export function AddNewPost() {
                                         (formValid.current.numberOfRooms =
                                             isValid)
                                     }
+                                    defaultValue={
+                                        postRealtor?.area == null
+                                            ? null
+                                            : postRealtor?.area
+                                    }
                                 />
                             </Grid>
 
@@ -393,6 +440,11 @@ export function AddNewPost() {
                                     validator={AreaValidator}
                                     onChange={(isValid) =>
                                         (formValid.current.area = isValid)
+                                    }
+                                    defaultValue={
+                                        postRealtor?.area == null
+                                            ? null
+                                            : postRealtor?.area
                                     }
                                 />
                             </Grid>
@@ -406,6 +458,7 @@ export function AddNewPost() {
                                     onChange={(isValid) =>
                                         (formValid.current.price = isValid)
                                     }
+                                    defaultValue={postRealtor?.price}
                                 />
                             </Grid>
 
@@ -421,6 +474,11 @@ export function AddNewPost() {
                                     }
                                     rowsCount={7}
                                     isMultiline={true}
+                                    defaultValue={
+                                        postRealtor?.description == null
+                                            ? null
+                                            : postRealtor?.description
+                                    }
                                 />
                             </Grid>
 

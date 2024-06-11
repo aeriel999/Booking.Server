@@ -8,7 +8,7 @@ interface InputGroupProps{
     validator: (value: string) => string | false | undefined,
     onChange: (isValid: boolean) => void,
     setIncomeValue?: (value: string) => void,
-    defaultValue?: string | null,
+    defaultValue?: string | null | number,
     rowsCount?: number | null,
     isMultiline?: boolean | false,
 }

@@ -1,8 +1,8 @@
 import { Status } from "../../utils/enum";
 
-export interface IFetchData{
-    page:number,
-    sizeOfPage:number
+export interface IFetchData {
+    page: number;
+    sizeOfPage: number;
 }
 
 export interface IListForCombobox {
@@ -53,15 +53,37 @@ export interface IPost {
     price: number;
     imagePost: string;
 }
+
+export interface IPostInformation {
+    id: number;
+    name: string;
+    category: string;
+    description: string;
+    postTypeOfRent: string;
+    countryName: string;
+    countryId: string;
+    cityName: string;
+    cityId: string;
+    street: string;
+    buildingNumber: string;
+    numberOfRooms: number;
+    area: number;
+    user: string;
+    isArchive: boolean;
+    price: number;
+    imagePost: string;
+}
+
 export interface IPostState {
     status: Status;
     posts: IPageOfPosts | null;
+    post: IPostInformation | null;
     categories: ICategory[] | null;
     countries: ICountry[] | null;
     cities: ICity[] | null;
     streets: IStreet[] | null;
     typeOfRent: ITypeOfRent[] | null;
-    postInfoList: IPageOfPostsForRealtor | null
+    postInfoList: IPageOfPostsForRealtor | null;
 }
 
 export interface IPostCreate {

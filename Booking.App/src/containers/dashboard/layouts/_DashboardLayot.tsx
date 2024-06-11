@@ -313,7 +313,7 @@ export default function DashboardLayout() {
                     <ListItem disablePadding>
                         <ListItemButton
                             onClick={() => {
-                                navigate("/dashboard/shaw-all-post");
+                                navigate("/dashboard/show-all-post");
                             }}
                         >
                             <ListItemIcon>

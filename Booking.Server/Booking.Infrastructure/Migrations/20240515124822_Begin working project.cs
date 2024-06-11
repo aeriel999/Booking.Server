@@ -287,7 +287,8 @@ namespace Booking.Infrastructure.Migrations
                 {
                     ChatRoomId = table.Column<Guid>(type: "uuid", nullable: false),
                     ClientId = table.Column<Guid>(type: "uuid", nullable: false),
-                    RealtorId = table.Column<Guid>(type: "uuid", nullable: false),
+					PostName = table.Column<Guid>(type: "text", nullable: false),
+					RealtorId = table.Column<string>(type: "uuid", nullable: false),
                     PostId = table.Column<Guid>(type: "uuid", nullable: false)
                 },
                 constraints: table =>

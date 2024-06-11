@@ -1,38 +1,39 @@
-﻿using Booking.Domain.Chat;
-using Booking.Domain.Posts;
-using Booking.Domain.Users;
-using System.ComponentModel.DataAnnotations.Schema;
+﻿namespace Booking.Api.Contracts.Post.GetPost;
 
-namespace Booking.Api.Contracts.Post.GetPost
+public record GetPostResponse
 {
-    public record GetPostResponse
-    {
-        public Guid Id { get; set; }
+	public required Guid Id { get; set; }
 
-        public required string Name { get; set; }
+	public required string Name { get; set; }
 
-        public string Category { get; set; }
+	public required string CountryName { get; set; }
 
-        public string? Description { get; set; }
+	public required Guid CountryId { get; set; }
 
-        public string PostTypeOfRent { get; set; }
+	public required string CityName { get; set; }
 
-        public string Street { get; set; }
+	public required Guid CityId { get; set; }
 
-        public string? BuildingNumber { get; set; }
+	public required string Category { get; set; }
 
-        public int? NumberOfRooms { get; set; }
+	public string? Description { get; set; }
 
-        public int? Area { get; set; }
+	public required string PostTypeOfRent { get; set; }
 
-        public string User { get; set; }
+	public required string Street { get; set; }
 
-        public bool IsArhive { get; set; }
+	public string? BuildingNumber { get; set; }
 
-        public decimal Price { get; set; }
+	public int? NumberOfRooms { get; set; }
 
-        public string ImagePost { get; set; }
+	public int? Area { get; set; }
 
-        public ICollection<Guid>? ChatRoomsId { get; set; }
-    }
+	public required string User { get; set; }
+
+	public required bool IsArhive { get; set; }
+
+	public required decimal Price { get; set; }
+
+	public required string ImagePost { get; set; }
+
 }

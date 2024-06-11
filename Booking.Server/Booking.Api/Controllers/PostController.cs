@@ -197,4 +197,5 @@ public class PostController(ISender mediatr, IMapper mapper) : ApiController
 				mapper.Map<PagedList<GetPostListForRealtorResponse>>(getPostListForRealtor)),
 			errors => Problem(errors));
 	}
+
 }

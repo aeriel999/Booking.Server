@@ -29,8 +29,6 @@ export const getListOfCategories = createAsyncThunk(
     },
 );
 
-
-
 export const  getListOfPosts=createAsyncThunk(
     'Post/get-list-of-posts',
     async (data:IFetchData) => {
@@ -38,6 +36,20 @@ export const  getListOfPosts=createAsyncThunk(
             return response.data;
 
     },
+
+)
+
+export const getPostById = createAsyncThunk(
+    'Post/get-post-by-id',
+    async (id : string, { rejectWithValue })=>{
+        try {
+            const response = await apiClient.get(`api/Post/get-post-by-id-${id}`);
+            return response.data;
+        } catch (error) {
+            return rejectWithValue(handleAxiosError(error, "Network error"));
+        }
+       
+    }
 
 )
 
@@ -104,3 +116,5 @@ export const getListPostsForRealtor = createAsyncThunk(
         }
     },
 );
+
+ 

@@ -15,6 +15,7 @@ public class ChatRoom
 
 	public required string PostName { get; set; }	
 
+
 	[ForeignKey(nameof(PostId))]
 	public Post? Post { get; set; }
 

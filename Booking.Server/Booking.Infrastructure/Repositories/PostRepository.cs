@@ -4,6 +4,7 @@ using Booking.Domain.Chat;
 using Booking.Domain.Posts;
 using Booking.Infrastructure.Common.Persistence;
 using Microsoft.EntityFrameworkCore;
+using System.IO;
 
 namespace Booking.Infrastructure.Repositories;
 
@@ -28,7 +29,7 @@ public class PostRepository(BookingDbContext context) : IPostRepository
     public async Task<Post> GetPostByIdAsync(Guid id)
     {
         var posts = await GetIncludeListAsync();
-        var post = posts.Find(x=>x.Id==id);    
+        var post = posts.Find(x => x.Id == id);    
         return post;
     }
     public async Task<PagedList<Post>> GetAllAsync(int page, int sizeOfPage)
@@ -55,30 +56,30 @@ public class PostRepository(BookingDbContext context) : IPostRepository
     public async Task<PagedList<Post>> GetSortedListByCategoryAsync(int page, int sizeOfPage)
     {
         var posts = await GetAllAsync(page, sizeOfPage);
-        posts.items = posts.items.OrderBy(item => item.Category.Name).ToList();
+        posts.items = posts.items.OrderBy(item => item.Category!.Name).ToList();
         return posts;
     }
     public async Task<PagedList<Post>> GetSortedListByRealtorAsync(int page, int sizeOfPage)
     {
         var posts = await GetAllAsync(page, sizeOfPage);
-        posts.items = posts.items.OrderBy(item => item.User.FirstName + item.User.LastName).ToList();
+        posts.items = posts.items.OrderBy(item => item.User!.FirstName + item.User.LastName).ToList();
         return posts;
     }
-    public async Task<List<Post>> GetIncludeListAsync()
-    {
-        return await context.Posts
-            .Include(post => post.PostTypeOfRent)
-            .Include(post => post.Category)
-            .Include(post => post.Street)
-            .Include(post => post.User)
-            .Include(post => post.ImagesPost)
-            .Include(post => post.ChatRooms)
-            .ToListAsync();
-    }
+	public async Task<List<Post>> GetIncludeListAsync()
+	{
+		return await _dbSet
+			.Include(post => post.PostTypeOfRent)
+			.Include(post => post.Category)
+			.Include(post => post.Street!.City!.Country)
+			.Include(post => post.User)
+			.Include(post => post.ImagesPost)
+			.Include(post => post.ChatRooms)
+			.ToListAsync();
+	}
 
 	public async Task<List<Post>> GetPostListByRealtorIdAsync(Guid realtorId)
 	{
-		return await context.Posts
+		return await _dbSet
 			.Where(c => c.UserId == realtorId)
 			.Include(post => post.PostTypeOfRent)
 			.Include(post => post.Category)

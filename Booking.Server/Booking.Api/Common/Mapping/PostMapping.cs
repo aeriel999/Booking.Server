@@ -33,7 +33,10 @@ public class PostMapping : IRegister
 			.Map(desp => desp.Street, src => src.Street!.Name)
 			.Map(desp => desp.User, src => $"{src.User!.FirstName} {src.User.LastName}")
 			.Map(desp => desp.ImagePost, src => src.ImagesPost!.FirstOrDefault(img => img.Priority == 1)!.Name)
-			.Map(desp => desp.ChatRoomsId, src => src.ChatRooms!.Select(x=>x.ChatRoomId).ToList());
+			.Map(desp => desp.CountryName, src => src.Street!.City!.Country!.Name)
+			.Map(desp => desp.CountryId, src => src.Street!.City!.CountryId)
+			.Map(desp => desp.CityName, src => src.Street!.City!.Name)
+			.Map(desp => desp.CityId, src => src.Street!.City!.Id);
 
         config.NewConfig<Post, GetListOfPostResponse>()
             .Map(desp => desp.Category, src => src.Category!.Name)
