@@ -21,8 +21,9 @@ public class PostCityRepository(BookingDbContext context) : IPostCityRepository
 		 && c.Name.ToLower() == name.ToLower());
 	}
 
-	public async Task<List<PostCity>?> GetCitiesListByCountryIdAsync(Guid countryId)
+	public async Task<List<PostCity>?> GetCitiesListByCountryIdAsync(Guid? countryId)
 	{
+		if (countryId == null) return new();
 		return await _dbSet
 			.Where(c => c.CountryId == countryId)
 			.ToListAsync();

@@ -6,7 +6,9 @@ namespace Booking.Application.Common.Interfaces.Users;
 
 public interface IUserRepository
 {
-	Task<ErrorOr<User>> FindByEmilAsync(string email);
+	Task<List<User>> GetRealtorsAsync();
+
+    Task<ErrorOr<User>> FindByEmilAsync(string email);
 
 	Task<ErrorOr<User>> FindByIdAsync(string userId);
 

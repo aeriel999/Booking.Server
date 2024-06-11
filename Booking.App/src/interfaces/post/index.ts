@@ -73,18 +73,40 @@ export interface IPostInformation {
     price: number;
     imagePost: string;
 }
-
-export interface IPostState {
-    status: Status;
-    posts: IPageOfPosts | null;
-    post: IPostInformation | null;
-    categories: ICategory[] | null;
-    countries: ICountry[] | null;
-    cities: ICity[] | null;
-    streets: IStreet[] | null;
-    typeOfRent: ITypeOfRent[] | null;
-    postInfoList: IPageOfPostsForRealtor | null;
+export interface IFilteredRequest {
+    filter:IFilter|null,
+    pages:IFetchData
 }
+export interface IFilter{
+    category:string | null,
+    country:string | null,
+    city:string | null,
+    realtor:string | null
+}
+export interface IFilteredRequestName {
+    filter:IFilter|null,
+    name:string | null
+}
+export  interface IPostState{
+    status: Status
+    post:IPostInformation | null,
+    posts: IPageOfPosts | null,
+    categories: ICategory[] | null,
+    countries: ICountry[] | null,
+    cities: ICity[] | null,
+    streets: IStreet[] | null,
+    typeOfRent: ITypeOfRent[] | null,
+    searchPost:string[]
+}
+export interface IFetchData{
+    page:number,
+    sizeOfPage:number
+}
+
+export interface IFetchDataByName{
+     filter:IFilter,
+     name:string,
+     pages:IFetchData
 
 export interface IPostCreate {
     name: string;

@@ -4,6 +4,7 @@ using Booking.Domain.Chat;
 using Booking.Domain.Posts;
 using Booking.Infrastructure.Common.Persistence;
 using Microsoft.EntityFrameworkCore;
+using System.Text.RegularExpressions;
 using System.IO;
 
 namespace Booking.Infrastructure.Repositories;
@@ -39,31 +40,53 @@ public class PostRepository(BookingDbContext context) : IPostRepository
         list.items = list.items.OrderBy(item => item.PostAt).ToList();
         return list;
     }
+    public async Task<List<Post>> Filter(Guid? category, Guid? country, Guid? city, Guid? realtor)
+    {
+        var posts = await GetIncludeListAsync();
 
-	 
-	public async Task<PagedList<Post>> GetSortedListByNumberOfRoomsAsync(int page, int sizeOfPage)
-    {
-        var posts = await GetAllAsync(page,sizeOfPage);
-        posts.items = posts.items.OrderBy(item=>item.NumberOfRooms).ToList();
-        return posts;
+        return posts.Where(p => (category == null ? true : p.CategoryId == category)
+             && (country == null ? true : p.Street.City.CountryId == country)
+             && (city == null ? true : p.Street.CityId == city)
+             && (realtor == null ? true : p.UserId == realtor))
+            .Select(p=>p)
+            .ToList();
     }
-    public async Task<PagedList<Post>> GetSortedListByPriceAsync(int page, int sizeOfPage)
+    public async Task<PagedList<Post>> GetFilteredListAsync(Guid? category, Guid? country, Guid? city, Guid? realtor,int page, int sizeOfPage)
     {
-        var posts = await GetAllAsync(page, sizeOfPage);
-        posts.items = posts.items.OrderBy(item => item.Price).ToList();
-        return posts;
+        var posts = await Filter(category,country,city,realtor);
+        PagedList<Post> list = new PagedList<Post>();
+
+        list = PagedList<Post>.getPagedList(posts.
+             OrderBy(item => item.PostAt).
+             Select(p=>p), page, sizeOfPage);
+        
+        return list;
     }
-    public async Task<PagedList<Post>> GetSortedListByCategoryAsync(int page, int sizeOfPage)
+   public async Task<PagedList<Post>> GetPostByNameAsync(Guid? category, Guid? country, Guid? city, Guid? realtor, string name, int page, int sizeOfPage)
     {
-        var posts = await GetAllAsync(page, sizeOfPage);
-        posts.items = posts.items.OrderBy(item => item.Category!.Name).ToList();
-        return posts;
+        var posts = await Filter(category, country, city, realtor);
+
+        var list = PagedList<Post>.getPagedList(posts
+            .Where(p=> p.Name.ToLower().Equals(name.ToLower()))
+            .Select(p=>p).
+            ToList(),page,sizeOfPage);
+
+        return list;
     }
-    public async Task<PagedList<Post>> GetSortedListByRealtorAsync(int page, int sizeOfPage)
-    {
-        var posts = await GetAllAsync(page, sizeOfPage);
-        posts.items = posts.items.OrderBy(item => item.User!.FirstName + item.User.LastName).ToList();
-        return posts;
+    public async Task<List<string>> GetNameOfPostAsync(Guid? category, Guid? country, Guid? city, Guid? realtor, string name)
+    {                                                  
+        if (String.IsNullOrEmpty(name)) return new List<string>();
+
+        var posts = await Filter(category, country, city, realtor);
+        Regex regex = new Regex($@"(^|\s){name.ToLower()}");
+        var list = posts
+            .Where(p => regex.IsMatch(p.Name.ToLower()))
+            .Select(p=>p.Name)
+            .Distinct() // видалення копій в списку
+            .Take(10)
+            .ToList();
+
+        return list;
     }
 	public async Task<List<Post>> GetIncludeListAsync()
 	{
