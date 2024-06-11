@@ -98,6 +98,9 @@ namespace Booking.Infrastructure.Migrations
                     b.Property<DateTime?>("EditAt")
                         .HasColumnType("timestamp with time zone");
 
+                    b.Property<bool>("IsActive")
+                        .HasColumnType("boolean");
+
                     b.Property<bool>("IsArhive")
                         .HasColumnType("boolean");
 

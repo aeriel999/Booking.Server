@@ -8,10 +8,10 @@ export interface IChatState {
 
 export interface IChatRoomList {
     hasNewMsg: boolean;
-    postChatRoomsInfoList: IPostChatsInfo[];
+    postChatRoomsInfoList: IChatsForPostListInfo[];
 }
 
-export interface IPostChatsInfo {
+export interface IChatsForPostListInfo {
     hasNewMsg: boolean;
     postName: string;
     postId: string;

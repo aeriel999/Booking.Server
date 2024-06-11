@@ -7,13 +7,12 @@ import {
     getListOfCategories,
     getListOfCitiesByCountryId,
     getListOfCountries, getListOfPosts, getListOfPostsByName, getListOfPostsName,
-    getListOfStreetsByCityId, getPostById, getTypesOfRentList
+    getListOfStreetsByCityId, getListPostsForRealtor, getPostById, getTypesOfRentList
 } from "./post.actions.ts";
 
 function isRejectedAction(action: AnyAction): action is RejectedAction {
-    return action.type.endsWith('/rejected');
+    return action.type.endsWith("/rejected");
 }
-
 
 const initialState: IPostState = {
     status: Status.IDLE,
@@ -24,18 +23,14 @@ const initialState: IPostState = {
     cities: null,
     streets: null,
     typeOfRent: null,
-    searchPost:[]
+    searchPost:[],
+    postInfoList: null,
 };
 
-
-
-
 export const postSlice = createSlice({
-    name: 'post',
+    name: "post",
     initialState,
-    reducers: {
-
-    },
+    reducers: {},
     extraReducers: (builder) => {
         builder
             .addCase(getTypesOfRentList.fulfilled, (state, action) => {
@@ -43,7 +38,7 @@ export const postSlice = createSlice({
                 state.status = Status.SUCCESS;
             })
             .addCase(getTypesOfRentList.pending, (state) => {
-            state.status = Status.LOADING;
+                state.status = Status.LOADING;
             })
             .addCase(getPostById.fulfilled,(state,action:PayloadAction<IPostInformation>)=>{
                 state.post = action.payload;
@@ -112,6 +107,13 @@ export const postSlice = createSlice({
                 state.status = Status.SUCCESS;
             })
             .addCase(createPost.pending, (state) => {
+                state.status = Status.LOADING;
+            })
+            .addCase(getListPostsForRealtor.fulfilled, (state, action) => {
+                state.status = Status.SUCCESS;
+                state.postInfoList = action.payload;
+            })
+            .addCase(getListPostsForRealtor.pending, (state) => {
                 state.status = Status.LOADING;
             })
             .addMatcher(isRejectedAction, (state) => {

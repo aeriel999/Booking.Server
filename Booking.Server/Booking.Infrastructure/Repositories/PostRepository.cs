@@ -5,6 +5,7 @@ using Booking.Domain.Posts;
 using Booking.Infrastructure.Common.Persistence;
 using Microsoft.EntityFrameworkCore;
 using System.Text.RegularExpressions;
+using System.IO;
 
 namespace Booking.Infrastructure.Repositories;
 
@@ -29,7 +30,7 @@ public class PostRepository(BookingDbContext context) : IPostRepository
     public async Task<Post> GetPostByIdAsync(Guid id)
     {
         var posts = await GetIncludeListAsync();
-        var post = posts.Find(x=>x.Id==id);    
+        var post = posts.Find(x => x.Id == id);    
         return post;
     }
     public async Task<PagedList<Post>> GetAllAsync(int page, int sizeOfPage)
@@ -87,24 +88,35 @@ public class PostRepository(BookingDbContext context) : IPostRepository
 
         return list;
     }
-    public async Task<List<Post>> GetIncludeListAsync()
-    {
-        return await context.Posts
-            .Include(post => post.PostTypeOfRent)
-            .Include(post => post.Category)
-            .Include(post=>post.Street.City.Country)
-            .Include(post => post.Street.City)
-            .Include(post => post.Street)
-            .Include(post => post.User)
-            .Include(post => post.ImagesPost)
-            .Include(post => post.ChatRooms)
-            .ToListAsync();
-    }
-
-	public Task<List<Guid>?> GetListPostIdByRealtorIdAsync(Guid realltorId)
+	public async Task<List<Post>> GetIncludeListAsync()
 	{
-		throw new NotImplementedException();
+		return await _dbSet
+			.Include(post => post.PostTypeOfRent)
+			.Include(post => post.Category)
+			.Include(post => post.Street!.City!.Country)
+			.Include(post => post.User)
+			.Include(post => post.ImagesPost)
+			.Include(post => post.ChatRooms)
+			.ToListAsync();
 	}
+
+	public async Task<List<Post>> GetPostListByRealtorIdAsync(Guid realtorId)
+	{
+		return await _dbSet
+			.Where(c => c.UserId == realtorId)
+			.Include(post => post.PostTypeOfRent)
+			.Include(post => post.Category)
+			.Include(post => post.Street!.City!.Country)
+			.ToListAsync();
+	}
+
+	public async Task<List<Post>?> GetListPostByRealtorIdAsync(Guid realtorId)
+	{
+		return await _dbSet
+			.Where(c => c.UserId == realtorId)
+			.ToListAsync();
+	}
+ 
 	//      public async Task<List<Guid>> GetPostIdListByRealtorIdAsync(Guid realtorId)
 	//      {
 	//	return await _bookingDbContext.Posts

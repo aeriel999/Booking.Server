@@ -41,6 +41,8 @@ public class Post
 
 	public bool IsArhive { get; set; }
 
+	public bool IsActive { get; set; }
+
 	public decimal Price { get; set; }
 
 	public ICollection<PostImage>? ImagesPost { get; set; }

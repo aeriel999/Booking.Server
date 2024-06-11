@@ -43,12 +43,4 @@ internal class RegisterRealtorCommandValidation : AbstractValidator<RegisterReal
 		RuleFor(file => file.Avatar).NotNull().WithMessage("{PropertyName} must not be empty")
 			.Must(file => file.Length <= (5 * 1024 * 1024)).WithMessage("File size must not exceed 2MB");
 	}
-
-	//ToDo Extension for files
-	private static bool IsFileExtensionValid(string fileName)
-	{
-		var allowedExtensions = new[] { ".jpg", ".jpeg", ".png" };
-		var fileExtension = Path.GetExtension(fileName).ToLower();
-		return allowedExtensions.Contains(fileExtension);
-	}
 }

@@ -79,18 +79,22 @@ export const  getListOfPostsByName=createAsyncThunk(
     },
 
 )
-export const getPostById=createAsyncThunk(
+
+export const getPostById = createAsyncThunk(
     'Post/get-post-by-id',
-    async (id, { rejectWithValue })=>{
+    async (id : string, { rejectWithValue })=>{
         try {
-        const response = await apiClient.get(`api/Post/get-post-by-id-${id}`);
-        return response.data;
+            const response = await apiClient.get(`api/Post/get-post-by-id-${id}`);
+            return response.data;
         } catch (error) {
             return rejectWithValue(handleAxiosError(error, "Network error"));
         }
+       
     }
 
 )
+
+ 
 
 export const getListOfCountries = createAsyncThunk(
     'Post/get-countries-list',
@@ -142,3 +146,18 @@ export const createPost = createAsyncThunk(
         }
     },
 );
+
+export const getListPostsForRealtor = createAsyncThunk(
+    'Post/get-post-list-for-realtor',
+    async (payload : IFetchData, { rejectWithValue }) => {
+        try {
+            const response = await apiClient.get(
+                `/api/Post/get-post-list-for-realtor?page=${payload.page}&sizeOfPage=${payload.sizeOfPage}`);
+            return response.data;
+        } catch (error) {
+            return rejectWithValue(handleAxiosError(error, "Network error"));
+        }
+    },
+);
+
+ 

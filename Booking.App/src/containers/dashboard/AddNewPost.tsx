@@ -273,6 +273,7 @@ export function AddNewPost() {
                                     options={typeOfRentList}
                                     onChange={setTypeOfRent}
                                     label={"Type Of Rent"}
+                                    defaultValue ={null}
                                 />
                             </Grid>
 
@@ -281,6 +282,7 @@ export function AddNewPost() {
                                     options={categoryList}
                                     onChange={setCategory}
                                     label={"Category"}
+                                    defaultValue ={null}
                                 />
                             </Grid>
 
@@ -289,6 +291,7 @@ export function AddNewPost() {
                                     options={countryList}
                                     onChange={setCountry}
                                     label={"Country"}
+                                    defaultValue ={null}
                                 />
                             </Grid>
 
@@ -305,6 +308,7 @@ export function AddNewPost() {
                                         options={cityList}
                                         onChange={setCity}
                                         label={"City"}
+                                        defaultValue ={null}
                                     />
                                 </Grid>
                             )}
@@ -336,6 +340,7 @@ export function AddNewPost() {
                                         options={streetList}
                                         onChange={setStreet}
                                         label={"Street"}
+                                        defaultValue ={null}
                                     />
                                 </Grid>
                             )}

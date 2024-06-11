@@ -5,6 +5,7 @@ using Booking.Api.Contracts.Post.GetCountries;
 using Booking.Api.Contracts.Post.GetFilteredList;
 using Booking.Api.Contracts.Post.GetListOfPost;
 using Booking.Api.Contracts.Post.GetPost;
+using Booking.Api.Contracts.Post.GetPostListForRealtor;
 using Booking.Api.Contracts.Post.GetStreets;
 using Booking.Api.Contracts.Post.GetTypeOfPost;
 using Booking.Api.Infrastructure;
@@ -18,6 +19,7 @@ using Booking.Application.Posts.GetListOfPost;
 using Booking.Application.Posts.GetNameOfPost;
 using Booking.Application.Posts.GetPostById;
 using Booking.Application.Posts.GetPostByName;
+using Booking.Application.Posts.GetPostListForRealtor;
 using Booking.Application.Posts.GetStreets;
 using Booking.Application.Posts.GetTypeOfRent;
 using MapsterMapper;
@@ -61,6 +63,7 @@ public class PostController(ISender mediatr, IMapper mapper) : ApiController
 			createPostResult => Ok(createPostResult),
 			errors => Problem(errors));
 	}
+
 	[AllowAnonymous]
 	[HttpGet("get-list-of-post")]
     public async Task<IActionResult> GetListOfPostAsync([FromQuery]int page, int sizeOfPage)
@@ -82,6 +85,7 @@ public class PostController(ISender mediatr, IMapper mapper) : ApiController
             getPostResult => Ok(mapper.Map<GetPostResponse>(getPostResult)),
             errors => Problem(errors));
     }
+
     [AllowAnonymous]
     [HttpGet("get-post-by-name")]
     public async Task<IActionResult> GetPostByNameAsync([FromQuery] GetFilteredListRequest types, string name, int page, int sizeOfPage)
@@ -92,6 +96,7 @@ public class PostController(ISender mediatr, IMapper mapper) : ApiController
             getPostResult => Ok(mapper.Map<PagedList<GetListOfPostResponse>>(getPostResult)),
             errors => Problem(errors));
     }
+
     [AllowAnonymous]
     [HttpGet("get-name-of-post")]
     public async Task<IActionResult> GetNameOfPostAsync([FromQuery] GetFilteredListRequest types,string name="")
@@ -102,6 +107,7 @@ public class PostController(ISender mediatr, IMapper mapper) : ApiController
             getPostResult => Ok(getPostResult),
             errors => Problem(errors));
     }
+
     [AllowAnonymous]
     [HttpGet("get-filtered-list-by-type")]
     public async Task<IActionResult> GetFilteredListAsync([FromQuery] GetFilteredListRequest types, int page, int sizeOfPage)
@@ -168,4 +174,20 @@ public class PostController(ISender mediatr, IMapper mapper) : ApiController
 
 		return Ok(response);
 	}
+
+	[HttpGet("get-post-list-for-realtor")]
+	public async Task<IActionResult> GetPostListForRealtorAsync(
+	[FromQuery] int page, int sizeOfPage)
+	{
+		string userId = User.Claims.First(u => u.Type == ClaimTypes.NameIdentifier).Value;
+
+		var getPostListForRealtor = await mediatr.Send(new GetPostListForRealtorQuery(
+			page, sizeOfPage, Guid.Parse(userId)));
+
+		return getPostListForRealtor.Match(
+			getPostListForRealtor => Ok(
+				mapper.Map<PagedList<GetPostListForRealtorResponse>>(getPostListForRealtor)),
+			errors => Problem(errors));
+	}
+
 }

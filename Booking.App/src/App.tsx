@@ -22,6 +22,9 @@ import ClientDashboardLayout from "./containers/client/layouts/_ClientDashboardL
 import { AddNewPost } from "./containers/dashboard/AddNewPost.tsx";
 import ListOfPostPage from "./containers/client/ListOfPostPage.tsx";
 import AnonymousDashboardLayout from "./containers/anonymous/layouts/AnonymousDashboardLayout.tsx";
+import ChatRoom from "./components/chat/ChatRoom.tsx";
+import AllPostList from "./containers/dashboard/AllPostList.tsx";
+import { EditPost } from "./containers/dashboard/EditPost.tsx";
 import PostPage from "./containers/client/PostPage.tsx";
 // import {  MessageRight } from "./components/chat/Message.tsx";
 //import { MessageLeft } from "./components/chat/Message.tsx";
@@ -70,6 +73,15 @@ const App: React.FC = () => {
                             <Route
                                 path="/dashboard/post/add"
                                 element={<AddNewPost />}
+                            />
+
+                                <Route
+                                path="/dashboard/show-all-post"
+                                element={<AllPostList />}
+                            />
+                              <Route
+                                path="/dashboard/edit-post/:postId"
+                                element={<EditPost />}
                             />
                              <Route path="chat-room/:roomId" element={<ChatRoom />} />
                         </Route>
