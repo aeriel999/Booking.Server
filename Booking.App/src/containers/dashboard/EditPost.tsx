@@ -77,7 +77,7 @@ export function EditPost() {
     const [images, setImages] = useState<File[]>([]);
     const [isFormValid, setIsFormValid] = useState(false);
     const navigate = useNavigate();
-    const [postRealtor, setPostRealtor] = useState<IPostInformation>(post!);
+    //  const [postRealtor, setPostRealtor] = useState<IPostInformation>(post!);
 
     //ToDo make hasCountOfRooms and hasArea
     //ToDo request.CityId == null && request.CityName != null
@@ -93,26 +93,28 @@ export function EditPost() {
     };
 
     useEffect(() => {
-        getPost(postId as string).then((history) => {
-            setPostRealtor(history?.payload);
-        });
+        getPost(postId as string);
+    }, []);
 
-        if (post?.countryId) {
-            getCityList(post?.countryId).then((history) => {
+    useEffect(() => {
+        getPost(postId as string);
+
+        if (post!.countryId) {
+            getCityList(post!.countryId).then((history) => {
                 if (history?.payload.$values != null) {
                     setCityList(history?.payload.$values);
                 }
             });
         }
 
-        if (post?.cityId) {
-            getStreetList(post?.cityId).then((history) => {
+        if (post!.cityId) {
+            getStreetList(post!.cityId).then((history) => {
                 if (history?.payload.$values != null) {
                     setStreetList(history?.payload.$values);
                 }
             });
         }
-    }, [postId]);
+    }, [post]);
 
     console.log("history", post);
 
@@ -305,7 +307,7 @@ export function EditPost() {
                                     onChange={(isValid) =>
                                         (formValid.current.name = isValid)
                                     }
-                                    defaultValue={postRealtor?.name}
+                                    defaultValue={post?.name}
                                 />
                             </Grid>
 
@@ -314,7 +316,7 @@ export function EditPost() {
                                     options={typeOfRentList}
                                     onChange={setTypeOfRent}
                                     label={"Type Of Rent"}
-                                    defaultValue={postRealtor?.postTypeOfRent}
+                                    defaultValue={post!.postTypeOfRent}
                                 />
                             </Grid>
 
@@ -323,7 +325,7 @@ export function EditPost() {
                                     options={categoryList}
                                     onChange={setCategory}
                                     label={"Category"}
-                                    defaultValue={postRealtor?.category}
+                                    defaultValue={post!.category}
                                 />
                             </Grid>
 
@@ -332,7 +334,7 @@ export function EditPost() {
                                     options={countryList}
                                     onChange={setCountry}
                                     label={"Country"}
-                                    defaultValue={postRealtor?.countryName}
+                                    defaultValue={post!.countryName}
                                 />
                             </Grid>
 
@@ -349,7 +351,7 @@ export function EditPost() {
                                         options={cityList}
                                         onChange={setCity}
                                         label={"City"}
-                                        defaultValue={postRealtor?.cityName}
+                                        defaultValue={post!.cityName}
                                     />
                                 </Grid>
                             )}
@@ -381,7 +383,7 @@ export function EditPost() {
                                         options={streetList}
                                         onChange={setStreet}
                                         label={"Street"}
-                                        defaultValue={postRealtor?.street}
+                                        defaultValue={post!.street}
                                     />
                                 </Grid>
                             )}
@@ -410,7 +412,7 @@ export function EditPost() {
                                         (formValid.current.buildingNumber =
                                             isValid)
                                     }
-                                    defaultValue={postRealtor?.buildingNumber}
+                                    defaultValue={post!.buildingNumber}
                                 />
                             </Grid>
 
@@ -425,9 +427,7 @@ export function EditPost() {
                                             isValid)
                                     }
                                     defaultValue={
-                                        postRealtor?.area == null
-                                            ? null
-                                            : postRealtor?.area
+                                        post!.area == null ? null : post!.area
                                     }
                                 />
                             </Grid>
@@ -442,9 +442,7 @@ export function EditPost() {
                                         (formValid.current.area = isValid)
                                     }
                                     defaultValue={
-                                        postRealtor?.area == null
-                                            ? null
-                                            : postRealtor?.area
+                                        post!.area == null ? null : post!.area
                                     }
                                 />
                             </Grid>
@@ -458,7 +456,7 @@ export function EditPost() {
                                     onChange={(isValid) =>
                                         (formValid.current.price = isValid)
                                     }
-                                    defaultValue={postRealtor?.price}
+                                    defaultValue={post?.price}
                                 />
                             </Grid>
 
@@ -475,9 +473,9 @@ export function EditPost() {
                                     rowsCount={7}
                                     isMultiline={true}
                                     defaultValue={
-                                        postRealtor?.description == null
+                                        post?.description == null
                                             ? null
-                                            : postRealtor?.description
+                                            : post?.description
                                     }
                                 />
                             </Grid>
