@@ -1,7 +1,7 @@
 import Container from "@mui/material/Container";
 import Box from "@mui/material/Box";
 import Typography from "@mui/material/Typography";
-import { Breadcrumbs, Grid } from "@mui/material";
+import { Breadcrumbs, CircularProgress, Grid } from "@mui/material";
 import { Link, useNavigate, useParams } from "react-router-dom";
 import Divider from "@mui/material/Divider";
 import ComboBox from "../../components/common/ComboBox.tsx";
@@ -45,8 +45,9 @@ import * as React from "react";
 import { joinForPostListening } from "../../SignalR";
 
 export function EditPost() {
-    const { post } = useAppSelector((state) => state.post);
     const { postId } = useParams();
+
+    const { post } = useAppSelector((state) => state.post);
     const dispatch = useAppDispatch();
     const [errorMessage, setErrorMessage] = useState<string | undefined>(
         undefined
@@ -93,30 +94,33 @@ export function EditPost() {
     };
 
     useEffect(() => {
-        getPost(postId as string);
-    }, []);
+        getPost(postId as string).then((history) => {
 
-    useEffect(() => {
-        getPost(postId as string);
+            console.log("history?.payload");
 
-        if (post!.countryId) {
-            getCityList(post!.countryId).then((history) => {
-                if (history?.payload.$values != null) {
-                    setCityList(history?.payload.$values);
-                }
-            });
-        }
+            console.log(history?.payload);
 
-        if (post!.cityId) {
-            getStreetList(post!.cityId).then((history) => {
-                if (history?.payload.$values != null) {
-                    setStreetList(history?.payload.$values);
-                }
-            });
-        }
-    }, [post]);
+            if (history?.payload.countryId) {
+                getCityList(history?.payload.countryId).then((history) => {
+                    
+                    if (history?.payload.$values != null) {
+                        console.log("history?.payload.$values", history?.payload.$values);
+                        setCityList(history?.payload.$values);
+                    }
+                });
+            }
+    
+            if (history?.payload.cityId) {
+                getStreetList(history?.payload.cityId).then((history) => {
+                    if (history?.payload.$values != null) {
+                        setStreetList(history?.payload.$values);
+                    }
+                });
+            }
+        });
+    }, [postId]);
 
-    console.log("history", post);
+    
 
     const getTypeOfRentList = async () => {
         try {
@@ -276,235 +280,243 @@ export function EditPost() {
                 </Typography>
             </Breadcrumbs>
             <Divider />
-
             {errorMessage && <OutlinedErrorAlert message={errorMessage} />}
-
-            <Container component="main" maxWidth="xs">
-                <Box
-                    sx={{
-                        marginTop: 8,
-                        display: "flex",
-                        flexDirection: "column",
-                        alignItems: "center",
-                    }}
-                >
-                    <Typography component="h1" variant="h5">
-                        Edit Post
-                    </Typography>
+            {post !== null && cityList !== null && streetList !== null ? (
+                <Container component="main" maxWidth="xs">
                     <Box
-                        component="form"
-                        onSubmit={handleSubmit}
-                        noValidate
-                        sx={{ mt: 1 }}
+                        sx={{
+                            marginTop: 8,
+                            display: "flex",
+                            flexDirection: "column",
+                            alignItems: "center",
+                        }}
                     >
-                        <Grid container spacing={2}>
-                            <Grid item xs={12}>
-                                <InputGroup
-                                    label="Enter title for your post"
-                                    field="name"
-                                    type="text"
-                                    validator={PostNameValidator}
-                                    onChange={(isValid) =>
-                                        (formValid.current.name = isValid)
-                                    }
-                                    defaultValue={post?.name}
-                                />
-                            </Grid>
-
-                            <Grid item xs={12}>
-                                <ComboBox
-                                    options={typeOfRentList}
-                                    onChange={setTypeOfRent}
-                                    label={"Type Of Rent"}
-                                    defaultValue={post!.postTypeOfRent}
-                                />
-                            </Grid>
-
-                            <Grid item xs={12}>
-                                <ComboBox
-                                    options={categoryList}
-                                    onChange={setCategory}
-                                    label={"Category"}
-                                    defaultValue={post!.category}
-                                />
-                            </Grid>
-
-                            <Grid item xs={12}>
-                                <ComboBox
-                                    options={countryList}
-                                    onChange={setCountry}
-                                    label={"Country"}
-                                    defaultValue={post!.countryName}
-                                />
-                            </Grid>
-
-                            {cityList.length > 0 && (
-                                <Grid item xs={12}>
-                                    <Typography
-                                        variant="subtitle1"
-                                        color="text.primary"
-                                    >
-                                        Select City from the list or enter it in
-                                        a field.
-                                    </Typography>
-                                    <ComboBox
-                                        options={cityList}
-                                        onChange={setCity}
-                                        label={"City"}
-                                        defaultValue={post!.cityName}
-                                    />
-                                </Grid>
-                            )}
-
-                            {city === undefined && (
-                                <Grid item xs={12}>
-                                    <InputGroup
-                                        label="City"
-                                        field="cityName"
-                                        type="text"
-                                        validator={CityNameValidator}
-                                        onChange={(isValid) =>
-                                            (formValid.current.city = isValid)
-                                        }
-                                    />
-                                </Grid>
-                            )}
-
-                            {streetList.length > 0 && (
-                                <Grid item xs={12}>
-                                    <Typography
-                                        variant="subtitle1"
-                                        color="text.primary"
-                                    >
-                                        Select Street from the list or enter it
-                                        in a field.
-                                    </Typography>
-                                    <ComboBox
-                                        options={streetList}
-                                        onChange={setStreet}
-                                        label={"Street"}
-                                        defaultValue={post!.street}
-                                    />
-                                </Grid>
-                            )}
-
-                            {street === undefined && (
-                                <Grid item xs={12}>
-                                    <InputGroup
-                                        label="Street"
-                                        field="streetName"
-                                        type="text"
-                                        validator={StreetNameValidator}
-                                        onChange={(isValid) =>
-                                            (formValid.current.street = isValid)
-                                        }
-                                    />
-                                </Grid>
-                            )}
-
-                            <Grid item xs={12}>
-                                <InputGroup
-                                    label="Bulding number"
-                                    field="buildingNumber"
-                                    type="text"
-                                    validator={BuildingNumberValidator}
-                                    onChange={(isValid) =>
-                                        (formValid.current.buildingNumber =
-                                            isValid)
-                                    }
-                                    defaultValue={post!.buildingNumber}
-                                />
-                            </Grid>
-
-                            <Grid item xs={12}>
-                                <InputGroup
-                                    label="Number of Rooms"
-                                    field="numberOfRooms"
-                                    type="number"
-                                    validator={NumberOfRoomsValidator}
-                                    onChange={(isValid) =>
-                                        (formValid.current.numberOfRooms =
-                                            isValid)
-                                    }
-                                    defaultValue={
-                                        post!.area == null ? null : post!.area
-                                    }
-                                />
-                            </Grid>
-
-                            <Grid item xs={12}>
-                                <InputGroup
-                                    label="Area"
-                                    field="area"
-                                    type="number"
-                                    validator={AreaValidator}
-                                    onChange={(isValid) =>
-                                        (formValid.current.area = isValid)
-                                    }
-                                    defaultValue={
-                                        post!.area == null ? null : post!.area
-                                    }
-                                />
-                            </Grid>
-
-                            <Grid item xs={12}>
-                                <InputGroup
-                                    label="Price"
-                                    field="price"
-                                    type="number"
-                                    validator={PriceValidator}
-                                    onChange={(isValid) =>
-                                        (formValid.current.price = isValid)
-                                    }
-                                    defaultValue={post?.price}
-                                />
-                            </Grid>
-
-                            <Grid item xs={12}>
-                                <InputGroup
-                                    label="Description"
-                                    field="description"
-                                    type="text"
-                                    validator={DescriptionValidator}
-                                    onChange={(isValid) =>
-                                        (formValid.current.description =
-                                            isValid)
-                                    }
-                                    rowsCount={7}
-                                    isMultiline={true}
-                                    defaultValue={
-                                        post?.description == null
-                                            ? null
-                                            : post?.description
-                                    }
-                                />
-                            </Grid>
-
-                            <Grid item xs={12}>
-                                <FileUploader
-                                    images={images}
-                                    setImages={setImages}
-                                    maxImagesUpload={10}
-                                    validator={AvatarValidator}
-                                    onChange={(isValid) =>
-                                        (formValid.current.images = isValid)
-                                    }
-                                    onDelete={handleChange}
-                                ></FileUploader>
-                            </Grid>
-                        </Grid>
-                        <Button
-                            type="submit"
-                            fullWidth
-                            variant="contained"
-                            sx={{ mt: 3, mb: 2 }}
-                            // disabled={!isFormValid}
+                        <Typography component="h1" variant="h5">
+                            Edit Post
+                        </Typography>
+                        <Box
+                            component="form"
+                            onSubmit={handleSubmit}
+                            noValidate
+                            sx={{ mt: 1 }}
                         >
-                            Add new post
-                        </Button>
+                            <Grid container spacing={2}>
+                                <Grid item xs={12}>
+                                    <InputGroup
+                                        label="Enter title for your post"
+                                        field="name"
+                                        type="text"
+                                        validator={PostNameValidator}
+                                        onChange={(isValid) =>
+                                            (formValid.current.name = isValid)
+                                        }
+                                        defaultValue={post?.name}
+                                    />
+                                </Grid>
+
+                                <Grid item xs={12}>
+                                    <ComboBox
+                                        options={typeOfRentList}
+                                        onChange={setTypeOfRent}
+                                        label={"Type Of Rent"}
+                                        defaultValue={post!.postTypeOfRent}
+                                    />
+                                </Grid>
+
+                                <Grid item xs={12}>
+                                    <ComboBox
+                                        options={categoryList}
+                                        onChange={setCategory}
+                                        label={"Category"}
+                                        defaultValue={post!.category}
+                                    />
+                                </Grid>
+
+                                <Grid item xs={12}>
+                                    <ComboBox
+                                        options={countryList}
+                                        onChange={setCountry}
+                                        label={"Country"}
+                                        defaultValue={post!.countryName}
+                                    />
+                                </Grid>
+
+                                {cityList.length > 0 && (
+                                    <Grid item xs={12}>
+                                        <Typography
+                                            variant="subtitle1"
+                                            color="text.primary"
+                                        >
+                                            Select City from the list or enter
+                                            it in a field.
+                                        </Typography>
+                                        <ComboBox
+                                            options={cityList}
+                                            onChange={setCity}
+                                            label={"City"}
+                                            defaultValue={post!.cityName}
+                                        />
+                                    </Grid>
+                                )}
+
+                                {city === undefined && (
+                                    <Grid item xs={12}>
+                                        <InputGroup
+                                            label="City"
+                                            field="cityName"
+                                            type="text"
+                                            validator={CityNameValidator}
+                                            onChange={(isValid) =>
+                                                (formValid.current.city =
+                                                    isValid)
+                                            }
+                                        />
+                                    </Grid>
+                                )}
+
+                                {streetList.length > 0 && (
+                                    <Grid item xs={12}>
+                                        <Typography
+                                            variant="subtitle1"
+                                            color="text.primary"
+                                        >
+                                            Select Street from the list or enter
+                                            it in a field.
+                                        </Typography>
+                                        <ComboBox
+                                            options={streetList}
+                                            onChange={setStreet}
+                                            label={"Street"}
+                                            defaultValue={post!.street}
+                                        />
+                                    </Grid>
+                                )}
+
+                                {street === undefined && (
+                                    <Grid item xs={12}>
+                                        <InputGroup
+                                            label="Street"
+                                            field="streetName"
+                                            type="text"
+                                            validator={StreetNameValidator}
+                                            onChange={(isValid) =>
+                                                (formValid.current.street =
+                                                    isValid)
+                                            }
+                                        />
+                                    </Grid>
+                                )}
+
+                                <Grid item xs={12}>
+                                    <InputGroup
+                                        label="Bulding number"
+                                        field="buildingNumber"
+                                        type="text"
+                                        validator={BuildingNumberValidator}
+                                        onChange={(isValid) =>
+                                            (formValid.current.buildingNumber =
+                                                isValid)
+                                        }
+                                        defaultValue={post!.buildingNumber}
+                                    />
+                                </Grid>
+
+                                <Grid item xs={12}>
+                                    <InputGroup
+                                        label="Number of Rooms"
+                                        field="numberOfRooms"
+                                        type="number"
+                                        validator={NumberOfRoomsValidator}
+                                        onChange={(isValid) =>
+                                            (formValid.current.numberOfRooms =
+                                                isValid)
+                                        }
+                                        defaultValue={
+                                            post!.area == null
+                                                ? null
+                                                : post!.area
+                                        }
+                                    />
+                                </Grid>
+
+                                <Grid item xs={12}>
+                                    <InputGroup
+                                        label="Area"
+                                        field="area"
+                                        type="number"
+                                        validator={AreaValidator}
+                                        onChange={(isValid) =>
+                                            (formValid.current.area = isValid)
+                                        }
+                                        defaultValue={
+                                            post!.area == null
+                                                ? null
+                                                : post!.area
+                                        }
+                                    />
+                                </Grid>
+
+                                <Grid item xs={12}>
+                                    <InputGroup
+                                        label="Price"
+                                        field="price"
+                                        type="number"
+                                        validator={PriceValidator}
+                                        onChange={(isValid) =>
+                                            (formValid.current.price = isValid)
+                                        }
+                                        defaultValue={post?.price}
+                                    />
+                                </Grid>
+
+                                <Grid item xs={12}>
+                                    <InputGroup
+                                        label="Description"
+                                        field="description"
+                                        type="text"
+                                        validator={DescriptionValidator}
+                                        onChange={(isValid) =>
+                                            (formValid.current.description =
+                                                isValid)
+                                        }
+                                        rowsCount={7}
+                                        isMultiline={true}
+                                        defaultValue={
+                                            post?.description == null
+                                                ? null
+                                                : post?.description
+                                        }
+                                    />
+                                </Grid>
+
+                                <Grid item xs={12}>
+                                    <FileUploader
+                                        images={images}
+                                        setImages={setImages}
+                                        maxImagesUpload={10}
+                                        validator={AvatarValidator}
+                                        onChange={(isValid) =>
+                                            (formValid.current.images = isValid)
+                                        }
+                                        onDelete={handleChange}
+                                    ></FileUploader>
+                                </Grid>
+                            </Grid>
+                            <Button
+                                type="submit"
+                                fullWidth
+                                variant="contained"
+                                sx={{ mt: 3, mb: 2 }}
+                                // disabled={!isFormValid}
+                            >
+                                Add new post
+                            </Button>
+                        </Box>
                     </Box>
-                </Box>
-            </Container>
+                </Container>
+            ) : (
+                <CircularProgress />
+            )}
         </>
     );
 }
