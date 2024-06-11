@@ -97,6 +97,7 @@ export  interface IPostState{
     streets: IStreet[] | null,
     typeOfRent: ITypeOfRent[] | null,
     searchPost:string[]
+    postInfoList: IPageOfPostsForRealtor | null;
 }
 export interface IFetchData{
     page:number,
@@ -107,7 +108,7 @@ export interface IFetchDataByName{
      filter:IFilter,
      name:string,
      pages:IFetchData
-
+}
 export interface IPostCreate {
     name: string;
     postTypeOfRentId: string;

@@ -7,7 +7,7 @@ import {
     getListOfCategories,
     getListOfCitiesByCountryId,
     getListOfCountries, getListOfPosts, getListOfPostsByName, getListOfPostsName,
-    getListOfStreetsByCityId, getPostById, getTypesOfRentList
+    getListOfStreetsByCityId, getListPostsForRealtor, getPostById, getTypesOfRentList
 } from "./post.actions.ts";
 
 function isRejectedAction(action: AnyAction): action is RejectedAction {
@@ -23,7 +23,7 @@ const initialState: IPostState = {
     cities: null,
     streets: null,
     typeOfRent: null,
-    searchPost:[]
+    searchPost:[],
     postInfoList: null,
 };
 

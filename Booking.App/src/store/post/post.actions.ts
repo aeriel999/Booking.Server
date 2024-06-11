@@ -93,18 +93,8 @@ export const getPostById = createAsyncThunk(
     }
 
 )
-export const getPostById=createAsyncThunk(
-    'Post/get-post-by-id',
-    async (id, { rejectWithValue })=>{
-        try {
-        const response = await apiClient.get(`api/Post/get-post-by-id-${id}`);
-        return response.data;
-        } catch (error) {
-            return rejectWithValue(handleAxiosError(error, "Network error"));
-        }
-    }
 
-)
+ 
 
 export const getListOfCountries = createAsyncThunk(
     'Post/get-countries-list',

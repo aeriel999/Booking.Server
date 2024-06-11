@@ -19,6 +19,7 @@ using Booking.Application.Posts.GetListOfPost;
 using Booking.Application.Posts.GetNameOfPost;
 using Booking.Application.Posts.GetPostById;
 using Booking.Application.Posts.GetPostByName;
+using Booking.Application.Posts.GetPostListForRealtor;
 using Booking.Application.Posts.GetStreets;
 using Booking.Application.Posts.GetTypeOfRent;
 using MapsterMapper;
