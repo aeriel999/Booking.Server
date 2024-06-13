@@ -134,7 +134,7 @@ const StyledTableRow = styled(TableRow)(({ theme }) => ({
 }));
 
 export default function AllPostList() {
-    const [page, setPage] = React.useState(1);
+    const [page, setPage] = React.useState(0); // 0-based index for MUI TablePagination
     const [rowsPerPage, setRowsPerPage] = useState(5);
     const [totalCount, setTotalCount] = useState(0);
     const [rows, setRows] = useState<IPostInfoForRealtor[]>();
@@ -158,7 +158,7 @@ export default function AllPostList() {
         event: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
     ) => {
         setRowsPerPage(parseInt(event.target.value, 10));
-        setPage(0);
+        setPage(0); // Reset to the first page
     };
 
     const getDataForPage = async (model: IFetchData) => {
@@ -173,14 +173,12 @@ export default function AllPostList() {
 
     useEffect(() => {
         const model: IFetchData = {
-            page: page,
+            page: page + 1, // Convert to 1-based index for backend
             sizeOfPage: rowsPerPage,
         };
 
         getDataForPage(model).then((history) => {
             console.log("history", history?.payload);
-            setPage(history?.payload.page);
-            setRowsPerPage(history?.payload.sizeOfPage);
             setRows(history?.payload.items.$values);
             setTotalCount(history?.payload.totalCount);
         });
@@ -248,58 +246,53 @@ export default function AllPostList() {
                         </TableRow>
                     </TableHead>
                     <TableBody>
-                        {
-                            // (rowsPerPage > 0
-                            //     ? rows.slice(
-                            //           page * rowsPerPage,
-                            //           page * rowsPerPage + rowsPerPage
-                            //       )
-                            //     : rows
-                            // )
-
-                            rows?.map((row) => (
-                                <StyledTableRow key={row.id}>
-                                    <StyledTableCell component="th" scope="row">
-                                        {row.category}
-                                    </StyledTableCell>
-                                    <StyledTableCell align="right">
-                                        {row.typeOfRent}
-                                    </StyledTableCell>
-                                    <StyledTableCell align="right">
-                                        {row.adress}
-                                    </StyledTableCell>
-                                    <StyledTableCell align="right">
-                                        {row.name}
-                                    </StyledTableCell>
-                                    <StyledTableCell align="right">
-                                        {"$" + row.price}
-                                    </StyledTableCell>
-                                    <StyledTableCell align="right">
-                                        {formatTimestamp(row.dateOfPost)}
-                                    </StyledTableCell>
-                                    <StyledTableCell align="right">
-                                        {row.dateOfEdit === null
-                                            ? "-"
-                                            : formatTimestamp(row.dateOfEdit)}
-                                    </StyledTableCell>
-                                    <StyledTableCell align="right">
-                                        {row.isActive === true ? "Yes" : "No"}
-                                    </StyledTableCell>
-                                    <StyledTableCell align="right">
-                                        {row.isArhive === true ? "Yes" : "No"}
-                                    </StyledTableCell>
-                                    <StyledTableCell align="right">
-                                        <Button   onClick={() => {
-                                navigate(`/dashboard/edit-post/${row.id}`);
-                            }}>
-                                            Edit</Button>
-                                    </StyledTableCell>
-                                    <StyledTableCell align="right">
-                                        <Button>Archive</Button>
-                                    </StyledTableCell>
-                                </StyledTableRow>
-                            ))
-                        }
+                        {rows?.map((row) => (
+                            <StyledTableRow key={row.id}>
+                                <StyledTableCell component="th" scope="row">
+                                    {row.category}
+                                </StyledTableCell>
+                                <StyledTableCell align="right">
+                                    {row.typeOfRent}
+                                </StyledTableCell>
+                                <StyledTableCell align="right">
+                                    {row.adress}
+                                </StyledTableCell>
+                                <StyledTableCell align="right">
+                                    {row.name}
+                                </StyledTableCell>
+                                <StyledTableCell align="right">
+                                    {"$" + row.price}
+                                </StyledTableCell>
+                                <StyledTableCell align="right">
+                                    {formatTimestamp(row.dateOfPost)}
+                                </StyledTableCell>
+                                <StyledTableCell align="right">
+                                    {row.dateOfEdit === null
+                                        ? "-"
+                                        : formatTimestamp(row.dateOfEdit)}
+                                </StyledTableCell>
+                                <StyledTableCell align="right">
+                                    {row.isActive === true ? "Yes" : "No"}
+                                </StyledTableCell>
+                                <StyledTableCell align="right">
+                                    {row.isArhive === true ? "Yes" : "No"}
+                                </StyledTableCell>
+                                <StyledTableCell align="right">
+                                    <Button
+                                        onClick={() => {
+                                            navigate(
+                                                `/dashboard/edit-post/${row.id}`
+                                            );
+                                        }}
+                                    >
+                                        Edit
+                                    </Button>
+                                </StyledTableCell>
+                                <StyledTableCell align="right">
+                                    <Button>Archive</Button>
+                                </StyledTableCell>
+                            </StyledTableRow>
+                        ))}
                         {emptyRows > 0 && (
                             <TableRow style={{ height: 53 * emptyRows }}>
                                 <TableCell colSpan={6} />
@@ -313,11 +306,11 @@ export default function AllPostList() {
                                     5,
                                     10,
                                     25,
-                                    { label: "All", value: -1 },
+                                    // { label: "All", value: -1 },
                                 ]}
-                                colSpan={3}
+                                colSpan={6}
                                 count={totalCount}
-                                rowsPerPage={rowsPerPage - 1}
+                                rowsPerPage={rowsPerPage}
                                 page={page}
                                 slotProps={{
                                     select: {

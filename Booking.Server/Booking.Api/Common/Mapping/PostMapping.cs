@@ -5,6 +5,7 @@ using Booking.Api.Contracts.Post.GetCountries;
 using Booking.Api.Contracts.Post.GetFilteredList;
 using Booking.Api.Contracts.Post.GetListOfPost;
 using Booking.Api.Contracts.Post.GetPost;
+using Booking.Api.Contracts.Post.GetPostForEditing;
 using Booking.Api.Contracts.Post.GetPostListForRealtor;
 using Booking.Api.Contracts.Post.GetStreets;
 using Booking.Api.Contracts.Post.GetTypeOfPost;
@@ -36,13 +37,15 @@ public class PostMapping : IRegister
 			.Map(desp => desp.PostTypeOfRent, src => src.PostTypeOfRent!.Name)
 			.Map(desp => desp.Street, src => src.Street!.Name)
 			.Map(desp => desp.User, src => $"{src.User!.FirstName} {src.User.LastName}")
-			.Map(desp => desp.ImagePost, src => src.ImagesPost!.FirstOrDefault(img => img.Priority == 1)!.Name)
 			.Map(desp => desp.CountryName, src => src.Street!.City!.Country!.Name)
 			.Map(desp => desp.CountryId, src => src.Street!.City!.CountryId)
 			.Map(desp => desp.CityName, src => src.Street!.City!.Name)
-			.Map(desp => desp.CityId, src => src.Street!.City!.Id);
+			.Map(desp => desp.CityId, src => src.Street!.City!.Id)
+			.Map(desp => desp.ImagePostList, src =>
+			 src.ImagesPost != null ? src.ImagesPost.OrderBy(img => img.Priority)
+			 .Select(img => img.Name).ToArray() : Array.Empty<string>());
 
-        config.NewConfig<Post, GetListOfPostResponse>()
+		config.NewConfig<Post, GetListOfPostResponse>()
             .Map(desp => desp.Category, src => src.Category!.Name)
             .Map(desp => desp.User, src => $"{src.User!.FirstName} {src.User.LastName}")
             .Map(desp => desp.ImagePost, src => src.ImagesPost!.FirstOrDefault(img => img.Priority == 1)!.Name);
@@ -98,5 +101,17 @@ public class PostMapping : IRegister
 		config.NewConfig<GetPostListForRealtorQueryResult, GetPostListForRealtorResponse>();
 		config.NewConfig<PagedList<GetPostListForRealtorQueryResult>, PagedList<GetPostListForRealtorResponse>>();
 
+
+		config.NewConfig<Post, GetPostForEditResponse>()
+			.Map(desp => desp.Category, src => src.Category!.Name)
+			.Map(desp => desp.PostTypeOfRent, src => src.PostTypeOfRent!.Name)
+			.Map(desp => desp.Street, src => src.Street!.Name)
+			.Map(desp => desp.User, src => $"{src.User!.FirstName} {src.User.LastName}")
+			.Map(desp => desp.CountryName, src => src.Street!.City!.Country!.Name)
+			.Map(desp => desp.CountryId, src => src.Street!.City!.CountryId)
+			.Map(desp => desp.CityName, src => src.Street!.City!.Name)
+			.Map(desp => desp.CityId, src => src.Street!.City!.Id)
+			.Map(desp => desp.ImagePostList, src =>
+			src.ImagesPost != null ? src.ImagesPost.Select(img => img.Name).ToArray() : Array.Empty<string>());
 	}
 }

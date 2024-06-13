@@ -125,7 +125,7 @@ public class CreatePostCommandHandler(
 
 			foreach (var image in request.Images)
 			{
-				var imageName = await imageStorageService.SavePostImageAsync(image);
+				var imageName = await imageStorageService.SavePostImageInStorageAsync(image);
 
 				if (imageName == null)
 					return Error.Validation("Image not save");

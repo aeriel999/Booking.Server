@@ -1,62 +1,55 @@
-import React, {useState} from 'react'
-import Button from '@mui/material/Button'
-import IconButton from '@mui/material/IconButton'
-import CancelIcon from '@mui/icons-material/Cancel'
-import { Grid } from '@mui/material'
-import IMG from  "../../assets/avatar-profile-icon-vector-illustration_276184-165.jpg"
+import React, { useState } from 'react';
+import Button from '@mui/material/Button';
+import IconButton from '@mui/material/IconButton';
+import CancelIcon from '@mui/icons-material/Cancel';
+import { Grid } from '@mui/material';
+import IMG from "../../assets/avatar-profile-icon-vector-illustration_276184-165.jpg";
 import OutlinedErrorAlert from "./ErrorAlert.tsx";
 
 type FileUploadProps = {
     images: File[];
     setImages: (arg: File[]) => void;
     maxImagesUpload: number;
-    defaultImage?: string | undefined; // New prop for default image
-    validator: (value: File[]) => string | false | undefined,
-    onChange: (isValid: boolean) => void,
-    onDelete: () => void
-}
+    defaultImages?: string[]; // Updated to an array of strings for multiple default images
+    validator: (value: File[]) => string | false | undefined;
+    onChange: (isValid: boolean) => void;
+    onDelete: () => void;
+};
 
 const FileUploader = (props: FileUploadProps) => {
-    const maxImagesUpload = props.maxImagesUpload;
-    const inputId = Math.random().toString(32).substring(2)
-    const defaultIMG = props.defaultImage ?? IMG;
+    const { maxImagesUpload, defaultImages = [IMG], images, setImages, validator, onChange, onDelete } = props;
+    const inputId = Math.random().toString(32).substring(2);
     const [error, setError] = useState<string | false | undefined>(false);
 
     const handleOnAddImage = async (e: React.ChangeEvent<HTMLInputElement>) => {
-        if (!e.target.files) return
-        const files: File[] = [];
+        if (!e.target.files) return;
+        const files: File[] = Array.from(e.target.files);
 
-        for (const file of e.target.files) {
-            files.push(file);
-        }
-
-        const errorMessage = props.validator(files);
-
+        const errorMessage = validator(files);
         setError(errorMessage);
-        props.onChange(!errorMessage);
+        onChange(!errorMessage);
 
-        props.setImages([...props.images, ...files])
-        e.target.value = ''
-    }
+        setImages([...images, ...files]);
+        e.target.value = '';
+    };
 
     const handleOnRemoveImage = (index: number) => {
-        const newImages = [...props.images]
-        newImages.splice(index, 1)
-        props.setImages(newImages)
+        const newImages = [...images];
+        newImages.splice(index, 1);
+        setImages(newImages);
 
-        const errorMessage = props.validator(newImages);
-
+        const errorMessage = validator(newImages);
         setError(errorMessage);
-        props.onChange(!errorMessage);
+        onChange(!errorMessage);
 
-        props.onDelete();
-    }
+        onDelete();
+    };
 
     return (
         <>
             <Grid container spacing={{ xs: 2, md: 3 }} columns={{ xs: 8, sm: 12, md: 12 }}>
                 {error && <OutlinedErrorAlert message={error} />}
-                {props.images.map((image, i) => (
+                {images.map((image, i) => (
                     <Grid
                         item
                         xs={4}
@@ -95,21 +88,22 @@ const FileUploader = (props: FileUploadProps) => {
                     </Grid>
                 ))}
             </Grid>
-            {props.images.length === 0 && ( // Display default image if no images are uploaded
+            {images.length === 0 && defaultImages.map((image, i) => ( // Display default images if no images are uploaded
                 <img
-                    src={defaultIMG}
+                    key={i}
+                    src={image}
                     alt='Default'
                     style={{
                         width: '100%',
                         height: "200px",
                         objectFit: 'contain',
-                        aspectRatio: '1 / 1'
+                        aspectRatio: '1 / 1',
+                        margin: '8px 0'
                     }}
-
                 />
-            )}
+            ))}
             <label htmlFor={inputId}>
-                <Button variant='contained' disabled={props.images.length >= maxImagesUpload} component='span' sx={{ mt: 4 }}>
+                <Button variant='contained' disabled={images.length >= maxImagesUpload} component='span' sx={{ mt: 4 }}>
                     Upload Files
                 </Button>
                 <input
@@ -119,11 +113,10 @@ const FileUploader = (props: FileUploadProps) => {
                     accept='image/*,.png,.jpg,.jpeg,.gif'
                     onChange={(e: React.ChangeEvent<HTMLInputElement>) => handleOnAddImage(e)}
                     style={{ display: 'none' }}
-
                 />
             </label>
         </>
-    )
-}
+    );
+};
 
-export default FileUploader
+export default FileUploader;

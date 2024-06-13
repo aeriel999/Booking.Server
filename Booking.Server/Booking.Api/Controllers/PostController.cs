@@ -5,6 +5,7 @@ using Booking.Api.Contracts.Post.GetCountries;
 using Booking.Api.Contracts.Post.GetFilteredList;
 using Booking.Api.Contracts.Post.GetListOfPost;
 using Booking.Api.Contracts.Post.GetPost;
+using Booking.Api.Contracts.Post.GetPostForEditing;
 using Booking.Api.Contracts.Post.GetPostListForRealtor;
 using Booking.Api.Contracts.Post.GetStreets;
 using Booking.Api.Contracts.Post.GetTypeOfPost;
@@ -45,14 +46,11 @@ public class PostController(ISender mediatr, IMapper mapper) : ApiController
 
 		if (request.Images != null && request.Images.Count != 0)
 		{
-			using (MemoryStream memoryStream = new MemoryStream())
+			foreach (var image in request.Images)
 			{
-				foreach (var image in request.Images)
-				{
-					await image.CopyToAsync(memoryStream);
-
-					images.Add(memoryStream.ToArray());
-				}
+				using MemoryStream memoryStream = new();
+				await image.CopyToAsync(memoryStream);
+				images.Add(memoryStream.ToArray());
 			}
 		}
 
@@ -189,5 +187,5 @@ public class PostController(ISender mediatr, IMapper mapper) : ApiController
 				mapper.Map<PagedList<GetPostListForRealtorResponse>>(getPostListForRealtor)),
 			errors => Problem(errors));
 	}
-
+ 
 }

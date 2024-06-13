@@ -1,6 +1,6 @@
-﻿namespace Booking.Api.Contracts.Post.GetPost;
+﻿namespace Booking.Api.Contracts.Post.GetPostForEditing;
 
-public record GetPostResponse
+public record GetPostForEditResponse
 {
 	public required Guid Id { get; set; }
 
@@ -35,5 +35,4 @@ public record GetPostResponse
 	public required decimal Price { get; set; }
 
 	public required string[] ImagePostList { get; set; }
-
 }

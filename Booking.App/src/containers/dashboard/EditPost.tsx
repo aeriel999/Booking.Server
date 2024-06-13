@@ -24,7 +24,6 @@ import {
     ICity,
     ICountry,
     IPostCreate,
-    IPostInformation,
     ITypeOfRent,
 } from "../../interfaces/post";
 import InputGroup from "../../components/common/InputGroup.tsx";
@@ -43,6 +42,7 @@ import { AvatarValidator } from "../../validations/account";
 import Button from "@mui/material/Button";
 import * as React from "react";
 import { joinForPostListening } from "../../SignalR";
+import { APP_ENV } from "../../env/index.ts";
 
 export function EditPost() {
     const { postId } = useParams();
@@ -78,7 +78,7 @@ export function EditPost() {
     const [images, setImages] = useState<File[]>([]);
     const [isFormValid, setIsFormValid] = useState(false);
     const navigate = useNavigate();
-    //  const [postRealtor, setPostRealtor] = useState<IPostInformation>(post!);
+    const [postImages, setPostImages] = useState<string[]>();
 
     //ToDo make hasCountOfRooms and hasArea
     //ToDo request.CityId == null && request.CityName != null
@@ -95,21 +95,14 @@ export function EditPost() {
 
     useEffect(() => {
         getPost(postId as string).then((history) => {
-
-            console.log("history?.payload");
-
-            console.log(history?.payload);
-
             if (history?.payload.countryId) {
                 getCityList(history?.payload.countryId).then((history) => {
-                    
                     if (history?.payload.$values != null) {
-                        console.log("history?.payload.$values", history?.payload.$values);
                         setCityList(history?.payload.$values);
                     }
                 });
             }
-    
+
             if (history?.payload.cityId) {
                 getStreetList(history?.payload.cityId).then((history) => {
                     if (history?.payload.$values != null) {
@@ -117,10 +110,17 @@ export function EditPost() {
                     }
                 });
             }
+
+            console.log( history?.payload.imagePostList)
+
+            const fullImageUrls: string[] = history?.payload.imagePostList.map(
+                (image: string) =>
+                    `${APP_ENV.BASE_URL}${"/images/posts/"}${image}`
+            );
+
+            setPostImages(fullImageUrls);
         });
     }, [postId]);
-
-    
 
     const getTypeOfRentList = async () => {
         try {
@@ -212,7 +212,6 @@ export function EditPost() {
         setIsFormValid(
             Object.values(formValid.current).every((isValid) => isValid)
         );
-        console.log("isFormValid", isFormValid);
     }
 
     const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
@@ -259,6 +258,7 @@ export function EditPost() {
             setErrorMessage(ErrorHandler(error));
         }
     };
+
     return (
         <>
             <Breadcrumbs
@@ -280,7 +280,9 @@ export function EditPost() {
                 </Typography>
             </Breadcrumbs>
             <Divider />
+
             {errorMessage && <OutlinedErrorAlert message={errorMessage} />}
+
             {post !== null && cityList !== null && streetList !== null ? (
                 <Container component="main" maxWidth="xs">
                     <Box
@@ -495,6 +497,7 @@ export function EditPost() {
                                         setImages={setImages}
                                         maxImagesUpload={10}
                                         validator={AvatarValidator}
+                                        defaultImages={postImages}
                                         onChange={(isValid) =>
                                             (formValid.current.images = isValid)
                                         }

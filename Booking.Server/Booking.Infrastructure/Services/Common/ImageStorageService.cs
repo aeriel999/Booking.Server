@@ -25,7 +25,7 @@ public class ImageStorageService : IImageStorageService
 		return await SaveImageAsync(file, uploadFolderPath, 600, 600);
 	}
 
-	public async Task<string> SavePostImageAsync(byte[] file)
+	public async Task<string> SavePostImageInStorageAsync(byte[] file)
 	{
 		var uploadFolderPath = Path.Combine(Directory.GetCurrentDirectory(), "images", "posts");
 
@@ -42,18 +42,22 @@ public class ImageStorageService : IImageStorageService
 
 		string dirSaveImage = Path.Combine(uploadFolderPath, imageName);
 
-		using var image = Image.Load(file);
-		image.Mutate(x =>
+		using (var image = Image.Load(file))
 		{
-			x.Resize(new ResizeOptions
+			image.Mutate(x =>
 			{
-				Size = new Size(weight, height),
-				Mode = ResizeMode.Max
+				x.Resize(new ResizeOptions
+				{
+					Size = new Size(weight, height),
+					Mode = ResizeMode.Max
+				});
 			});
-		});
 
-		using var stream = File.Create(dirSaveImage);
-		await image.SaveAsync(stream, new WebpEncoder());
+			using (var stream = File.Create(dirSaveImage))
+			{
+				await image.SaveAsync(stream, new WebpEncoder());
+			}
+		}
 
 		return imageName;
 	}

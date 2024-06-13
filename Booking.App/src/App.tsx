@@ -17,7 +17,6 @@ import ForgotPasswordPage from "./pages/accaunt/forgot-password/ForgotPasswordPa
 import ForgotPasswordInformationPage from "./pages/accaunt/forgot-password/ForgotPasswordInformationPage.tsx";
 import ResetPasswordPage from "./pages/accaunt/reset-password/ResetPasswordPage.tsx";
 import ReConfirmEmailPage from "./pages/reconfirm-email/ReConfirmEmailPage.tsx";
-//import ChatRoom  from "./containers/common/ChatRoom.tsx";
 import ClientDashboardLayout from "./containers/client/layouts/_ClientDashboardLayout.tsx";
 import { AddNewPost } from "./containers/dashboard/AddNewPost.tsx";
 import ListOfPostPage from "./containers/client/ListOfPostPage.tsx";
@@ -26,11 +25,8 @@ import ChatRoom from "./components/chat/ChatRoom.tsx";
 import AllPostList from "./containers/dashboard/AllPostList.tsx";
 import { EditPost } from "./containers/dashboard/EditPost.tsx";
 import PostPage from "./containers/client/PostPage.tsx";
-// import {  MessageRight } from "./components/chat/Message.tsx";
-//import { MessageLeft } from "./components/chat/Message.tsx";
 
 const App: React.FC = () => {
-     
     const { isLogin, user } = useAppSelector((state) => state.account);
 
     const role = () => {
@@ -75,15 +71,20 @@ const App: React.FC = () => {
                                 element={<AddNewPost />}
                             />
 
-                                <Route
+                            <Route
                                 path="/dashboard/show-all-post"
                                 element={<AllPostList />}
                             />
-                              <Route
+                            <Route
                                 path="/dashboard/edit-post/:postId"
                                 element={<EditPost />}
                             />
-                             <Route path="chat-room/:roomId" element={<ChatRoom />} />
+                            <Route
+                                path="/dashboard/chat-room/:roomId"
+                                element={<ChatRoom />}
+                            />
+
+                            <Route path="/dashboard/*" element={<NotFound />} />
                         </Route>
                     )}
 
@@ -94,33 +95,31 @@ const App: React.FC = () => {
                                 path="/profile"
                                 element={<UserProfilePage />}
                             />
-                            <Route path="/posts" element={<ListOfPostPage />}>
+                            <Route
+                                path="/posts"
+                                element={<ListOfPostPage />}
+                            ></Route>
+                            <Route
+                                path={"/posts/:id"}
+                                element={<PostPage />}
+                            ></Route>
 
-                            </Route>
-                            <Route path={"/posts/:id"} element={<PostPage/>}></Route>
-                            {/*<Route path="/dashboard/chat/:postId" element={<ChatRoom/>} />*/}
+                            <Route path="*" element={<NotFound />} />
                         </Route>
                     )}
-
-                    {/* <Route path="test" element={<MessageLeft />} /> */}
-                   
                 </>
             )}
             <Route />
-            {/*{!connection*/}
-            {/*    ? <Route path="/test" element={<WaitingRoom joinChatRoom={joinChatRoom} />} />*/}
-            {/*    : <Route path="/test" element={<ChatRoom messages={messages} sendMSG={sendMSG} />} />}*/}
-            {/* <Route path="*" element={<SignInPage />} /> */}
             <Route path="/" element={<AnonymousDashboardLayout />}>
-                <Route index element={<ListOfPostPage />}/>
+                <Route index element={<ListOfPostPage />} />
             </Route>
+            <Route path="*" element={<SignInPage />} />
             <Route path="/dashboard/profile" element={<SignInPage />} />
             <Route path="/dashboard/profile/edit" element={<SignInPage />} />
             <Route
                 path="/dashboard/profile/change-password"
                 element={<SignInPage />}
             />
-            // <Route path="*" element={<NotFound />} />
             <Route
                 path="/authentication/user-register"
                 element={<UserRegisterPage />}
@@ -133,6 +132,7 @@ const App: React.FC = () => {
                 path="/authentication/confirm-email/:userId/:token"
                 element={<ConfirmEmailPage />}
             />
+            //ToDo make token for identifire
             <Route
                 path="/authentication/realtor-register"
                 element={<RealtorRegisterPage />}
