@@ -3,7 +3,7 @@ import {RejectedAction} from "../../utils/types";
 import {Status} from "../../utils/enum";
 import {IPageOfPosts, IPostInformation, IPostState} from "../../interfaces/post";
 import {
-    createPost, getFilteredListByType,
+    createPost, editPost, getFilteredListByType,
     getListOfCategories,
     getListOfCitiesByCountryId,
     getListOfCountries, getListOfPosts, getListOfPostsByName, getListOfPostsName,
@@ -114,6 +114,12 @@ export const postSlice = createSlice({
                 state.postInfoList = action.payload;
             })
             .addCase(getListPostsForRealtor.pending, (state) => {
+                state.status = Status.LOADING;
+            })
+            .addCase(editPost.fulfilled, (state) => {
+                state.status = Status.SUCCESS;
+            })
+            .addCase(editPost.pending, (state) => {
                 state.status = Status.LOADING;
             })
             .addMatcher(isRejectedAction, (state) => {

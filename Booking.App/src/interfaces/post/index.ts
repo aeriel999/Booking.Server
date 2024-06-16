@@ -110,6 +110,7 @@ export interface IFetchDataByName {
     name: string;
     pages: IFetchData;
 }
+
 export interface IPostCreate {
     name: string;
     postTypeOfRentId: string;
@@ -148,4 +149,23 @@ export interface IPageOfPostsForRealtor {
     page: number;
     sizeOfPage: number;
     totalCount: number;
+}
+
+export interface IPostEdit {
+    id: string;
+    name: string;
+    postTypeOfRentId: string | null;
+    categoryId: string | null;
+    countryId: string | null;
+    cityId: string | null;
+    cityName: string | null;
+    streetId: string | null;
+    streetName: string | null;
+    buildingNumber: string | null;
+    numberOfRooms: number | null;
+    area: number | null;
+    price: number | null;
+    description: string | null;
+    images: File[] | null;
+    deleteImages: string[] | undefined;
 }

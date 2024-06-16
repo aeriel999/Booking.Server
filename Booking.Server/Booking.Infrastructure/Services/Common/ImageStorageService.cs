@@ -1,6 +1,5 @@
 ﻿using Booking.Application.Common.Interfaces.Common;
 using Booking.Domain.Users;
-using ErrorOr;
 using Microsoft.IdentityModel.Tokens;
 using SixLabors.ImageSharp;
 using SixLabors.ImageSharp.Formats.Webp;
@@ -62,22 +61,19 @@ public class ImageStorageService : IImageStorageService
 		return imageName;
 	}
 
-	public async Task<ErrorOr<Deleted>> DeleteImageAsync(string imageName)
+
+	//ToDo delete avatar
+	public async Task DeleteImageAsync(string imageName, string path)
 	{
-		try
+		await Task.Run
+		(() =>
 		{
-			var uploadFolderPath = Path.Combine(Directory.GetCurrentDirectory(), "images", "apartments");
+			var uploadFolderPath = Path.Combine(Directory.GetCurrentDirectory(), "images", path);
 
 			var delFilePath = Path.Combine(uploadFolderPath, imageName);
 
 			File.Delete(delFilePath);
-
-			return Result.Deleted;
-		}
-		catch (Exception ex)
-		{
-			return Error.Unexpected(ex.Message.ToString());
-		}
+		});
 	}
 
 }

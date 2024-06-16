@@ -65,7 +65,7 @@ public class UserRepository(UserManager<User> userManager) : IUserRepository
         throw new NotImplementedException();
     }
 
-    public async Task<ErrorOr<User>> FindByEmilAsync(string email)
+    public async Task<ErrorOr<User>> FindByEmailAsync(string email)
     {
         var user = await userManager.FindByEmailAsync(email);
 

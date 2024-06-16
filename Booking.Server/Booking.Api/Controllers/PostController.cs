@@ -12,6 +12,7 @@ using Booking.Api.Contracts.Post.GetTypeOfPost;
 using Booking.Api.Infrastructure;
 using Booking.Application.Common.Behaviors;
 using Booking.Application.Posts.CreatePost;
+using Booking.Application.Posts.EditPost;
 using Booking.Application.Posts.GetCategoriesList;
 using Booking.Application.Posts.GetCities;
 using Booking.Application.Posts.GetCountries;
@@ -187,5 +188,29 @@ public class PostController(ISender mediatr, IMapper mapper) : ApiController
 				mapper.Map<PagedList<GetPostListForRealtorResponse>>(getPostListForRealtor)),
 			errors => Problem(errors));
 	}
- 
+
+	[HttpPost("edit-post")]
+	public async Task<IActionResult> EditPostAsync(EditPostRequest request)
+	{
+		string userId = User.Claims.First(u => u.Type == ClaimTypes.NameIdentifier).Value;
+
+		var images = new List<byte[]>();
+
+		if (request.Images != null && request.Images.Count != 0)
+		{
+			foreach (var image in request.Images)
+			{
+				using MemoryStream memoryStream = new();
+				await image.CopyToAsync(memoryStream);
+				images.Add(memoryStream.ToArray());
+			}
+		}
+
+		var editPostResult = await mediatr.Send(mapper.Map<EditPostCommand>(
+			(request, Guid.Parse(userId), images)));
+
+		return editPostResult.Match(
+			editPostResult => Ok(editPostResult),
+			errors => Problem(errors));
+	}
 }

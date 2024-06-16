@@ -16,6 +16,18 @@ public class PostImageRepository(BookingDbContext context) : IPostImageRepositor
 		await _dbSet.AddAsync(image);
 	}
 
+	public async Task DeletePostImageByNameAsync(string imageName)
+	{
+		var postImage = await _dbSet.FirstOrDefaultAsync(img => img.Name == imageName);
+
+		if (postImage != null)
+		{
+			_dbSet.Remove(postImage);
+
+			await context.SaveChangesAsync();
+		}
+	}
+
 	public async Task SavePostImageAsync()
 	{
 		await context.SaveChangesAsync();

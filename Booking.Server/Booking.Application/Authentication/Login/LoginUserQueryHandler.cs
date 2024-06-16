@@ -14,7 +14,7 @@ public class LoginUserQueryHandler(
 	public async Task<ErrorOr<string>> Handle(LoginUserQuery command, CancellationToken cancellationToken)
 	{
 		//Check for exist
-		var errorOrUser = await userRepository.FindByEmilAsync(command.Email);
+		var errorOrUser = await userRepository.FindByEmailAsync(command.Email);
 
 		if (errorOrUser.IsError)
 			return Error.Validation("User with such email doesn't exist");

@@ -1,7 +1,7 @@
 ﻿using ErrorOr;
 using MediatR;
 
-namespace Booking.Application.Users.Realtor;
+namespace Booking.Application.Users.Realtor.EditRealtor;
 
 public record EditRealtorPrifileInfoCommand(
    string? Email,

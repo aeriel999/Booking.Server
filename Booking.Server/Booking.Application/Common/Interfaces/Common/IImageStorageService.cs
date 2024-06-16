@@ -6,7 +6,9 @@ public interface IImageStorageService
 {
 	Task<string> AddAvatarAsync(User user, byte[] file);
 
+
 	Task<string> SavePostImageInStorageAsync(byte[] file);
 
-	//Task<ErrorOr<Deleted>> DeleteImageAsync(string imageName);
+
+	Task DeleteImageAsync(string imageName, string path);
 }

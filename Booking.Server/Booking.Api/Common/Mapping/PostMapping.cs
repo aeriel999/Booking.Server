@@ -11,6 +11,7 @@ using Booking.Api.Contracts.Post.GetStreets;
 using Booking.Api.Contracts.Post.GetTypeOfPost;
 using Booking.Application.Common.Behaviors;
 using Booking.Application.Posts.CreatePost;
+using Booking.Application.Posts.EditPost;
 using Booking.Application.Posts.GetCities;
 using Booking.Application.Posts.GetFilteredList;
 using Booking.Application.Posts.GetNameOfPost;
@@ -68,7 +69,8 @@ public class PostMapping : IRegister
 			.Map(dest => dest.page, src => src.page)
             .Map(dest => dest.sizeOfPage, src => src.sizeOfPage);
 
-        config.NewConfig<(GetFilteredListRequest request,string name, int page, int sizeOfPage), GetPostByNameQuery>()
+        config.NewConfig<(GetFilteredListRequest request,string name, int page, int sizeOfPage),
+			GetPostByNameQuery>()
             .Map(dest => dest.category, src => src.request.category)
             .Map(dest => dest.country, src => src.request.country)
             .Map(dest => dest.city, src => src.request.city)
@@ -113,5 +115,11 @@ public class PostMapping : IRegister
 			.Map(desp => desp.CityId, src => src.Street!.City!.Id)
 			.Map(desp => desp.ImagePostList, src =>
 			src.ImagesPost != null ? src.ImagesPost.Select(img => img.Name).ToArray() : Array.Empty<string>());
+	
+		config.NewConfig<(
+			EditPostRequest editPostRequest, Guid UserId, List<byte[]> Images), EditPostCommand>()
+		.Map(dest => dest.UserId, src => src.UserId)
+		.Map(dest => dest.Images, src => src.Images)
+		.Map(dest => dest, src => src.editPostRequest);
 	}
 }

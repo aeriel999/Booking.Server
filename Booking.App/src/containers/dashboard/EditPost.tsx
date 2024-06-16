@@ -9,7 +9,7 @@ import { useEffect, useRef, useState } from "react";
 import { useAppDispatch, useAppSelector } from "../../hooks/redux";
 import { unwrapResult } from "@reduxjs/toolkit";
 import {
-    createPost,
+    editPost,
     getListOfCategories,
     getListOfCitiesByCountryId,
     getListOfCountries,
@@ -23,7 +23,7 @@ import {
     ICategory,
     ICity,
     ICountry,
-    IPostCreate,
+    IPostEdit,
     ITypeOfRent,
 } from "../../interfaces/post";
 import InputGroup from "../../components/common/InputGroup.tsx";
@@ -41,8 +41,8 @@ import FileUploader from "../../components/common/FileUploader.tsx";
 import { AvatarValidator } from "../../validations/account";
 import Button from "@mui/material/Button";
 import * as React from "react";
-import { joinForPostListening } from "../../SignalR";
 import { APP_ENV } from "../../env/index.ts";
+import IMG from "../../assets/avatar-profile-icon-vector-illustration_276184-165.jpg";
 
 export function EditPost() {
     const { postId } = useParams();
@@ -79,6 +79,7 @@ export function EditPost() {
     const [isFormValid, setIsFormValid] = useState(false);
     const navigate = useNavigate();
     const [postImages, setPostImages] = useState<string[]>();
+    const [deleteImg, setDeleteImg] = useState<string[]>();
 
     //ToDo make hasCountOfRooms and hasArea
     //ToDo request.CityId == null && request.CityName != null
@@ -111,7 +112,7 @@ export function EditPost() {
                 });
             }
 
-            console.log( history?.payload.imagePostList)
+            console.log(history?.payload.imagePostList);
 
             const fullImageUrls: string[] = history?.payload.imagePostList.map(
                 (image: string) =>
@@ -229,14 +230,15 @@ export function EditPost() {
                 ? null
                 : parseInt(data.get("area") as string, 10);
 
-        const model: IPostCreate = {
+        const model: IPostEdit = {
+            id: postId as string,
             name: data.get("name") as string,
-            postTypeOfRentId: typeOfRent!.id,
-            categoryId: category!.id,
-            countryId: country!.id,
-            cityId: city === undefined ? null : city.id,
+            postTypeOfRentId: typeOfRent?.id ?? null,
+            categoryId: category?.id ?? null,
+            countryId: country?.id ?? null,
+            cityId: city?.id ?? null,
             cityName: data.get("cityName") as string,
-            streetId: street === undefined ? null : street.id,
+            streetId: street?.id ?? null,
             streetName: data.get("streetName") as string,
             buildingNumber: data.get("buildingNumber") as string,
             numberOfRooms: numberOfRoomsResult,
@@ -244,16 +246,15 @@ export function EditPost() {
             price: parseFloat(data.get("price") as string),
             description: data.get("description") as string,
             images: images,
+            deleteImages: deleteImg,
         };
+        console.log("model", model);
 
         try {
-            const response = await dispatch(createPost(model));
+            const response = await dispatch(editPost(model));
             unwrapResult(response);
 
-            console.log("response.payload.Id", response);
-            await joinForPostListening(response.payload.id);
-
-            navigate("/dashboard");
+            navigate("/dashboard/show-all-post");
         } catch (error) {
             setErrorMessage(ErrorHandler(error));
         }
@@ -283,7 +284,7 @@ export function EditPost() {
 
             {errorMessage && <OutlinedErrorAlert message={errorMessage} />}
 
-            {post !== null && cityList !== null && streetList !== null ? (
+            {post && cityList && streetList && postImages ? (
                 <Container component="main" maxWidth="xs">
                     <Box
                         sx={{
@@ -497,11 +498,12 @@ export function EditPost() {
                                         setImages={setImages}
                                         maxImagesUpload={10}
                                         validator={AvatarValidator}
-                                        defaultImages={postImages}
+                                        defaultImages={postImages ?? [IMG]}
                                         onChange={(isValid) =>
                                             (formValid.current.images = isValid)
                                         }
                                         onDelete={handleChange}
+                                        setDeleteImages={setDeleteImg}
                                     ></FileUploader>
                                 </Grid>
                             </Grid>

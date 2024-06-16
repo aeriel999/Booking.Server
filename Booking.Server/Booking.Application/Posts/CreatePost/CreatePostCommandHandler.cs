@@ -118,7 +118,7 @@ public class CreatePostCommandHandler(
 
 		await postRepository.SavePostAsync();
 
-		//Save image in lokalestorage and create and save image in DB
+		//Save image in local storage and create and save image in DB
 		if (request.Images.Count > 0 && request.Images != null)
 		{
 			int priority = 1;

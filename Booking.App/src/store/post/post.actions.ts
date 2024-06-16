@@ -7,6 +7,7 @@ import {
     IFilteredRequest,
     IFilteredRequestName,
     IPostCreate,
+    IPostEdit,
 } from "../../interfaces/post";
 
 export const getTypesOfRentList = createAsyncThunk(
@@ -169,6 +170,21 @@ export const getListPostsForRealtor = createAsyncThunk(
         try {
             const response = await apiClient.get(
                 `/api/Post/get-post-list-for-realtor?page=${payload.page}&sizeOfPage=${payload.sizeOfPage}`
+            );
+            return response.data;
+        } catch (error) {
+            return rejectWithValue(handleAxiosError(error, "Network error"));
+        }
+    }
+);
+
+export const editPost = createAsyncThunk(
+    "Post/edit-post",
+    async (payload: IPostEdit, { rejectWithValue }) => {
+        try {
+            const response = await apiMediaClient.post(
+                "/api/Post/edit-post",
+                payload
             );
             return response.data;
         } catch (error) {

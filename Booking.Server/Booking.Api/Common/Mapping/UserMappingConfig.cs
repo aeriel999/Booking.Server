@@ -2,7 +2,7 @@
 using Booking.Api.Contracts.Users.Realtor.Edit;
 using Booking.Api.Contracts.Users.Realtor.Get;
 using Booking.Application.Users.Common.ChangePassword;
-using Booking.Application.Users.Realtor;
+using Booking.Application.Users.Realtor.EditRealtor;
 using Booking.Domain.Users;
 using Mapster;
 
