@@ -192,3 +192,17 @@ export const editPost = createAsyncThunk(
         }
     }
 );
+
+export const archivePost = createAsyncThunk(
+    "Post/archive-post",
+    async (postId: string, { rejectWithValue }) => {
+        try {
+            const response = await apiClient.get(
+                `api/Post/archive-post-${postId}`
+            );
+            return response.data;
+        } catch (error) {
+            return rejectWithValue(handleAxiosError(error, "Network error"));
+        }
+    }
+);

@@ -11,6 +11,7 @@ using Booking.Api.Contracts.Post.GetStreets;
 using Booking.Api.Contracts.Post.GetTypeOfPost;
 using Booking.Api.Infrastructure;
 using Booking.Application.Common.Behaviors;
+using Booking.Application.Posts.ArchivePost;
 using Booking.Application.Posts.CreatePost;
 using Booking.Application.Posts.EditPost;
 using Booking.Application.Posts.GetCategoriesList;
@@ -211,6 +212,18 @@ public class PostController(ISender mediatr, IMapper mapper) : ApiController
 
 		return editPostResult.Match(
 			editPostResult => Ok(editPostResult),
+			errors => Problem(errors));
+	}
+
+	[HttpGet("archive-post-{postId}")]
+	public async Task<IActionResult> ArchivePostAsync([FromRoute] Guid postId)
+	{
+		string userId = User.Claims.First(u => u.Type == ClaimTypes.NameIdentifier).Value;
+
+		var archivePostResult = await mediatr.Send(new ArchivePostCommand(postId, Guid.Parse(userId)));
+
+		return archivePostResult.Match(
+			getPostListForRealtor => Ok(archivePostResult),
 			errors => Problem(errors));
 	}
 }

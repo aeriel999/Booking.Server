@@ -25,11 +25,13 @@ public class PostRepository(BookingDbContext context) : IPostRepository
 
 	public async Task<Post?> GetPostByIdAsync(Guid id)
 	{
-		var posts = await GetIncludeListAsync();
-
-		var post = posts.Find(x => x.Id == id);
-
-		return post;
+		return await _dbSet.Where(post => post.Id == id)
+							.Include(post => post.PostTypeOfRent)
+							.Include(post => post.Category)
+							.Include(post => post.Street!.City!.Country)
+							.Include(post => post.User)
+							.Include(post => post.ImagesPost)
+							.FirstOrDefaultAsync();
 	}
 
 	public async Task<PagedList<Post>> GetAllAsync(int page, int sizeOfPage)

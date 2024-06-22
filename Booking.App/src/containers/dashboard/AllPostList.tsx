@@ -22,8 +22,9 @@ import { useState, useEffect } from "react";
 import { useAppDispatch } from "../../hooks/redux";
 import { unwrapResult } from "@reduxjs/toolkit";
 import { IFetchData, IPostInfoForRealtor } from "../../interfaces/post";
-import { getListPostsForRealtor } from "../../store/post/post.actions";
+import { archivePost, getListPostsForRealtor } from "../../store/post/post.actions";
 import ErrorHandler from "../../components/common/ErrorHandler";
+import CustomizedDialogs from "../../components/common/Dialog";
 
 interface TablePaginationActionsProps {
     count: number;
@@ -142,6 +143,7 @@ export default function AllPostList() {
         undefined
     );
     const dispatch = useAppDispatch();
+    const [open, setOpen] = useState<boolean>(false);
     const navigate = useNavigate();
 
     const emptyRows =
@@ -247,51 +249,67 @@ export default function AllPostList() {
                     </TableHead>
                     <TableBody>
                         {rows?.map((row) => (
-                            <StyledTableRow key={row.id}>
-                                <StyledTableCell component="th" scope="row">
-                                    {row.category}
-                                </StyledTableCell>
-                                <StyledTableCell align="right">
-                                    {row.typeOfRent}
-                                </StyledTableCell>
-                                <StyledTableCell align="right">
-                                    {row.adress}
-                                </StyledTableCell>
-                                <StyledTableCell align="right">
-                                    {row.name}
-                                </StyledTableCell>
-                                <StyledTableCell align="right">
-                                    {"$" + row.price}
-                                </StyledTableCell>
-                                <StyledTableCell align="right">
-                                    {formatTimestamp(row.dateOfPost)}
-                                </StyledTableCell>
-                                <StyledTableCell align="right">
-                                    {row.dateOfEdit === null
-                                        ? "-"
-                                        : formatTimestamp(row.dateOfEdit)}
-                                </StyledTableCell>
-                                <StyledTableCell align="right">
-                                    {row.isActive === true ? "Yes" : "No"}
-                                </StyledTableCell>
-                                <StyledTableCell align="right">
-                                    {row.isArhive === true ? "Yes" : "No"}
-                                </StyledTableCell>
-                                <StyledTableCell align="right">
-                                    <Button
-                                        onClick={() => {
-                                            navigate(
-                                                `/dashboard/edit-post/${row.id}`
-                                            );
-                                        }}
-                                    >
-                                        Edit
-                                    </Button>
-                                </StyledTableCell>
-                                <StyledTableCell align="right">
-                                    <Button>Archive</Button>
-                                </StyledTableCell>
-                            </StyledTableRow>
+                            <>
+                                <CustomizedDialogs
+                                    message={"You want to archive post " + row.name + "Are you sure?"}
+                                    isOpen={open}
+                                    setOpen={setOpen}
+                                    action={() => {
+                                        dispatch(archivePost(row.id))
+                                    }}
+                                    navigate={"/dashboard/archive"}
+                                />
+
+                                <StyledTableRow key={row.id}>
+                                    <StyledTableCell component="th" scope="row">
+                                        {row.category}
+                                    </StyledTableCell>
+                                    <StyledTableCell align="right">
+                                        {row.typeOfRent}
+                                    </StyledTableCell>
+                                    <StyledTableCell align="right">
+                                        {row.adress}
+                                    </StyledTableCell>
+                                    <StyledTableCell align="right">
+                                        {row.name}
+                                    </StyledTableCell>
+                                    <StyledTableCell align="right">
+                                        {"$" + row.price}
+                                    </StyledTableCell>
+                                    <StyledTableCell align="right">
+                                        {formatTimestamp(row.dateOfPost)}
+                                    </StyledTableCell>
+                                    <StyledTableCell align="right">
+                                        {row.dateOfEdit === null
+                                            ? "-"
+                                            : formatTimestamp(row.dateOfEdit)}
+                                    </StyledTableCell>
+                                    <StyledTableCell align="right">
+                                        {row.isActive === true ? "Yes" : "No"}
+                                    </StyledTableCell>
+                                    <StyledTableCell align="right">
+                                        {row.isArhive === true ? "Yes" : "No"}
+                                    </StyledTableCell>
+                                    <StyledTableCell align="right">
+                                        <Button
+                                            onClick={() => {
+                                                navigate(
+                                                    `/dashboard/edit-post/${row.id}`
+                                                );
+                                            }}
+                                        >
+                                            Edit
+                                        </Button>
+                                    </StyledTableCell>
+                                    <StyledTableCell align="right">
+                                        <Button
+                                            onClick={() => {
+                                                setOpen(true);
+                                            }}
+                                        >Archive</Button>
+                                    </StyledTableCell>
+                                </StyledTableRow>
+                            </>
                         ))}
                         {emptyRows > 0 && (
                             <TableRow style={{ height: 53 * emptyRows }}>
@@ -303,9 +321,7 @@ export default function AllPostList() {
                         <TableRow>
                             <TablePagination
                                 rowsPerPageOptions={[
-                                    5,
-                                    10,
-                                    25,
+                                    5, 10, 25,
                                     // { label: "All", value: -1 },
                                 ]}
                                 colSpan={6}

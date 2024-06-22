@@ -492,20 +492,47 @@ export function EditPost() {
                                     />
                                 </Grid>
 
-                                <Grid item xs={12}>
-                                    <FileUploader
-                                        images={images}
-                                        setImages={setImages}
-                                        maxImagesUpload={10}
-                                        validator={AvatarValidator}
-                                        defaultImages={postImages ?? [IMG]}
-                                        onChange={(isValid) =>
-                                            (formValid.current.images = isValid)
-                                        }
-                                        onDelete={handleChange}
-                                        setDeleteImages={setDeleteImg}
-                                    ></FileUploader>
-                                </Grid>
+                                {postImages.map((img, index) => (
+                                    <Grid item xs={12} key={index}>
+                                        <Typography
+                                            variant="subtitle1"
+                                            color="text.primary"
+                                        > Image # {index + 1}</Typography>
+
+                                        <FileUploader
+                                            images={images}
+                                            setImages={setImages}
+                                            maxImagesUpload={10}
+                                            validator={AvatarValidator}
+                                            defaultImage={img}  
+                                            onChange={(isValid) => (formValid.current.images = isValid)}
+                                            onDelete={handleChange}
+                                            setDeleteImages={setDeleteImg}
+                                        />
+                                    </Grid>
+                                ))}
+                                
+
+                                {Array.from({ length:  (10 - postImages.length)}).map((_, index)=> (
+                                    <Grid item xs={12} key={index}>
+
+<Typography
+                                            variant="subtitle1"
+                                            color="text.primary"
+                                        > Image # {postImages.length + index + 1}</Typography>
+
+                                        <FileUploader
+                                            images={images}
+                                            setImages={setImages}
+                                            maxImagesUpload={10}
+                                            validator={AvatarValidator}
+                                            defaultImage={IMG}  
+                                            onChange={(isValid) => (formValid.current.images = isValid)}
+                                            onDelete={handleChange}
+                                            setDeleteImages={setDeleteImg}
+                                        />
+                                    </Grid>
+                                ))}
                             </Grid>
                             <Button
                                 type="submit"
@@ -514,7 +541,7 @@ export function EditPost() {
                                 sx={{ mt: 3, mb: 2 }}
                                 // disabled={!isFormValid}
                             >
-                                Add new post
+                                Edit post
                             </Button>
                         </Box>
                     </Box>

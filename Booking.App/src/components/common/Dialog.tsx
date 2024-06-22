@@ -23,13 +23,18 @@ interface CustomizedDialogsProps {
     isOpen: boolean;
     message: string;
     setOpen: (arg: boolean) => void;
-    navigate: string
+    navigate: string;
+    action?: () => void;
 }
 
 export default function CustomizedDialogs ( props : CustomizedDialogsProps)  {
     const navigate = useNavigate();
     const handleClose = () => {
         props.setOpen(false);
+        if(props.action)
+            {
+                props.action();
+            }
         navigate(props.navigate)
     };
 
