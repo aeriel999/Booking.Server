@@ -1,4 +1,5 @@
 ﻿using Booking.Api.Contracts.Post.CreatePost;
+using Booking.Api.Contracts.Post.GetArchivedPostListForRealtor;
 using Booking.Api.Contracts.Post.GetCategories;
 using Booking.Api.Contracts.Post.GetCities;
 using Booking.Api.Contracts.Post.GetCountries;
@@ -20,6 +21,7 @@ using Booking.Application.Posts.GetPostListForRealtor;
 using Booking.Application.Posts.GetStreets;
 using Booking.Domain.Posts;
 using Mapster;
+using Microsoft.Extensions.Hosting;
 
 namespace Booking.Api.Common.Mapping;
 
@@ -121,5 +123,19 @@ public class PostMapping : IRegister
 		.Map(dest => dest.UserId, src => src.UserId)
 		.Map(dest => dest.Images, src => src.Images)
 		.Map(dest => dest, src => src.editPostRequest);
+
+		config.NewConfig<Post, GetArchivedPostListForRealtorResponse>()
+			.Map(desp => desp.Id, src => src.Id)
+			.Map(desp => desp.Category, src => src.Category!.Name)
+			.Map(desp => desp.TypeOfRent, src => src.PostTypeOfRent!.Name)
+			.Map(desp => desp.Adress,
+			src => src.Street!.City!.Country!.Name + " " + src.Street.City.Name + " " + src.Street.Name)
+			.Map(desp => desp.Name, src => src.Name)
+			.Map(desp => desp.Price, src => src.Price)
+			.Map(desp => desp.DateOfPost, src => src.PostAt)
+			.Map(desp => desp.DateOfEdit, src => src.EditAt)
+			.Map(desp => desp.IsActive, src => src.IsActive);
+
+		config.NewConfig<PagedList<Post>, PagedList<GetArchivedPostListForRealtorResponse>>();
 	}
 }

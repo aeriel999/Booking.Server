@@ -141,5 +141,13 @@ public class PostRepository(BookingDbContext context) : IPostRepository
 			});
 	}
 
-
+	public async Task<List<Post>?> GetArchivedListPostByRealtorIdAsync(Guid realtorId)
+	{
+		return await _dbSet
+			.Where(c => c.UserId == realtorId && c.IsArhive == true)
+			.Include(post => post.PostTypeOfRent)
+			.Include(post => post.Category)
+			.Include(post => post.Street!.City!.Country)
+			.ToListAsync();
+	}
 }

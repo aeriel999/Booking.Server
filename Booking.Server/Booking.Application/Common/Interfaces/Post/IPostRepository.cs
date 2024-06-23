@@ -35,4 +35,6 @@ public interface IPostRepository
 	
 
 	Task<List<Post>?> GetListPostByRealtorIdAsync(Guid realtorId);
+
+	Task<List<Post>?> GetArchivedListPostByRealtorIdAsync(Guid realtorId);
 }

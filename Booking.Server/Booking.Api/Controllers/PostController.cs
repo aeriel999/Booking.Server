@@ -1,4 +1,5 @@
 ﻿using Booking.Api.Contracts.Post.CreatePost;
+using Booking.Api.Contracts.Post.GetArchivedPostListForRealtor;
 using Booking.Api.Contracts.Post.GetCategories;
 using Booking.Api.Contracts.Post.GetCities;
 using Booking.Api.Contracts.Post.GetCountries;
@@ -14,6 +15,7 @@ using Booking.Application.Common.Behaviors;
 using Booking.Application.Posts.ArchivePost;
 using Booking.Application.Posts.CreatePost;
 using Booking.Application.Posts.EditPost;
+using Booking.Application.Posts.GetArchivedPostList;
 using Booking.Application.Posts.GetCategoriesList;
 using Booking.Application.Posts.GetCities;
 using Booking.Application.Posts.GetCountries;
@@ -225,5 +227,19 @@ public class PostController(ISender mediatr, IMapper mapper) : ApiController
 		return archivePostResult.Match(
 			getPostListForRealtor => Ok(archivePostResult),
 			errors => Problem(errors));
+	}
+
+	[HttpGet("get-archived-post-list-for-realtor")]
+	public async Task<IActionResult> GetArchivedPostListForRealtorAsync(
+	[FromQuery] int page, int sizeOfPage)
+	{
+		string userId = User.Claims.First(u => u.Type == ClaimTypes.NameIdentifier).Value;
+
+		var getArchivedPostListForRealtor = await mediatr.Send(new GetArchivedPostListForRealtorQuery(
+			page, sizeOfPage, Guid.Parse(userId)));
+
+		PagedList<GetArchivedPostListForRealtorResponse> list = mapper.Map<PagedList<GetArchivedPostListForRealtorResponse>>(getArchivedPostListForRealtor);
+
+		return Ok(list);
 	}
 }
