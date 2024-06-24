@@ -10,6 +10,7 @@ import {
     archivePost,
     createPost,
     editPost,
+    getArchivedPostList,
     getFilteredListByType,
     getListOfCategories,
     getListOfCitiesByCountryId,
@@ -154,6 +155,12 @@ export const postSlice = createSlice({
                 state.status = Status.SUCCESS;
             })
             .addCase(archivePost.pending, (state) => {
+                state.status = Status.LOADING;
+            })
+            .addCase(getArchivedPostList.fulfilled, (state) => {
+                state.status = Status.SUCCESS;
+            })
+            .addCase(getArchivedPostList.pending, (state) => {
                 state.status = Status.LOADING;
             })
             .addMatcher(isRejectedAction, (state) => {

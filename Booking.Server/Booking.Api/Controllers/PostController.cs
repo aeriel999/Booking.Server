@@ -225,7 +225,7 @@ public class PostController(ISender mediatr, IMapper mapper) : ApiController
 		var archivePostResult = await mediatr.Send(new ArchivePostCommand(postId, Guid.Parse(userId)));
 
 		return archivePostResult.Match(
-			getPostListForRealtor => Ok(archivePostResult),
+			getPostListForRealtor => Ok(archivePostResult.Value),
 			errors => Problem(errors));
 	}
 

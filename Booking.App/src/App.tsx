@@ -25,7 +25,7 @@ import ChatRoom from "./components/chat/ChatRoom.tsx";
 import AllPostList from "./containers/dashboard/AllPostList.tsx";
 import { EditPost } from "./containers/dashboard/EditPost.tsx";
 import PostPage from "./containers/client/PostPage.tsx";
-import { ArchivePage } from "./containers/dashboard/ArchivePage.tsx";
+import ArchivePage from "./containers/dashboard/ArchivePage.tsx";
 
 const App: React.FC = () => {
     const { isLogin, user } = useAppSelector((state) => state.account);

@@ -1,6 +1,5 @@
 import * as React from "react";
-import { useTheme, styled } from "@mui/material/styles";
-import Box from "@mui/material/Box";
+import { styled } from "@mui/material/styles";
 import Table from "@mui/material/Table";
 import TableBody from "@mui/material/TableBody";
 import TableCell, { tableCellClasses } from "@mui/material/TableCell";
@@ -10,11 +9,6 @@ import TableHead from "@mui/material/TableHead";
 import TablePagination from "@mui/material/TablePagination";
 import TableRow from "@mui/material/TableRow";
 import Paper from "@mui/material/Paper";
-import IconButton from "@mui/material/IconButton";
-import FirstPageIcon from "@mui/icons-material/FirstPage";
-import KeyboardArrowLeft from "@mui/icons-material/KeyboardArrowLeft";
-import KeyboardArrowRight from "@mui/icons-material/KeyboardArrowRight";
-import LastPageIcon from "@mui/icons-material/LastPage";
 import { Breadcrumbs, Button, Divider, Typography } from "@mui/material";
 import OutlinedErrorAlert from "../../components/common/ErrorAlert";
 import { Link, useNavigate } from "react-router-dom";
@@ -22,97 +16,13 @@ import { useState, useEffect } from "react";
 import { useAppDispatch } from "../../hooks/redux";
 import { unwrapResult } from "@reduxjs/toolkit";
 import { IFetchData, IPostInfoForRealtor } from "../../interfaces/post";
-import { archivePost, getListPostsForRealtor } from "../../store/post/post.actions";
+import {
+    archivePost,
+    getListPostsForRealtor,
+} from "../../store/post/post.actions";
 import ErrorHandler from "../../components/common/ErrorHandler";
 import CustomizedDialogs from "../../components/common/Dialog";
-
-interface TablePaginationActionsProps {
-    count: number;
-    page: number;
-    rowsPerPage: number;
-    onPageChange: (
-        event: React.MouseEvent<HTMLButtonElement>,
-        newPage: number
-    ) => void;
-}
-
-function TablePaginationActions(props: TablePaginationActionsProps) {
-    const theme = useTheme();
-    const { count, page, rowsPerPage, onPageChange } = props;
-
-    const handleFirstPageButtonClick = (
-        event: React.MouseEvent<HTMLButtonElement>
-    ) => {
-        onPageChange(event, 0);
-    };
-
-    const handleBackButtonClick = (
-        event: React.MouseEvent<HTMLButtonElement>
-    ) => {
-        onPageChange(event, page - 1);
-    };
-
-    const handleNextButtonClick = (
-        event: React.MouseEvent<HTMLButtonElement>
-    ) => {
-        onPageChange(event, page + 1);
-    };
-
-    const handleLastPageButtonClick = (
-        event: React.MouseEvent<HTMLButtonElement>
-    ) => {
-        onPageChange(event, Math.max(0, Math.ceil(count / rowsPerPage) - 1));
-    };
-
-    return (
-        <Box sx={{ flexShrink: 0, ml: 2.5 }}>
-            <IconButton
-                onClick={handleFirstPageButtonClick}
-                disabled={page === 0}
-                aria-label="first page"
-            >
-                {theme.direction === "rtl" ? (
-                    <LastPageIcon />
-                ) : (
-                    <FirstPageIcon />
-                )}
-            </IconButton>
-            <IconButton
-                onClick={handleBackButtonClick}
-                disabled={page === 0}
-                aria-label="previous page"
-            >
-                {theme.direction === "rtl" ? (
-                    <KeyboardArrowRight />
-                ) : (
-                    <KeyboardArrowLeft />
-                )}
-            </IconButton>
-            <IconButton
-                onClick={handleNextButtonClick}
-                disabled={page >= Math.ceil(count / rowsPerPage) - 1}
-                aria-label="next page"
-            >
-                {theme.direction === "rtl" ? (
-                    <KeyboardArrowLeft />
-                ) : (
-                    <KeyboardArrowRight />
-                )}
-            </IconButton>
-            <IconButton
-                onClick={handleLastPageButtonClick}
-                disabled={page >= Math.ceil(count / rowsPerPage) - 1}
-                aria-label="last page"
-            >
-                {theme.direction === "rtl" ? (
-                    <FirstPageIcon />
-                ) : (
-                    <LastPageIcon />
-                )}
-            </IconButton>
-        </Box>
-    );
-}
+import { TablePaginationActions } from "../../components/common/TablePagination";
 
 const StyledTableCell = styled(TableCell)(({ theme }) => ({
     [`&.${tableCellClasses.head}`]: {
@@ -145,6 +55,9 @@ export default function AllPostList() {
     const dispatch = useAppDispatch();
     const [open, setOpen] = useState<boolean>(false);
     const navigate = useNavigate();
+    const [isDialogOpen, setIsDialogOpen] = useState(false);
+    const [postName, setPostName] = useState<string>();
+    const [postId, setPostId] = useState<string>();
 
     const emptyRows =
         page > 0 ? Math.max(0, (1 + page) * rowsPerPage - totalCount) : 0;
@@ -184,7 +97,7 @@ export default function AllPostList() {
             setRows(history?.payload.items.$values);
             setTotalCount(history?.payload.totalCount);
         });
-    }, [page, rowsPerPage]);
+    }, [page, rowsPerPage, open]);
 
     const formatTimestamp = (timestamp: string) => {
         const date = new Date(timestamp);
@@ -197,6 +110,20 @@ export default function AllPostList() {
 
     return (
         <>
+
+{isDialogOpen && postName && postId && (
+                <CustomizedDialogs
+                    message={`You want to archive post ${postName}. Are you sure?`}
+                    isOpen={isDialogOpen}
+                    setOpen={setIsDialogOpen}
+                    action={async () => {
+                        await dispatch(archivePost(postId!));
+                    }}
+                    navigate={"/dashboard/archive"}
+                />
+            )}
+            
+
             <Breadcrumbs
                 aria-label="breadcrumb"
                 style={{ marginBottom: "20px" }}
@@ -204,11 +131,6 @@ export default function AllPostList() {
                 <Link to={"/dashboard/profile"}>
                     <Typography variant="h6" color="text.primary">
                         Dashboard
-                    </Typography>
-                </Link>
-                <Link to={"/dashboard/profile"}>
-                    <Typography variant="h6" color="text.primary">
-                        Profile
                     </Typography>
                 </Link>
                 <Typography variant="h6" color="text.primary">
@@ -247,19 +169,10 @@ export default function AllPostList() {
                             </StyledTableCell>
                         </TableRow>
                     </TableHead>
-                    <TableBody>
-                        {rows?.map((row) => (
-                            <>
-                                <CustomizedDialogs
-                                    message={"You want to archive post " + row.name + "Are you sure?"}
-                                    isOpen={open}
-                                    setOpen={setOpen}
-                                    action={() => {
-                                        dispatch(archivePost(row.id))
-                                    }}
-                                    navigate={"/dashboard/archive"}
-                                />
 
+                    <TableBody>
+                        {rows?.map((row) => {
+                            return (
                                 <StyledTableRow key={row.id}>
                                     <StyledTableCell component="th" scope="row">
                                         {row.category}
@@ -285,10 +198,10 @@ export default function AllPostList() {
                                             : formatTimestamp(row.dateOfEdit)}
                                     </StyledTableCell>
                                     <StyledTableCell align="right">
-                                        {row.isActive === true ? "Yes" : "No"}
+                                        {row.isActive ? "Yes" : "No"}
                                     </StyledTableCell>
                                     <StyledTableCell align="right">
-                                        {row.isArhive === true ? "Yes" : "No"}
+                                        {row.isArhive ? "Yes" : "No"}
                                     </StyledTableCell>
                                     <StyledTableCell align="right">
                                         <Button
@@ -304,19 +217,26 @@ export default function AllPostList() {
                                     <StyledTableCell align="right">
                                         <Button
                                             onClick={() => {
-                                                setOpen(true);
+                                               
+                                                setPostName(row.name);
+                                                setPostId(row.id);
+                                                
+                                                setIsDialogOpen(true);
                                             }}
-                                        >Archive</Button>
+                                        >
+                                            Archive
+                                        </Button>
                                     </StyledTableCell>
                                 </StyledTableRow>
-                            </>
-                        ))}
+                            );
+                        })}
                         {emptyRows > 0 && (
                             <TableRow style={{ height: 53 * emptyRows }}>
                                 <TableCell colSpan={6} />
                             </TableRow>
                         )}
                     </TableBody>
+
                     <TableFooter>
                         <TableRow>
                             <TablePagination

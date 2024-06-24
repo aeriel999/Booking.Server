@@ -339,7 +339,7 @@ export default function DashboardLayout() {
                     <ListItem disablePadding>
                         <ListItemButton
                             onClick={() => {
-                                navigate("/dashboard/profile");
+                                navigate("/dashboard/archive");
                             }}
                         >
                             <ListItemIcon>

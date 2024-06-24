@@ -206,3 +206,17 @@ export const archivePost = createAsyncThunk(
         }
     }
 );
+
+export const getArchivedPostList = createAsyncThunk(
+    "Post/get-archived-post-list-for-realtor",
+    async (payload: IFetchData, { rejectWithValue }) => {
+        try {
+            const response = await apiClient.get(
+                `/api/Post/get-archived-post-list-for-realtor?page=${payload.page}&sizeOfPage=${payload.sizeOfPage}`
+            );
+            return response.data;
+        } catch (error) {
+            return rejectWithValue(handleAxiosError(error, "Network error"));
+        }
+    }
+);
