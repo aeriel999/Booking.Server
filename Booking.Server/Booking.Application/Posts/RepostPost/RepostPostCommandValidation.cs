@@ -1,10 +1,10 @@
 ﻿using FluentValidation;
 
-namespace Booking.Application.Posts.ArchivePost;
+namespace Booking.Application.Posts.RepostPost;
 
-public class ArchivePostCommandValidation : AbstractValidator<ArchivePostCommand>
+public class RepostPostCommandValidation : AbstractValidator<RepostPostCommand>
 {
-    public ArchivePostCommandValidation()
+    public RepostPostCommandValidation()
     {
 		RuleFor(r => r.UserId).NotEmpty().WithMessage("Field must not be empty");
 

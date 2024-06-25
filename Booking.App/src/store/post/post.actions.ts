@@ -220,3 +220,31 @@ export const getArchivedPostList = createAsyncThunk(
         }
     }
 );
+
+export const deletePost = createAsyncThunk(
+    "Post/delete-post",
+    async (postId: string, { rejectWithValue }) => {
+        try {
+            const response = await apiClient.get(
+                `api/Post/delete-post-${postId}`
+            );
+            return response.data;
+        } catch (error) {
+            return rejectWithValue(handleAxiosError(error, "Network error"));
+        }
+    }
+);
+
+export const repostPost = createAsyncThunk(
+    "Post/repost-post",
+    async (postId: string, { rejectWithValue }) => {
+        try {
+            const response = await apiClient.get(
+                `api/Post/repost-post-${postId}`
+            );
+            return response.data;
+        } catch (error) {
+            return rejectWithValue(handleAxiosError(error, "Network error"));
+        }
+    }
+);

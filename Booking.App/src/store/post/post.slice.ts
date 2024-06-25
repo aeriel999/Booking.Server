@@ -9,6 +9,7 @@ import {
 import {
     archivePost,
     createPost,
+    deletePost,
     editPost,
     getArchivedPostList,
     getFilteredListByType,
@@ -22,6 +23,7 @@ import {
     getListPostsForRealtor,
     getPostById,
     getTypesOfRentList,
+    repostPost,
 } from "./post.actions.ts";
 
 function isRejectedAction(action: AnyAction): action is RejectedAction {
@@ -161,6 +163,18 @@ export const postSlice = createSlice({
                 state.status = Status.SUCCESS;
             })
             .addCase(getArchivedPostList.pending, (state) => {
+                state.status = Status.LOADING;
+            })
+            .addCase(deletePost.fulfilled, (state) => {
+                state.status = Status.SUCCESS;
+            })
+            .addCase(deletePost.pending, (state) => {
+                state.status = Status.LOADING;
+            })
+            .addCase(repostPost.fulfilled, (state) => {
+                state.status = Status.SUCCESS;
+            })
+            .addCase(repostPost.pending, (state) => {
                 state.status = Status.LOADING;
             })
             .addMatcher(isRejectedAction, (state) => {

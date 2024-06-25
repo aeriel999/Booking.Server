@@ -53,7 +53,7 @@ export default function AllPostList() {
         undefined
     );
     const dispatch = useAppDispatch();
-    const [open, setOpen] = useState<boolean>(false);
+    
     const navigate = useNavigate();
     const [isDialogOpen, setIsDialogOpen] = useState(false);
     const [postName, setPostName] = useState<string>();
@@ -97,7 +97,7 @@ export default function AllPostList() {
             setRows(history?.payload.items.$values);
             setTotalCount(history?.payload.totalCount);
         });
-    }, [page, rowsPerPage, open]);
+    }, [page, rowsPerPage, isDialogOpen]);
 
     const formatTimestamp = (timestamp: string) => {
         const date = new Date(timestamp);
@@ -110,8 +110,7 @@ export default function AllPostList() {
 
     return (
         <>
-
-{isDialogOpen && postName && postId && (
+            {isDialogOpen && postName && postId && (
                 <CustomizedDialogs
                     message={`You want to archive post ${postName}. Are you sure?`}
                     isOpen={isDialogOpen}
@@ -122,7 +121,6 @@ export default function AllPostList() {
                     navigate={"/dashboard/archive"}
                 />
             )}
-            
 
             <Breadcrumbs
                 aria-label="breadcrumb"
@@ -217,10 +215,8 @@ export default function AllPostList() {
                                     <StyledTableCell align="right">
                                         <Button
                                             onClick={() => {
-                                               
                                                 setPostName(row.name);
                                                 setPostId(row.id);
-                                                
                                                 setIsDialogOpen(true);
                                             }}
                                         >

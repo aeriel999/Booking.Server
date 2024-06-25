@@ -23,7 +23,7 @@ public class PostRepository(BookingDbContext context) : IPostRepository
 		await context.SaveChangesAsync();
 	}
 
-	public async Task<Post?> GetPostByIdAsync(Guid id)
+	public async Task<Post?> GetPostWithIncludesByIdAsync(Guid id)
 	{
 		return await _dbSet.Where(post => post.Id == id)
 							.Include(post => post.PostTypeOfRent)
@@ -114,7 +114,7 @@ public class PostRepository(BookingDbContext context) : IPostRepository
 			.ToListAsync();
 	}
 
-	public async Task<List<Post>> GetPostListByRealtorIdAsync(Guid realtorId)
+	public async Task<List<Post>> GetPostListWithIncludesByRealtorIdAsync(Guid realtorId)
 	{
 		return await _dbSet
 			.Where(c => c.UserId == realtorId)
@@ -149,5 +149,21 @@ public class PostRepository(BookingDbContext context) : IPostRepository
 			.Include(post => post.Category)
 			.Include(post => post.Street!.City!.Country)
 			.ToListAsync();
+	}
+
+	public async Task DeletePostAsync(Post post)
+	{
+		await Task.Run
+			(() =>
+			{
+				_dbSet.Remove(post);
+			});
+
+		await context.SaveChangesAsync();
+	}
+
+	public async Task<Post?> GetPostById(Guid postId)
+	{
+		return await _dbSet.Where(p => p.Id == postId).FirstOrDefaultAsync();
 	}
 }

@@ -8,7 +8,7 @@ public class GePostByIdQueryHandler(IPostRepository repository) : IRequestHandle
 {      
     public async Task<ErrorOr<Post>> Handle(GetPostByIdQuery request, CancellationToken cancellationToken)
     {
-        var respons = await repository.GetPostByIdAsync(request.id);
+        var respons = await repository.GetPostWithIncludesByIdAsync(request.id);
 
         if(request == null) return Error.NotFound("Post is not found");
 

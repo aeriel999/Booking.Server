@@ -18,7 +18,9 @@ import { unwrapResult } from "@reduxjs/toolkit";
 import { IFetchData, IPostInfoForRealtor } from "../../interfaces/post";
 import {
     archivePost,
+    deletePost,
     getArchivedPostList,
+    repostPost,
 } from "../../store/post/post.actions";
 import ErrorHandler from "../../components/common/ErrorHandler";
 import CustomizedDialogs from "../../components/common/Dialog";
@@ -53,8 +55,11 @@ export default function ArchivePage() {
         undefined
     );
     const dispatch = useAppDispatch();
-    const [open, setOpen] = useState<boolean>(false);
+
     const navigate = useNavigate();
+    const [isDialogOpen, setIsDialogOpen] = useState(false);
+    const [postName, setPostName] = useState<string>();
+    const [postId, setPostId] = useState<string>();
 
     const emptyRows =
         page > 0 ? Math.max(0, (1 + page) * rowsPerPage - totalCount) : 0;
@@ -106,6 +111,18 @@ export default function ArchivePage() {
 
     return (
         <>
+            {isDialogOpen && postName && postId && (
+                <CustomizedDialogs
+                    message={`You want to delete post ${postName}. Are you sure?`}
+                    isOpen={isDialogOpen}
+                    setOpen={setIsDialogOpen}
+                    action={async () => {
+                        await dispatch(deletePost(postId!));
+                    }}
+                    navigate={"/dashboard/show-all-post"}
+                />
+            )}
+
             <Breadcrumbs
                 aria-label="breadcrumb"
                 style={{ marginBottom: "20px" }}
@@ -115,11 +132,17 @@ export default function ArchivePage() {
                         Dashboard
                     </Typography>
                 </Link>
+                <Link to={"/dashboard/show-all-post"}>
+                    <Typography variant="h6" color="text.primary">
+                        All Posts
+                    </Typography>
+                </Link>
                 <Typography variant="h6" color="text.primary">
                     Archive
                 </Typography>
             </Breadcrumbs>
             <Divider />
+
             {errorMessage && <OutlinedErrorAlert message={errorMessage} />}
 
             <TableContainer component={Paper}>
@@ -154,20 +177,6 @@ export default function ArchivePage() {
                     <TableBody>
                         {rows?.map((row) => (
                             <>
-                                <CustomizedDialogs
-                                    message={
-                                        "You want to archive post " +
-                                        row.name +
-                                        "Are you sure?"
-                                    }
-                                    isOpen={open}
-                                    setOpen={setOpen}
-                                    action={() => {
-                                        dispatch(archivePost(row.id));
-                                    }}
-                                    navigate={"/dashboard/archive"}
-                                />
-
                                 <StyledTableRow key={row.id}>
                                     <StyledTableCell component="th" scope="row">
                                         {row.category}
@@ -195,9 +204,7 @@ export default function ArchivePage() {
                                     <StyledTableCell align="right">
                                         {row.isActive === true ? "Yes" : "No"}
                                     </StyledTableCell>
-                                    <StyledTableCell align="right">
-                                        {row.isArhive === true ? "Yes" : "No"}
-                                    </StyledTableCell>
+
                                     <StyledTableCell align="right">
                                         <Button
                                             onClick={() => {
@@ -211,11 +218,28 @@ export default function ArchivePage() {
                                     </StyledTableCell>
                                     <StyledTableCell align="right">
                                         <Button
-                                            onClick={() => {
-                                                setOpen(true);
+                                            onClick={async () => {
+                                                await dispatch(
+                                                    repostPost(row.id)
+                                                );
+                                                navigate(
+                                                    "/dashboard/show-all-post"
+                                                );
                                             }}
                                         >
-                                            Archive
+                                            Post
+                                        </Button>
+                                    </StyledTableCell>
+                                    <StyledTableCell align="right">
+                                        <Button
+                                            onClick={() => {
+                                                console.log("delete");
+                                                setPostName(row.name);
+                                                setPostId(row.id);
+                                                setIsDialogOpen(true);
+                                            }}
+                                        >
+                                            Delete
                                         </Button>
                                     </StyledTableCell>
                                 </StyledTableRow>

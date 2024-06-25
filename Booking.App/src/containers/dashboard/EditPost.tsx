@@ -271,13 +271,13 @@ export function EditPost() {
                         Dashboard
                     </Typography>
                 </Link>
-                <Link to={"/dashboard/profile"}>
+                <Link to={"/dashboard/show-all-post"}>
                     <Typography variant="h6" color="text.primary">
-                        Profile
+                        All Posts
                     </Typography>
                 </Link>
                 <Typography variant="h6" color="text.primary">
-                    Add New Post
+                   Edit Post
                 </Typography>
             </Breadcrumbs>
             <Divider />
@@ -497,37 +497,50 @@ export function EditPost() {
                                         <Typography
                                             variant="subtitle1"
                                             color="text.primary"
-                                        > Image # {index + 1}</Typography>
+                                        >
+                                            {" "}
+                                            Image # {index + 1}
+                                        </Typography>
 
                                         <FileUploader
                                             images={images}
                                             setImages={setImages}
                                             maxImagesUpload={10}
                                             validator={AvatarValidator}
-                                            defaultImage={img}  
-                                            onChange={(isValid) => (formValid.current.images = isValid)}
+                                            defaultImage={img}
+                                            onChange={(isValid) =>
+                                                (formValid.current.images =
+                                                    isValid)
+                                            }
                                             onDelete={handleChange}
                                             setDeleteImages={setDeleteImg}
                                         />
                                     </Grid>
                                 ))}
-                                
 
-                                {Array.from({ length:  (10 - postImages.length)}).map((_, index)=> (
+                                {Array.from({
+                                    length: 10 - postImages.length,
+                                }).map((_, index) => (
                                     <Grid item xs={12} key={index}>
-
-<Typography
+                                        <Typography
                                             variant="subtitle1"
                                             color="text.primary"
-                                        > Image # {postImages.length + index + 1}</Typography>
+                                        >
+                                            {" "}
+                                            Image #{" "}
+                                            {postImages.length + index + 1}
+                                        </Typography>
 
                                         <FileUploader
                                             images={images}
                                             setImages={setImages}
                                             maxImagesUpload={10}
                                             validator={AvatarValidator}
-                                            defaultImage={IMG}  
-                                            onChange={(isValid) => (formValid.current.images = isValid)}
+                                            defaultImage={IMG}
+                                            onChange={(isValid) =>
+                                                (formValid.current.images =
+                                                    isValid)
+                                            }
                                             onDelete={handleChange}
                                             setDeleteImages={setDeleteImg}
                                         />

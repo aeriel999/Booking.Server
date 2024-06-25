@@ -1,14 +1,13 @@
 ﻿using Booking.Application.Common.Interfaces.Post;
-using Booking.Domain.Posts;
 using ErrorOr;
 using MediatR;
 
-namespace Booking.Application.Posts.ArchivePost;
+namespace Booking.Application.Posts.RepostPost;
 
-public class ArchivePostCommandHandler(IPostRepository postRepository)
-	: IRequestHandler<ArchivePostCommand, ErrorOr<Success>>
+public class RepostPostCommandHandler(IPostRepository postRepository) 
+	: IRequestHandler<RepostPostCommand, ErrorOr<Success>>
 {
-	public async Task<ErrorOr<Success>> Handle(ArchivePostCommand request, CancellationToken cancellationToken)
+	public async Task<ErrorOr<Success>> Handle(RepostPostCommand request, CancellationToken cancellationToken)
 	{
 		//Get Post
 		var post = await postRepository.GetPostById(request.PostId);
@@ -20,8 +19,8 @@ public class ArchivePostCommandHandler(IPostRepository postRepository)
 		if (post.UserId != request.UserId)
 			return Error.Validation("Access deny");
 
-		//Archived post
-		post.IsArhive = true;
+		//Repost post
+		post.IsArhive = false;
 
 		await postRepository.UpdatePostAsync(post);
 

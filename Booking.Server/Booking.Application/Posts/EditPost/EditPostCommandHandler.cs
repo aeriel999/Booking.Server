@@ -19,7 +19,7 @@ public class EditPostCommandHandler(
 	public async Task<ErrorOr<Post>> Handle(EditPostCommand request, CancellationToken cancellationToken)
 	{
 		//Get Post
-		var post = await postRepository.GetPostByIdAsync(request.Id);
+		var post = await postRepository.GetPostWithIncludesByIdAsync(request.Id);
 
 		if (post == null)
 			return Error.NotFound("Post was not found");
@@ -133,6 +133,8 @@ public class EditPostCommandHandler(
 		}
 
 		post.IsActive = false;
+
+		post.EditAt = DateTime.Now.ToUniversalTime();
 
 		await postRepository.UpdatePostAsync(post);
 
