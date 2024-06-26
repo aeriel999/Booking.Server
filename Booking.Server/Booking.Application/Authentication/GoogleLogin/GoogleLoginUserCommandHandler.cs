@@ -30,7 +30,7 @@ public class GoogleLoginUserCommandHandler(
 		var role = Roles.User;
 
 		//Check user for existing
-		var errorOrUser = await userRepository.FindByEmilAsync(validPayload.Email);
+		var errorOrUser = await userRepository.FindByEmailAsync(validPayload.Email);
  
 		var googleUser = await userRepository.FindByLoginAsync(info.LoginProvider, info.ProviderKey);
 

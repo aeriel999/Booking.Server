@@ -14,7 +14,7 @@ public class RegisterUserCommandHandler(IUserRepository userRepository, ISender 
 	public async Task<ErrorOr<User>> Handle(RegisterUserCommand request, CancellationToken cancellationToken)
 	{
 		//Check For exist
-		var errorOrUser = await userRepository.FindByEmilAsync(request.Email);
+		var errorOrUser = await userRepository.FindByEmailAsync(request.Email);
 
 		if (errorOrUser.IsSuccess())
 			return Error.Validation("User with such email already exists");

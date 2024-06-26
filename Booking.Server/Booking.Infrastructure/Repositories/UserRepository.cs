@@ -90,7 +90,7 @@ public class UserRepository(UserManager<User> userManager) : IUserRepository
         return Result.Updated;
     }
 
-    public async Task<ErrorOr<User>> FindByEmilAsync(string email)
+    public async Task<ErrorOr<User>> FindByEmailAsync(string email)
     {
         var user = await userManager.FindByEmailAsync(email);
 
@@ -176,5 +176,10 @@ public class UserRepository(UserManager<User> userManager) : IUserRepository
 	public async Task<IdentityResult> AddLoginAsync(User user, UserLoginInfo userLoginInfo)
 	{
 		return await userManager.AddLoginAsync(user, userLoginInfo);
+	}
+
+	public Task<ErrorOr<User>> EditUserAsync(User user)
+	{
+		throw new NotImplementedException();
 	}
 }

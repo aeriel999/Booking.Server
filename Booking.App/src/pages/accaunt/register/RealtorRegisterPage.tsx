@@ -27,6 +27,7 @@ import ErrorHandler from "../../../components/common/ErrorHandler.ts";
 import MuiPhoneNumber from "mui-phone-number";
 import { isValidPhoneNumber} from 'libphonenumber-js';
 import FileUploader from "../../../components/common/FileUploader.tsx";
+import IMG from "../../../assets/avatar-profile-icon-vector-illustration_276184-165.jpg";
 
 
 export interface IUploadedFile {
@@ -149,6 +150,7 @@ export default function RealtorRegisterPage() {
                                 validator={AvatarValidator}
                                 onChange={isValid => (formValid.current.avatar = isValid)}
                                 onDelete={ handleChange}
+                                defaultImages={[IMG]}
                             ></FileUploader>
 
                         </Grid>

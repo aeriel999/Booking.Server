@@ -24,23 +24,30 @@ public class AuthenticationMappingConfig : IRegister
 		.Map(dest => dest.BaseUrl, src => src.BaseUrl)
 		.Map(dest => dest, src => src.registerRequest);
 
+
 		config.NewConfig<(RegisterRealtorRequest registerRequest, string BaseUrl, byte[] Image),
 			RegisterRealtorCommand>()
 		.Map(dest => dest.BaseUrl, src => src.BaseUrl)
 		.Map(dest => dest.Avatar, src => src.Image)
 		.Map(dest => dest, src => src.registerRequest);
+
 	
 		config.NewConfig<ConfirmEmailRequest, ConfirmEmailCommand>();
 
+
 		config.NewConfig<LoginUserRequest, LoginUserQuery>();
+
 
 		config.NewConfig<(ForgotPasswordRequest registerRequest, string BaseUrl), ForgotPasswordQuery>()
 			.Map(dest => dest.BaseUrl, src => src.BaseUrl)
 			.Map(dest => dest, src => src.registerRequest);
 
+
 		config.NewConfig<ResetPssswordRequest, ResetPasswordCommand>();
 
+
 		config.NewConfig<ChangeEmailRequest, ChangeEmailCommand>();
+
 
 		config.NewConfig<(
 			ReconfirmEmailRequest reconfirmEmailRequest, string BaseUrl), SendConfirmationEmailCommand>()

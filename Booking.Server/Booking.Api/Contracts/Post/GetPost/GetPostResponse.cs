@@ -35,6 +35,6 @@ public record GetPostResponse
 
 	public required decimal Price { get; set; }
 
-	public required string ImagePost { get; set; }
+	public required string[] ImagePostList { get; set; }
 
 }

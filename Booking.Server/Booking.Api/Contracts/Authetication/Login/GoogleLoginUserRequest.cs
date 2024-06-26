@@ -1,7 +1,10 @@
-﻿namespace Booking.Api.Contracts.Authetication.Login;
+﻿using System.ComponentModel.DataAnnotations;
+
+namespace Booking.Api.Contracts.Authetication.Login;
 
 public record GoogleLoginUserRequest
 {
-    //ToDo length
-    public required string GoogleToken { get; set; }
+	[Required(ErrorMessage = "{PropertyName} must not be empty")]
+	[Length(256, 4096)]
+	public required string GoogleToken { get; set; }
 }

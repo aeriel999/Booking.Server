@@ -43,6 +43,7 @@ public record CreatePostRequest
 	[Range(0, 9999999999999999.99, ErrorMessage = "{PropertyName} must be between {1} and {2}")]
 	public decimal Price { get; init; }
 
+
 	public string? Description { get; init; }
 	
 

@@ -86,7 +86,7 @@ export interface IPostInformation {
     userId: string;
     isArchive: boolean;
     price: number;
-    imagePost: string;
+    imagePostList: string[];
 }
 
 export interface IPostByRealtorId{
@@ -97,42 +97,43 @@ export interface IPostByRealtorId{
 
 
 export interface IFilteredRequest {
-    filter:IFilter|null,
-    pages:IFetchData
+    filter: IFilter | null;
+    pages: IFetchData;
 }
-export interface IFilter{
-    category:string | null,
-    country:string | null,
-    city:string | null,
-    realtor:string | null
+export interface IFilter {
+    category: string | null;
+    country: string | null;
+    city: string | null;
+    realtor: string | null;
 }
 export interface IFilteredRequestName {
-    filter:IFilter|null,
-    name:string | null
+    filter: IFilter | null;
+    name: string | null;
 }
-export  interface IPostState{
-    status: Status
-    post:IPostInformation | null,
-    posts: IPageOfPosts | null,
-    categories: ICategory[] | null,
-    countries: ICountry[] | null,
-    cities: ICity[] | null,
-    streets: IStreet[] | null,
-    typeOfRent: ITypeOfRent[] | null,
-    searchPost:string[]
+export interface IPostState {
+    status: Status;
+    post: IPostInformation | null;
+    posts: IPageOfPosts | null;
+    categories: ICategory[] | null;
+    countries: ICountry[] | null;
+    cities: ICity[] | null;
+    streets: IStreet[] | null;
+    typeOfRent: ITypeOfRent[] | null;
+    searchPost: string[];
     postInfoList: IPageOfPostsForRealtor | null;
     postsByRealtorId : IPostByRealtorId[] | null;
 }
-export interface IFetchData{
-    page:number,
-    sizeOfPage:number
+export interface IFetchData {
+    page: number;
+    sizeOfPage: number;
 }
 
-export interface IFetchDataByName{
-     filter:IFilter,
-     name:string,
-     pages:IFetchData
+export interface IFetchDataByName {
+    filter: IFilter;
+    name: string;
+    pages: IFetchData;
 }
+
 export interface IPostCreate {
     name: string;
     postTypeOfRentId: string;
@@ -171,4 +172,33 @@ export interface IPageOfPostsForRealtor {
     page: number;
     sizeOfPage: number;
     totalCount: number;
+}
+
+export interface IPostEdit {
+    id: string;
+    name: string;
+    postTypeOfRentId: string | null;
+    categoryId: string | null;
+    countryId: string | null;
+    cityId: string | null;
+    cityName: string | null;
+    streetId: string | null;
+    streetName: string | null;
+    buildingNumber: string | null;
+    numberOfRooms: number | null;
+    area: number | null;
+    price: number | null;
+    description: string | null;
+    images: File[] | null;
+    deleteImages: string[] | undefined;
+}
+
+export interface TablePaginationActionsProps {
+    count: number;
+    page: number;
+    rowsPerPage: number;
+    onPageChange: (
+        event: React.MouseEvent<HTMLButtonElement>,
+        newPage: number
+    ) => void;
 }

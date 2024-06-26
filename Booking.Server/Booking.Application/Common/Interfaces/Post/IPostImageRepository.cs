@@ -6,5 +6,9 @@ public interface IPostImageRepository
 {
 	Task CraetePostImageAsync(PostImage image);
 
+
 	Task SavePostImageAsync();
+
+
+	Task DeletePostImageByNameAsync(string imageName);
 }
