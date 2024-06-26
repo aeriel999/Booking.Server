@@ -2,7 +2,7 @@ import { Routes, Route } from "react-router-dom";
 import NotFound from "./pages/errors/NotFound.tsx";
 import RealtorRegisterPage from "./pages/accaunt/register/RealtorRegisterPage.tsx";
 import SignInPage from "./pages/accaunt/login/SignIn.tsx";
-import { useAppSelector } from "./hooks/redux";
+import { useAppSelector } from "./hooks/redux/index.ts";
 import DashboardLayout from "./containers/dashboard/layouts/_DashboardLayot.tsx";
 import ChangeEmailPage from "./pages/accaunt/change-email/ChangeEmailPage.tsx";
 import UserRegisterPage from "./pages/accaunt/register/UserRegisterPage.tsx";
@@ -26,8 +26,9 @@ import AllPostList from "./containers/dashboard/AllPostList.tsx";
 import { EditPost } from "./containers/dashboard/EditPost.tsx";
 import PostPage from "./containers/client/PostPage.tsx";
 import ArchivePage from "./containers/dashboard/ArchivePage.tsx";
+import { ReviewsPage } from "./containers/dashboard/ReviewsPage.tsx";
 
-const App: React.FC = () => {
+export const App: React.FC = () => {
     const { isLogin, user } = useAppSelector((state) => state.account);
 
     const role = () => {
@@ -88,6 +89,11 @@ const App: React.FC = () => {
                             <Route
                                 path="/dashboard/archive"
                                 element={<ArchivePage />}
+                            />
+
+                            <Route
+                                path="/dashboard/reviews"
+                                element={<ReviewsPage />}
                             />
                             <Route path="/dashboard/*" element={<NotFound />} />
                         </Route>
@@ -166,5 +172,3 @@ const App: React.FC = () => {
         </Routes>
     );
 };
-
-export default App;

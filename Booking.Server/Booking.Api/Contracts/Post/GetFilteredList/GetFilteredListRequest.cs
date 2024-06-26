@@ -9,3 +9,4 @@ public record GetFilteredListRequest
 
     public Guid? realtor { get; set; }
 }
+//ToDo Props start with capital letter

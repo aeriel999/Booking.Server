@@ -307,6 +307,7 @@ export default function DashboardLayout() {
                         <ListItemText primary={"Profile"} />
                     </ListItemButton>
                 </ListItem>
+
                 <Divider />
 
                 <List>
@@ -426,7 +427,23 @@ export default function DashboardLayout() {
                         </List>
                     </Collapse>
                 </List>
+                <Divider />
+                <ListItem disablePadding>
+                    <ListItemButton
+                        onClick={() => {
+                            navigate("/dashboard/reviews");
+                        }}
+                    >
+                        <ListItemIcon>
+                            <AccountBoxTwoToneIcon />
+                        </ListItemIcon>
+                        <ListItemText primary={"Reviews"} />
+                    </ListItemButton>
+                </ListItem>
+
+                <Divider />
             </Drawer>
+
             <Main open={open}>
                 <DrawerHeader />
                 <Outlet />

@@ -135,7 +135,7 @@ export default function RealtorProfileEditPage() {
                                 images={images}
                                 setImages={setImages}
                                 maxImagesUpload={1}
-                                defaultImages={[avatarUrl ?? IMG]}
+                                defaultImage={avatarUrl ?? IMG}
                                 validator={AvatarValidator}
                                 onChange={(isValid) =>
                                     (formValid.current.avatar = isValid)

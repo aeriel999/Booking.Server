@@ -20,11 +20,14 @@ public class UserMappingConfig : IRegister
 		.Map(dest => dest.Avatar, src => src.Avatar)
 		.Map(dest => dest, src => src.editRealtorPrifileInfo);
 
+
 		config.NewConfig<EditRealtorPrifileInfoCommandResult, EditRealtorPrifileInfoResponse>();
+
 
 		config.NewConfig<(ChangePasswordRequest changePassword, string UserId),	ChangePasswordCommand>()
 		.Map(dest => dest.UserId, src => src.UserId)
 		.Map(dest => dest, src => src.changePassword);
+
 
 		config.NewConfig<User, GetRealtorResponse>()
 			.Map(dest => dest.Id, src => src.Id)

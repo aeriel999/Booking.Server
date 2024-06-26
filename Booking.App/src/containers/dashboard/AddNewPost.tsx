@@ -224,9 +224,9 @@ export function AddNewPost() {
                         Dashboard
                     </Typography>
                 </Link>
-                <Link to={"/dashboard/profile"}>
+                <Link to={"/dashboard/show-all-post"}>
                     <Typography variant="h6" color="text.primary">
-                        Profile
+                        All Posts
                     </Typography>
                 </Link>
                 <Typography variant="h6" color="text.primary">
