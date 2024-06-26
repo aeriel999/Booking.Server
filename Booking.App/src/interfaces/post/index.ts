@@ -34,6 +34,20 @@ export interface ITypeOfRent {
     id: string;
     name: string;
 }
+export interface IFilteredRequest {
+    filter:IFilter|null,
+    pages:IFetchData
+}
+export interface IFilter{
+    category:string | null,
+    country:string | null,
+    city:string | null,
+    realtor:string | null
+}
+export interface IFilteredRequestName {
+    filter:IFilter|null,
+    name:string | null
+}
 
 export interface IPageOfPosts {
     items: {
