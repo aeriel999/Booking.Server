@@ -4,9 +4,9 @@ using ErrorOr;
 using MediatR;
 
 namespace Booking.Application.Users.Realtor.GetRealtorsList;
-public class GetRealtorsListQueryHandler(IUserRepository repository) : IRequestHandler<GetRealtorsListQuery, ErrorOr<List<User>>>
+public class GetRealtorsListQueryHandler(IUserRepository repository) : IRequestHandler<GetRealtorsListQuery, ErrorOr<List<Booking.Domain.Users.User>>>
 {
-    public async Task<ErrorOr<List<User>>> Handle(GetRealtorsListQuery request, CancellationToken cancellationToken)
+    public async Task<ErrorOr<List<Booking.Domain.Users.User>>> Handle(GetRealtorsListQuery request, CancellationToken cancellationToken)
     {
         var response = await repository.GetRealtorsAsync();
 

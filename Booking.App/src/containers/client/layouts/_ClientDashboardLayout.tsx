@@ -18,19 +18,24 @@ import ListItemIcon from '@mui/material/ListItemIcon';
 import ListItemText from '@mui/material/ListItemText';
 import InboxIcon from '@mui/icons-material/MoveToInbox';
 import MailIcon from '@mui/icons-material/Mail';
-import {Outlet, useNavigate} from "react-router-dom";
-import {useAppDispatch, useAppSelector} from "../../../hooks/redux";
+import { Outlet, useNavigate } from "react-router-dom";
+import { useAppDispatch, useAppSelector } from "../../../hooks/redux";
 import Avatar from "@mui/material/Avatar";
-import {useEffect, useState} from "react";
-import {APP_ENV} from "../../../env";
+import { useEffect, useState } from "react";
+import { APP_ENV } from "../../../env";
 import Button from "@mui/material/Button";
-import {logout} from "../../../store/accounts/account.slice.ts";
+import { logout } from "../../../store/accounts/account.slice.ts";
 import LogoutIcon from '@mui/icons-material/Logout';
-
-import { joinForPostListening,startListening} from "../../../SignalR";
-import {getListOfChatRooms} from "../../../store/chat/chat.action.ts";
-import {unwrapResult} from "@reduxjs/toolkit";
-
+import StarBorder from '@mui/icons-material/StarBorder';
+import { joinForPostListening, startListening } from "../../../SignalR";
+import { getListOfChatRooms } from "../../../store/chat/chat.action.ts";
+import { unwrapResult } from "@reduxjs/toolkit";
+import { Collapse } from '@mui/material';
+import ExpandLess from '@mui/icons-material/ExpandLess';
+import ExpandMore from '@mui/icons-material/ExpandMore';
+import { getRealtorsByUserFeedbacks } from '../../../store/users/user.action.ts';
+import { useSelector } from 'react-redux';
+import { RootState } from '../../../store/index.ts';
 
 const drawerWidth = 240;
 
@@ -90,8 +95,12 @@ export interface IActive {
 export default function ClientDashboardLayout() {
     const theme = useTheme();
     const [open, setOpen] = React.useState(false);
-    const {user} = useAppSelector(state => state.account);
+    const { user } = useAppSelector(state => state.account);
+    const realtors = useSelector((state: RootState) => state.user.realtorsByUserFeedbacks);
     const [avatarUrl, setAvatarUrl] = useState<string>("#");
+    const [isOpenFeedbacks, setIsOpenFeedbacks] = useState(false);
+    const [isOpenMessages, setIsOpenMessages] = useState(false);
+    const [isMouseEnter, setIsMouseEnter] = useState(false);
     const dispatch = useAppDispatch();
     const navigate = useNavigate();
     // const [isActive, setIsActive] = useState<IActive | undefined>();
@@ -99,15 +108,13 @@ export default function ClientDashboardLayout() {
 
 
     useEffect(() => {
-        if(user)
-        {
-            setAvatarUrl( APP_ENV.BASE_URL + user?.avatar);
-            const getRooms = async ()=>{
+        if (user) {
+            setAvatarUrl(APP_ENV.BASE_URL + user?.avatar);
+            const getRooms = async () => {
                 try {
                     const response = await dispatch(getListOfChatRooms());
                     unwrapResult(response);
-                }catch (e)
-                {
+                } catch (e) {
                     console.log(e)
                 }
             }
@@ -120,9 +127,14 @@ export default function ClientDashboardLayout() {
 
     useEffect(() => {
         startListening();
+        getRealtors();
     }, []);
-
-
+    useEffect(() => {
+        console.log("Realtors - " + realtors);
+    }, [realtors]);
+    const getRealtors = async () => {
+        await dispatch(getRealtorsByUserFeedbacks());
+    }
     const handleDrawerOpen = () => {
         setOpen(true);
     };
@@ -131,24 +143,24 @@ export default function ClientDashboardLayout() {
         setOpen(false);
     };
 
-    const addConnection = async () =>{
+    const addConnection = async () => {
         console.log("Connect ///////////////")
         await joinForPostListening("5c57dae8-39f3-41da-9bc8-521221e4bf44");
     }
 
-    const  disconnect = async () =>{
+    const disconnect = async () => {
 
 
         console.log("Disconnect///////")
 
-      //  await leave("5c57dae8-39f3-41da-9bc8-521221e4bf44");
+        //  await leave("5c57dae8-39f3-41da-9bc8-521221e4bf44");
     }
 
     return (
-        <Box sx={{ display: 'flex'}}>
+        <Box sx={{ display: 'flex' }}>
             <CssBaseline />
             <AppBar position="fixed" open={open}>
-                <Toolbar sx={{backgroundColor: "#BD8BE7"}}>
+                <Toolbar sx={{ backgroundColor: "#BD8BE7" }}>
                     <IconButton
                         color="inherit"
                         aria-label="open drawer"
@@ -161,16 +173,16 @@ export default function ClientDashboardLayout() {
 
                     {avatarUrl && <Avatar alt={user?.email} src={avatarUrl} />}
 
-                    <Typography variant="h6" noWrap component="div" style={{marginLeft: "25px", marginRight: "25px"}}>
+                    <Typography onMouseEnter={() => setIsMouseEnter(true)} onMouseLeave={() => setIsMouseEnter(false)} onClick={() => navigate("/profile")} variant="h6" noWrap component="div" style={{ marginLeft: "25px", marginRight: "25px", textDecoration: isMouseEnter ? "underline" : "none", cursor: isMouseEnter ? "pointer" : "default" }}>
                         {user?.email}
                     </Typography>
 
                     <Button
-                        onClick={()=>{
+                        onClick={() => {
                             dispatch(logout());
-                            navigate("*");
+                            navigate("/");
                         }}
-                        startIcon={<LogoutIcon/>}
+                        startIcon={<LogoutIcon />}
                         color={"inherit"}
 
                     >logout</Button>
@@ -178,9 +190,7 @@ export default function ClientDashboardLayout() {
 
                     {/*<DotBadge isActive={false}/>*/}
 
-                    <Button onClick={addConnection} color={"inherit"}>Add connection</Button>
-                    <Button onClick={disconnect} color={"inherit"}>End connection</Button>
-                    {/*<Button onClick={navigate("/posts")} color={"inherit"}>Posts</Button>*/}
+                    <Button onClick={() => navigate("/")} color={"inherit"}>Posts</Button>
 
                 </Toolbar>
             </AppBar>
@@ -217,21 +227,50 @@ export default function ClientDashboardLayout() {
                 </List>
                 <Divider />
                 <List>
-                    {['All mail', 'Trash', 'Spam'].map((text, index) => (
-                        <ListItem key={text} disablePadding>
-                            <ListItemButton>
-                                <ListItemIcon>
-                                    {index % 2 === 0 ? <InboxIcon /> : <MailIcon />}
-                                </ListItemIcon>
-                                <ListItemText primary={text} />
-                            </ListItemButton>
-                        </ListItem>
-                    ))}
+                    <ListItem key="feedbacks" disablePadding>
+                        <ListItemButton onClick={() => setIsOpenFeedbacks(!isOpenFeedbacks)}>
+                            <ListItemIcon>
+                                <StarBorder />
+                            </ListItemIcon>
+                            <ListItemText primary={"Feedbacks"} />
+                            {isOpenFeedbacks ? <ExpandLess /> : <ExpandMore />}
+                        </ListItemButton>
+                    </ListItem>
+                    <Collapse in={isOpenFeedbacks} timeout="auto" unmountOnExit>
+                        {realtors ? realtors.$values.map((item) => (
+                            <List component="div" disablePadding>
+                                <ListItemButton sx={{ pl: 4 }} onClick={() => navigate(`realtor/${item.id}`)}>
+                                    <ListItemIcon>
+                                        {APP_ENV.BASE_URL + "/images/avatars/" + item.avatar && <Avatar alt={item.realtor} src={APP_ENV.BASE_URL + "/images/avatars/" + item.avatar} />}
+                                    </ListItemIcon>
+                                    <ListItemText primary={item.realtor} />
+                                </ListItemButton>
+                            </List>
+                        )) : ""}
+
+
+                    </Collapse>
+                </List>
+                <List>
+                    <ListItem key="messages" disablePadding>
+                        <ListItemButton onClick={() => setIsOpenMessages(!isOpenMessages)}>
+                            <ListItemIcon>
+                                <MailIcon />
+                            </ListItemIcon>
+                            <ListItemText primary={"Messages"} />
+                            {isOpenMessages ? <ExpandLess /> : <ExpandMore />}
+                        </ListItemButton>
+                    </ListItem>
+                    <Collapse in={isOpenMessages} timeout="auto" unmountOnExit>
+
+
+
+                    </Collapse>
                 </List>
             </Drawer>
             <Main open={open}>
                 <DrawerHeader />
-                <Outlet/>
+                <Outlet />
             </Main>
         </Box>
     );

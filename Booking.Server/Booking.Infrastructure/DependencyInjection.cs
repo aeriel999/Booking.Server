@@ -86,6 +86,7 @@ public static class DependencyInjection
         services.AddScoped<IChatRoomRepository, ChatRoomRepository>();
 		services.AddScoped<IUserMessageRepository, UserMessageRepository>();
 		services.AddScoped<IPostTypeOfRentRepository, PostTypeOfRentRepository>();
+		services.AddScoped<IUserFeedbackRepository, UserFeedbackRepository>();
 		
 		return services;
 	}

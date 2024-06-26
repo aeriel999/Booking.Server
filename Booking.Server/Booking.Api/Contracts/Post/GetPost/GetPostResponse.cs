@@ -29,8 +29,9 @@ public record GetPostResponse
 	public int? Area { get; set; }
 
 	public required string User { get; set; }
+    public required Guid UserId { get; set; }
 
-	public required bool IsArhive { get; set; }
+    public required bool IsArhive { get; set; }
 
 	public required decimal Price { get; set; }
 

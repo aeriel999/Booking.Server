@@ -7,4 +7,4 @@ public record ChangePasswordCommand(
     string CurrentPassword,
     string NewPassword,
     string ConfirmNewPassword,
-    string UserId) : IRequest<ErrorOr<User>>;
+    string UserId) : IRequest<ErrorOr<Booking.Domain.Users.User>>;
