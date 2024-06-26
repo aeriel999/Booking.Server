@@ -6,7 +6,7 @@ namespace Booking.Application.Common.Interfaces.Users;
 
 public interface IUserRepository
 {
-	Task<List<User>> GetRealtorsAsync();
+    Task<List<User>> GetRealtorsAsync();
 
     Task<ErrorOr<User>> FindByEmilAsync(string email);
 
@@ -26,13 +26,16 @@ public interface IUserRepository
 
 	Task<ErrorOr<User>> GetUserAsync(string userId);
 
-	Task<ErrorOr<User>> EditUserAsync(User user);
+	Task<ErrorOr<Updated>> EditUserAsync(Guid id, string? email);
 
-	Task<ErrorOr<User>> SaveUserAsync(User user);
+
+    Task<ErrorOr<User>> SaveUserAsync(User user);
 
 	Task<string> GetUserNameByUserAsync(User user);
 
 	Task<User?> FindByLoginAsync(string loginProvider, string providerKey);
 
 	Task<IdentityResult> AddLoginAsync(User user, UserLoginInfo userLoginInfo);
+
+	Task<ErrorOr<User>> ChangeRatingForRealtorAsync(Guid id, float rating);
 }

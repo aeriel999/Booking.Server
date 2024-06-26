@@ -1,45 +1,44 @@
-import {useAppDispatch, useAppSelector} from "../../hooks/redux";
-import {useEffect, useRef, useState} from "react";
-import {APP_ENV} from "../../env";
+import { useAppDispatch, useAppSelector } from "../../hooks/redux";
+import { useEffect, useRef, useState } from "react";
+import { APP_ENV } from "../../env";
 import Box from "@mui/material/Box";
 import Grid from "@mui/material/Grid";
 import InputGroup from "../../components/common/InputGroup.tsx";
-import {AvatarValidator, EmailValidator, FirstNameValidator, LastNameValidator} from "../../validations/account";
+import { AvatarValidator, EmailValidator, FirstNameValidator, LastNameValidator } from "../../validations/account";
 import MuiPhoneNumber from "mui-phone-number";
-import {isValidPhoneNumber} from "libphonenumber-js";
+import { isValidPhoneNumber } from "libphonenumber-js";
 import FileUploader from "../../components/common/FileUploader.tsx";
 import Button from "@mui/material/Button";
 import * as React from "react";
-import {IEditRealtorInfo} from "../../interfaces/account";
-import {editProfile} from "../../store/accounts/account.actions.ts";
-import {unwrapResult} from "@reduxjs/toolkit";
+import { IEditRealtorInfo } from "../../interfaces/account";
+import { editProfile } from "../../store/accounts/account.actions.ts";
+import { unwrapResult } from "@reduxjs/toolkit";
 import ErrorHandler from "../../components/common/ErrorHandler.ts";
-import {Link, useNavigate} from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import OutlinedErrorAlert from "../../components/common/ErrorAlert.tsx";
-import {Breadcrumbs} from "@mui/material";
+import { Breadcrumbs } from "@mui/material";
 import Typography from "@mui/material/Typography";
 import CustomizedDialogs from "../../components/common/Dialog.tsx";
 import Divider from "@mui/material/Divider";
 
-export  default function RealtorProfileEditPage(){
-    const {user} = useAppSelector(state => state.account);
+export default function RealtorProfileEditPage() {
+    const { user } = useAppSelector(state => state.account);
     const dispatch = useAppDispatch();
     const [avatarUrl, setAvatarUrl] = useState<string>();
-    const [errorMessage, setErrorMessage] = useState<string | undefined >(undefined);
+    const [errorMessage, setErrorMessage] = useState<string | undefined>(undefined);
     const [isFormValid, setIsFormValid] = useState(false);
-    const formValid = useRef({ email: true, firstName: true, lastName: true, avatar: true, phoneNumber: true});
+    const formValid = useRef({ email: true, firstName: true, lastName: true, avatar: true, phoneNumber: true });
     const [isPhoneValid, setIsPhoneValid] = useState(true);
     const [images, setImages] = useState<File[]>([])
-    const [phone, setPhone] = useState<string>( user?.phoneNumber ?? "" )
+    const [phone, setPhone] = useState<string>(user?.phoneNumber ?? "")
     const [open, setOpen] = useState<boolean>(false)
     const message = "Please note that your email will be changed once you confirm the update. " +
         "We'll send a confirmation link to your new email address shortly. Thank you for your patience."
     const navigate = useNavigate();
 
     useEffect(() => {
-        if(user)
-        {
-            setAvatarUrl( APP_ENV.BASE_URL + user?.avatar);
+        if (user) {
+            setAvatarUrl(APP_ENV.BASE_URL + user?.avatar);
         }
 
     }, [user]);
@@ -53,10 +52,10 @@ export  default function RealtorProfileEditPage(){
         const data = new FormData(event.currentTarget);
 
         if (Object.values(formValid.current).every(isValid => isValid)) {
-            const model : IEditRealtorInfo = {
+            const model: IEditRealtorInfo = {
                 email: data.get("email") as string,
-                firstName: data.get("firstName")  as string,
-                lastName: data.get("lastName")  as string,
+                firstName: data.get("firstName") as string,
+                lastName: data.get("lastName") as string,
                 phoneNumber: phone,
                 avatar: images[0]
             }
@@ -64,25 +63,24 @@ export  default function RealtorProfileEditPage(){
                 const response = await dispatch(editProfile(model));
                 unwrapResult(response);
 
-                const {isEmailChanged} = response.payload;
+                const { isEmailChanged } = response.payload;
 
-               if(isEmailChanged)
-               {
-                   setOpen(isEmailChanged)
-               }else{
-                   navigate("/dashboard/profile")
-               }
-            } catch (error ) {
+                if (isEmailChanged) {
+                    setOpen(isEmailChanged)
+                } else {
+                    navigate("/dashboard/profile")
+                }
+            } catch (error) {
                 setErrorMessage(ErrorHandler(error));
             }
         }
     };
 
-    return(
+    return (
         <>
-           < CustomizedDialogs  message={message} isOpen={open} setOpen={setOpen} navigate={"/dashboard/profile"}/>
+            < CustomizedDialogs message={message} isOpen={open} setOpen={setOpen} navigate={"/dashboard/profile"} />
 
-            <Breadcrumbs aria-label="breadcrumb" style={{marginBottom: "20px"}}>
+            <Breadcrumbs aria-label="breadcrumb" style={{ marginBottom: "20px" }}>
                 <Link to={"/dashboard/profile"}>
                     <Typography variant="h6" color="text.primary">Dashboard</Typography>
                 </Link>
@@ -111,14 +109,14 @@ export  default function RealtorProfileEditPage(){
                     </Grid>
                     <Grid item container spacing={4} xs={6}>
                         <Grid item xs={12}>
-                        <InputGroup
-                            label="First name"
-                            field="firstName"
-                            validator={FirstNameValidator}
-                            onChange={isValid => (formValid.current.firstName = isValid)}
-                            defaultValue={user?.firstName}
-                        />
-                    </Grid>
+                            <InputGroup
+                                label="First name"
+                                field="firstName"
+                                validator={FirstNameValidator}
+                                onChange={isValid => (formValid.current.firstName = isValid)}
+                                defaultValue={user?.firstName}
+                            />
+                        </Grid>
                         <Grid item xs={12}>
                             <InputGroup
                                 label="Last name"
@@ -130,13 +128,14 @@ export  default function RealtorProfileEditPage(){
                         </Grid>
                         <Grid item xs={12}>
                             <MuiPhoneNumber defaultCountry={'ua'}
-                                            value={phone}
-                                            onChange={(e) => {
-                                                formValid.current.phoneNumber = isValidPhoneNumber(e as string)
-                                                setIsPhoneValid(isValidPhoneNumber(e as string))
-                                                setPhone(e as string)
-                                                handleChange();}}
-                                            error={!isPhoneValid}
+                                value={phone}
+                                onChange={(e) => {
+                                    formValid.current.phoneNumber = isValidPhoneNumber(e as string)
+                                    setIsPhoneValid(isValidPhoneNumber(e as string))
+                                    setPhone(e as string)
+                                    handleChange();
+                                }}
+                                error={!isPhoneValid}
                             />
                         </Grid>
                         <Grid item xs={12}>
@@ -152,32 +151,32 @@ export  default function RealtorProfileEditPage(){
                     </Grid>
                 </Grid>
 
-               <Grid container spacing={1} sx={{ mt: 5 }}>
-                   <Grid item xs={6}>
-                       <Button
-                           type="submit"
-                           fullWidth
-                           variant="contained"
-                           sx={{ mt: 3, mb: 2 }}
-                           disabled={!isFormValid}
-                       >
-                           Save
-                       </Button>
-                   </Grid>
-                   <Grid item xs={6}>
-                     <Link  to={"/dashboard/profile"}>
-                         <Button
-                             type="button"
-                             fullWidth
-                             variant="contained"
-                             sx={{ mt: 3, mb: 2 }}
-                             color="error"
-                         >
-                             Cancel
-                         </Button>
-                     </Link>
-                   </Grid>
-               </Grid>
+                <Grid container spacing={1} sx={{ mt: 5 }}>
+                    <Grid item xs={6}>
+                        <Button
+                            type="submit"
+                            fullWidth
+                            variant="contained"
+                            sx={{ mt: 3, mb: 2 }}
+                            disabled={!isFormValid}
+                        >
+                            Save
+                        </Button>
+                    </Grid>
+                    <Grid item xs={6}>
+                        <Link to={"/dashboard/profile"}>
+                            <Button
+                                type="button"
+                                fullWidth
+                                variant="contained"
+                                sx={{ mt: 3, mb: 2 }}
+                                color="error"
+                            >
+                                Cancel
+                            </Button>
+                        </Link>
+                    </Grid>
+                </Grid>
 
             </Box>
         </>

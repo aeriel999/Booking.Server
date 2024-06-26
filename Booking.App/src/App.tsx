@@ -26,11 +26,13 @@ import ChatRoom from "./components/chat/ChatRoom.tsx";
 import AllPostList from "./containers/dashboard/AllPostList.tsx";
 import { EditPost } from "./containers/dashboard/EditPost.tsx";
 import PostPage from "./containers/client/PostPage.tsx";
+import RealtorPage from "./containers/client/RealtorPage.tsx";
+import { EditUserEpailPage } from "./containers/client/EditUserEmailPage.tsx";
 // import {  MessageRight } from "./components/chat/Message.tsx";
 //import { MessageLeft } from "./components/chat/Message.tsx";
 
 const App: React.FC = () => {
-     
+
     const { isLogin, user } = useAppSelector((state) => state.account);
 
     const role = () => {
@@ -75,35 +77,50 @@ const App: React.FC = () => {
                                 element={<AddNewPost />}
                             />
 
-                                <Route
+                            <Route
                                 path="/dashboard/show-all-post"
                                 element={<AllPostList />}
                             />
-                              <Route
+                            <Route
                                 path="/dashboard/edit-post/:postId"
                                 element={<EditPost />}
                             />
-                             <Route path="chat-room/:roomId" element={<ChatRoom />} />
+                            <Route path="chat-room/:roomId" element={<ChatRoom />} />
                         </Route>
                     )}
 
                     {role() === "user" && (
                         <Route path="/" element={<ClientDashboardLayout />}>
-                            <Route index element={<UserProfilePage />} />
+                            <Route
+                                index element={<ListOfPostPage />}
+                            />
+                            <Route
+                                path="post/:postId" element={<PostPage />}
+                            />
+                            <Route
+                                path="post/:postId/realtor/:realtorId"
+                                element={<RealtorPage />}
+                            />
+                            <Route
+                                path="realtor/:realtorId"
+                                element={<RealtorPage />}
+                            />
                             <Route
                                 path="/profile"
                                 element={<UserProfilePage />}
                             />
-                            <Route path="/posts" element={<ListOfPostPage />}>
-
-                            </Route>
-                            <Route path={"/posts/:id"} element={<PostPage/>}></Route>
-                            {/*<Route path="/dashboard/chat/:postId" element={<ChatRoom/>} />*/}
+                            <Route
+                                path="/profile/edit"
+                                element={<EditUserEpailPage />}
+                            />
+                            <Route
+                                path="*"
+                                element={<NotFound />} />
                         </Route>
                     )}
 
-                    {/* <Route path="test" element={<MessageLeft />} /> */}
-                   
+
+
                 </>
             )}
             <Route />
@@ -112,52 +129,55 @@ const App: React.FC = () => {
             {/*    : <Route path="/test" element={<ChatRoom messages={messages} sendMSG={sendMSG} />} />}*/}
             {/* <Route path="*" element={<SignInPage />} /> */}
             <Route path="/" element={<AnonymousDashboardLayout />}>
-                <Route index element={<ListOfPostPage />}/>
+                <Route index element={<ListOfPostPage />} />
+                <Route path="post/:postId" element={<PostPage />} />
+                <Route path="post/:postId/realtor/:realtorId" element={<RealtorPage />} />
+                <Route path="dashboard/profile" element={<SignInPage />} />
+                <Route path="dashboard/profile/edit" element={<SignInPage />} />
+                <Route
+                    path="dashboard/profile/change-password"
+                    element={<SignInPage />}
+                />
+                <Route
+                    path="authentication/user-register"
+                    element={<UserRegisterPage />}
+                />
+                <Route
+                    path="authentication/register-information/:email"
+                    element={<RegisterInformationPage />}
+                />
+                <Route
+                    path="authentication/confirm-email/:userId/:token"
+                    element={<ConfirmEmailPage />}
+                />
+                <Route
+                    path="authentication/realtor-register"
+                    element={<RealtorRegisterPage />}
+                />
+                <Route path="authentication/login" element={<SignInPage />} />
+                <Route
+                    path="authentication/forgot-password"
+                    element={<ForgotPasswordPage />}
+                />
+                <Route
+                    path="authentication/forgot-password-information/:email"
+                    element={<ForgotPasswordInformationPage />}
+                />
+                <Route
+                    path="authentication/reset-password/:email/:token"
+                    element={<ResetPasswordPage />}
+                />
+                <Route
+                    path="authentication/change-email/:userId/:email/:token"
+                    element={<ChangeEmailPage />}
+                />
+                <Route
+                    path="authentication/reconfirm-email"
+                    element={<ReConfirmEmailPage />}
+                />
+                <Route path="*" element={<NotFound />} />
             </Route>
-            <Route path="/dashboard/profile" element={<SignInPage />} />
-            <Route path="/dashboard/profile/edit" element={<SignInPage />} />
-            <Route
-                path="/dashboard/profile/change-password"
-                element={<SignInPage />}
-            />
-            // <Route path="*" element={<NotFound />} />
-            <Route
-                path="/authentication/user-register"
-                element={<UserRegisterPage />}
-            />
-            <Route
-                path="/authentication/register-information/:email"
-                element={<RegisterInformationPage />}
-            />
-            <Route
-                path="/authentication/confirm-email/:userId/:token"
-                element={<ConfirmEmailPage />}
-            />
-            <Route
-                path="/authentication/realtor-register"
-                element={<RealtorRegisterPage />}
-            />
-            <Route path="/authentication/login" element={<SignInPage />} />
-            <Route
-                path="/authentication/forgot-password"
-                element={<ForgotPasswordPage />}
-            />
-            <Route
-                path="/authentication/forgot-password-information/:email"
-                element={<ForgotPasswordInformationPage />}
-            />
-            <Route
-                path="/authentication/reset-password/:email/:token"
-                element={<ResetPasswordPage />}
-            />
-            <Route
-                path="/authentication/change-email/:userId/:email/:token"
-                element={<ChangeEmailPage />}
-            />
-            <Route
-                path="/authentication/reconfirm-email"
-                element={<ReConfirmEmailPage />}
-            />
+
         </Routes>
     );
 };

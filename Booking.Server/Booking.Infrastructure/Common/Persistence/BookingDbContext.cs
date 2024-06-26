@@ -30,8 +30,9 @@ public class BookingDbContext : IdentityDbContext<User, IdentityRole<Guid>, Guid
 	public DbSet<UserMessage> UserMessages { get; set; }
 
 	public DbSet<PostTypeOfRent> PostTypeOfRent { get; set; }
+    public DbSet<Feedback> Feedbacks { get; set; }
 
-	protected override void OnModelCreating(ModelBuilder builder)
+    protected override void OnModelCreating(ModelBuilder builder)
 	{
 		base.OnModelCreating(builder);
 
@@ -94,5 +95,18 @@ public class BookingDbContext : IdentityDbContext<User, IdentityRole<Guid>, Guid
 			.HasMany(u => u.Posts)
 			.WithOne(p => p.PostTypeOfRent)
 			.OnDelete(DeleteBehavior.ClientNoAction);
-	}
+
+		builder.Entity<User>()
+			.HasMany(u => u.ReceivedFeedbacks)
+			.WithOne(u => u.Realtor)
+			.HasForeignKey(u => u.RealtorId)
+            .OnDelete(DeleteBehavior.ClientNoAction);
+
+        builder.Entity<User>()
+            .HasMany(u => u.SentFeedbacks)
+            .WithOne(u => u.Client)
+            .HasForeignKey(u => u.ClientId)
+            .OnDelete(DeleteBehavior.ClientNoAction);
+
+    }
 }

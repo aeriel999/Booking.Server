@@ -7,7 +7,7 @@ import {
     getListOfCategories,
     getListOfCitiesByCountryId,
     getListOfCountries, getListOfPosts, getListOfPostsByName, getListOfPostsName,
-    getListOfStreetsByCityId, getListPostsForRealtor, getPostById, getTypesOfRentList
+    getListOfStreetsByCityId, getListPostsForRealtor, getPostById, getPostListByRealtorId, getTypesOfRentList
 } from "./post.actions.ts";
 
 function isRejectedAction(action: AnyAction): action is RejectedAction {
@@ -25,6 +25,7 @@ const initialState: IPostState = {
     typeOfRent: null,
     searchPost:[],
     postInfoList: null,
+    postsByRealtorId : null
 };
 
 export const postSlice = createSlice({
@@ -80,6 +81,13 @@ export const postSlice = createSlice({
                 state.status = Status.SUCCESS;
             })
             .addCase(getListOfCategories.pending, (state) => {
+                state.status = Status.LOADING;
+            })
+            .addCase(getPostListByRealtorId.fulfilled, (state, action) => {
+                state.postsByRealtorId = action.payload.$values;
+                state.status = Status.SUCCESS;
+            })
+            .addCase(getPostListByRealtorId.pending, (state) => {
                 state.status = Status.LOADING;
             })
             .addCase(getListOfCountries.fulfilled, (state, action) => {

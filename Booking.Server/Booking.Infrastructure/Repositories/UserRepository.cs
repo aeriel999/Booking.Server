@@ -3,12 +3,14 @@ using Booking.Domain.Constants;
 using Booking.Domain.Users;
 using ErrorOr;
 using Microsoft.AspNetCore.Identity;
+using Org.BouncyCastle.Asn1.Ocsp;
+//using static System.Runtime.InteropServices.JavaScript.JSType;
 
 namespace Booking.Infrastructure.Repositories;
 
 public class UserRepository(UserManager<User> userManager) : IUserRepository
 {
-	public async Task<List<User>> GetRealtorsAsync()
+    public async Task<List<User>> GetRealtorsAsync()
 	{
 		IList<User> list = await userManager.GetUsersInRoleAsync(Roles.Realtor);
 
@@ -55,14 +57,37 @@ public class UserRepository(UserManager<User> userManager) : IUserRepository
 		return user;
 	}
 
-	public Task<ErrorOr<Deleted>> DeleteUserAsync(string userId)
+	public async Task<ErrorOr<Deleted>> DeleteUserAsync(string userId)
     {
-        throw new NotImplementedException();
+        var user = await userManager.FindByIdAsync(userId);
+
+        if (user == null) return Error.NotFound("Error");
+        var result = await userManager.DeleteAsync(user);
+
+        if(!result.Succeeded) return Error.Conflict(result.Errors.FirstOrDefault().Description);
+
+        return Result.Deleted;
     }
 
-    public Task<ErrorOr<User>> EditUserAsync(User user)
+    public async Task<ErrorOr<Updated>> EditUserAsync(Guid id, string? email)
     {
-        throw new NotImplementedException();
+        var user = await userManager.FindByIdAsync(id.ToString());
+        if (email == null && user.Email.Equals(email))
+        {
+            return Result.Updated;
+        }
+
+       var token = await userManager.GenerateChangeEmailTokenAsync(user, email);
+
+        var result = await userManager.ChangeEmailAsync(user, email, token);
+
+        if(!result.Succeeded)return Error.Conflict(result.Errors.FirstOrDefault().Description);
+
+        user.UserName = email;
+
+        await SaveUserAsync(user);
+
+        return Result.Updated;
     }
 
     public async Task<ErrorOr<User>> FindByEmilAsync(string email)
@@ -94,9 +119,27 @@ public class UserRepository(UserManager<User> userManager) : IUserRepository
 
         return roles.ToList();
 	}
+    public async Task<ErrorOr<User>> ChangeRatingForRealtorAsync(Guid id,float rating)
+    {
+        var user = await userManager.FindByIdAsync(id.ToString());
 
+        if (user == null) 
+            return Error.NotFound("User not found");
+
+        if(user.Rating == null)
+            user.Rating = rating;
+        else
+            user.Rating = (user.Rating + rating) / 2;
+
+
+        await SaveUserAsync(user);
+
+        return user;
+        
+    }
+   
     //ToDo Async Method without await
-	public async Task<string> GetUserNameByUserAsync(User user)
+    public async Task<string> GetUserNameByUserAsync(User user)
     {
 		if (string.IsNullOrEmpty(user.FirstName) || string.IsNullOrEmpty(user.LastName))
 		{

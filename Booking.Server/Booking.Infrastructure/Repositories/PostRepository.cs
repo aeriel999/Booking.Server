@@ -23,10 +23,12 @@ public class PostRepository(BookingDbContext context) : IPostRepository
 		await context.SaveChangesAsync();
 	}
 
-	/*public async Task<Post?> GetPostByIdAsync(Guid postId)
+    /*public async Task<Post?> GetPostByIdAsync(Guid postId)
 	{
 		return await _dbSet.FindAsync(postId);
 	}*/
+
+
     public async Task<Post> GetPostByIdAsync(Guid id)
     {
         var posts = await GetIncludeListAsync();
@@ -37,7 +39,7 @@ public class PostRepository(BookingDbContext context) : IPostRepository
     {
         var posts = await GetIncludeListAsync();
         var list = PagedList<Post>.getPagedList(posts, page, sizeOfPage);
-        list.items = list.items.OrderBy(item => item.PostAt).ToList();
+        list.items = list.items.OrderByDescending(item => item.PostAt).ToList();
         return list;
     }
     public async Task<List<Post>> Filter(Guid? category, Guid? country, Guid? city, Guid? realtor)
@@ -57,7 +59,7 @@ public class PostRepository(BookingDbContext context) : IPostRepository
         PagedList<Post> list = new PagedList<Post>();
 
         list = PagedList<Post>.getPagedList(posts.
-             OrderBy(item => item.PostAt).
+             OrderByDescending(item => item.PostAt).
              Select(p=>p), page, sizeOfPage);
         
         return list;
@@ -114,6 +116,7 @@ public class PostRepository(BookingDbContext context) : IPostRepository
 	{
 		return await _dbSet
 			.Where(c => c.UserId == realtorId)
+			.Include(post=>post.ImagesPost)
 			.ToListAsync();
 	}
  
