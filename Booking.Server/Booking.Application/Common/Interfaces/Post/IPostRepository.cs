@@ -11,7 +11,7 @@ public interface IPostRepository
 
 	Task<List<Post>> GetPostListByRealtorIdAsync(Guid realtorId);
 
-	Task<Post?> GetPostByIdAsync(Guid postId);
+	Task<Post?> GetPostWithIncludesByIdAsync(Guid postId);
 
 	Task<PagedList<Post>> GetAllAsync(int page, int sizeOfPage);
 	Task<PagedList<Post>> GetFilteredListAsync(Guid? category, Guid? country, Guid? city, Guid? realtor, int page, int sizeOfPage);

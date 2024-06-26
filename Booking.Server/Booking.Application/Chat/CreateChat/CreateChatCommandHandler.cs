@@ -26,7 +26,7 @@ public class CreateChatCommandHandler(
 		var user = userOrError.Value;
 
 		//Get Post
-		var post = await postRepositories.GetPostByIdAsync(request.PostId);
+		var post = await postRepositories.GetPostWithIncludesByIdAsync(request.PostId);
 
 		if (post == null)
 			return Error.NotFound();

@@ -29,7 +29,7 @@ public class PostRepository(BookingDbContext context) : IPostRepository
 	}*/
 
 
-    public async Task<Post> GetPostByIdAsync(Guid id)
+    public async Task<Post> GetPostWithIncludesByIdAsync(Guid id)
     {
         var posts = await GetIncludeListAsync();
         var post = posts.Find(x => x.Id == id);    
