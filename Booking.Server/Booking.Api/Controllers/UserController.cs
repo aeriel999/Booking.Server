@@ -13,6 +13,7 @@ using Booking.Application.Users.Realtor;
 using Booking.Application.Users.Realtor.GetFeedbacks;
 using Booking.Application.Users.Realtor.GetRealtorById;
 using Booking.Application.Users.Realtor.GetRealtorsByUserFeedbacks;
+using Booking.Application.Users.Realtor.EditRealtor;
 using Booking.Application.Users.Realtor.GetRealtorsList;
 using Booking.Application.Users.User.DeleteUser;
 using Booking.Application.Users.User.EditUser;

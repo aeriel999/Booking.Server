@@ -6,5 +6,4 @@ public record CreateChatRequest
 {
 	[Required(ErrorMessage = "{PropertyName} must not be empty")]
 	public Guid PostId { get; init; }
-
 }

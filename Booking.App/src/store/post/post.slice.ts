@@ -1,11 +1,29 @@
-import {AnyAction, createSlice, PayloadAction} from "@reduxjs/toolkit";
-import {RejectedAction} from "../../utils/types";
-import {Status} from "../../utils/enum";
-import {IPageOfPosts, IPostInformation, IPostState} from "../../interfaces/post";
+import { AnyAction, createSlice, PayloadAction } from "@reduxjs/toolkit";
+import { RejectedAction } from "../../utils/types";
+import { Status } from "../../utils/enum";
 import {
-    createPost, getFilteredListByType,
+    IPageOfPosts,
+    IPostInformation,
+    IPostState,
+} from "../../interfaces/post";
+import {
+    archivePost,
+    createPost,
+    deletePost,
+    editPost,
+    getArchivedPostList,
+    getFilteredListByType,
     getListOfCategories,
     getListOfCitiesByCountryId,
+    getListOfCountries,
+    getListOfPosts,
+    getListOfPostsByName,
+    getListOfPostsName,
+    getListOfStreetsByCityId,
+    getListPostsForRealtor,
+    getPostById,
+    getTypesOfRentList,
+    repostPost,
     getListOfCountries, getListOfPosts, getListOfPostsByName, getListOfPostsName,
     getListOfStreetsByCityId, getListPostsForRealtor, getPostById, getPostListByRealtorId, getTypesOfRentList
 } from "./post.actions.ts";
@@ -16,14 +34,14 @@ function isRejectedAction(action: AnyAction): action is RejectedAction {
 
 const initialState: IPostState = {
     status: Status.IDLE,
-    post:null,
-    posts:null,
+    post: null,
+    posts: null,
     categories: null,
     countries: null,
     cities: null,
     streets: null,
     typeOfRent: null,
-    searchPost:[],
+    searchPost: [],
     postInfoList: null,
     postsByRealtorId : null
 };
@@ -41,38 +59,53 @@ export const postSlice = createSlice({
             .addCase(getTypesOfRentList.pending, (state) => {
                 state.status = Status.LOADING;
             })
-            .addCase(getPostById.fulfilled,(state,action:PayloadAction<IPostInformation>)=>{
-                state.post = action.payload;
-                state.status = Status.SUCCESS;
-            })
+            .addCase(
+                getPostById.fulfilled,
+                (state, action: PayloadAction<IPostInformation>) => {
+                    state.post = action.payload;
+                    state.status = Status.SUCCESS;
+                }
+            )
             .addCase(getPostById.pending, (state) => {
                 state.status = Status.LOADING;
             })
-            .addCase(getListOfPosts.fulfilled,(state, action:PayloadAction<IPageOfPosts>) => {
-                state.posts = action.payload;
-                state.status = Status.SUCCESS;
-            })
+            .addCase(
+                getListOfPosts.fulfilled,
+                (state, action: PayloadAction<IPageOfPosts>) => {
+                    state.posts = action.payload;
+                    state.status = Status.SUCCESS;
+                }
+            )
             .addCase(getListOfPosts.pending, (state) => {
                 state.status = Status.LOADING;
             })
-            .addCase(getListOfPostsName.fulfilled,(state, action:PayloadAction<string[]>) => {
-                state.searchPost = action.payload;
-                state.status = Status.SUCCESS;
-            })
+            .addCase(
+                getListOfPostsName.fulfilled,
+                (state, action: PayloadAction<string[]>) => {
+                    state.searchPost = action.payload;
+                    state.status = Status.SUCCESS;
+                }
+            )
             .addCase(getListOfPostsName.pending, (state) => {
                 state.status = Status.LOADING;
             })
-            .addCase(getFilteredListByType.fulfilled,(state, action:PayloadAction<IPageOfPosts>) => {
-                state.posts = action.payload;
-                state.status = Status.SUCCESS;
-            })
+            .addCase(
+                getFilteredListByType.fulfilled,
+                (state, action: PayloadAction<IPageOfPosts>) => {
+                    state.posts = action.payload;
+                    state.status = Status.SUCCESS;
+                }
+            )
             .addCase(getFilteredListByType.pending, (state) => {
                 state.status = Status.LOADING;
             })
-            .addCase(getListOfPostsByName.fulfilled,(state, action:PayloadAction<IPageOfPosts>) => {
-                state.posts = action.payload;
-                state.status = Status.SUCCESS;
-            })
+            .addCase(
+                getListOfPostsByName.fulfilled,
+                (state, action: PayloadAction<IPageOfPosts>) => {
+                    state.posts = action.payload;
+                    state.status = Status.SUCCESS;
+                }
+            )
             .addCase(getListOfPostsByName.pending, (state) => {
                 state.status = Status.LOADING;
             })
@@ -122,6 +155,36 @@ export const postSlice = createSlice({
                 state.postInfoList = action.payload;
             })
             .addCase(getListPostsForRealtor.pending, (state) => {
+                state.status = Status.LOADING;
+            })
+            .addCase(editPost.fulfilled, (state) => {
+                state.status = Status.SUCCESS;
+            })
+            .addCase(editPost.pending, (state) => {
+                state.status = Status.LOADING;
+            })
+            .addCase(archivePost.fulfilled, (state) => {
+                state.status = Status.SUCCESS;
+            })
+            .addCase(archivePost.pending, (state) => {
+                state.status = Status.LOADING;
+            })
+            .addCase(getArchivedPostList.fulfilled, (state) => {
+                state.status = Status.SUCCESS;
+            })
+            .addCase(getArchivedPostList.pending, (state) => {
+                state.status = Status.LOADING;
+            })
+            .addCase(deletePost.fulfilled, (state) => {
+                state.status = Status.SUCCESS;
+            })
+            .addCase(deletePost.pending, (state) => {
+                state.status = Status.LOADING;
+            })
+            .addCase(repostPost.fulfilled, (state) => {
+                state.status = Status.SUCCESS;
+            })
+            .addCase(repostPost.pending, (state) => {
                 state.status = Status.LOADING;
             })
             .addMatcher(isRejectedAction, (state) => {

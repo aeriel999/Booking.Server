@@ -5,6 +5,11 @@ public class CreateMessageCommandValidation : AbstractValidator<CreateMessageCom
 {
     public CreateMessageCommandValidation()
     {
-		//ToDo MAke CreateMessageCommand validation
+		RuleFor(r => r.UserId).NotEmpty().WithMessage("Field must not be empty");
+		 
+		RuleFor(r => r.Message).NotEmpty().WithMessage("Field must not be empty")
+			.MaximumLength(5000).MinimumLength(2);
+
+		RuleFor(r => r.RoomId).NotEmpty().WithMessage("Field must not be empty");
 	}
 }
