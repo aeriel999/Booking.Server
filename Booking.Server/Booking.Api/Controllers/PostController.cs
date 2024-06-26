@@ -1,4 +1,5 @@
 ﻿using Booking.Api.Contracts.Post.CreatePost;
+using Booking.Api.Contracts.Post.GetArchivedPostListForRealtor;
 using Booking.Api.Contracts.Post.GetCategories;
 using Booking.Api.Contracts.Post.GetCities;
 using Booking.Api.Contracts.Post.GetCountries;
@@ -11,7 +12,11 @@ using Booking.Api.Contracts.Post.GetStreets;
 using Booking.Api.Contracts.Post.GetTypeOfPost;
 using Booking.Api.Infrastructure;
 using Booking.Application.Common.Behaviors;
+using Booking.Application.Posts.ArchivePost;
 using Booking.Application.Posts.CreatePost;
+using Booking.Application.Posts.DeletePost;
+using Booking.Application.Posts.EditPost;
+using Booking.Application.Posts.GetArchivedPostList;
 using Booking.Application.Posts.GetCategoriesList;
 using Booking.Application.Posts.GetCities;
 using Booking.Application.Posts.GetCountries;
@@ -25,6 +30,7 @@ using Booking.Application.Posts.GetPostListForRealtor;
 using Booking.Application.Posts.GetStreets;
 using Booking.Application.Posts.GetTypeOfRent;
 using Booking.Application.Users.User.DeleteUser;
+using Booking.Application.Posts.RepostPost;
 using MapsterMapper;
 using MediatR;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
@@ -48,14 +54,11 @@ public class PostController(ISender mediatr, IMapper mapper) : ApiController
 
 		if (request.Images != null && request.Images.Count != 0)
 		{
-			using (MemoryStream memoryStream = new MemoryStream())
+			foreach (var image in request.Images)
 			{
-				foreach (var image in request.Images)
-				{
-					await image.CopyToAsync(memoryStream);
-
-					images.Add(memoryStream.ToArray());
-				}
+				using MemoryStream memoryStream = new();
+				await image.CopyToAsync(memoryStream);
+				images.Add(memoryStream.ToArray());
 			}
 		}
 
@@ -66,6 +69,7 @@ public class PostController(ISender mediatr, IMapper mapper) : ApiController
 			createPostResult => Ok(createPostResult),
 			errors => Problem(errors));
 	}
+
 
 	[AllowAnonymous]
 	[HttpGet("get-list-of-post")]
@@ -78,6 +82,7 @@ public class PostController(ISender mediatr, IMapper mapper) : ApiController
             errors => Problem(errors));
     }
     
+
     [AllowAnonymous]
     [HttpGet("get-post-by-id-{id}")]
     public async Task<IActionResult> GetPostByIdAsync([FromRoute] Guid id)
@@ -89,9 +94,11 @@ public class PostController(ISender mediatr, IMapper mapper) : ApiController
             errors => Problem(errors));
     }
 
+
     [AllowAnonymous]
     [HttpGet("get-post-by-name")]
-    public async Task<IActionResult> GetPostByNameAsync([FromQuery] GetFilteredListRequest types, string name, int page, int sizeOfPage)
+    public async Task<IActionResult> GetPostByNameAsync(
+		[FromQuery] GetFilteredListRequest types, string name, int page, int sizeOfPage)
     {
         var getPostResult = await mediatr.Send(mapper.Map<GetPostByNameQuery>((types, name,page,sizeOfPage)));
 
@@ -100,9 +107,10 @@ public class PostController(ISender mediatr, IMapper mapper) : ApiController
             errors => Problem(errors));
     }
 
+
     [AllowAnonymous]
     [HttpGet("get-name-of-post")]
-    public async Task<IActionResult> GetNameOfPostAsync([FromQuery] GetFilteredListRequest types,string name="")
+    public async Task<IActionResult> GetNameOfPostAsync([FromQuery] GetFilteredListRequest types,string name = "")
     {
         var getPostResult = await mediatr.Send(mapper.Map<GetNameOfPostQuery>((types,name)));
 
@@ -111,9 +119,11 @@ public class PostController(ISender mediatr, IMapper mapper) : ApiController
             errors => Problem(errors));
     }
 
+
     [AllowAnonymous]
     [HttpGet("get-filtered-list-by-type")]
-    public async Task<IActionResult> GetFilteredListAsync([FromQuery] GetFilteredListRequest types, int page, int sizeOfPage)
+    public async Task<IActionResult> GetFilteredListAsync(
+		[FromQuery] GetFilteredListRequest types, int page, int sizeOfPage)
     {
         var getlistOfPostResult = await mediatr.Send(mapper.Map<GetFilteredListQuery>((types,page,sizeOfPage)));
 
@@ -121,6 +131,8 @@ public class PostController(ISender mediatr, IMapper mapper) : ApiController
             getlistOfPostResult => Ok(mapper.Map<PagedList<GetListOfPostResponse>>(getlistOfPostResult)),
             errors => Problem(errors));
     }
+
+
     [AllowAnonymous]
     [HttpGet("get-type-of-rent-list")]
 	public async Task<IActionResult> GetTypeOfRentListAsync()
@@ -131,6 +143,8 @@ public class PostController(ISender mediatr, IMapper mapper) : ApiController
 			getTypeOfPostListResult => Ok(mapper.Map<List<GetTypeOfPostResponse>>(getTypeOfPostListResult)),
 			errors => Problem(errors));
 	}
+
+
     [AllowAnonymous]
     [HttpGet("get-categories-list")]
 	public async Task<IActionResult> GetCategoriesListAsync()
@@ -142,6 +156,7 @@ public class PostController(ISender mediatr, IMapper mapper) : ApiController
 			errors => Problem(errors));
 	}
 
+
 	[AllowAnonymous]
 	[HttpGet("get-countries-list")]
 	public async Task<IActionResult> GetCountriesListAsync()
@@ -152,6 +167,7 @@ public class PostController(ISender mediatr, IMapper mapper) : ApiController
 			getCountriesListResult => Ok(mapper.Map <List<GetCountryResponse>> (getCountriesListResult)),
 			errors => Problem(errors));
 	}
+
 
     [AllowAnonymous]
     [HttpGet("get-cities-list")]
@@ -177,6 +193,7 @@ public class PostController(ISender mediatr, IMapper mapper) : ApiController
 
 		return Ok(response);
 	}
+
 
 	[HttpGet("get-post-list-for-realtor")]
 	public async Task<IActionResult> GetPostListForRealtorAsync(
@@ -205,5 +222,83 @@ public class PostController(ISender mediatr, IMapper mapper) : ApiController
             errors => Problem(errors));
     }
 
+
+	[HttpPost("edit-post")]
+	public async Task<IActionResult> EditPostAsync(EditPostRequest request)
+	{
+		string userId = User.Claims.First(u => u.Type == ClaimTypes.NameIdentifier).Value;
+
+		var images = new List<byte[]>();
+
+		if (request.Images != null && request.Images.Count != 0)
+		{
+			foreach (var image in request.Images)
+			{
+				using MemoryStream memoryStream = new();
+				await image.CopyToAsync(memoryStream);
+				images.Add(memoryStream.ToArray());
+			}
+		}
+
+		var editPostResult = await mediatr.Send(mapper.Map<EditPostCommand>(
+			(request, Guid.Parse(userId), images)));
+
+		return editPostResult.Match(
+			editPostResult => Ok(editPostResult),
+			errors => Problem(errors));
+	}
+
+
+	[HttpGet("archive-post-{postId}")]
+	public async Task<IActionResult> ArchivePostAsync([FromRoute] Guid postId)
+	{
+		string userId = User.Claims.First(u => u.Type == ClaimTypes.NameIdentifier).Value;
+
+		var archivePostResult = await mediatr.Send(new ArchivePostCommand(postId, Guid.Parse(userId)));
+
+		return archivePostResult.Match(
+			getPostListForRealtor => Ok(archivePostResult.Value),
+			errors => Problem(errors));
+	}
+
 	
+
+	[HttpGet("get-archived-post-list-for-realtor")]
+	public async Task<IActionResult> GetArchivedPostListForRealtorAsync([FromQuery] int page, int sizeOfPage)
+	{
+		string userId = User.Claims.First(u => u.Type == ClaimTypes.NameIdentifier).Value;
+
+		var getArchivedPostListForRealtor = await mediatr.Send(new GetArchivedPostListForRealtorQuery(
+			page, sizeOfPage, Guid.Parse(userId)));
+
+		PagedList<GetArchivedPostListForRealtorResponse> list = mapper.Map<PagedList<GetArchivedPostListForRealtorResponse>>(getArchivedPostListForRealtor);
+
+		return Ok(list);
+	}
+
+
+	[HttpGet("delete-post-{postId}")]
+	public async Task<IActionResult> DeletePostAsync([FromRoute] Guid postId)
+	{
+		string userId = User.Claims.First(u => u.Type == ClaimTypes.NameIdentifier).Value;
+
+		var deletePostResult = await mediatr.Send(new DeletePostCommand(postId, Guid.Parse(userId)));
+
+		return deletePostResult.Match(
+			getPostListForRealtor => Ok(deletePostResult.Value),
+			errors => Problem(errors));
+	}
+
+
+	[HttpGet("repost-post-{postId}")]
+	public async Task<IActionResult> RepostPostAsync([FromRoute] Guid postId)
+	{
+		string userId = User.Claims.First(u => u.Type == ClaimTypes.NameIdentifier).Value;
+
+		var repostPostResult = await mediatr.Send(new RepostPostCommand(postId, Guid.Parse(userId)));
+
+		return repostPostResult.Match(
+			getPostListForRealtor => Ok(repostPostResult.Value),
+			errors => Problem(errors));
+	}
 }

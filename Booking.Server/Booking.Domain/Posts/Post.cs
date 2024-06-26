@@ -12,6 +12,7 @@ public class Post
 
 	public Guid CategoryId { get; set; }
 
+
 	[ForeignKey(nameof(CategoryId))]
 	public PostCategory? Category { get; set; }
 
@@ -35,6 +36,7 @@ public class Post
 	public int? Area { get; set; }
 
 	public Guid UserId { get; set; }
+
 
 	[ForeignKey(nameof(UserId))]
 	public User? User { get; set; }

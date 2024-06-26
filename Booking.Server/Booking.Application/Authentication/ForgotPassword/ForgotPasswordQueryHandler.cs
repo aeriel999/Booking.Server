@@ -15,7 +15,7 @@ public class ForgotPasswordQueryHandler(
 	public async Task<ErrorOr<Success>> Handle(ForgotPasswordQuery request, CancellationToken cancellationToken)
 	{
 		//Check for exist
-		var errorOrUser = await userRepository.FindByEmilAsync(request.Email);
+		var errorOrUser = await userRepository.FindByEmailAsync(request.Email);
 
 		if (errorOrUser.IsError)
 			return Error.Validation("User with such email doesn't exist");

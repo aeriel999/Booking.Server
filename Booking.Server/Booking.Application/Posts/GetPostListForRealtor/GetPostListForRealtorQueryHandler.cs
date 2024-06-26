@@ -11,7 +11,7 @@ public class GetPostListForRealtorQueryHandler(IPostRepository postRepository)
 	public async Task<ErrorOr<PagedList<GetPostListForRealtorQueryResult>>> Handle(
 		GetPostListForRealtorQuery request, CancellationToken cancellationToken)
 	{
-		var posts = await postRepository.GetPostListByRealtorIdAsync(request.UserId);
+		var posts = await postRepository.GetPostListWithIncludesByRealtorIdAsync(request.UserId);
 
 		List<GetPostListForRealtorQueryResult> getPostListForRealtorQueryResult = new();
 

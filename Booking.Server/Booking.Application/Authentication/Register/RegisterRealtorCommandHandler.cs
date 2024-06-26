@@ -17,7 +17,7 @@ public class RegisterRealtorCommandHandler(
 		CancellationToken cancellationToken)
 	{
 		//Check For exist
-		var errorOrUser = await userRepository.FindByEmilAsync(request.Email);
+		var errorOrUser = await userRepository.FindByEmailAsync(request.Email);
 
 		if (errorOrUser.IsSuccess())
 			return Error.Validation("User with such email already exists");

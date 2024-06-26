@@ -8,6 +8,7 @@ public record LoginUserRequest {
 	[Length(5, 254)]
 	public required string Email { get; init; }
 
+
 	[Required(ErrorMessage = "{PropertyName} must not be empty")]
 	[Length(8, 24)]
 	public required string Password { get; init; }

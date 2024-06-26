@@ -41,6 +41,7 @@ import { AvatarValidator } from "../../validations/account";
 import Button from "@mui/material/Button";
 import * as React from "react";
 import { joinForPostListening } from "../../SignalR";
+import IMG from "../../assets/avatar-profile-icon-vector-illustration_276184-165.jpg";
 
 export function AddNewPost() {
     const dispatch = useAppDispatch();
@@ -205,10 +206,9 @@ export function AddNewPost() {
             const response = await dispatch(createPost(model));
             unwrapResult(response);
 
-            console.log("response.payload.Id", response);
             await joinForPostListening(response.payload.id);
 
-            navigate("/dashboard");
+            navigate("/dashboard/show-all-post");
         } catch (error) {
             setErrorMessage(ErrorHandler(error));
         }
@@ -224,9 +224,9 @@ export function AddNewPost() {
                         Dashboard
                     </Typography>
                 </Link>
-                <Link to={"/dashboard/profile"}>
+                <Link to={"/dashboard/show-all-post"}>
                     <Typography variant="h6" color="text.primary">
-                        Profile
+                        All Posts
                     </Typography>
                 </Link>
                 <Typography variant="h6" color="text.primary">
@@ -273,7 +273,6 @@ export function AddNewPost() {
                                     options={typeOfRentList}
                                     onChange={setTypeOfRent}
                                     label={"Type Of Rent"}
-                                    defaultValue ={null}
                                 />
                             </Grid>
 
@@ -282,7 +281,6 @@ export function AddNewPost() {
                                     options={categoryList}
                                     onChange={setCategory}
                                     label={"Category"}
-                                    defaultValue ={null}
                                 />
                             </Grid>
 
@@ -291,7 +289,6 @@ export function AddNewPost() {
                                     options={countryList}
                                     onChange={setCountry}
                                     label={"Country"}
-                                    defaultValue ={null}
                                 />
                             </Grid>
 
@@ -308,7 +305,6 @@ export function AddNewPost() {
                                         options={cityList}
                                         onChange={setCity}
                                         label={"City"}
-                                        defaultValue ={null}
                                     />
                                 </Grid>
                             )}
@@ -340,7 +336,6 @@ export function AddNewPost() {
                                         options={streetList}
                                         onChange={setStreet}
                                         label={"Street"}
-                                        defaultValue ={null}
                                     />
                                 </Grid>
                             )}
@@ -434,6 +429,7 @@ export function AddNewPost() {
                                         (formValid.current.images = isValid)
                                     }
                                     onDelete={handleChange}
+                                    defaultImages={[IMG]}
                                 ></FileUploader>
                             </Grid>
                         </Grid>
