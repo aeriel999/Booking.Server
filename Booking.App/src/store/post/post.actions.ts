@@ -38,6 +38,18 @@ export const getListOfCategories = createAsyncThunk(
     }
 );
 
+export const getPostListByRealtorId = createAsyncThunk(
+    'Post/get-post-list-by-realtor-id',
+    async (id:string, { rejectWithValue }) => {
+        try{
+            const response = await apiClient.get(`/api/Post/get-post-list-by-realtor-id-${id}`);
+            return response.data;
+        } catch (error) {
+            return rejectWithValue(handleAxiosError(error, "Network error"));
+        }
+    },
+);
+
 export const getFilteredListByType = createAsyncThunk(
     "Post/get-filtered-list-by-type",
     async (payload: IFilteredRequest, { rejectWithValue }) => {

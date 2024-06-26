@@ -6,6 +6,7 @@ using Booking.Api.Contracts.Post.GetCountries;
 using Booking.Api.Contracts.Post.GetFilteredList;
 using Booking.Api.Contracts.Post.GetListOfPost;
 using Booking.Api.Contracts.Post.GetPost;
+using Booking.Api.Contracts.Post.GetPostListByRealtorId;
 using Booking.Api.Contracts.Post.GetPostListForRealtor;
 using Booking.Api.Contracts.Post.GetStreets;
 using Booking.Api.Contracts.Post.GetTypeOfPost;
@@ -24,9 +25,11 @@ using Booking.Application.Posts.GetListOfPost;
 using Booking.Application.Posts.GetNameOfPost;
 using Booking.Application.Posts.GetPostById;
 using Booking.Application.Posts.GetPostByName;
+using Booking.Application.Posts.GetPostListByRealtorId;
 using Booking.Application.Posts.GetPostListForRealtor;
 using Booking.Application.Posts.GetStreets;
 using Booking.Application.Posts.GetTypeOfRent;
+using Booking.Application.Users.User.DeleteUser;
 using Booking.Application.Posts.RepostPost;
 using MapsterMapper;
 using MediatR;
@@ -178,9 +181,8 @@ public class PostController(ISender mediatr, IMapper mapper) : ApiController
 
 		return Ok(response);
 	}
-
-
-	[HttpGet("get-street-list")]
+    [AllowAnonymous]
+    [HttpGet("get-street-list")]
 	public async Task<IActionResult> GetStreetsListByCityIdAsync(
 		[FromQuery] GetStreetsListByCityIdRequest request)
 	{
@@ -207,6 +209,18 @@ public class PostController(ISender mediatr, IMapper mapper) : ApiController
 				mapper.Map<PagedList<GetPostListForRealtorResponse>>(getPostListForRealtor)),
 			errors => Problem(errors));
 	}
+    [AllowAnonymous]
+    [HttpGet("get-post-list-by-realtor-id-{id}")]
+    public async Task<IActionResult> GetPostListByRealtorIDAsync([FromRoute] Guid id)
+    {
+
+        var getPostListByRealtorId = await mediatr.Send(new GetPostListByRealtorIdQuery(id));
+
+        return getPostListByRealtorId.Match(
+            getPostListByRealtorId => Ok(
+                mapper.Map<List<GetPostListByRealtorIdResponse>>(getPostListByRealtorId)),
+            errors => Problem(errors));
+    }
 
 
 	[HttpPost("edit-post")]
@@ -247,6 +261,7 @@ public class PostController(ISender mediatr, IMapper mapper) : ApiController
 			errors => Problem(errors));
 	}
 
+	
 
 	[HttpGet("get-archived-post-list-for-realtor")]
 	public async Task<IActionResult> GetArchivedPostListForRealtorAsync([FromQuery] int page, int sizeOfPage)

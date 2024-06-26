@@ -7,6 +7,7 @@ using Booking.Api.Contracts.Post.GetFilteredList;
 using Booking.Api.Contracts.Post.GetListOfPost;
 using Booking.Api.Contracts.Post.GetPost;
 using Booking.Api.Contracts.Post.GetPostForEditing;
+using Booking.Api.Contracts.Post.GetPostListByRealtorId;
 using Booking.Api.Contracts.Post.GetPostListForRealtor;
 using Booking.Api.Contracts.Post.GetStreets;
 using Booking.Api.Contracts.Post.GetTypeOfPost;
@@ -40,6 +41,7 @@ public class PostMapping : IRegister
 			.Map(desp => desp.PostTypeOfRent, src => src.PostTypeOfRent!.Name)
 			.Map(desp => desp.Street, src => src.Street!.Name)
 			.Map(desp => desp.User, src => $"{src.User!.FirstName} {src.User.LastName}")
+            .Map(desp => desp.UserId, src => src.UserId)
 			.Map(desp => desp.CountryName, src => src.Street!.City!.Country!.Name)
 			.Map(desp => desp.CountryId, src => src.Street!.City!.CountryId)
 			.Map(desp => desp.CityName, src => src.Street!.City!.Name)
@@ -48,8 +50,12 @@ public class PostMapping : IRegister
 			 src.ImagesPost != null ? src.ImagesPost.OrderBy(img => img.Priority)
 			 .Select(img => img.Name).ToArray() : Array.Empty<string>());
 
+        config.NewConfig<Post, GetPostListByRealtorIdResponse>()
+            .Map(desp => desp.Id, src => src.Id)
+            .Map(src => src.Name, src => src.Name)
+            .Map(desp => desp.ImagePost, src => src.ImagesPost!.FirstOrDefault(img => img.Priority == 1)!.Name);
 
-		config.NewConfig<Post, GetListOfPostResponse>()
+        config.NewConfig<Post, GetListOfPostResponse>()
             .Map(desp => desp.Category, src => src.Category!.Name)
             .Map(desp => desp.User, src => $"{src.User!.FirstName} {src.User.LastName}")
             .Map(desp => desp.ImagePost, src => src.ImagesPost!.FirstOrDefault(img => img.Priority == 1)!.Name);

@@ -64,17 +64,15 @@ public class PostRepository(BookingDbContext context) : IPostRepository
 
 		PagedList<Post> list = new PagedList<Post>();
 
-		list = PagedList<Post>.getPagedList(posts.
-			 OrderBy(item => item.PostAt).
-			 Select(p => p), page, sizeOfPage);
-
-		return list;
-	}
-
-	public async Task<PagedList<Post>> GetPostByNameAsync(
-		Guid? category, Guid? country, Guid? city, Guid? realtor, string name, int page, int sizeOfPage)
-	{
-		var posts = await Filter(category, country, city, realtor);
+        list = PagedList<Post>.getPagedList(posts.
+             OrderByDescending(item => item.PostAt).
+             Select(p=>p), page, sizeOfPage);
+        
+        return list;
+    }
+   public async Task<PagedList<Post>> GetPostByNameAsync(Guid? category, Guid? country, Guid? city, Guid? realtor, string name, int page, int sizeOfPage)
+    {
+        var posts = await Filter(category, country, city, realtor);
 
 		var list = PagedList<Post>.getPagedList(posts
 			.Where(p => p.Name.ToLower().Equals(name.ToLower()))
@@ -128,6 +126,7 @@ public class PostRepository(BookingDbContext context) : IPostRepository
 	{
 		return await _dbSet
 			.Where(c => c.UserId == realtorId)
+			.Include(post=>post.ImagesPost)
 			.ToListAsync();
 	}
 

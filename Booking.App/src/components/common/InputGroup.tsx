@@ -1,7 +1,7 @@
-import React, {FC, useState} from 'react';
+import React, { FC, useState } from 'react';
 import { TextField } from "@mui/material";
 
-interface InputGroupProps{
+interface InputGroupProps {
     label: string,
     type?: "text" | "password" | "email" | "number",
     field: string,
@@ -14,16 +14,16 @@ interface InputGroupProps{
 }
 
 const InputGroup: FC<InputGroupProps> = ({
-                                             label,
-                                             type = "text",
-                                             field,
-                                             onChange,
-                                             validator,
-                                             setIncomeValue,
-                                             defaultValue,
-                                             rowsCount,
-                                             isMultiline
-                                         }) => {
+    label,
+    type = "text",
+    field,
+    onChange,
+    validator,
+    setIncomeValue,
+    defaultValue,
+    rowsCount,
+    isMultiline
+}) => {
 
     const [value, setValue] = useState(defaultValue ?? "");
     const [error, setError] = useState<string | false | undefined>(false);
@@ -34,7 +34,7 @@ const InputGroup: FC<InputGroupProps> = ({
         setValue(newValue);
         setError(errorMessage);
         onChange(!errorMessage);
-        if(setIncomeValue)
+        if (setIncomeValue)
             setIncomeValue(newValue);
     };
 
@@ -49,7 +49,7 @@ const InputGroup: FC<InputGroupProps> = ({
             onChange={handleChange}
             error={!!error}
             helperText={error}
-            rows={ rowsCount === null ? 1 : rowsCount}
+            rows={rowsCount === null ? 1 : rowsCount}
             multiline={!!isMultiline}
         />
     );

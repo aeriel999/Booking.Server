@@ -1,15 +1,29 @@
 ﻿using Booking.Api.Contracts.Users.Common.ChangePassword;
 using Booking.Api.Contracts.Users.Realtor.Edit;
 using Booking.Api.Contracts.Users.Realtor.Get;
+using Booking.Api.Contracts.Users.Realtor.Get.Feedback;
+using Booking.Api.Contracts.Users.Realtor.Get.GetRealtorByUserFeedback;
+using Booking.Api.Contracts.Users.Realtor.Get.Information;
+using Booking.Api.Contracts.Users.User.Edit;
+using Booking.Api.Contracts.Users.User.SentFeedback;
 using Booking.Api.Infrastructure;
+using Booking.Application.Common.Behaviors;
 using Booking.Application.Users.Common.ChangePassword;
+using Booking.Application.Users.Realtor;
+using Booking.Application.Users.Realtor.GetFeedbacks;
+using Booking.Application.Users.Realtor.GetRealtorById;
+using Booking.Application.Users.Realtor.GetRealtorsByUserFeedbacks;
 using Booking.Application.Users.Realtor.EditRealtor;
 using Booking.Application.Users.Realtor.GetRealtorsList;
+using Booking.Application.Users.User.DeleteUser;
+using Booking.Application.Users.User.EditUser;
+using Booking.Application.Users.User.SendFeedback;
 using MapsterMapper;
 using MediatR;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.RazorPages;
 using System.Security.Claims;
 
 namespace Booking.Api.Controllers;
@@ -29,7 +43,16 @@ public class UserController(ISender mediatr, IMapper mapper, IConfiguration conf
             getRealtorsListResult => Ok(mapper.Map<List<GetRealtorResponse>>(getRealtorsListResult)),
             errors => Problem(errors));
     }
+    [AllowAnonymous]
+    [HttpGet("get-realtor-by-id-{id}")]
+    public async Task<IActionResult> GetRealtrByIdAsync([FromRoute] Guid id)
+    {
+        var realtor = await mediatr.Send(new GetRealtorByIdQuery(id));
 
+        return realtor.Match(
+            realtor => Ok(mapper.Map<GetInformationAboutRealtorResponse>(realtor)),
+            errors => Problem(errors));
+    }
     [HttpPost("realtor-profile")]
 	public async Task<IActionResult> EditRealtorPrifileInfoAsync(EditRealtorPrifileInfoRequest request)
 	{
@@ -55,15 +78,73 @@ public class UserController(ISender mediatr, IMapper mapper, IConfiguration conf
 			errors => Problem(errors));
 	}
 
-	[HttpPost("change-password")]
-	public async Task<IActionResult> ChangePasswordAsync([FromBody] ChangePasswordRequest request)
-	{
-		string userId = User.Claims.First(u => u.Type == ClaimTypes.NameIdentifier).Value;
+    [HttpPost("change-password")]
+    public async Task<IActionResult> ChangePasswordAsync([FromBody] ChangePasswordRequest request)
+    {
+        string userId = User.Claims.First(u => u.Type == ClaimTypes.NameIdentifier).Value;
 
-		var changeEmailResult = await mediatr.Send(mapper.Map<ChangePasswordCommand>((request, userId)));
+        var changeEmailResult = await mediatr.Send(mapper.Map<ChangePasswordCommand>((request, userId)));
 
-		return changeEmailResult.Match(
-			changeEmailResult => Ok(),
-			errors => Problem(errors));
-	}
+        return changeEmailResult.Match(
+            changeEmailResult => Ok(),
+            errors => Problem(errors));
+    }
+
+    [HttpPost("send-feedback")]
+    public async Task<IActionResult> SendFeedbackAsync([FromBody] SendFeedbackRequest request)
+    {
+        string clientId = User.Claims.First(u => u.Type == ClaimTypes.NameIdentifier).Value;
+
+        var sendFeedbackResult = await mediatr.Send(mapper.Map<SendFeedbackCommand>((request, clientId)));
+
+        return sendFeedbackResult.Match(
+            sendFeedbackResult => Ok(sendFeedbackResult),
+            errors => Problem(errors));
+    }
+    [AllowAnonymous]
+    [HttpGet("get-feedbacks-{id}")]
+    public async Task<IActionResult> GetFeedbacksAsync([FromRoute] Guid id, [FromQuery] int page, int sizeOfPage)
+    {      
+        var getFeedbacksResult = await mediatr.Send(new GetFeedbacksQuery(id,page,sizeOfPage));
+
+        return getFeedbacksResult.Match(
+            getFeedbacksResult => Ok(mapper.Map<PagedList<GetFeedbackResponse>>(getFeedbacksResult)),
+            errors => Problem(errors));
+    }
+    [HttpGet("get-realtors-by-user-feedbacks")]
+    public async Task<IActionResult> GetRealtorsByUserFeedbacksAsync()
+    {
+        string clientId = User.Claims.First(u => u.Type == ClaimTypes.NameIdentifier).Value;
+
+        var getRealtorsResult = await mediatr.Send(new GetRealtorsByUserFeedbacksQuery(clientId));
+
+        return getRealtorsResult.Match(
+            getRealtorsResult => Ok(mapper.Map<List<GetRealtorByUserFeedbackResponse>>(getRealtorsResult)),
+            errors => Problem(errors));
+    }
+    [HttpDelete("delete-user")]
+    public async Task<IActionResult> DeleteUserAsync()
+    {
+        string userId = User.Claims.First(u => u.Type == ClaimTypes.NameIdentifier).Value;
+
+        var deleteUser = await mediatr.Send(new DeleteUserCommand(userId));
+
+        return deleteUser.Match(
+            deleteUser => Ok(deleteUser),
+            errors => Problem(errors));
+    }
+
+    [HttpPut("edit-user-profile")]
+    public async Task<IActionResult> EditUserProfileAsync([FromBody] EditUserProfileRequest request)
+    {
+        var baseUrl = configuration.GetRequiredSection("HostSettings:ClientURL").Value;
+
+        string userId = User.Claims.First(u => u.Type == ClaimTypes.NameIdentifier).Value;
+
+        var updateUser = await mediatr.Send(mapper.Map<EditUserProfileCommand>((request,userId,baseUrl)));
+
+        return updateUser.Match(
+            updateUser => Ok(updateUser),
+            errors => Problem(errors));
+    }
 }

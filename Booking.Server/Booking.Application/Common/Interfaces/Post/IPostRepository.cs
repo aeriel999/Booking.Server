@@ -38,9 +38,9 @@ public interface IPostRepository
 
 
 	Task<List<string>> GetNameOfPostAsync(Guid? category, Guid? country, Guid? city, Guid? realtor, string name);
-	
 
 	Task<List<Post>?> GetListPostByRealtorIdAsync(Guid realtorId);
+
 
 	Task<List<Post>?> GetArchivedListPostByRealtorIdAsync(Guid realtorId);
 }

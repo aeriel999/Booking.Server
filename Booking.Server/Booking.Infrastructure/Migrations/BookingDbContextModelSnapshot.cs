@@ -251,6 +251,37 @@ namespace Booking.Infrastructure.Migrations
                     b.ToTable("PostTypeOfRent");
                 });
 
+            modelBuilder.Entity("Booking.Domain.Users.Feedback", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uuid");
+
+                    b.Property<Guid>("ClientId")
+                        .HasColumnType("uuid");
+
+                    b.Property<DateTime>("FeedbackAt")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.Property<float>("Rating")
+                        .HasColumnType("real");
+
+                    b.Property<Guid>("RealtorId")
+                        .HasColumnType("uuid");
+
+                    b.Property<string>("Text")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("ClientId");
+
+                    b.HasIndex("RealtorId");
+
+                    b.ToTable("Feedbacks");
+                });
+
             modelBuilder.Entity("Booking.Domain.Users.User", b =>
                 {
                     b.Property<Guid>("Id")
@@ -552,6 +583,25 @@ namespace Booking.Infrastructure.Migrations
                     b.Navigation("City");
                 });
 
+            modelBuilder.Entity("Booking.Domain.Users.Feedback", b =>
+                {
+                    b.HasOne("Booking.Domain.Users.User", "Client")
+                        .WithMany("SentFeedbacks")
+                        .HasForeignKey("ClientId")
+                        .OnDelete(DeleteBehavior.ClientNoAction)
+                        .IsRequired();
+
+                    b.HasOne("Booking.Domain.Users.User", "Realtor")
+                        .WithMany("ReceivedFeedbacks")
+                        .HasForeignKey("RealtorId")
+                        .OnDelete(DeleteBehavior.ClientNoAction)
+                        .IsRequired();
+
+                    b.Navigation("Client");
+
+                    b.Navigation("Realtor");
+                });
+
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRoleClaim<System.Guid>", b =>
                 {
                     b.HasOne("Microsoft.AspNetCore.Identity.IdentityRole<System.Guid>", null)
@@ -645,6 +695,10 @@ namespace Booking.Infrastructure.Migrations
             modelBuilder.Entity("Booking.Domain.Users.User", b =>
                 {
                     b.Navigation("Posts");
+
+                    b.Navigation("ReceivedFeedbacks");
+
+                    b.Navigation("SentFeedbacks");
                 });
 #pragma warning restore 612, 618
         }
