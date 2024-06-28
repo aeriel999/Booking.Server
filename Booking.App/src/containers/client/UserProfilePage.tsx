@@ -3,10 +3,10 @@ import { getListOfChatRooms } from "../../store/chat/chat.action.ts";
 import { unwrapResult } from "@reduxjs/toolkit";
 import { startListening } from "../../SignalR";
 import { useAppDispatch, useAppSelector } from "../../hooks/redux";
-import { Avatar, Box, Button, Dialog, DialogActions, DialogContent, DialogContentText, DialogTitle, Typography } from "@mui/material";
+import { Avatar, Box, Breadcrumbs, Button, Dialog, DialogActions, DialogContent, DialogContentText, DialogTitle, Typography } from "@mui/material";
 import { APP_ENV } from "../../env/index.ts";
 import { logout } from "../../store/accounts/account.slice.ts";
-import { useNavigate } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { deleteUserAccount } from "../../store/users/user.action.ts";
 
 export default function UserProfilePage() {
@@ -46,6 +46,12 @@ export default function UserProfilePage() {
     return (
         <>
             <Box>
+                <Breadcrumbs aria-label="breadcrumb" style={{ marginBottom: "20px" }}>
+                    <Link to={"/dashboard"}>
+                        <Typography variant="h6" color="text.primary">Dashboard</Typography>
+                    </Link>
+                    <Typography variant="h6" color="text.primary">Profile</Typography>
+                </Breadcrumbs>
                 <Dialog
                     open={deleteAlertIsOpen}
                     onClose={handleClose}
@@ -72,7 +78,8 @@ export default function UserProfilePage() {
                     </Typography>
                 </Box>
                 <Box sx={{ display: "flex", columnGap: 10 }}>
-                    <Button sx={{ flex: 1 }} variant="contained" onClick={() => navigate("/profile/edit")}>Edit</Button>
+                    <Button sx={{ flex: 1 }} variant="contained" onClick={() => navigate("edit")}>Edit email</Button>
+                    <Button sx={{ flex: 1 }} variant="contained" onClick={() => navigate("change-password")}>Change Password</Button>
                     <Button sx={{ flex: 1 }} variant="contained" onClick={() => setDeleteAlertIsOpen(true)}>Delete</Button>
                 </Box>
             </Box>

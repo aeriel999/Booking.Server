@@ -8,30 +8,30 @@ import Box from '@mui/material/Box';
 import LockOutlinedIcon from '@mui/icons-material/LockOutlined';
 import Typography from '@mui/material/Typography';
 import Container from '@mui/material/Container';
-import {ILogin} from "../../../interfaces/account";
-import {googleLogin, login} from "../../../store/accounts/account.actions.ts";
-import {unwrapResult} from "@reduxjs/toolkit";
+import { ILogin } from "../../../interfaces/account";
+import { googleLogin, login } from "../../../store/accounts/account.actions.ts";
+import { unwrapResult } from "@reduxjs/toolkit";
 import ErrorHandler from "../../../components/common/ErrorHandler.ts";
-import {useAppDispatch} from "../../../hooks/redux";
-import {useRef, useState} from "react";
+import { useAppDispatch } from "../../../hooks/redux";
+import { useRef, useState } from "react";
 import OutlinedErrorAlert from "../../../components/common/ErrorAlert.tsx";
-import {useNavigate} from "react-router-dom";
-import {jwtDecode} from "jwt-decode";
+import { useNavigate } from "react-router-dom";
+import { jwtDecode } from "jwt-decode";
 import InputGroup from "../../../components/common/InputGroup.tsx";
-import {EmailValidator, PasswordValidator} from "../../../validations/account";
+import { EmailValidator, PasswordValidator } from "../../../validations/account";
 
-import {CredentialResponse, GoogleLogin} from "@react-oauth/google";
-import {startListening} from "../../../SignalR";
-import {getListOfChatRooms} from "../../../store/chat/chat.action.ts";
+import { CredentialResponse, GoogleLogin } from "@react-oauth/google";
+import { startListening } from "../../../SignalR";
+import { getListOfChatRooms } from "../../../store/chat/chat.action.ts";
 
-export interface IGoogleLogin{
+export interface IGoogleLogin {
     googleToken: string
 }
 
 export default function SignInPage() {
     const dispatch = useAppDispatch();
-    const [errorMessage, setErrorMessage] = useState<string | undefined >(undefined);
-    const formValid = useRef({ email: false,  password: false});
+    const [errorMessage, setErrorMessage] = useState<string | undefined>(undefined);
+    const formValid = useRef({ email: false, password: false });
     const navigate = useNavigate();
 
     const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
@@ -39,9 +39,9 @@ export default function SignInPage() {
 
         const data = new FormData(event.currentTarget);
 
-        const model : ILogin = {
+        const model: ILogin = {
             email: data.get("email") as string,
-            password: data.get("password")  as string,
+            password: data.get("password") as string,
         }
 
 
@@ -49,19 +49,19 @@ export default function SignInPage() {
             const response = await dispatch(login(model));
             unwrapResult(response);
 
-            await  afterLogin(response.payload)
+            await afterLogin(response.payload)
 
-        } catch (error ) {
+        } catch (error) {
             setErrorMessage(ErrorHandler(error));
 
         }
     };
 
-    const handleLoginSuccess =  async (response: CredentialResponse) => {
+    const handleLoginSuccess = async (response: CredentialResponse) => {
         // Handle successful login (e.g., store user data)
         console.log('Logged in successfully:', response);
 
-        const token : IGoogleLogin = {
+        const token: IGoogleLogin = {
             googleToken: response.credential as string
         }
         try {
@@ -69,14 +69,14 @@ export default function SignInPage() {
 
             unwrapResult(resp);
 
-            await  afterLogin(resp.payload);
+            await afterLogin(resp.payload);
 
-        } catch (error ) {
+        } catch (error) {
             setErrorMessage(ErrorHandler(error));
         }
     };
 
-     const  afterLogin  = async (token : string) =>{
+    const afterLogin = async (token: string) => {
 
         await startListening();
 
@@ -84,24 +84,21 @@ export default function SignInPage() {
 
         const role = decodedToken["http://schemas.microsoft.com/ws/2008/06/identity/claims/role"]
 
-        if (role.toLowerCase().includes('realtor'))
-        {
+        if (role.toLowerCase().includes('realtor')) {
             navigate("/dashboard/profile");
-        }else if(role.toLowerCase().includes('user'))
-        {
-            navigate("/profile");
-        }else if(role.toLowerCase().includes('admin'))
-        {
+        } else if (role.toLowerCase().includes('user')) {
             navigate("/dashboard/profile");
-        }else {
+        } else if (role.toLowerCase().includes('admin')) {
+            navigate("/dashboard/profile");
+        } else {
             navigate("/#");
         }
 
         try {
             const response = await dispatch(getListOfChatRooms());
             unwrapResult(response);
-        }catch (error)                 {
-             setErrorMessage(ErrorHandler(error));
+        } catch (error) {
+            setErrorMessage(ErrorHandler(error));
         }
     }
 

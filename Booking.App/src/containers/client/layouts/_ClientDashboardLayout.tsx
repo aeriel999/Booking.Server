@@ -173,7 +173,7 @@ export default function ClientDashboardLayout() {
 
                     {avatarUrl && <Avatar alt={user?.email} src={avatarUrl} />}
 
-                    <Typography onMouseEnter={() => setIsMouseEnter(true)} onMouseLeave={() => setIsMouseEnter(false)} onClick={() => navigate("/profile")} variant="h6" noWrap component="div" style={{ marginLeft: "25px", marginRight: "25px", textDecoration: isMouseEnter ? "underline" : "none", cursor: isMouseEnter ? "pointer" : "default" }}>
+                    <Typography onMouseEnter={() => setIsMouseEnter(true)} onMouseLeave={() => setIsMouseEnter(false)} onClick={() => navigate("/dashboard/profile")} variant="h6" noWrap component="div" style={{ marginLeft: "25px", marginRight: "25px", textDecoration: isMouseEnter ? "underline" : "none", cursor: isMouseEnter ? "pointer" : "default" }}>
                         {user?.email}
                     </Typography>
 
@@ -190,7 +190,7 @@ export default function ClientDashboardLayout() {
 
                     {/*<DotBadge isActive={false}/>*/}
 
-                    <Button onClick={() => navigate("/")} color={"inherit"}>Posts</Button>
+                    <Button onClick={() => navigate("/dashboard")} color={"inherit"}>Posts</Button>
 
                 </Toolbar>
             </AppBar>

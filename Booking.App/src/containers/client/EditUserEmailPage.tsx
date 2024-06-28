@@ -1,4 +1,4 @@
-import { Box, Button, Container, TextField } from "@mui/material";
+import { Box, Breadcrumbs, Button, Container, TextField, Typography } from "@mui/material";
 import { useEffect, useRef, useState } from "react";
 import { useAppDispatch, useAppSelector } from "../../hooks/redux";
 import { editUserProfile } from "../../store/users/user.action";
@@ -7,7 +7,7 @@ import { EmailValidator } from "../../validations/account";
 import { unwrapResult } from "@reduxjs/toolkit";
 import ErrorHandler from "../../components/common/ErrorHandler";
 import CustomizedDialogs from "../../components/common/Dialog";
-import { useNavigate } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { logout } from "../../store/accounts/account.slice";
 
 export const EditUserEpailPage = () => {
@@ -53,6 +53,15 @@ export const EditUserEpailPage = () => {
     }, [isOpen])
     return (
         <Container fixed sx={{ display: "flex", flexDirection: "column", rowGap: 15 }} >
+            <Breadcrumbs aria-label="breadcrumb" style={{ marginBottom: "20px" }}>
+                <Link to={"/dashboard"}>
+                    <Typography variant="h6" color="text.primary">Dashboard</Typography>
+                </Link>
+                <Link to={"/dashboard/profile"}>
+                    <Typography variant="h6" color="text.primary">Profile</Typography>
+                </Link>
+                <Typography variant="h6" color="text.primary">Edit Email</Typography>
+            </Breadcrumbs>
             <CustomizedDialogs
                 isOpen={isOpen}
                 message={message}
@@ -79,7 +88,7 @@ export const EditUserEpailPage = () => {
 
                 <Box sx={{ display: "flex", justifyContent: "space-between", margin: "auto", width: "50%", marginTop: 10 }}>
                     <Button type="submit" sx={{ width: "30%" }} variant="contained">Update</Button>
-                    <Button sx={{ width: "30%" }} variant="contained" onClick={() => navigate("/profile")}>Cancel</Button>
+                    <Button sx={{ width: "30%" }} variant="contained" onClick={() => navigate("/dashboard/profile")}>Cancel</Button>
                 </Box>
             </Box>
         </Container>

@@ -186,7 +186,7 @@ export default function RealtorPage() {
                                     <Typography sx={{ margin: 1 }}>
                                         {item.name}
                                     </Typography>
-                                    <Button sx={{ padding: 3 }} size="small" onClick={() => navigate(isLogin ? `posts/${item.id}` : `/${item.id}`)}>Learn More</Button>
+                                    <Button sx={{ padding: 3 }} size="small" onClick={() => navigate(isLogin ? `/dashboard/post/${item.id}` : `/${item.id}`)}>Learn More</Button>
                                 </ImageListItem>
                             ))}
                         </ImageList> : ""}

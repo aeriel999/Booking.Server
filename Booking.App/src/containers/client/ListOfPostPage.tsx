@@ -274,7 +274,7 @@ export default function ListOfPostPage() {
                                     </Typography>
                                 </CardContent>
                                 <CardActions>
-                                    <Button size="small" onClick={() => navigate(`/post/${item.id}`)}>Learn More</Button>
+                                    <Button size="small" onClick={() => navigate(`/dashboard/post/${item.id}`)}>Learn More</Button>
                                 </CardActions>
                             </Card>
                         )) : ""}

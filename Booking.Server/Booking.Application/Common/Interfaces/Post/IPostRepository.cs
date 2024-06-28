@@ -28,8 +28,11 @@ public interface IPostRepository
 
 	Task<PagedList<Post>> GetAllAsync(int page, int sizeOfPage);
 
+	Task<List<Post>> GetIncludeListNotArchivedAsync();
 
-	Task<PagedList<Post>> GetFilteredListAsync(
+
+
+    Task<PagedList<Post>> GetFilteredListAsync(
 		Guid? category, Guid? country, Guid? city, Guid? realtor, int page, int sizeOfPage);
 	
 	

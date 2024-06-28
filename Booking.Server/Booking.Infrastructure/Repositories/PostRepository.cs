@@ -36,7 +36,7 @@ public class PostRepository(BookingDbContext context) : IPostRepository
 
 	public async Task<PagedList<Post>> GetAllAsync(int page, int sizeOfPage)
 	{
-		var posts = await GetIncludeListAsync();
+		var posts = await GetIncludeListNotArchivedAsync();
 
 		var list = PagedList<Post>.getPagedList(posts, page, sizeOfPage);
 
@@ -47,7 +47,7 @@ public class PostRepository(BookingDbContext context) : IPostRepository
 
 	public async Task<List<Post>> Filter(Guid? category, Guid? country, Guid? city, Guid? realtor)
 	{
-		var posts = await GetIncludeListAsync();
+		var posts = await GetIncludeListNotArchivedAsync();
 
 		return posts.Where(p => (category == null ? true : p.CategoryId == category)
 			 && (country == null ? true : p.Street!.City!.CountryId == country)
@@ -111,8 +111,18 @@ public class PostRepository(BookingDbContext context) : IPostRepository
 			.Include(post => post.ImagesPost)
 			.ToListAsync();
 	}
-
-	public async Task<List<Post>> GetPostListWithIncludesByRealtorIdAsync(Guid realtorId)
+    public async Task<List<Post>> GetIncludeListNotArchivedAsync()
+    {
+        return await _dbSet
+			.Where(post => !post.IsActive)
+            .Include(post => post.PostTypeOfRent)
+            .Include(post => post.Category)
+            .Include(post => post.Street!.City!.Country)
+            .Include(post => post.User)
+            .Include(post => post.ImagesPost)
+            .ToListAsync();
+    }
+    public async Task<List<Post>> GetPostListWithIncludesByRealtorIdAsync(Guid realtorId)
 	{
 		return await _dbSet
 			.Where(c => c.UserId == realtorId)
