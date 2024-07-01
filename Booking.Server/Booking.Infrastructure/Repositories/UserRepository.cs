@@ -57,11 +57,12 @@ public class UserRepository(UserManager<User> userManager) : IUserRepository
 		return user;
 	}
 
-	public async Task<ErrorOr<Deleted>> DeleteUserAsync(string userId)
+	public async Task<ErrorOr<Deleted>> DeleteUserAsync(Guid userId)
     {
-        var user = await userManager.FindByIdAsync(userId);
+        var user = await userManager.FindByIdAsync(userId.ToString());
 
         if (user == null) return Error.NotFound("Error");
+
         var result = await userManager.DeleteAsync(user);
 
         if(!result.Succeeded) return Error.Conflict(result.Errors.FirstOrDefault().Description);
@@ -90,6 +91,7 @@ public class UserRepository(UserManager<User> userManager) : IUserRepository
         return Result.Updated;
     }
 
+
     public async Task<ErrorOr<User>> FindByEmailAsync(string email)
     {
         var user = await userManager.FindByEmailAsync(email);
@@ -100,15 +102,17 @@ public class UserRepository(UserManager<User> userManager) : IUserRepository
         return user;
     }
 
-    public async Task<ErrorOr<User>> FindByIdAsync(string userId)
+
+    public async Task<ErrorOr<User>> FindByIdAsync(Guid userId)
     {
-		var user = await userManager.FindByIdAsync(userId);
+		var user = await userManager.FindByIdAsync(userId.ToString());
 
         if (user == null)
             return Error.NotFound("User not found");
 
         return user;
 	}
+
 
 	public async Task<ErrorOr<List<string>>> FindRolesByUserIdAsync(User user)
 	{
@@ -119,6 +123,8 @@ public class UserRepository(UserManager<User> userManager) : IUserRepository
 
         return roles.ToList();
 	}
+
+
     public async Task<ErrorOr<User>> ChangeRatingForRealtorAsync(Guid id,float rating)
     {
         var user = await userManager.FindByIdAsync(id.ToString());
@@ -158,28 +164,17 @@ public class UserRepository(UserManager<User> userManager) : IUserRepository
         throw new NotImplementedException();
     }
 
-    public Task<ErrorOr<User>> GetUserAsync(string userId)
-    {
-        throw new NotImplementedException();
-    }
-
-    public Task<ErrorOr<User>> UpdateProfileAsync(User user)
-    {
-        throw new NotImplementedException();
-    }
 
 	public async Task<User?> FindByLoginAsync(string loginProvider, string providerKey)
 	{
         return await userManager.FindByLoginAsync(loginProvider, providerKey);
 	}
 
+
 	public async Task<IdentityResult> AddLoginAsync(User user, UserLoginInfo userLoginInfo)
 	{
 		return await userManager.AddLoginAsync(user, userLoginInfo);
 	}
 
-	public Task<ErrorOr<User>> EditUserAsync(User user)
-	{
-		throw new NotImplementedException();
-	}
+ 
 }

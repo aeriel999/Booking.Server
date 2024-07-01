@@ -9,5 +9,5 @@ public record EditRealtorPrifileInfoCommand(
    string? LastName,
    string? PhoneNumber,
    byte[]? Avatar,
-   string UserId,
+   Guid UserId,
    string BaseUrl) : IRequest<ErrorOr<EditRealtorPrifileInfoCommandResult>>;

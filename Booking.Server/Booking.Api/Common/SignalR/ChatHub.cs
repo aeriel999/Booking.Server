@@ -75,7 +75,7 @@ namespace Booking.Api.Common.SignalR
 
 			//Save message in DB
 			var saveUserMessageResult = await mediatr.Send(mapper.Map<CreateMessageCommand>(
-				(message, userId)));
+				(message, Guid.Parse(userId))));
 
 			//send message in real time
 			await Clients.GroupExcept(message.RoomId.ToString(), new[] { Context.ConnectionId })

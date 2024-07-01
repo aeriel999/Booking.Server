@@ -38,6 +38,7 @@ public class AuthenticationController(
 			errors => Problem(errors));
 	}
 
+
 	[HttpPost("realtor-register")]
 	public async Task<IActionResult> RegisterRealtorAsync(RegisterRealtorRequest request)
 	{
@@ -62,6 +63,7 @@ public class AuthenticationController(
 			errors => Problem(errors));
 	}
 
+
 	[HttpPost("confirm-email")]
 	public async Task<IActionResult> ConfirmEmailAsync(ConfirmEmailRequest request)
 	{
@@ -71,6 +73,7 @@ public class AuthenticationController(
 			authResult => Ok(confirmEmailResult.Value),
 			errors => Problem(errors));
 	}
+
 
 	[HttpPost("login")]
 	public async Task<IActionResult> LoginAsync([FromBody] LoginUserRequest request)
@@ -82,6 +85,7 @@ public class AuthenticationController(
 			errors => Problem(errors));
 	}
 
+
 	[HttpPost("google-login")]
 	public async Task<IActionResult> GoogleLoginAsync([FromBody] GoogleLoginUserRequest request)
 	{
@@ -91,6 +95,7 @@ public class AuthenticationController(
 			loginResult => Ok(googleLoginResult.Value),
 			errors => Problem(errors));
 	}
+
 
 	[HttpPost("forgot-password")]
 	public async Task<IActionResult> ForgotPasswordAsync([FromBody] ForgotPasswordRequest request)
@@ -104,6 +109,7 @@ public class AuthenticationController(
 			errors => Problem(errors));
 	}
 
+
 	[HttpPost("reset-password")]
 	public async Task<IActionResult> ResetPasswordAsync([FromBody] ResetPssswordRequest request)
 	{
@@ -114,6 +120,7 @@ public class AuthenticationController(
 			errors => Problem(errors));
 	}
 
+
 	[HttpPost("change-email")]
 	public async Task<IActionResult> ChangeEmailAsync([FromBody] ChangeEmailRequest request)
 	{
@@ -123,6 +130,7 @@ public class AuthenticationController(
 			changeEmailResult => Ok(),
 			errors => Problem(errors));
 	}
+
 
 	[HttpPost("reconfirm-email")]
 	public async Task<IActionResult> ReconfirmEmailAsync([FromBody] ReconfirmEmailRequest request)
@@ -136,6 +144,7 @@ public class AuthenticationController(
 			changeEmailResult => Ok(),
 			errors => Problem(errors));
 	}
+
 
 	[HttpGet("ping")]
 	public IActionResult Ping()

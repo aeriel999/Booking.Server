@@ -22,7 +22,7 @@ public class UserMappingConfig : IRegister
 	public void Register(TypeAdapterConfig config)
 	{
 		config.NewConfig<(
-			EditRealtorPrifileInfoRequest editRealtorPrifileInfo, string UserId, string BaseUrl, byte[] Avatar),
+			EditRealtorPrifileInfoRequest editRealtorPrifileInfo, Guid UserId, string BaseUrl, byte[] Avatar),
 			EditRealtorPrifileInfoCommand>()
 		.Map(dest => dest.UserId, src => src.UserId)
 		.Map(dest => dest.BaseUrl, src => src.BaseUrl)
@@ -33,7 +33,7 @@ public class UserMappingConfig : IRegister
 		config.NewConfig<EditRealtorPrifileInfoCommandResult, EditRealtorPrifileInfoResponse>();
 
 
-		config.NewConfig<(ChangePasswordRequest changePassword, string UserId),	ChangePasswordCommand>()
+		config.NewConfig<(ChangePasswordRequest changePassword, Guid UserId),	ChangePasswordCommand>()
 		.Map(dest => dest.UserId, src => src.UserId)
 		.Map(dest => dest, src => src.changePassword);
 

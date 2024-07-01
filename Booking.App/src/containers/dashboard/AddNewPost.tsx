@@ -1,7 +1,7 @@
 import Container from "@mui/material/Container";
 import Box from "@mui/material/Box";
 import Typography from "@mui/material/Typography";
-import { Breadcrumbs, Grid } from "@mui/material";
+import { Breadcrumbs, Grid, LinearProgress } from "@mui/material";
 import { Link, useNavigate } from "react-router-dom";
 import Divider from "@mui/material/Divider";
 import ComboBox from "../../components/common/ComboBox.tsx";
@@ -41,7 +41,8 @@ import { AvatarValidator } from "../../validations/account";
 import Button from "@mui/material/Button";
 import * as React from "react";
 import { joinForPostListening } from "../../SignalR";
-import IMG from "../../assets/avatar-profile-icon-vector-illustration_276184-165.jpg";
+import DefaultImg from "../../assets/images.png";
+import { maxImagesCount } from "../../constants/index.ts";
 
 export function AddNewPost() {
     const dispatch = useAppDispatch();
@@ -72,10 +73,9 @@ export function AddNewPost() {
         images: false,
     });
     const [images, setImages] = useState<File[]>([]);
-    const [isFormValid, setIsFormValid] = useState(false);
+    const [isFormValid, setIsFormValid] = useState<boolean>(false);
     const navigate = useNavigate();
-    //ToDo make hasCountOfRooms and hasArea
-    //ToDo request.CityId == null && request.CityName != null
+    const [upload, setUpload] = useState<boolean>(false);
 
     const getTypeOfRentList = async () => {
         try {
@@ -203,6 +203,7 @@ export function AddNewPost() {
         };
 
         try {
+            //setUpload(true);
             const response = await dispatch(createPost(model));
             unwrapResult(response);
 
@@ -234,6 +235,8 @@ export function AddNewPost() {
                 </Typography>
             </Breadcrumbs>
             <Divider />
+
+            {upload && <LinearProgress />}
 
             {errorMessage && <OutlinedErrorAlert message={errorMessage} />}
 
@@ -419,19 +422,31 @@ export function AddNewPost() {
                                 />
                             </Grid>
 
-                            <Grid item xs={12}>
-                                <FileUploader
-                                    images={images}
-                                    setImages={setImages}
-                                    maxImagesUpload={10}
-                                    validator={AvatarValidator}
-                                    onChange={(isValid) =>
-                                        (formValid.current.images = isValid)
-                                    }
-                                    onDelete={handleChange}
-                                    defaultImages={[IMG]}
-                                ></FileUploader>
-                            </Grid>
+                            {Array.from({
+                                length: maxImagesCount,
+                            }).map((_, index) => (
+                                <Grid item xs={12} key={index}>
+                                    <Typography
+                                        variant="subtitle1"
+                                        color="text.primary"
+                                    >
+                                        {" "}
+                                        Image # {index + 1}
+                                    </Typography>
+
+                                    <FileUploader
+                                        images={images}
+                                        setImages={setImages}
+                                        maxImagesUpload={maxImagesCount}
+                                        validator={AvatarValidator}
+                                        defaultImage={DefaultImg}
+                                        onChange={(isValid) =>
+                                            (formValid.current.images = isValid)
+                                        }
+                                        onDelete={handleChange}
+                                    />
+                                </Grid>
+                            ))}
                         </Grid>
                         <Button
                             type="submit"

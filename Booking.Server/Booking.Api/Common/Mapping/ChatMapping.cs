@@ -8,7 +8,7 @@ public class ChatMapping : IRegister
 {
 	public void Register(TypeAdapterConfig config)
 	{
-		config.NewConfig<(InputMessage inputMessage, string UserId), CreateMessageCommand>()
+		config.NewConfig<(InputMessage inputMessage, Guid UserId), CreateMessageCommand>()
 		.Map(dest => dest.UserId, src => src.UserId)
 		.Map(dest => dest, src => src.inputMessage);
 	}

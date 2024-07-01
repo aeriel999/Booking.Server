@@ -14,7 +14,7 @@ public class ChangeEmailCommandHandler(
 	public async Task<ErrorOr<User>> Handle(ChangeEmailCommand request, CancellationToken cancellationToken)
 	{
 		//get user
-		var getUserResult = await userRepository.FindByIdAsync(request.UserId.ToString());
+		var getUserResult = await userRepository.FindByIdAsync(request.UserId);
 
 		if (getUserResult.IsError)
 			return getUserResult;

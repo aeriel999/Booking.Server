@@ -1,5 +1,4 @@
 ﻿using Booking.Application.Common.Interfaces.Post;
-using Booking.Domain.Posts;
 using ErrorOr;
 using MediatR;
 

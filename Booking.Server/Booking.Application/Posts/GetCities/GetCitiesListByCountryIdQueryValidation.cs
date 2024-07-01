@@ -6,6 +6,6 @@ public class GetCitiesListByCountryIdQueryValidation : AbstractValidator<GetCiti
 {
     public GetCitiesListByCountryIdQueryValidation()
     {
-        //ToDo Make Validation
-    }
+		RuleFor(r => r.ContryId).NotEmpty().WithMessage("Field must not be empty");
+	}
 }

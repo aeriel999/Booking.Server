@@ -6,6 +6,7 @@ using Booking.Infrastructure.Common.Persistence;
 using Microsoft.EntityFrameworkCore;
 using System.Text.RegularExpressions;
 using System.IO;
+using MailKit.Search;
 
 namespace Booking.Infrastructure.Repositories;
 
@@ -38,6 +39,7 @@ public class PostRepository(BookingDbContext context) : IPostRepository
 	{
 		var posts = await GetIncludeListAsync();
 
+		//ToDo Nazar
 		var list = PagedList<Post>.getPagedList(posts, page, sizeOfPage);
 
 		list.items = list.items.OrderBy(item => item.PostAt).ToList();
@@ -62,6 +64,7 @@ public class PostRepository(BookingDbContext context) : IPostRepository
 	{
 		var posts = await Filter(category, country, city, realtor);
 
+		//ToDo Nazar
 		PagedList<Post> list = new PagedList<Post>();
 
         list = PagedList<Post>.getPagedList(posts.
@@ -119,6 +122,7 @@ public class PostRepository(BookingDbContext context) : IPostRepository
 			.Include(post => post.PostTypeOfRent)
 			.Include(post => post.Category)
 			.Include(post => post.Street!.City!.Country)
+			.OrderByDescending(post => post.PostAt)
 			.ToListAsync();
 	}
 
@@ -126,7 +130,7 @@ public class PostRepository(BookingDbContext context) : IPostRepository
 	{
 		return await _dbSet
 			.Where(c => c.UserId == realtorId)
-			.Include(post=>post.ImagesPost)
+			.Include(post => post.ImagesPost)
 			.ToListAsync();
 	}
 
@@ -158,7 +162,7 @@ public class PostRepository(BookingDbContext context) : IPostRepository
 				_dbSet.Remove(post);
 			});
 
-		await context.SaveChangesAsync();
+		//await context.SaveChangesAsync();
 	}
 
 	public async Task<Post?> GetPostById(Guid postId)

@@ -18,16 +18,16 @@ export const StreetNameValidator = (value: string): string | undefined => {
 
 export const PostNameValidator = (value: string): string | undefined => {
     if (!value) return 'Title must not be empty';
-    if (value.length < 24) return 'Title must be at least 24 characters long';
-    if (value.length > 48) return 'Title must be less than 48 characters long';
+    if (value.length < 8) return 'Title must be at least 24 characters long';
+    if (value.length > 256) return 'Title must be less than 48 characters long';
     // if (!/^[A-Za-z0-9\s]+$/.test(value)) return 'Title must contain only letters, digits, and spaces';
     if (/[£#“”]/.test(value)) return 'Title must not contain the following characters: £ # “”';
     return undefined; // Return undefined if validation passes
 };
 
 export const DescriptionValidator = (value: string): string | undefined => {
-    if (value.length < 240) return 'Description must be at least 240 characters long';
-    if (value.length > 1500) return 'Description must be less than 1500 characters long';
+    if (value.length < 256) return 'Description must be at least 240 characters long';
+    if (value.length > 5000) return 'Description must be less than 1500 characters long';
     // if (!/^[A-Za-z0-9\s]+$/.test(value)) return 'Description must contain only letters, digits, and spaces';
     if (/[£#“”]/.test(value)) return 'Description must not contain the following characters: £ # “”';
     return undefined; // Return undefined if validation passes

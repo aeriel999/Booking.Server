@@ -8,7 +8,7 @@ public class GetRealtorByIdQueryHandler(IUserRepository repository) : IRequestHa
 {
     public async Task<ErrorOr<Booking.Domain.Users.User>> Handle(GetRealtorByIdQuery request, CancellationToken cancellationToken)
     {
-        var response = await repository.FindByIdAsync(request.id.ToString());
+        var response = await repository.FindByIdAsync(request.id);
 
         if (response.IsError) return response.FirstError;
 

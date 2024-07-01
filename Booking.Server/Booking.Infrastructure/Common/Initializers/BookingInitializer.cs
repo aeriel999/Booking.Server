@@ -6,7 +6,6 @@ using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
-using Org.BouncyCastle.Utilities.IO;
 
 namespace Booking.Infrastructure.Common.Initializers;
 
@@ -312,7 +311,7 @@ public static class BookingInitializer
 
 		var context = service.GetRequiredService<BookingDbContext>();
 
-		context.Database.Migrate();
+		//context.Database.Migrate();
 
 		var userManager = scope.ServiceProvider
 			.GetRequiredService<UserManager<User>>();

@@ -6,5 +6,6 @@ public interface IPostCategoryRepository
 {
 	Task<PostCategory?> FindPostCategoryByIdAsync(Guid postCategoryId);
 
+
 	Task<List<PostCategory>?> GetListOfCategoriesAsync();
 }

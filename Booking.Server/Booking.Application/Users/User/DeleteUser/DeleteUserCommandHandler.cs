@@ -9,7 +9,7 @@ public class DeleteUserCommandHandler(IUserRepository userRepository,IUserFeedba
     {
         await userFeedbackRepository.DeleteAllFeedbacksAsync(request.id);
 
-        var result = await userRepository.DeleteUserAsync(request.id);
+        var result = await userRepository.DeleteUserAsync(Guid.Parse(request.id));
         if (result.IsError) return Error.Custom((int)result.Errors.FirstOrDefault().Type,
             result.Errors.FirstOrDefault().Code,
             result.Errors.FirstOrDefault().Description);

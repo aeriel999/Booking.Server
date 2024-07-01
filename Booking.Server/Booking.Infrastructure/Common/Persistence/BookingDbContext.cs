@@ -78,7 +78,8 @@ public class BookingDbContext : IdentityDbContext<User, IdentityRole<Guid>, Guid
 		builder.Entity<Post>()
 			.HasMany(c => c.ImagesPost)
 			.WithOne(u => u.Post)
-			.OnDelete(DeleteBehavior.ClientCascade);
+			.HasForeignKey(i => i.PostId)
+			.OnDelete(DeleteBehavior.Cascade);
 
 		builder.Entity<PostCategory>()
 			.HasMany(u => u.Posts)

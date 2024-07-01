@@ -18,18 +18,16 @@ public class CreateChatCommandHandler(
 		CreateChatCommand request, CancellationToken cancellationToken)
 	{
 		//Get user
-		var userOrError = await userRepository.FindByIdAsync(request.UserId.ToString());
+		var userOrError = await userRepository.FindByIdAsync(request.UserId);
 
 		if (userOrError.IsError)
 			return userOrError.Errors;
-
-		var user = userOrError.Value;
 
 		//Get Post
 		var post = await postRepositories.GetPostWithIncludesByIdAsync(request.PostId);
 
 		if (post == null)
-			return Error.NotFound();
+			return Error.NotFound("Post is not found");
 
 		//Create chatRoom
 		var chatRoom = new ChatRoom

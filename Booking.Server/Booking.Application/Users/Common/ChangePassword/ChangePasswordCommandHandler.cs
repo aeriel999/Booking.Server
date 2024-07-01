@@ -10,7 +10,8 @@ public class ChangePasswordCommandHandler(
 	IUserRepository userRepository, IUserAuthenticationService userAuthenticationService)
 	: IRequestHandler<ChangePasswordCommand, ErrorOr<Booking.Domain.Users.User>>
 {
-	public async Task<ErrorOr<Booking.Domain.Users.User>> Handle(ChangePasswordCommand request, CancellationToken cancellationToken)
+	public async Task<ErrorOr<Booking.Domain.Users.User>> Handle(
+		ChangePasswordCommand request, CancellationToken cancellationToken)
 	{
 		//Get User
 		var userOrError = await userRepository.FindByIdAsync(request.UserId);

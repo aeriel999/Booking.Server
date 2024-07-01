@@ -1,0 +1,1 @@
+export const maxImagesCount : number = 10;

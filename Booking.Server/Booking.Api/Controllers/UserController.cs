@@ -43,6 +43,8 @@ public class UserController(ISender mediatr, IMapper mapper, IConfiguration conf
             getRealtorsListResult => Ok(mapper.Map<List<GetRealtorResponse>>(getRealtorsListResult)),
             errors => Problem(errors));
     }
+
+
     [AllowAnonymous]
     [HttpGet("get-realtor-by-id-{id}")]
     public async Task<IActionResult> GetRealtrByIdAsync([FromRoute] Guid id)
@@ -53,6 +55,8 @@ public class UserController(ISender mediatr, IMapper mapper, IConfiguration conf
             realtor => Ok(mapper.Map<GetInformationAboutRealtorResponse>(realtor)),
             errors => Problem(errors));
     }
+
+
     [HttpPost("realtor-profile")]
 	public async Task<IActionResult> EditRealtorPrifileInfoAsync(EditRealtorPrifileInfoRequest request)
 	{
@@ -71,24 +75,26 @@ public class UserController(ISender mediatr, IMapper mapper, IConfiguration conf
 		}
 
 		var editResult = await mediatr.Send(
-			mapper.Map<EditRealtorPrifileInfoCommand>((request, userId, baseUrl, image)));
+			mapper.Map<EditRealtorPrifileInfoCommand>((request, Guid.Parse(userId), baseUrl, image)));
 
 		return editResult.Match(
 			authResult => Ok(mapper.Map<EditRealtorPrifileInfoResponse>(editResult.Value)),
 			errors => Problem(errors));
 	}
 
+
     [HttpPost("change-password")]
     public async Task<IActionResult> ChangePasswordAsync([FromBody] ChangePasswordRequest request)
     {
         string userId = User.Claims.First(u => u.Type == ClaimTypes.NameIdentifier).Value;
 
-        var changeEmailResult = await mediatr.Send(mapper.Map<ChangePasswordCommand>((request, userId)));
+        var changeEmailResult = await mediatr.Send(mapper.Map<ChangePasswordCommand>((request, Guid.Parse(userId))));
 
         return changeEmailResult.Match(
             changeEmailResult => Ok(),
             errors => Problem(errors));
     }
+
 
     [HttpPost("send-feedback")]
     public async Task<IActionResult> SendFeedbackAsync([FromBody] SendFeedbackRequest request)
@@ -101,6 +107,8 @@ public class UserController(ISender mediatr, IMapper mapper, IConfiguration conf
             sendFeedbackResult => Ok(sendFeedbackResult),
             errors => Problem(errors));
     }
+
+
     [AllowAnonymous]
     [HttpGet("get-feedbacks-{id}")]
     public async Task<IActionResult> GetFeedbacksAsync([FromRoute] Guid id, [FromQuery] int page, int sizeOfPage)
@@ -111,6 +119,8 @@ public class UserController(ISender mediatr, IMapper mapper, IConfiguration conf
             getFeedbacksResult => Ok(mapper.Map<PagedList<GetFeedbackResponse>>(getFeedbacksResult)),
             errors => Problem(errors));
     }
+
+
     [HttpGet("get-realtors-by-user-feedbacks")]
     public async Task<IActionResult> GetRealtorsByUserFeedbacksAsync()
     {
@@ -122,6 +132,8 @@ public class UserController(ISender mediatr, IMapper mapper, IConfiguration conf
             getRealtorsResult => Ok(mapper.Map<List<GetRealtorByUserFeedbackResponse>>(getRealtorsResult)),
             errors => Problem(errors));
     }
+
+
     [HttpDelete("delete-user")]
     public async Task<IActionResult> DeleteUserAsync()
     {
@@ -133,6 +145,7 @@ public class UserController(ISender mediatr, IMapper mapper, IConfiguration conf
             deleteUser => Ok(deleteUser),
             errors => Problem(errors));
     }
+
 
     [HttpPut("edit-user-profile")]
     public async Task<IActionResult> EditUserProfileAsync([FromBody] EditUserProfileRequest request)
