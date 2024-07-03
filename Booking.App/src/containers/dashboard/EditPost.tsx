@@ -1,7 +1,7 @@
 import Container from "@mui/material/Container";
 import Box from "@mui/material/Box";
 import Typography from "@mui/material/Typography";
-import { Breadcrumbs, CircularProgress, Grid } from "@mui/material";
+import { Breadcrumbs, Grid, LinearProgress } from "@mui/material";
 import { Link, useNavigate, useParams } from "react-router-dom";
 import Divider from "@mui/material/Divider";
 import ComboBox from "../../components/common/ComboBox.tsx";
@@ -43,6 +43,7 @@ import Button from "@mui/material/Button";
 import * as React from "react";
 import { APP_ENV } from "../../env/index.ts";
 import IMG from "../../assets/avatar-profile-icon-vector-illustration_276184-165.jpg";
+import { maxImagesCount } from "../../constants/index.ts";
 
 export function EditPost() {
     const { postId } = useParams();
@@ -505,7 +506,7 @@ export function EditPost() {
                                         <FileUploader
                                             images={images}
                                             setImages={setImages}
-                                            maxImagesUpload={10}
+                                            maxImagesUpload={1}
                                             validator={AvatarValidator}
                                             defaultImage={img}
                                             onChange={(isValid) =>
@@ -519,7 +520,7 @@ export function EditPost() {
                                 ))}
 
                                 {Array.from({
-                                    length: 10 - postImages.length,
+                                    length: maxImagesCount - postImages.length,
                                 }).map((_, index) => (
                                     <Grid item xs={12} key={index}>
                                         <Typography
@@ -560,7 +561,7 @@ export function EditPost() {
                     </Box>
                 </Container>
             ) : (
-                <CircularProgress />
+                <LinearProgress />
             )}
         </>
     );

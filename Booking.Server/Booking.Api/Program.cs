@@ -64,7 +64,6 @@ app.MapHub<ChatHub>("/chat", options =>
 	options.Transports =
 		HttpTransportType.WebSockets |
 		HttpTransportType.LongPolling;
-}
-);
+});
 
 app.Run();

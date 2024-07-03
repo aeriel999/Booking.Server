@@ -1,7 +1,6 @@
 ﻿using Booking.Application.Common.Interfaces.Chat;
 using Booking.Application.Common.Interfaces.Post;
 using Booking.Application.Common.Interfaces.Users;
-using Booking.Domain.Chat;
 using Booking.Domain.Constants;
 using ErrorOr;
 using MediatR;
@@ -51,7 +50,7 @@ public class GetChatRoomsListQueryHandler(
 						}
 					}
 
-					var user = await userRepository.FindByIdAsync(chat.ClientId.ToString());
+					var user = await userRepository.FindByIdAsync(chat.ClientId);
 
 					var userName = await userRepository.GetUserNameByUserAsync(user.Value);
 

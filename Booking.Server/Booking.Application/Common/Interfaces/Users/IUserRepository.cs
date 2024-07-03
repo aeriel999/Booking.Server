@@ -12,7 +12,7 @@ public interface IUserRepository
     Task<ErrorOr<User>> FindByEmailAsync(string email);
 
 
-	Task<ErrorOr<User>> FindByIdAsync(string userId);
+	Task<ErrorOr<User>> FindByIdAsync(Guid userId);
 
 
 	Task<ErrorOr<List<string>>> FindRolesByUserIdAsync(User user);
@@ -38,9 +38,6 @@ public interface IUserRepository
 	Task<ErrorOr<Updated>> EditUserAsync(Guid id, string? email);
 
 
-	Task<ErrorOr<User>> EditUserAsync(User user);
-
-
 	Task<ErrorOr<User>> SaveUserAsync(User user);
 
 
@@ -52,5 +49,9 @@ public interface IUserRepository
 
 	Task<IdentityResult> AddLoginAsync(User user, UserLoginInfo userLoginInfo);
 
+
 	Task<ErrorOr<User>> ChangeRatingForRealtorAsync(Guid id, float rating);
+
+
+	//Task<ErrorOr<Deleted>> DeleteUserAsync(Guid userId);
 }

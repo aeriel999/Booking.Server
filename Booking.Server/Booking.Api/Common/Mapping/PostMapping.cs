@@ -121,8 +121,20 @@ public class PostMapping : IRegister
 		config.NewConfig<List<PostTypeOfRent>, List<GetTypeOfPostResponse>>();
 
 
-		config.NewConfig<GetPostListForRealtorQueryResult, GetPostListForRealtorResponse>();
-		config.NewConfig<PagedList<GetPostListForRealtorQueryResult>, PagedList<GetPostListForRealtorResponse>>();
+		config.NewConfig<Post, GetPostListForRealtorResponse>()
+			.Map(desp => desp.Id, src => src.Id)
+			.Map(desp => desp.Category, src => src.Category!.Name)
+			.Map(desp => desp.TypeOfRent, src => src.PostTypeOfRent!.Name)
+			.Map(desp => desp.Adress,
+			src => src.Street!.City!.Country!.Name + " " + src.Street.City.Name + " " + src.Street.Name)
+			.Map(desp => desp.Name, src => src.Name)
+			.Map(desp => desp.Price, src => src.Price)
+			.Map(desp => desp.DateOfPost, src => src.PostAt)
+			.Map(desp => desp.DateOfEdit, src => src.EditAt)
+			.Map(desp => desp.IsActive, src => src.IsActive)
+			.Map(desp => desp.IsArhive, src => src.IsArhive);
+		
+		config.NewConfig<PagedList<Post>, PagedList<GetPostListForRealtorResponse>>();
 
 
 		config.NewConfig<Post, GetPostForEditResponse>()
@@ -156,7 +168,6 @@ public class PostMapping : IRegister
 			.Map(desp => desp.DateOfPost, src => src.PostAt)
 			.Map(desp => desp.DateOfEdit, src => src.EditAt)
 			.Map(desp => desp.IsActive, src => src.IsActive);
-
 
 		config.NewConfig<PagedList<Post>, PagedList<GetArchivedPostListForRealtorResponse>>();
 	}

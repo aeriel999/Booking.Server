@@ -6,7 +6,9 @@ public interface IUserMessageRepository
 {
 	Task CreateUserMessageAsync(UserMessage userMessage);
 
+
 	Task SaveUserMessageAsync();
+
 
 	Task<List<UserMessage>> GetUserMessagesByChatRoomIdAsync(Guid chatRoomId);
 }

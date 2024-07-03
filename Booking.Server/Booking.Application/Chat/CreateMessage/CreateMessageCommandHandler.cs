@@ -33,7 +33,7 @@ public class CreateMessageCommandHandler(
 		var userMessage = new UserMessage
 		{
 			Id = Guid.NewGuid(),
-			UserId = Guid.Parse(request.UserId),
+			UserId = request.UserId,
 			Message = request.Message,
 			ChatRoomId = request.RoomId,
 			ChatRoom = room!,

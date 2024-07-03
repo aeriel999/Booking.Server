@@ -8,9 +8,11 @@ public record ChangePasswordRequest
     [Length(8, 24)]
     public required string CurrentPassword { get; init; }
 
+
     [Required(ErrorMessage = "{PropertyName} must not be empty")]
     [Length(8, 24)]
     public required string NewPassword { get; init; }
+
 
     [Required(ErrorMessage = "{PropertyName} must not be empty")]
     [Compare("NewPassword",

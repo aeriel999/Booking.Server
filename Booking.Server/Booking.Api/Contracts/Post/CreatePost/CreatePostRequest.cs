@@ -6,7 +6,7 @@ namespace Booking.Api.Contracts.Post.CreatePost;
 public record CreatePostRequest
 {
 	[Required(ErrorMessage = "{PropertyName} must not be empty")]
-	[Length(8, 124)]
+	[Length(8, 256)]
 	public required string Name { get; init; }
 
 

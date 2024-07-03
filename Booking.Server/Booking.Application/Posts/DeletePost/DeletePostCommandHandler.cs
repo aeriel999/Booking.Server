@@ -21,6 +21,7 @@ public class DeletePostCommandHandler(IPostRepository postRepository)
 
 		//Delete post
 		await postRepository.DeletePostAsync(post);
+		await postRepository.SavePostAsync();
 
 		return Result.Deleted;
 	}

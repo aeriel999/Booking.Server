@@ -18,7 +18,5 @@ public class LoginUserQueryValidation : AbstractValidator<LoginUserQuery>
 			.Matches(@"\d").WithMessage("Password must contain one or more digits.")
 			.Matches(@"[][""!@$%^&*(){}:;<>,.?/+_=|'~\\-]").WithMessage("Password must contain one or more special characters.")
 			.Matches("^[^£# “”]*$").WithMessage("Password must not contain the following characters £ # “” or spaces.");
-		//.Must(pass => !blacklistedWords.Any(word => pass.IndexOf(word, StringComparison.OrdinalIgnoreCase) >= 0))
-		//.WithMessage("Password contains a word that is not allowed."); 
 	}
 }

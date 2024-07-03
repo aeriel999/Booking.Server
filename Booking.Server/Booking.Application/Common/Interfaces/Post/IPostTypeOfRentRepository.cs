@@ -6,5 +6,6 @@ public interface IPostTypeOfRentRepository
 {
 	Task<List<PostTypeOfRent>> GetListTypeOfRentAsync(); 
 
+
 	Task<PostTypeOfRent?> GetTypeOfRentByIdAsync(Guid id);
 }

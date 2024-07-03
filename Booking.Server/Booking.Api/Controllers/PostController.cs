@@ -211,7 +211,7 @@ public class PostController(ISender mediatr, IMapper mapper) : ApiController
 	}
     [AllowAnonymous]
     [HttpGet("get-post-list-by-realtor-id-{id}")]
-    public async Task<IActionResult> GetPostListByRealtorIDAsync([FromRoute] Guid id)
+    public async Task<IActionResult> GetPostListByRealtorIdForChatsAsync([FromRoute] Guid id)
     {
 
         var getPostListByRealtorId = await mediatr.Send(new GetPostListByRealtorIdQuery(id));

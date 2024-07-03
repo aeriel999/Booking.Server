@@ -1,7 +1,7 @@
 import Container from "@mui/material/Container";
 import Box from "@mui/material/Box";
 import Typography from "@mui/material/Typography";
-import { Breadcrumbs, Grid } from "@mui/material";
+import { Breadcrumbs, Grid, LinearProgress } from "@mui/material";
 import { Link, useNavigate } from "react-router-dom";
 import Divider from "@mui/material/Divider";
 import ComboBox from "../../components/common/ComboBox.tsx";
@@ -41,7 +41,8 @@ import { AvatarValidator } from "../../validations/account";
 import Button from "@mui/material/Button";
 import * as React from "react";
 import { joinForPostListening } from "../../SignalR";
-import IMG from "../../assets/avatar-profile-icon-vector-illustration_276184-165.jpg";
+import DefaultImg from "../../assets/images.png";
+import { maxImagesCount } from "../../constants/index.ts";
 
 export function AddNewPost() {
     const dispatch = useAppDispatch();
@@ -72,10 +73,9 @@ export function AddNewPost() {
         images: false,
     });
     const [images, setImages] = useState<File[]>([]);
-    const [isFormValid, setIsFormValid] = useState(false);
+    const [isFormValid, setIsFormValid] = useState<boolean>(false);
     const navigate = useNavigate();
-    //ToDo make hasCountOfRooms and hasArea
-    //ToDo request.CityId == null && request.CityName != null
+    const [upload, setUpload] = useState<boolean>(false);
 
     const getTypeOfRentList = async () => {
         try {
@@ -167,11 +167,18 @@ export function AddNewPost() {
         setIsFormValid(
             Object.values(formValid.current).every((isValid) => isValid)
         );
-        console.log("isFormValid", isFormValid);
+
+        console.log("formValid.current", formValid.current);
+        console.log(
+            "TestValid",
+            Object.values(formValid.current).every((isValid) => isValid)
+        );
     }
 
     const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
         event.preventDefault();
+
+        setUpload(true);
 
         const data = new FormData(event.currentTarget);
 
@@ -258,7 +265,7 @@ export function AddNewPost() {
                         <Grid container spacing={2}>
                             <Grid item xs={12}>
                                 <InputGroup
-                                    label="Enter title for your post"
+                                    label="Enter title for your post *"
                                     field="name"
                                     type="text"
                                     validator={PostNameValidator}
@@ -272,7 +279,7 @@ export function AddNewPost() {
                                 <ComboBox
                                     options={typeOfRentList}
                                     onChange={setTypeOfRent}
-                                    label={"Type Of Rent"}
+                                    label={"Type Of Rent *"}
                                 />
                             </Grid>
 
@@ -280,7 +287,7 @@ export function AddNewPost() {
                                 <ComboBox
                                     options={categoryList}
                                     onChange={setCategory}
-                                    label={"Category"}
+                                    label={"Category *"}
                                 />
                             </Grid>
 
@@ -288,7 +295,7 @@ export function AddNewPost() {
                                 <ComboBox
                                     options={countryList}
                                     onChange={setCountry}
-                                    label={"Country"}
+                                    label={"Country *"}
                                 />
                             </Grid>
 
@@ -299,7 +306,7 @@ export function AddNewPost() {
                                         color="text.primary"
                                     >
                                         Select City from the list or enter it in
-                                        a field.
+                                        a field. *
                                     </Typography>
                                     <ComboBox
                                         options={cityList}
@@ -317,7 +324,10 @@ export function AddNewPost() {
                                         type="text"
                                         validator={CityNameValidator}
                                         onChange={(isValid) =>
-                                            (formValid.current.city = isValid)
+                                            (formValid.current.city =
+                                                city === undefined
+                                                    ? isValid
+                                                    : true)
                                         }
                                     />
                                 </Grid>
@@ -330,7 +340,7 @@ export function AddNewPost() {
                                         color="text.primary"
                                     >
                                         Select Street from the list or enter it
-                                        in a field.
+                                        in a field. *
                                     </Typography>
                                     <ComboBox
                                         options={streetList}
@@ -343,12 +353,15 @@ export function AddNewPost() {
                             {street === undefined && (
                                 <Grid item xs={12}>
                                     <InputGroup
-                                        label="Street"
+                                        label="Street *"
                                         field="streetName"
                                         type="text"
                                         validator={StreetNameValidator}
                                         onChange={(isValid) =>
-                                            (formValid.current.street = isValid)
+                                            (formValid.current.street =
+                                                street === undefined
+                                                    ? isValid
+                                                    : true)
                                         }
                                     />
                                 </Grid>
@@ -356,7 +369,7 @@ export function AddNewPost() {
 
                             <Grid item xs={12}>
                                 <InputGroup
-                                    label="Bulding number"
+                                    label="Bulding number *"
                                     field="buildingNumber"
                                     type="text"
                                     validator={BuildingNumberValidator}
@@ -394,7 +407,7 @@ export function AddNewPost() {
 
                             <Grid item xs={12}>
                                 <InputGroup
-                                    label="Price"
+                                    label="Price *"
                                     field="price"
                                     type="number"
                                     validator={PriceValidator}
@@ -418,20 +431,48 @@ export function AddNewPost() {
                                     isMultiline={true}
                                 />
                             </Grid>
+                            {/* 
+                            <Grid item xs={12}  >
+                                   
 
-                            <Grid item xs={12}>
-                                <FileUploader
-                                    images={images}
-                                    setImages={setImages}
-                                    maxImagesUpload={10}
-                                    validator={AvatarValidator}
-                                    onChange={(isValid) =>
-                                        (formValid.current.images = isValid)
-                                    }
-                                    onDelete={handleChange}
-                                    defaultImages={[IMG]}
-                                ></FileUploader>
-                            </Grid>
+                                    <FileUploader
+                                        images={images}
+                                        setImages={setImages}
+                                        maxImagesUpload={maxImagesCount}
+                                        validator={AvatarValidator}
+                                        defaultImage={DefaultImg}
+                                        onChange={(isValid) =>
+                                            (formValid.current.images = isValid)
+                                        }
+                                        onDelete={handleChange}
+                                    />
+                                </Grid> */}
+
+                            {Array.from({
+                                length: maxImagesCount,
+                            }).map((_, index) => (
+                                <Grid item xs={12} key={index}>
+                                    <Typography
+                                        variant="subtitle1"
+                                        color="text.primary"
+                                    >
+                                        {" "}
+                                        Image # {index + 1}
+                                    </Typography>
+
+                                    <FileUploader
+                                        images={images}
+                                        setImages={setImages}
+                                        maxImagesUpload={maxImagesCount}
+                                        validator={AvatarValidator}
+                                        defaultImage={DefaultImg}
+                                        onChange={(isValid) =>
+                                            (formValid.current.images = isValid)
+                                        }
+                                        onDelete={handleChange}
+                                    />
+                                </Grid>
+                            ))}
                         </Grid>
                         <Button
                             type="submit"
@@ -444,6 +485,8 @@ export function AddNewPost() {
                         </Button>
                     </Box>
                 </Box>
+
+                {upload && <LinearProgress />}
             </Container>
         </>
     );

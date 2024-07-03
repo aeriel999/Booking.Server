@@ -155,6 +155,7 @@ export interface IPostCreate {
     price: number;
     description: string | null;
     images: File[];
+  
 }
 
 export interface IPostInfoForRealtor {

@@ -1,5 +1,4 @@
-﻿using Booking.Domain.Posts;
-using ErrorOr;
+﻿using ErrorOr;
 using MediatR;
 
 namespace Booking.Application.Posts.ArchivePost;

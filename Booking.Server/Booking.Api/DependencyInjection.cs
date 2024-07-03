@@ -35,15 +35,7 @@ public static class DependencyInjection
 		services.AddMappings();
 
 		services.AddCustomSignalR(configuration);
-
-
-		//services.AddAuthentication()
-		//		.AddGoogle(options =>
-		//		{
-		//			options.ClientId = "684180662007-h02th8plar344nq8g66407g9qq27dvjr.apps.googleusercontent.com";
-		//			options.ClientSecret = "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";
-		//		});
-
+ 
 		return services;
 	}
 

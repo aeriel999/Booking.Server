@@ -2,7 +2,6 @@
 using Booking.Domain.Posts;
 using ErrorOr;
 using MediatR;
-//TODO Nazar 
 
 namespace Booking.Application.Posts.GetListOfPost;
 

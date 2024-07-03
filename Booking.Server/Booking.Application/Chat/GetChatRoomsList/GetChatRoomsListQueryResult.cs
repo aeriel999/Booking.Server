@@ -1,6 +1,4 @@
-﻿using Booking.Domain.Chat;
-
-namespace Booking.Application.Chat.GetChatRoomsList;
+﻿namespace Booking.Application.Chat.GetChatRoomsList;
 
 public record GetChatRoomsListQueryResult(List<ChatsForPostListInfo>? ChatsForPosts, bool HasNewPosts);
 
