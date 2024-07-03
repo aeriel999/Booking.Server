@@ -1,4 +1,4 @@
-import { Box, Breadcrumbs, Button, Container, TextField, Typography } from "@mui/material";
+import { Box, Breadcrumbs, Button, Container, Typography } from "@mui/material";
 import { useEffect, useRef, useState } from "react";
 import { useAppDispatch, useAppSelector } from "../../hooks/redux";
 import { editUserProfile } from "../../store/users/user.action";
@@ -65,7 +65,7 @@ export const EditUserEpailPage = () => {
             <CustomizedDialogs
                 isOpen={isOpen}
                 message={message}
-                setOpen={function (arg: boolean): void {
+                setOpen={function (): void {
                     /*if (letterSend) {
                         //Logout();
                         //setIsOpen(false);

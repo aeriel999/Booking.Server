@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useState } from "react";
 import {
     getFilteredListByType,
     getListOfCategories, getListOfCitiesByCountryId, getListOfCountries,
@@ -23,10 +23,8 @@ import Card from "@mui/material/Card";
 import { Outlet, useNavigate } from "react-router-dom";
 import { APP_ENV } from "../../env";
 import IconButton from "@mui/material/IconButton";
-import Divider from "@mui/material/Divider";
 import SearchIcon from '@mui/icons-material/Search';
 import Paper from '@mui/material/Paper';
-import DirectionsIcon from '@mui/icons-material/Directions';
 import {
     IFetchDataByName,
     IFetchData,
@@ -91,7 +89,7 @@ export default function ListOfPostPage() {
     useEffect(() => {
         console.log("Filter - " + filter.category)
     }, [filter]);
-    const changePage = async (event: React.ChangeEvent<unknown>, value: number) => {
+    const changePage = async ({ }, value: number) => {
         setPage(value);
         const nextPage: IFetchData = {
             page: value,
@@ -115,7 +113,9 @@ export default function ListOfPostPage() {
 
         setInputValue(e.target.value);
     }
-    const searchPost = async () => {
+    const searchPost = async (event: React.FormEvent<HTMLFormElement>) => {
+        event.preventDefault();
+
         if (inputValue == "") {
             const currentFilter: IFilter = {
                 category: filter.category == "0" ? "" : filter.category,
@@ -156,6 +156,9 @@ export default function ListOfPostPage() {
     useEffect(() => {
         getCities();
     }, [countrySelect]);
+    useEffect(() => {
+        console.log(listOfPostsName)
+    }, [listOfPostsName]);
     const changeCategory = (event: SelectChangeEvent) => {
         setCategorySelect(event.target.value);
     }
@@ -223,7 +226,7 @@ export default function ListOfPostPage() {
                 disablePortal
                 id="post-search"
                 filterOptions={(x) => x}
-                options={listOfPostsName.$values != null ? listOfPostsName.$values : []}
+                options={listOfPostsName?.$values != null ? listOfPostsName.$values : []}
                 sx={{ width: "100%" }}
                 noOptionsText={"Enter word"}
                 onSelect={changeText}
@@ -232,18 +235,19 @@ export default function ListOfPostPage() {
                     <Paper
                         component="form"
                         sx={{ display: 'flex', alignItems: 'center', width: "100%", marginBottom: 5 }}
+                        onSubmit={searchPost}
                     >
                         <InputBase
                             sx={{ ml: 1, flex: 1 }}
-                            {...params.inputProps}
+                            {...params}
                             inputProps={{ ...params.inputProps, 'aria-label': 'search posts' }}
                             inputRef={params.InputProps.ref}
                             placeholder="Search Posts"
                         />
-                        <IconButton type="button" sx={{ p: '10px' }} aria-label="search" onClick={searchPost}>
+                        <IconButton type="submit" sx={{ p: '10px' }} aria-label="search"  >
                             <SearchIcon />
                         </IconButton>
-                        <Divider sx={{ height: 28, m: 0.5 }} orientation="vertical" />
+
                     </Paper>
                 }
             />
@@ -252,15 +256,15 @@ export default function ListOfPostPage() {
                 <Grid item xs={10}>
                     <Box sx={{ boxShadow: 'rgba(0, 0, 0, 0.35) 0px 5px 15px', height: '100vh', display: 'flex', flexDirection: "row", flexWrap: "wrap", padding: 15, position: 'relative', justifyContent: 'space-around' }}>
 
-                        {listOfPosts != null ? listOfPosts.items.$values.map((item, index) => (
-                            <Card sx={{ width: '40%', height: 345 }}>
+                        {listOfPosts != null ? listOfPosts.items.$values.map((item) => (
+                            <Card sx={{ width: '40%', height: 345, overflowY: "scroll" }}>
                                 <CardMedia
                                     sx={{ height: 140 }}
                                     image={`${APP_ENV.BASE_URL}/images/posts/${item.imagePost}`}
                                     title={item.name}
                                 />
                                 <CardContent>
-                                    <Typography gutterBottom variant="h5" component="div">
+                                    <Typography gutterBottom variant="h6" component="div">
                                         {item.name}
                                     </Typography>
                                     <Typography variant="body2" color="text.secondary">
@@ -274,7 +278,7 @@ export default function ListOfPostPage() {
                                     </Typography>
                                 </CardContent>
                                 <CardActions>
-                                    <Button size="small" onClick={() => navigate(`/dashboard/post/${item.id}`)}>Learn More</Button>
+                                    <Button size="small" onClick={() => isLogin ? navigate(`/dashboard/post/${item.id}`) : navigate(`/post/${item.id}`)}>Learn More</Button>
                                 </CardActions>
                             </Card>
                         )) : ""}

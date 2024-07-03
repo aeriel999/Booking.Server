@@ -57,9 +57,9 @@ public class UserRepository(UserManager<User> userManager) : IUserRepository
 		return user;
 	}
 
-	public async Task<ErrorOr<Deleted>> DeleteUserAsync(string userId)
+	public async Task<ErrorOr<Deleted>> DeleteUserAsync(Guid userId)
     {
-        var user = await userManager.FindByIdAsync(userId);
+        var user = await userManager.FindByIdAsync(userId.ToString());
 
         if (user == null) return Error.NotFound("Error");
         var result = await userManager.DeleteAsync(user);

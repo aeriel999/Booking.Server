@@ -27,7 +27,7 @@ import Button from "@mui/material/Button";
 import { logout } from "../../../store/accounts/account.slice.ts";
 import LogoutIcon from '@mui/icons-material/Logout';
 import StarBorder from '@mui/icons-material/StarBorder';
-import { joinForPostListening, startListening } from "../../../SignalR";
+import { startListening } from "../../../SignalR";
 import { getListOfChatRooms } from "../../../store/chat/chat.action.ts";
 import { unwrapResult } from "@reduxjs/toolkit";
 import { Collapse } from '@mui/material';
@@ -143,19 +143,6 @@ export default function ClientDashboardLayout() {
         setOpen(false);
     };
 
-    const addConnection = async () => {
-        console.log("Connect ///////////////")
-        await joinForPostListening("5c57dae8-39f3-41da-9bc8-521221e4bf44");
-    }
-
-    const disconnect = async () => {
-
-
-        console.log("Disconnect///////")
-
-        //  await leave("5c57dae8-39f3-41da-9bc8-521221e4bf44");
-    }
-
     return (
         <Box sx={{ display: 'flex' }}>
             <CssBaseline />
@@ -237,7 +224,7 @@ export default function ClientDashboardLayout() {
                         </ListItemButton>
                     </ListItem>
                     <Collapse in={isOpenFeedbacks} timeout="auto" unmountOnExit>
-                        {realtors ? realtors.$values.map((item) => (
+                        {realtors?.$values ? realtors.$values.map((item) => (
                             <List component="div" disablePadding>
                                 <ListItemButton sx={{ pl: 4 }} onClick={() => navigate(`realtor/${item.id}`)}>
                                     <ListItemIcon>

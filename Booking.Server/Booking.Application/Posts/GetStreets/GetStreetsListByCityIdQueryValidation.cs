@@ -1,4 +1,5 @@
-﻿using FluentValidation;
+﻿using Booking.Application.Common.Behaviors.CustomValidators;
+using FluentValidation;
 
 namespace Booking.Application.Posts.GetStreets;
 
@@ -6,6 +7,8 @@ public class GetStreetsListByCityIdQueryValidation : AbstractValidator<GetStreet
 {
     public GetStreetsListByCityIdQueryValidation()
     {
-        //ToDo make validation
+        RuleFor(x => x.CityId.ToString())
+         .NotEmpty().WithMessage("{PropertyName} must not be empty")
+         .IsGuid();
     }
 }

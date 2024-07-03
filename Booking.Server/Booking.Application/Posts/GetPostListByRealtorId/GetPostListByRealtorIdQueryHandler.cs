@@ -8,7 +8,7 @@ namespace Booking.Application.Posts.GetPostListByRealtorId;
 {
     public async Task<ErrorOr<List<Post>>> Handle(GetPostListByRealtorIdQuery request, CancellationToken cancellationToken)
     {
-        var response = await repository.GetListPostByRealtorIdAsync(request.id);
+        var response = await repository.GetListPostByRealtorIdAsync(request.Id);
 
         if (response == null) return Error.NotFound("List is empty");
 

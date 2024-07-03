@@ -6,5 +6,5 @@ using MediatR;
 
 namespace Booking.Application.Posts.GetListOfPost;
 
-public record GetListOfPostQuery(int page, int sizeOfPage) : IRequest<ErrorOr<PagedList<Post>>>;
+public record GetListOfPostQuery(int Page, int SizeOfPage) : IRequest<ErrorOr<PagedList<Post>>>;
 

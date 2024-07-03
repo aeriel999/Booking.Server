@@ -9,7 +9,7 @@ public class GetFeedbacksQueryHandler(IUserFeedbackRepository repository) : IReq
 {
     public async Task<ErrorOr<PagedList<Feedback>>> Handle(GetFeedbacksQuery request, CancellationToken cancellationToken)
     {
-        var list = await repository.GetFeedbacksAsync(request.id, request.page, request.sizeOfPage);
+        var list = await repository.GetFeedbacksAsync(request.Id, request.Page, request.SizeOfPage);
 
         if (list == null) return Error.NotFound("List is empty");
 

@@ -40,8 +40,8 @@ export const getListOfCategories = createAsyncThunk(
 
 export const getPostListByRealtorId = createAsyncThunk(
     'Post/get-post-list-by-realtor-id',
-    async (id:string, { rejectWithValue }) => {
-        try{
+    async (id: string, { rejectWithValue }) => {
+        try {
             const response = await apiClient.get(`/api/Post/get-post-list-by-realtor-id-${id}`);
             return response.data;
         } catch (error) {
@@ -96,7 +96,17 @@ export const getListOfPostsByName = createAsyncThunk(
     async (payload: IFetchDataByName, { rejectWithValue }) => {
         try {
             const response = await apiClient.get(
-                `/api/Post/get-post-by-name?category=${payload.filter?.category}&country=${payload.filter?.country}&city=${payload.filter?.city}&realtor=${payload.filter?.realtor}&name=${payload.name}&page=${payload.pages.page}&sizeOfPage=${payload.pages.sizeOfPage}`
+                `/api/Post/get-post-by-name`, {
+                params: {
+                    category: payload.filter.category,
+                    country: payload.filter.country,
+                    city: payload.filter.city,
+                    realtor: payload.filter.realtor,
+                    name: payload.name,
+                    page: payload.pages.page,
+                    sizeOfPage: payload.pages.sizeOfPage
+                }
+            }
             );
             return response.data;
         } catch (error) {

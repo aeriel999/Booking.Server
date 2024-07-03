@@ -6,7 +6,7 @@ import { AppDispatch, RootState } from "../../store";
 import { getRealtorById, getFeedbacksByRealtor, sendFeedback } from "../../store/users/user.action.ts";
 import Grid from "@mui/material/Grid";
 import { APP_ENV } from "../../env";
-import { Accordion, AccordionDetails, AccordionSummary, Button, CardMedia, ImageList, ImageListItem, InputLabel, List, ListItem, ListItemText, Pagination, Rating, TextField, Typography } from "@mui/material";
+import { Accordion, AccordionDetails, AccordionSummary, Button, CardMedia, ImageList, ImageListItem, List, ListItem, ListItemText, Pagination, Rating, TextField, Typography } from "@mui/material";
 import Box from "@mui/material/Box";
 import Stack from "@mui/material/Stack";
 import { getPostListByRealtorId } from "../../store/post/post.actions.ts";
@@ -28,11 +28,11 @@ export default function RealtorPage() {
     const posts = useSelector((state: RootState) => state.post.postsByRealtorId);
     const feedbacks = useSelector((state: RootState) => state.user.feedbacks);
     const isLogin = useSelector((state: RootState) => state.account.isLogin);
-    const [activePage, setPage] = useState(1);
-    const [feedbackText, setFeedbackText] = useState("");
-    const [ratingValue, setRatingValue] = useState(0);
-    const [isOpen, setIsOpen] = useState(false);
-    const [errorMessage, setErrorMessage] = useState("");
+    const [activePage, setPage] = useState<number>(1);
+    const [feedbackText, setFeedbackText] = useState<string>("");
+    const [ratingValue, setRatingValue] = useState<number>(0);
+    const [isOpen, setIsOpen] = useState<boolean>(false);
+    const [errorMessage, setErrorMessage] = useState<string>("");
 
 
     const dispatch = useDispatch<AppDispatch>();
@@ -69,7 +69,7 @@ export default function RealtorPage() {
         console.log("User id - " + realtorId);
     }, []);
 
-    const changePage = async (event: React.ChangeEvent<unknown>, value: number) => {
+    const changePage = async ({ }, value: number) => {
         setPage(value);
         const nextPage: IPage = {
             page: value,
@@ -203,7 +203,7 @@ export default function RealtorPage() {
                                 <CustomizedDialogs
                                     isOpen={isOpen}
                                     message={errorMessage}
-                                    setOpen={function (arg: boolean): void {
+                                    setOpen={function (): void {
                                         setIsOpen(false);
                                     }} navigate={""}
                                 ></CustomizedDialogs>
@@ -221,8 +221,10 @@ export default function RealtorPage() {
                                 <Rating
                                     name="simple-controlled"
                                     value={ratingValue}
-                                    onChange={(event, newValue) => {
-                                        setRatingValue(newValue);
+                                    onChange={(_, newValue) => {
+                                        if (newValue != null) {
+                                            setRatingValue(newValue);
+                                        }
                                     }}
                                     precision={0.5}
                                     sx={{ alignItems: "center" }}

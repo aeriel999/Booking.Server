@@ -30,7 +30,7 @@ public interface IUserRepository
 	Task<ErrorOr<User>> UpdateProfileAsync(User user);
 
 
-	Task<ErrorOr<Deleted>> DeleteUserAsync(string userId);
+	Task<ErrorOr<Deleted>> DeleteUserAsync(Guid userId);
 
 
 	Task<ErrorOr<User>> GetUserAsync(string userId);
