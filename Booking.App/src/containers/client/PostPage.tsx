@@ -16,7 +16,7 @@ export default function PostPage() {
     const dispatch = useDispatch<AppDispatch>();
     useEffect(() => {
         const getPost = async () => {
-            await dispatch(getPostById(postId));
+            await dispatch(getPostById(postId as string));
         }
         getPost();
     }, []);
@@ -31,7 +31,7 @@ export default function PostPage() {
                     <Grid item xs={4}>
                         <CardMedia
                             sx={{ height: 300, width: "100%" }}
-                            image={`${APP_ENV.BASE_URL}/images/posts/${post.imagePost}`}
+                            image={`${APP_ENV.BASE_URL}/images/posts/${post.imagePostList[0]}`}
                             title={post.name}
                         />
                     </Grid>
@@ -40,42 +40,69 @@ export default function PostPage() {
                             <Typography sx={{ fontSize: 21, textAlign: "center" }} color="text.secondary" gutterBottom>
                                 Name :
                             </Typography>
-                            <Typography sx={{ fontSize: 21, textAlign: "center" }} color="text.secondary" gutterBottom>
-                                Category :
-                            </Typography>
-                            <Typography sx={{ fontSize: 21, textAlign: "center" }} color="text.secondary" gutterBottom>
-                                Type of rent :
-                            </Typography>
-                            <Typography sx={{ fontSize: 21, textAlign: "center" }} color="text.secondary" gutterBottom>
-                                Is Archive :
-                            </Typography>
-                            <Typography sx={{ fontSize: 21, textAlign: "center" }} color="text.secondary" gutterBottom>
-                                Number of rooms :
-                            </Typography>
-                            <Typography sx={{ fontSize: 21, textAlign: "center" }} color="text.secondary" gutterBottom>
-                                Country :
-                            </Typography>
-                            <Typography sx={{ fontSize: 21, textAlign: "center" }} color="text.secondary" gutterBottom>
-                                City :
-                            </Typography>
-                            <Typography sx={{ fontSize: 21, textAlign: "center" }} color="text.secondary" gutterBottom>
-                                Street :
-                            </Typography>
-                            <Typography sx={{ fontSize: 21, textAlign: "center" }} color="text.secondary" gutterBottom>
-                                Building number :
-                            </Typography>
-                            <Typography sx={{ fontSize: 21, textAlign: "center" }} color="text.secondary" gutterBottom>
-                                Area :
-                            </Typography>
+                            {post.category == null ? "" :
+                                <Typography sx={{ fontSize: 21, textAlign: "center" }} color="text.secondary" gutterBottom>
+                                    Category :
+                                </Typography>
+                            }
+
+                            {post.postTypeOfRent == null ? "" :
+                                <Typography sx={{ fontSize: 21, textAlign: "center" }} color="text.secondary" gutterBottom>
+                                    Type of rent :
+                                </Typography>
+                            }
+
+                            {post.numberOfRooms == null ? "" :
+                                <Typography sx={{ fontSize: 21, textAlign: "center" }} color="text.secondary" gutterBottom>
+                                    Number of rooms :
+                                </Typography>
+                            }
+
+
+                            {post.countryName == null ? "" :
+                                <Typography sx={{ fontSize: 21, textAlign: "center" }} color="text.secondary" gutterBottom>
+                                    Country :
+                                </Typography>
+                            }
+
+                            {post.cityName == null ? "" :
+                                <Typography sx={{ fontSize: 21, textAlign: "center" }} color="text.secondary" gutterBottom>
+                                    City :
+                                </Typography>
+                            }
+
+                            {post.street == null ? "" :
+                                <Typography sx={{ fontSize: 21, textAlign: "center" }} color="text.secondary" gutterBottom>
+                                    Street :
+                                </Typography>
+                            }
+
+                            {post.buildingNumber == null ? "" :
+                                <Typography sx={{ fontSize: 21, textAlign: "center" }} color="text.secondary" gutterBottom>
+                                    Building number :
+                                </Typography>
+                            }
+
+                            {post.area == null ? "" :
+                                <Typography sx={{ fontSize: 21, textAlign: "center" }} color="text.secondary" gutterBottom>
+                                    Area :
+                                </Typography>
+                            }
+
                             <Typography sx={{ fontSize: 21, textAlign: "center" }} color="text.secondary" gutterBottom>
                                 Price :
                             </Typography>
-                            <Typography sx={{ fontSize: 21, textAlign: "center" }} color="text.secondary" gutterBottom>
-                                Realtor :
-                            </Typography>
-                            <Typography sx={{ fontSize: 21, textAlign: "center" }} color="text.secondary" gutterBottom>
-                                Description :
-                            </Typography>
+
+                            {post.user == " " ? "" :
+                                <Typography sx={{ fontSize: 21, textAlign: "center" }} color="text.secondary" gutterBottom>
+                                    Realtor :
+                                </Typography>
+                            }
+                            {post.description == null ? "" :
+                                <Typography sx={{ fontSize: 21, textAlign: "center" }} color="text.secondary" gutterBottom>
+                                    Description :
+                                </Typography>
+                            }
 
                         </Stack>
 
@@ -88,42 +115,71 @@ export default function PostPage() {
                             <Typography sx={{ fontSize: 21, textAlign: "center" }} color="text.secondary" gutterBottom>
                                 {post.name}
                             </Typography>
-                            <Typography sx={{ fontSize: 21, textAlign: "center" }} color="text.secondary" gutterBottom>
-                                {post.category == null ? "none" : post.category}
-                            </Typography>
-                            <Typography sx={{ fontSize: 21, textAlign: "center" }} color="text.secondary" gutterBottom>
-                                {post.postTypeOfRent == null ? "none" : post.postTypeOfRent}
-                            </Typography>
-                            <Typography sx={{ fontSize: 21, textAlign: "center" }} color="text.secondary" gutterBottom>
-                                {post.isArchive ? "Yes" : "No"}
-                            </Typography>
-                            <Typography sx={{ fontSize: 21, textAlign: "center" }} color="text.secondary" gutterBottom>
-                                {post.numberOfRooms == null ? "none" : post.numberOfRooms}
-                            </Typography>
-                            <Typography sx={{ fontSize: 21, textAlign: "center" }} color="text.secondary" gutterBottom>
-                                {post.countryName == null ? "none" : post.countryName}
-                            </Typography>
-                            <Typography sx={{ fontSize: 21, textAlign: "center" }} color="text.secondary" gutterBottom>
-                                {post.cityName == null ? "none" : post.cityName}
-                            </Typography>
-                            <Typography sx={{ fontSize: 21, textAlign: "center" }} color="text.secondary" gutterBottom>
-                                {post.street == null ? "none" : post.street}
-                            </Typography>
-                            <Typography sx={{ fontSize: 21, textAlign: "center" }} color="text.secondary" gutterBottom>
-                                {post.buildingNumber == null ? "none" : post.buildingNumber}
-                            </Typography>
-                            <Typography sx={{ fontSize: 21, textAlign: "center" }} color="text.secondary" gutterBottom>
-                                {post.area == null ? "none" : post.area}
-                            </Typography>
+                            {post.category == null ? "" :
+                                <Typography sx={{ fontSize: 21, textAlign: "center" }} color="text.secondary" gutterBottom>
+                                    {post.category}
+                                </Typography>
+                            }
+
+                            {post.postTypeOfRent == null ? "" :
+                                <Typography sx={{ fontSize: 21, textAlign: "center" }} color="text.secondary" gutterBottom>
+                                    {post.postTypeOfRent}
+                                </Typography>
+                            }
+
+                            {post.numberOfRooms == null ? "" :
+                                <Typography sx={{ fontSize: 21, textAlign: "center" }} color="text.secondary" gutterBottom>
+                                    {post.numberOfRooms}
+                                </Typography>
+                            }
+
+
+                            {post.countryName == null ? "" :
+                                <Typography sx={{ fontSize: 21, textAlign: "center" }} color="text.secondary" gutterBottom>
+                                    {post.countryName}
+                                </Typography>
+                            }
+
+                            {post.cityName == null ? "" :
+                                <Typography sx={{ fontSize: 21, textAlign: "center" }} color="text.secondary" gutterBottom>
+                                    {post.cityName}
+                                </Typography>
+                            }
+
+                            {post.street == null ? "" :
+                                <Typography sx={{ fontSize: 21, textAlign: "center" }} color="text.secondary" gutterBottom>
+                                    {post.street}
+                                </Typography>
+                            }
+
+                            {post.buildingNumber == null ? "" :
+                                <Typography sx={{ fontSize: 21, textAlign: "center" }} color="text.secondary" gutterBottom>
+                                    {post.buildingNumber}
+                                </Typography>
+                            }
+
+                            {post.area == null ? "" :
+                                <Typography sx={{ fontSize: 21, textAlign: "center" }} color="text.secondary" gutterBottom>
+                                    {post.area}
+                                </Typography>
+                            }
+
                             <Typography sx={{ fontSize: 21, textAlign: "center" }} color="text.secondary" gutterBottom>
                                 {post.price} UAH
                             </Typography>
-                            <Typography sx={{ fontSize: 21, textAlign: "center" }} color="text.secondary" gutterBottom>
-                                {post.user}
-                            </Typography>
-                            <Typography sx={{ fontSize: 21, textAlign: "center", overflow: "hidden" }} color="text.secondary" gutterBottom>
-                                {post.description == null ? "none" : post.description}
-                            </Typography>
+
+                            {post.user == " " ? "" :
+                                <Typography sx={{ fontSize: 21, textAlign: "center" }} color="text.secondary" gutterBottom>
+                                    {post.user}
+                                </Typography>
+                            }
+
+                            {post.description == null ? "" :
+                                <Typography sx={{ fontSize: 21, textAlign: "center" }} color="text.secondary" gutterBottom>
+                                    {post.description}
+                                </Typography>
+                            }
+
                         </Stack>
                     </Grid>
                     <Grid item xs={12} sx={{ display: "flex", columnGap: 7 }}>

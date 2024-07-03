@@ -37,10 +37,10 @@ public class UserFeedbackRepository(BookingDbContext context,UserManager<User> u
        await context.SaveChangesAsync();
     }
 
-    public async Task<List<User>> GetRealtorsByUserFeedbacksAsync(string id)
+    public async Task<List<User>> GetRealtorsByUserFeedbacksAsync(Guid id)
     {
         var res = await _dbSet
-            .Where(r => r.ClientId.ToString() == id)
+            .Where(r => r.ClientId == id)
             .Include(r => r.Realtor)
             .Select(r => r.Realtor)
             .Distinct()

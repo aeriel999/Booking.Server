@@ -2,6 +2,6 @@
 using MediatR;
 
 namespace Booking.Application.Users.User.DeleteUser;
-public record DeleteUserCommand(string id):IRequest<ErrorOr<Deleted>>;
+public record DeleteUserCommand(Guid Id):IRequest<ErrorOr<Deleted>>;
 
 

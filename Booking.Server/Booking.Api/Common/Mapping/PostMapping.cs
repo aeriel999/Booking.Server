@@ -66,31 +66,31 @@ public class PostMapping : IRegister
 
 
         config.NewConfig<(GetFilteredListRequest request, string name), GetNameOfPostQuery>()
-            .Map(dest => dest.category, src => src.request.category)
-            .Map(dest => dest.country, src => src.request.country)
-            .Map(dest => dest.city, src => src.request.city)
-            .Map(dest => dest.realtor, src => src.request.realtor)
-            .Map(dest => dest.name, src => src.name);
+            .Map(dest => dest.Category, src => src.request.Category)
+            .Map(dest => dest.Country, src => src.request.Country)
+            .Map(dest => dest.City, src => src.request.City)
+            .Map(dest => dest.Realtor, src => src.request.Realtor)
+            .Map(dest => dest.Name, src => src.name);
 
 
         config.NewConfig<(GetFilteredListRequest request, int page, int sizeOfPage), GetFilteredListQuery>()
-			.Map(dest => dest.category, src => src.request.category)
-			.Map(dest => dest.country, src => src.request.country)
-			.Map(dest => dest.city, src => src.request.city)
-			.Map(dest => dest.realtor, src => src.request.realtor)
-			.Map(dest => dest.page, src => src.page)
-            .Map(dest => dest.sizeOfPage, src => src.sizeOfPage);
+			.Map(dest => dest.Category, src => src.request.Category)
+			.Map(dest => dest.Country, src => src.request.Country)
+			.Map(dest => dest.City, src => src.request.City)
+			.Map(dest => dest.Realtor, src => src.request.Realtor)
+			.Map(dest => dest.Page, src => src.page)
+            .Map(dest => dest.SizeOfPage, src => src.sizeOfPage);
 
 
         config.NewConfig<(GetFilteredListRequest request,string name, int page, int sizeOfPage),
 			GetPostByNameQuery>()
-            .Map(dest => dest.category, src => src.request.category)
-            .Map(dest => dest.country, src => src.request.country)
-            .Map(dest => dest.city, src => src.request.city)
-            .Map(dest => dest.realtor, src => src.request.realtor)
-            .Map(dest => dest.name, src => src.name)
-            .Map(dest => dest.page, src => src.page)
-            .Map(dest => dest.sizeOfPage, src => src.sizeOfPage);
+            .Map(dest => dest.Category, src => src.request.Category)
+            .Map(dest => dest.Country, src => src.request.Country)
+            .Map(dest => dest.City, src => src.request.City)
+            .Map(dest => dest.Realtor, src => src.request.Realtor)
+            .Map(dest => dest.Name, src => src.name)
+            .Map(dest => dest.Page, src => src.page)
+            .Map(dest => dest.SizeOfPage, src => src.sizeOfPage);
 
 
         config.NewConfig<PostCategory, GetCategoryResponse>();

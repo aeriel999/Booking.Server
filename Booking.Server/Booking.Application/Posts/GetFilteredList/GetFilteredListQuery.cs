@@ -5,11 +5,11 @@ using MediatR;
 
 namespace Booking.Application.Posts.GetFilteredList;
 public record GetFilteredListQuery(
-    Guid? category,
-    Guid? country,
-    Guid? city,
-    Guid? realtor,
-    int page,
-    int sizeOfPage):IRequest<ErrorOr<PagedList<Post>>>;
+    Guid? Category,
+    Guid? Country,
+    Guid? City,
+    Guid? Realtor,
+    int Page,
+    int SizeOfPage):IRequest<ErrorOr<PagedList<Post>>>;
 
 

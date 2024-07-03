@@ -11,7 +11,7 @@ export interface IUserState {
     realtors: IRealtor[] | null,
     realtor: IRealtorInformation | null,
     feedbacks: IFeedbackView | null,
-    realtorsByUserFeedbacks: IRealtorByUserFeedbacks[] | null
+    realtorsByUserFeedbacks: IRealtorsForUser | null
 }
 
 export interface IRealtor {
@@ -55,6 +55,12 @@ export interface ISendFeedback {
     rating: number,
     realtorId: string
 }
+
+export interface IRealtorsForUser {
+    $id: string,
+    $values: IRealtorByUserFeedbacks[] | null
+}
+
 export interface IRealtorByUserFeedbacks {
     id: string,
     realtor: string,

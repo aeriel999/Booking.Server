@@ -4,8 +4,8 @@ using MediatR;
 namespace Booking.Application.Posts.GetNameOfPost;
 
 public record GetNameOfPostQuery(
-    Guid? category,
-    Guid? country,
-    Guid? city,
-    Guid? realtor, string name):IRequest<ErrorOr<List<string>>>;
+    Guid? Category,
+    Guid? Country,
+    Guid? City,
+    Guid? Realtor, string Name):IRequest<ErrorOr<List<string>>>;
 

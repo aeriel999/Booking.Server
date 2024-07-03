@@ -105,28 +105,32 @@ export const App: React.FC = () => {
                     )}
 
                     {role() === "user" && (
-                        <Route path="/" element={<ClientDashboardLayout />}>
+                        <Route path="/dashboard" element={<ClientDashboardLayout />}>
                             <Route
                                 index element={<ListOfPostPage />}
                             />
                             <Route
-                                path="post/:postId" element={<PostPage />}
+                                path="/dashboard/post/:postId" element={<PostPage />}
                             />
                             <Route
-                                path="post/:postId/realtor/:realtorId"
+                                path="/dashboard/post/:postId/realtor/:realtorId"
                                 element={<RealtorPage />}
                             />
                             <Route
-                                path="realtor/:realtorId"
+                                path="/dashboard/realtor/:realtorId"
                                 element={<RealtorPage />}
                             />
                             <Route
-                                path="/profile"
+                                path="/dashboard/profile"
                                 element={<UserProfilePage />}
                             />
                             <Route
-                                path="/profile/edit"
+                                path="/dashboard/profile/edit"
                                 element={<EditUserEpailPage />}
+                            />
+                            <Route
+                                path="/dashboard/profile/change-password"
+                                element={<ChangePasswordPage />}
                             />
                             <Route
                                 path="*"

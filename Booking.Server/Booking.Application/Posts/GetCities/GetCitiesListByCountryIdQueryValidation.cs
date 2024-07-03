@@ -1,4 +1,5 @@
-﻿using FluentValidation;
+﻿using Booking.Application.Common.Behaviors.CustomValidators;
+using FluentValidation;
 
 namespace Booking.Application.Posts.GetCities;
 
@@ -6,6 +7,8 @@ public class GetCitiesListByCountryIdQueryValidation : AbstractValidator<GetCiti
 {
     public GetCitiesListByCountryIdQueryValidation()
     {
-        //ToDo Make Validation
+        RuleFor(x => x.ContryId.ToString())
+         .NotEmpty().WithMessage("{PropertyName} must not be empty")
+         .IsGuid();
     }
 }
