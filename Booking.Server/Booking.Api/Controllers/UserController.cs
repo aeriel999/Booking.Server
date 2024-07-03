@@ -126,7 +126,7 @@ public class UserController(ISender mediatr, IMapper mapper, IConfiguration conf
     {
         string clientId = User.Claims.First(u => u.Type == ClaimTypes.NameIdentifier).Value;
 
-        var getRealtorsResult = await mediatr.Send(new GetRealtorsByUserFeedbacksQuery(clientId));
+        var getRealtorsResult = await mediatr.Send(new GetRealtorsByUserFeedbacksQuery(Guid.Parse(clientId)));
 
         return getRealtorsResult.Match(
             getRealtorsResult => Ok(mapper.Map<List<GetRealtorByUserFeedbackResponse>>(getRealtorsResult)),
@@ -139,7 +139,7 @@ public class UserController(ISender mediatr, IMapper mapper, IConfiguration conf
     {
         string userId = User.Claims.First(u => u.Type == ClaimTypes.NameIdentifier).Value;
 
-        var deleteUser = await mediatr.Send(new DeleteUserCommand(userId));
+        var deleteUser = await mediatr.Send(new DeleteUserCommand(Guid.Parse(userId)));
 
         return deleteUser.Match(
             deleteUser => Ok(deleteUser),

@@ -107,14 +107,13 @@ public class BookingDbContext : IdentityDbContext<User, IdentityRole<Guid>, Guid
 			.HasMany(u => u.ReceivedFeedbacks)
 			.WithOne(u => u.Realtor)
 			.HasForeignKey(u => u.RealtorId)
-            .OnDelete(DeleteBehavior.ClientNoAction);
+            .OnDelete(DeleteBehavior.ClientCascade);
 
         builder.Entity<User>()
             .HasMany(u => u.SentFeedbacks)
             .WithOne(u => u.Client)
             .HasForeignKey(u => u.ClientId)
-            .OnDelete(DeleteBehavior.ClientNoAction);
- 
+            .OnDelete(DeleteBehavior.ClientCascade);
 
-	}
+    }
 }

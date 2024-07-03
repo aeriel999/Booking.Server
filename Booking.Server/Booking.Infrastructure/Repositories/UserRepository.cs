@@ -176,5 +176,13 @@ public class UserRepository(UserManager<User> userManager) : IUserRepository
 		return await userManager.AddLoginAsync(user, userLoginInfo);
 	}
 
- 
+	public Task<ErrorOr<User>> UpdateProfileAsync(User user)
+	{
+		throw new NotImplementedException();
+	}
+
+	public Task<ErrorOr<User>> GetUserAsync(string userId)
+	{
+		throw new NotImplementedException();
+	}
 }

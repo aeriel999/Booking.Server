@@ -35,18 +35,18 @@ export interface ITypeOfRent {
     name: string;
 }
 export interface IFilteredRequest {
-    filter:IFilter|null,
-    pages:IFetchData
+    filter: IFilter | null,
+    pages: IFetchData
 }
-export interface IFilter{
-    category:string | null,
-    country:string | null,
-    city:string | null,
-    realtor:string | null
+export interface IFilter {
+    category: string | null,
+    country: string | null,
+    city: string | null,
+    realtor: string | null
 }
 export interface IFilteredRequestName {
-    filter:IFilter|null,
-    name:string | null
+    filter: IFilter | null,
+    name: string | null
 }
 
 export interface IPageOfPosts {
@@ -89,10 +89,10 @@ export interface IPostInformation {
     imagePostList: string[];
 }
 
-export interface IPostByRealtorId{
+export interface IPostByRealtorId {
     id: number;
     name: string;
-    imagePost:string;
+    imagePost: string;
 }
 
 
@@ -119,10 +119,16 @@ export interface IPostState {
     cities: ICity[] | null;
     streets: IStreet[] | null;
     typeOfRent: ITypeOfRent[] | null;
-    searchPost: string[];
+    searchPost: INamesOfPosts | null;
     postInfoList: IPageOfPostsForRealtor | null;
-    postsByRealtorId : IPostByRealtorId[] | null;
+    postsByRealtorId: IPostByRealtorId[] | null;
 }
+
+export interface INamesOfPosts {
+    $id: string,
+    $values: string[]
+}
+
 export interface IFetchData {
     page: number;
     sizeOfPage: number;

@@ -27,6 +27,14 @@ public interface IUserRepository
 	Task<ErrorOr<List<User>>> GetAllUsersAsync();
 
 
+	Task<ErrorOr<User>> UpdateProfileAsync(User user);
+
+
+	Task<ErrorOr<Deleted>> DeleteUserAsync(Guid userId);
+
+
+	Task<ErrorOr<User>> GetUserAsync(string userId);
+
 	Task<ErrorOr<Updated>> EditUserAsync(Guid id, string? email);
 
 
@@ -45,5 +53,5 @@ public interface IUserRepository
 	Task<ErrorOr<User>> ChangeRatingForRealtorAsync(Guid id, float rating);
 
 
-	Task<ErrorOr<Deleted>> DeleteUserAsync(Guid userId);
+	//Task<ErrorOr<Deleted>> DeleteUserAsync(Guid userId);
 }

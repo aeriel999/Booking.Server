@@ -4,5 +4,5 @@ using ErrorOr;
 using MediatR;
 
 namespace Booking.Application.Users.Realtor.GetFeedbacks;
-public record GetFeedbacksQuery(Guid id, int page, int sizeOfPage) :IRequest<ErrorOr<PagedList<Feedback>>>;
+public record GetFeedbacksQuery(Guid Id, int Page, int SizeOfPage) :IRequest<ErrorOr<PagedList<Feedback>>>;
 

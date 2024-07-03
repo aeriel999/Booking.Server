@@ -10,11 +10,13 @@ public class GetPostByNameQueryHandler(IPostRepository repository) : IRequestHan
 {
     public async Task<ErrorOr<PagedList<Post>>> Handle(GetPostByNameQuery request, CancellationToken cancellationToken)
     {
-        var result = await repository.GetPostByNameAsync(request.category,request.country,request.city,request.realtor,request.name, request.page, request.sizeOfPage);
+        var posts = await repository.GetPostByNameAsync(request.Category,request.Country,request.City,request.Realtor,request.Name);
 
-        if (result == null) return Error.NotFound("Posts not found");
+        if (posts == null) return PagedList<Post>.getPagedList(new List<Post>(), request.Page, request.SizeOfPage);
 
-        return result;
+        var response = PagedList<Post>.getPagedList(posts, request.Page, request.SizeOfPage);
+
+        return response;
     }
 }
 

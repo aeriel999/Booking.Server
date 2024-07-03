@@ -1,4 +1,5 @@
-﻿using FluentValidation;
+﻿using Booking.Application.Common.Behaviors.CustomValidators;
+using FluentValidation;
 
 namespace Booking.Application.Users.User.SendFeedback;
 public class SendFeedbackCommandValidation : AbstractValidator<SendFeedbackCommand>
@@ -12,11 +13,13 @@ public class SendFeedbackCommandValidation : AbstractValidator<SendFeedbackComma
             .NotEmpty().WithMessage("{PropertyName} must be not epmty")
             .InclusiveBetween(0, 5).WithMessage("{Property Name must be from 0 to 5}");
 
-        RuleFor(x => x.RealtorId)
-            .NotEmpty().WithMessage("{PropertyName} must be not epmty");
+        RuleFor(x => x.RealtorId.ToString())
+            .NotEmpty().WithMessage("{PropertyName} must be not epmty")
+            .IsGuid();
 
-        RuleFor(x => x.ClientId)
-            .NotEmpty().WithMessage("{PropertyName} must be not epmty");
+        RuleFor(x => x.ClientId.ToString())
+            .NotEmpty().WithMessage("{PropertyName} must be not epmty")
+            .IsGuid();
     }
 }
 

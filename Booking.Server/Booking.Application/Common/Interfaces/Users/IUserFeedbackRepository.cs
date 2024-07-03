@@ -11,8 +11,6 @@ public interface IUserFeedbackRepository
 
 
     Task DeleteAllFeedbacksAsync(string id);
-
-
-    Task<List<User>> GetRealtorsByUserFeedbacksAsync(string id);
+    Task<List<User>> GetRealtorsByUserFeedbacksAsync(Guid id);
 }
 

@@ -1,4 +1,5 @@
-﻿using FluentValidation;
+﻿using Booking.Application.Common.Behaviors.CustomValidators;
+using FluentValidation;
 
 namespace Booking.Application.Users.Realtor.EditRealtor;
 
@@ -7,9 +8,9 @@ public class EditRealtorPrifileInfoCommandValidation : AbstractValidator<EditRea
     public EditRealtorPrifileInfoCommandValidation()
     {
 
-        RuleFor(r => r.UserId).NotEmpty().WithMessage("{PropertyName} must not be empty");
+        RuleFor(r => r.UserId.ToString()).NotEmpty().WithMessage("{PropertyName} must not be empty").IsGuid();
 
-        RuleFor(r => r.BaseUrl).NotEmpty().WithMessage("{PropertyName} must not be empty");
+        RuleFor(r => r.BaseUrl.ToString()).NotEmpty().WithMessage("{PropertyName} must not be empty").IsGuid();
 
         When(r => !string.IsNullOrEmpty(r.Email), () =>
         {

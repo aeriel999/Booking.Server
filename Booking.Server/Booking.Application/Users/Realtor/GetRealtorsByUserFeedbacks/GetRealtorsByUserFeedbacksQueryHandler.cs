@@ -7,7 +7,7 @@ public class GetRealtorsByUserFeedbacksQueryHandler(IUserFeedbackRepository repo
 {
     public async Task<ErrorOr<List<Booking.Domain.Users.User>>> Handle(GetRealtorsByUserFeedbacksQuery request, CancellationToken cancellationToken)
     {
-       return await repository.GetRealtorsByUserFeedbacksAsync(request.id);
+       return await repository.GetRealtorsByUserFeedbacksAsync(request.Id);
     }
 }
 

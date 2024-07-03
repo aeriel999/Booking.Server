@@ -11,11 +11,14 @@ public class GetListOfPostQueryHandler(IPostRepository repository)
 {
     public async Task<ErrorOr<PagedList<Post>>> Handle(GetListOfPostQuery request, CancellationToken cancellationToken)
     {
-       var respons = await repository.GetAllAsync(request.page, request.sizeOfPage);
+        //TODO Nazar + Validation
+       var posts = await repository.GetAllAsync();
 
-       if (respons == null) return Error.NotFound("List is empty");
+       if (posts == null) return PagedList<Post>.getPagedList(new List<Post>(), request.Page, request.SizeOfPage);
 
-       return respons;
+        var response = PagedList<Post>.getPagedList(posts, request.Page, request.SizeOfPage);
+
+        return response;
     }
 }
 

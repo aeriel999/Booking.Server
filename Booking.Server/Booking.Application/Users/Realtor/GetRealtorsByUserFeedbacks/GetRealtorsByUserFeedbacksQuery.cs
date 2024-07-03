@@ -2,5 +2,5 @@
 using MediatR;
 
 namespace Booking.Application.Users.Realtor.GetRealtorsByUserFeedbacks;
-public record GetRealtorsByUserFeedbacksQuery(string id):IRequest<ErrorOr<List<Booking.Domain.Users.User>>>;
+public record GetRealtorsByUserFeedbacksQuery(Guid Id):IRequest<ErrorOr<List<Booking.Domain.Users.User>>>;
 

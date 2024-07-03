@@ -35,54 +35,38 @@ public class PostRepository(BookingDbContext context) : IPostRepository
 							.FirstOrDefaultAsync();
 	}
 
-	public async Task<PagedList<Post>> GetAllAsync(int page, int sizeOfPage)
+	public async Task<List<Post>> GetAllAsync()
 	{
-		var posts = await GetIncludeListAsync();
+		var posts = await GetIncludeListNotArchivedAsync();
 
-		//ToDo Nazar
-		var list = PagedList<Post>.getPagedList(posts, page, sizeOfPage);
-
-		list.items = list.items.OrderBy(item => item.PostAt).ToList();
-
-		return list;
+		return posts.Where(p => p.IsActive).OrderByDescending(item => item.PostAt).ToList();
 	}
 
 	public async Task<List<Post>> Filter(Guid? category, Guid? country, Guid? city, Guid? realtor)
 	{
-		var posts = await GetIncludeListAsync();
+		var posts = await GetIncludeListNotArchivedAsync();
 
 		return posts.Where(p => (category == null ? true : p.CategoryId == category)
 			 && (country == null ? true : p.Street!.City!.CountryId == country)
 			 && (city == null ? true : p.Street!.CityId == city)
-			 && (realtor == null ? true : p.UserId == realtor))
-			.Select(p => p)
+			 && (realtor == null ? true : p.UserId == realtor)
+			 && p.IsActive)
 			.ToList();
 	}
 
-	public async Task<PagedList<Post>> GetFilteredListAsync(
-		Guid? category, Guid? country, Guid? city, Guid? realtor, int page, int sizeOfPage)
+	public async Task<List<Post>> GetFilteredListAsync(
+		Guid? category, Guid? country, Guid? city, Guid? realtor)
 	{
 		var posts = await Filter(category, country, city, realtor);
 
-		//ToDo Nazar
-		PagedList<Post> list = new PagedList<Post>();
-
-        list = PagedList<Post>.getPagedList(posts.
-             OrderByDescending(item => item.PostAt).
-             Select(p=>p), page, sizeOfPage);
-        
-        return list;
+        return posts.OrderByDescending(item => item.PostAt).ToList();
     }
-   public async Task<PagedList<Post>> GetPostByNameAsync(Guid? category, Guid? country, Guid? city, Guid? realtor, string name, int page, int sizeOfPage)
+   public async Task<List<Post>> GetPostByNameAsync(Guid? category, Guid? country, Guid? city, Guid? realtor, string name)
     {
         var posts = await Filter(category, country, city, realtor);
 
-		var list = PagedList<Post>.getPagedList(posts
-			.Where(p => p.Name.ToLower().Equals(name.ToLower()))
-			.Select(p => p).
-			ToList(), page, sizeOfPage);
-
-		return list;
+		return posts.Where(p => p.Name.ToLower().Equals(name.ToLower()))
+			        .ToList();
 	}
 
 	public async Task<List<string>> GetNameOfPostAsync(
@@ -114,8 +98,18 @@ public class PostRepository(BookingDbContext context) : IPostRepository
 			.Include(post => post.ImagesPost)
 			.ToListAsync();
 	}
-
-	public async Task<List<Post>> GetPostListWithIncludesByRealtorIdAsync(Guid realtorId)
+    public async Task<List<Post>> GetIncludeListNotArchivedAsync()
+    {
+        return await _dbSet
+			.Where(post => !post.IsArhive)
+            .Include(post => post.PostTypeOfRent)
+            .Include(post => post.Category)
+            .Include(post => post.Street!.City!.Country)
+            .Include(post => post.User)
+            .Include(post => post.ImagesPost)
+            .ToListAsync();
+    }
+    public async Task<List<Post>> GetPostListWithIncludesByRealtorIdAsync(Guid realtorId)
 	{
 		return await _dbSet
 			.Where(c => c.UserId == realtorId)

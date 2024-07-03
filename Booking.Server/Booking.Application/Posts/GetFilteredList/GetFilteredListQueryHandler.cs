@@ -9,11 +9,13 @@ public class GetFilteredListQueryHandler(IPostRepository repository) : IRequestH
 {
     public async Task<ErrorOr<PagedList<Post>>> Handle(GetFilteredListQuery request, CancellationToken cancellationToken)
     {
-       var respons = await repository.GetFilteredListAsync(request.category,request.country,request.city,request.realtor, request.page, request.sizeOfPage);
+       var posts = await repository.GetFilteredListAsync(request.Category,request.Country,request.City,request.Realtor);
 
-       if(respons == null) return Error.NotFound("List is empty");
+        if (posts == null) return PagedList<Post>.getPagedList(new List<Post>(), request.Page, request.SizeOfPage);
 
-       return respons;
+        var response = PagedList<Post>.getPagedList(posts, request.Page, request.SizeOfPage);
+
+        return response;
 
     }
 }

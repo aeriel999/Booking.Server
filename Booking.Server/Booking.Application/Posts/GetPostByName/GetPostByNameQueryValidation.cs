@@ -9,11 +9,11 @@ public class GetPostByNameQueryValidation:AbstractValidator<GetPostByNameQuery>
        /*RuleFor(x => x.name)
             .NotEmpty().WithMessage("{PropertyName} must not be empty");*/
 
-        RuleFor(x => x.page)
+        RuleFor(x => x.Page)
             .NotEmpty().WithMessage("{PropertyName} must not be empty")
             .GreaterThan(0).WithMessage("{PropertyName} must be greater than 0");
 
-        RuleFor(x => x.sizeOfPage)
+        RuleFor(x => x.SizeOfPage)
             .NotEmpty().WithMessage("{PropertyName} must not be empty")
             .Must(x => x.Equals(4)).WithMessage("{PropertyName} should be 4");
     }
