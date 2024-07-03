@@ -79,7 +79,13 @@ public class BookingDbContext : IdentityDbContext<User, IdentityRole<Guid>, Guid
 			.HasMany(c => c.ImagesPost)
 			.WithOne(u => u.Post)
 			.HasForeignKey(i => i.PostId)
-			.OnDelete(DeleteBehavior.Cascade);
+			.OnDelete(DeleteBehavior.ClientCascade);
+
+		builder.Entity<PostImage>()
+		 .HasOne(pi => pi.Post)
+		 .WithMany(p => p.ImagesPost)
+		 .HasForeignKey(pi => pi.PostId)
+		 .OnDelete(DeleteBehavior.Cascade);
 
 		builder.Entity<PostCategory>()
 			.HasMany(u => u.Posts)
@@ -108,6 +114,7 @@ public class BookingDbContext : IdentityDbContext<User, IdentityRole<Guid>, Guid
             .WithOne(u => u.Client)
             .HasForeignKey(u => u.ClientId)
             .OnDelete(DeleteBehavior.ClientNoAction);
+ 
 
-    }
+	}
 }

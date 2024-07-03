@@ -52,7 +52,7 @@ public class CreatePostCommandHandler(
 			{
 				city = new PostCity
 				{
-					Name = request.CityName,
+					Name = request.CityName.Trim(),
 					CountryId = request.CountryId,
 				};
 
@@ -81,7 +81,7 @@ public class CreatePostCommandHandler(
 			{
 				street = new PostStreet
 				{
-					Name = request.StreetName,
+					Name = request.StreetName.Trim(),
 					CityId = city.Id,
 				};
 
