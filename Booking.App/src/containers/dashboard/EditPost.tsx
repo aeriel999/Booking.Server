@@ -37,13 +37,13 @@ import {
     PriceValidator,
     StreetNameValidator,
 } from "../../validations/post";
-import FileUploader from "../../components/common/FileUploader.tsx";
+import FileEditUploader from "../../components/common/FileEditUploader.tsx";
 import { AvatarValidator } from "../../validations/account";
 import Button from "@mui/material/Button";
 import * as React from "react";
 import { APP_ENV } from "../../env/index.ts";
-import IMG from "../../assets/avatar-profile-icon-vector-illustration_276184-165.jpg";
 import { maxImagesCount } from "../../constants/index.ts";
+import DefaultImg from "../../assets/images.png";
 
 export function EditPost() {
     const { postId } = useParams();
@@ -278,7 +278,7 @@ export function EditPost() {
                     </Typography>
                 </Link>
                 <Typography variant="h6" color="text.primary">
-                   Edit Post
+                    Edit Post
                 </Typography>
             </Breadcrumbs>
             <Divider />
@@ -503,10 +503,10 @@ export function EditPost() {
                                             Image # {index + 1}
                                         </Typography>
 
-                                        <FileUploader
+                                        <FileEditUploader
                                             images={images}
                                             setImages={setImages}
-                                            maxImagesUpload={1}
+                                            maxImagesUpload={maxImagesCount}
                                             validator={AvatarValidator}
                                             defaultImage={img}
                                             onChange={(isValid) =>
@@ -532,12 +532,12 @@ export function EditPost() {
                                             {postImages.length + index + 1}
                                         </Typography>
 
-                                        <FileUploader
+                                        <FileEditUploader
                                             images={images}
                                             setImages={setImages}
-                                            maxImagesUpload={10}
+                                            maxImagesUpload={maxImagesCount}
                                             validator={AvatarValidator}
-                                            defaultImage={IMG}
+                                            defaultImage={DefaultImg}
                                             onChange={(isValid) =>
                                                 (formValid.current.images =
                                                     isValid)

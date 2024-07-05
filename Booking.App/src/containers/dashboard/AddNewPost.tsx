@@ -36,13 +36,13 @@ import {
     PriceValidator,
     StreetNameValidator,
 } from "../../validations/post";
-import FileUploader from "../../components/common/FileUploader.tsx";
 import { AvatarValidator } from "../../validations/account";
 import Button from "@mui/material/Button";
 import * as React from "react";
 import { joinForPostListening } from "../../SignalR";
 import DefaultImg from "../../assets/images.png";
 import { maxImagesCount } from "../../constants/index.ts";
+import FileUploader from "../../components/common/FileUploader.tsx";
 
 export function AddNewPost() {
     const dispatch = useAppDispatch();
@@ -213,11 +213,14 @@ export function AddNewPost() {
             const response = await dispatch(createPost(model));
             unwrapResult(response);
 
-            await joinForPostListening(response.payload.id);
+            //ToDo joinForPostListening in adding post
+              await joinForPostListening(response.payload.id);
 
             navigate("/dashboard/show-all-post");
         } catch (error) {
             setErrorMessage(ErrorHandler(error));
+
+            console.log("Add error", error);
         }
     };
     return (
@@ -431,24 +434,22 @@ export function AddNewPost() {
                                     isMultiline={true}
                                 />
                             </Grid>
-                            {/* 
-                            <Grid item xs={12}  >
-                                   
 
-                                    <FileUploader
-                                        images={images}
-                                        setImages={setImages}
-                                        maxImagesUpload={maxImagesCount}
-                                        validator={AvatarValidator}
-                                        defaultImage={DefaultImg}
-                                        onChange={(isValid) =>
-                                            (formValid.current.images = isValid)
-                                        }
-                                        onDelete={handleChange}
-                                    />
-                                </Grid> */}
+                            <Grid item xs={12}>
+                                <FileUploader
+                                    images={images}
+                                    setImages={setImages}
+                                    maxImagesUpload={maxImagesCount}
+                                    validator={AvatarValidator}
+                                    defaultImage={DefaultImg}
+                                    onChange={(isValid) =>
+                                        (formValid.current.images = isValid)
+                                    }
+                                    onDelete={handleChange}
+                                />
+                            </Grid>
 
-                            {Array.from({
+                            {/* {Array.from({
                                 length: maxImagesCount,
                             }).map((_, index) => (
                                 <Grid item xs={12} key={index}>
@@ -460,7 +461,7 @@ export function AddNewPost() {
                                         Image # {index + 1}
                                     </Typography>
 
-                                    <FileUploader
+                                    <FileEditUploader
                                         images={images}
                                         setImages={setImages}
                                         maxImagesUpload={maxImagesCount}
@@ -472,7 +473,7 @@ export function AddNewPost() {
                                         onDelete={handleChange}
                                     />
                                 </Grid>
-                            ))}
+                            ))} */}
                         </Grid>
                         <Button
                             type="submit"

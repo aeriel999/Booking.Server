@@ -27,8 +27,8 @@ import { useNavigate } from "react-router-dom";
 import ErrorHandler from "../../../components/common/ErrorHandler.ts";
 import MuiPhoneNumber from "mui-phone-number";
 import { isValidPhoneNumber } from "libphonenumber-js";
-import FileUploader from "../../../components/common/FileUploader.tsx";
 import IMG from "../../../assets/avatar-profile-icon-vector-illustration_276184-165.jpg";
+import FileUploader from "../../../components/common/FileUploader.tsx";
 
 export interface IUploadedFile {
     lastModified: number;
