@@ -6,6 +6,7 @@ using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
+using System.Numerics;
 
 namespace Booking.Infrastructure.Common.Initializers;
 
@@ -302,6 +303,50 @@ public static class BookingInitializer
 			context.Streets.AddRange(streets);
 			context.SaveChanges();
 		}
+
+		if (!context.PostTypesOfRest.Any())
+		{
+			PostTypeOfRest[] typesOfRest = {
+				new()
+				{
+					Id = Guid.NewGuid(),
+					Name = "Rest with family"
+				},
+                new()
+                {
+                    Id = Guid.NewGuid(),
+                    Name = "Ski resorts"
+                },
+                new()
+                {
+                    Id = Guid.NewGuid(),
+                    Name = "Beach vacation"
+                },
+                new()
+                {
+                    Id = Guid.NewGuid(),
+                    Name = "Extreme"
+                },
+                new()
+                {
+                    Id = Guid.NewGuid(),
+                    Name = "Visiting historical places"
+                },
+                new()
+                {
+                    Id = Guid.NewGuid(),
+                    Name = "Health recreation"
+                },
+                new()
+                {
+                    Id = Guid.NewGuid(),
+                    Name = "Sightseeing trips and urban tourism"
+                }
+            };
+			context.PostTypesOfRest.AddRange(typesOfRest);
+			context.SaveChanges();
+		}
+
 	}
 	public async static void SeedUserAndRoleData(this IApplicationBuilder app)
 	{

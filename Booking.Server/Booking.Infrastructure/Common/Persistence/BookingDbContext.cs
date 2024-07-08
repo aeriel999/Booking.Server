@@ -30,7 +30,12 @@ public class BookingDbContext : IdentityDbContext<User, IdentityRole<Guid>, Guid
 	public DbSet<UserMessage> UserMessages { get; set; }
 
 	public DbSet<PostTypeOfRent> PostTypeOfRent { get; set; }
+
     public DbSet<Feedback> Feedbacks { get; set; }
+
+    public DbSet<PostTypeOfRest> PostTypesOfRest { get; set; }
+
+    public DbSet<PostPostTypeOfRest> PostPostTypesOfRest { get; set; }
 
     protected override void OnModelCreating(ModelBuilder builder)
 	{
@@ -114,6 +119,21 @@ public class BookingDbContext : IdentityDbContext<User, IdentityRole<Guid>, Guid
             .WithOne(u => u.Client)
             .HasForeignKey(u => u.ClientId)
             .OnDelete(DeleteBehavior.ClientCascade);
+
+		builder.Entity<Post>()
+			.HasMany(p => p.PostPostTypesOfRest)
+			.WithOne(p => p.Post)
+			.HasForeignKey(p => p.PostId)
+			.OnDelete(DeleteBehavior.ClientCascade);
+
+        builder.Entity<PostTypeOfRest>()
+            .HasMany(p => p.PostPostTypesOfRest)
+            .WithOne(p => p.PostTypeOfRest)
+            .HasForeignKey(p => p.PostTypeOfRestId)
+            .OnDelete(DeleteBehavior.ClientCascade);
+
+		builder.Entity<PostPostTypeOfRest>()
+			.HasKey(p => new { p.PostId, p.PostTypeOfRestId });
 
     }
 }
