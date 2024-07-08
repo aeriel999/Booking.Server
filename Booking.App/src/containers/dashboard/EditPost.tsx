@@ -15,7 +15,6 @@ import {
     getListOfCountries,
     getListOfStreetsByCityId,
     getPostById,
-    getTypesOfRentList,
 } from "../../store/post/post.actions.ts";
 import ErrorHandler from "../../components/common/ErrorHandler.ts";
 import OutlinedErrorAlert from "../../components/common/ErrorAlert.tsx";
@@ -53,8 +52,6 @@ export function EditPost() {
     const [errorMessage, setErrorMessage] = useState<string | undefined>(
         undefined
     );
-    const [typeOfRentList, setTypeOfRentList] = useState<ITypeOfRent[]>([]);
-    const [typeOfRent, setTypeOfRent] = useState<ITypeOfRent>();
     const [categoryList, setCategoryList] = useState<ICategory[]>([]);
     const [category, setCategory] = useState<ICategory>();
     const [countryList, setCountryList] = useState<ICountry[]>([]);
@@ -124,16 +121,6 @@ export function EditPost() {
         });
     }, [postId]);
 
-    const getTypeOfRentList = async () => {
-        try {
-            const response = await dispatch(getTypesOfRentList());
-            unwrapResult(response);
-            return response;
-        } catch (error) {
-            setErrorMessage(ErrorHandler(error));
-        }
-    };
-
     const getCategoryList = async () => {
         try {
             const response = await dispatch(getListOfCategories());
@@ -177,10 +164,6 @@ export function EditPost() {
     };
 
     useEffect(() => {
-        getTypeOfRentList().then((history) => {
-            setTypeOfRentList(history?.payload.$values);
-        });
-
         getCategoryList().then((history) => {
             setCategoryList(history?.payload.$values);
         });
@@ -234,7 +217,6 @@ export function EditPost() {
         const model: IPostEdit = {
             id: postId as string,
             name: data.get("name") as string,
-            postTypeOfRentId: typeOfRent?.id ?? null,
             categoryId: category?.id ?? null,
             countryId: country?.id ?? null,
             cityId: city?.id ?? null,
@@ -315,15 +297,6 @@ export function EditPost() {
                                             (formValid.current.name = isValid)
                                         }
                                         defaultValue={post?.name}
-                                    />
-                                </Grid>
-
-                                <Grid item xs={12}>
-                                    <ComboBox
-                                        options={typeOfRentList}
-                                        onChange={setTypeOfRent}
-                                        label={"Type Of Rent"}
-                                        defaultValue={post!.postTypeOfRent}
                                     />
                                 </Grid>
 

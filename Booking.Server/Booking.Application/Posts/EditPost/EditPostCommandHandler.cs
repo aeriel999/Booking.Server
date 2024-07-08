@@ -34,16 +34,16 @@ public class EditPostCommandHandler(
 			post.Name = request.Name;
 		}
 
-		if (request.PostTypeOfRentId != null && request.PostTypeOfRentId != post.PostTypeOfRentId)
-		{
-			// Check typeOfRent for existing
-			var typeOfRent = await postTypeOfRentRepository.GetTypeOfRentByIdAsync((Guid)request.PostTypeOfRentId);
+		//if (request.PostTypeOfRentId != null && request.PostTypeOfRentId != post.PostTypeOfRentId)
+		//{
+		//	// Check typeOfRent for existing
+		//	var typeOfRent = await postTypeOfRentRepository.GetTypeOfRentByIdAsync((Guid)request.PostTypeOfRentId);
 
-			if (typeOfRent == null)
-				return Error.NotFound("Type of rent is not found");
+		//	if (typeOfRent == null)
+		//		return Error.NotFound("Type of rent is not found");
 
-			post.PostTypeOfRentId = (Guid)request.PostTypeOfRentId;
-		}
+		//	post.PostTypeOfRentId = (Guid)request.PostTypeOfRentId;
+		//}
 
 		if (request.CategoryId != null && request.CategoryId != post.CategoryId)
 		{
@@ -107,14 +107,14 @@ public class EditPostCommandHandler(
 			}
 		}
 
-		if (request.BuildingNumber != post.BuildingNumber)
-		{
-			post.BuildingNumber = request.BuildingNumber;
-		}
+		//if (request.BuildingNumber != post.BuildingNumber)
+		//{
+		//	post.BuildingNumber = request.BuildingNumber;
+		//}
 
-		if ( request.NumberOfRooms != null &&request.BuildingNumber != post.BuildingNumber)
+		if ( request.NumberOfRooms != null &&request.NumberOfRooms != post.NumberOfGuests)
 		{
-			post.NumberOfRooms = request.NumberOfRooms;
+			post.NumberOfGuests = request.NumberOfRooms;
 		}
 
 		if (request.Area != null && request.Area != post.Area)

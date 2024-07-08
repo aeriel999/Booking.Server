@@ -38,7 +38,7 @@ public class PostMapping : IRegister
 
 		config.NewConfig<Post, GetPostResponse>()
 			.Map(desp => desp.Category, src => src.Category!.Name)
-			.Map(desp => desp.PostTypeOfRent, src => src.PostTypeOfRent!.Name)
+			//.Map(desp => desp.PostTypeOfRent, src => src.PostTypeOfRent!.Name)
 			.Map(desp => desp.Street, src => src.Street!.Name)
 			.Map(desp => desp.User, src => $"{src.User!.FirstName} {src.User.LastName}")
             .Map(desp => desp.UserId, src => src.UserId)
@@ -124,7 +124,7 @@ public class PostMapping : IRegister
 		config.NewConfig<Post, GetPostListForRealtorResponse>()
 			.Map(desp => desp.Id, src => src.Id)
 			.Map(desp => desp.Category, src => src.Category!.Name)
-			.Map(desp => desp.TypeOfRent, src => src.PostTypeOfRent!.Name)
+			//.Map(desp => desp.TypeOfRent, src => src.PostTypeOfRent!.Name)
 			.Map(desp => desp.Adress,
 			src => src.Street!.City!.Country!.Name + " " + src.Street.City.Name + " " + src.Street.Name)
 			.Map(desp => desp.Name, src => src.Name)
@@ -139,7 +139,7 @@ public class PostMapping : IRegister
 
 		config.NewConfig<Post, GetPostForEditResponse>()
 			.Map(desp => desp.Category, src => src.Category!.Name)
-			.Map(desp => desp.PostTypeOfRent, src => src.PostTypeOfRent!.Name)
+			//.Map(desp => desp.PostTypeOfRent, src => src.PostTypeOfRent!.Name)
 			.Map(desp => desp.Street, src => src.Street!.Name)
 			.Map(desp => desp.User, src => $"{src.User!.FirstName} {src.User.LastName}")
 			.Map(desp => desp.CountryName, src => src.Street!.City!.Country!.Name)
@@ -160,7 +160,7 @@ public class PostMapping : IRegister
 		config.NewConfig<Post, GetArchivedPostListForRealtorResponse>()
 			.Map(desp => desp.Id, src => src.Id)
 			.Map(desp => desp.Category, src => src.Category!.Name)
-			.Map(desp => desp.TypeOfRent, src => src.PostTypeOfRent!.Name)
+			//.Map(desp => desp.TypeOfRent, src => src.PostTypeOfRent!.Name)
 			.Map(desp => desp.Adress,
 			src => src.Street!.City!.Country!.Name + " " + src.Street.City.Name + " " + src.Street.Name)
 			.Map(desp => desp.Name, src => src.Name)

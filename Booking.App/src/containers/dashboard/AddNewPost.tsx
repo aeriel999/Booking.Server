@@ -14,7 +14,7 @@ import {
     getListOfCitiesByCountryId,
     getListOfCountries,
     getListOfStreetsByCityId,
-    getTypesOfRentList,
+    
 } from "../../store/post/post.actions.ts";
 import ErrorHandler from "../../components/common/ErrorHandler.ts";
 import OutlinedErrorAlert from "../../components/common/ErrorAlert.tsx";
@@ -60,9 +60,11 @@ export function AddNewPost() {
     const [streetList, setStreetList] = useState<ICity[]>([]);
     const [street, setStreet] = useState<ICity>();
     const formValid = useRef({
+        name: false,
+        typeOfRentfield: typeOfRent === undefined ? false : true,
         cityName: false,
         streetName: false,
-        name: false,
+
         description: false,
         buildingNumber: false,
         numberOfRooms: false,
@@ -77,15 +79,15 @@ export function AddNewPost() {
     const navigate = useNavigate();
     const [upload, setUpload] = useState<boolean>(false);
 
-    const getTypeOfRentList = async () => {
-        try {
-            const response = await dispatch(getTypesOfRentList());
-            unwrapResult(response);
-            return response;
-        } catch (error) {
-            setErrorMessage(ErrorHandler(error));
-        }
-    };
+    // const getTypeOfRentList = async () => {
+    //     try {
+    //         const response = await dispatch(getTypesOfRentList());
+    //         unwrapResult(response);
+    //         return response;
+    //     } catch (error) {
+    //         setErrorMessage(ErrorHandler(error));
+    //     }
+    // };
 
     const getCategoryList = async () => {
         try {
@@ -130,9 +132,9 @@ export function AddNewPost() {
     };
 
     useEffect(() => {
-        getTypeOfRentList().then((history) => {
-            setTypeOfRentList(history?.payload.$values);
-        });
+        // getTypeOfRentList().then((history) => {
+        //     setTypeOfRentList(history?.payload.$values);
+        // });
 
         getCategoryList().then((history) => {
             setCategoryList(history?.payload.$values);
@@ -175,6 +177,8 @@ export function AddNewPost() {
         );
     }
 
+    console.log("TestValid", formValid.current);
+
     const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
         event.preventDefault();
 
@@ -194,7 +198,6 @@ export function AddNewPost() {
 
         const model: IPostCreate = {
             name: data.get("name") as string,
-            postTypeOfRentId: typeOfRent!.id,
             categoryId: category!.id,
             countryId: country!.id,
             cityId: city === undefined ? null : city.id,
@@ -213,8 +216,7 @@ export function AddNewPost() {
             const response = await dispatch(createPost(model));
             unwrapResult(response);
 
-            //ToDo joinForPostListening in adding post
-              await joinForPostListening(response.payload.id);
+            await joinForPostListening(response.payload.id);
 
             navigate("/dashboard/show-all-post");
         } catch (error) {
@@ -277,16 +279,8 @@ export function AddNewPost() {
                                     }
                                 />
                             </Grid>
-
-                            <Grid item xs={12}>
-                                <ComboBox
-                                    options={typeOfRentList}
-                                    onChange={setTypeOfRent}
-                                    label={"Type Of Rent *"}
-                                />
-                            </Grid>
-
-                            <Grid item xs={12}>
+ 
+                         <Grid item xs={12}>
                                 <ComboBox
                                     options={categoryList}
                                     onChange={setCategory}
@@ -448,39 +442,13 @@ export function AddNewPost() {
                                     onDelete={handleChange}
                                 />
                             </Grid>
-
-                            {/* {Array.from({
-                                length: maxImagesCount,
-                            }).map((_, index) => (
-                                <Grid item xs={12} key={index}>
-                                    <Typography
-                                        variant="subtitle1"
-                                        color="text.primary"
-                                    >
-                                        {" "}
-                                        Image # {index + 1}
-                                    </Typography>
-
-                                    <FileEditUploader
-                                        images={images}
-                                        setImages={setImages}
-                                        maxImagesUpload={maxImagesCount}
-                                        validator={AvatarValidator}
-                                        defaultImage={DefaultImg}
-                                        onChange={(isValid) =>
-                                            (formValid.current.images = isValid)
-                                        }
-                                        onDelete={handleChange}
-                                    />
-                                </Grid>
-                            ))} */}
                         </Grid>
                         <Button
                             type="submit"
                             fullWidth
                             variant="contained"
                             sx={{ mt: 3, mb: 2 }}
-                            // disabled={!isFormValid}
+                            //   disabled={!isFormValid}
                         >
                             Add new post
                         </Button>

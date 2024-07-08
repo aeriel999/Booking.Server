@@ -25,31 +25,29 @@ public static class BookingInitializer
 		{
 			PostCategory[] categories =
 			[
-				new() { Name = "House" },
 				new() { Name = "Apartment" },
 				new() { Name = "Cottage" },
 				new() { Name = "Hotel" },
 				new() { Name = "Hostel" },
-				new() { Name = "Room" }
 			];
 
 			context.Categories.AddRange(categories);
 			context.SaveChanges();
 		}
 
-		if (!context.PostTypeOfRent.Any())
-		{
-			PostTypeOfRent[] typeOfRents =
-			[
-				new() { Name = TypeOfRent.Daily },
-				new() { Name = TypeOfRent.Hourly },
-				new() { Name = TypeOfRent.LongTerm },
+		//if (!context.PostTypeOfRent.Any())
+		//{
+		//	PostTypeOfRent[] typeOfRents =
+		//	[
+		//		new() { Name = TypeOfRent.Daily },
+		//		new() { Name = TypeOfRent.Hourly },
+		//		new() { Name = TypeOfRent.LongTerm },
 				 
-			];
+		//	];
 
-			context.PostTypeOfRent.AddRange(typeOfRents);
-			context.SaveChanges();
-		}
+		//	context.PostTypeOfRent.AddRange(typeOfRents);
+		//	context.SaveChanges();
+		//}
 
 
 		if (!context.Countries.Any())

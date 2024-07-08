@@ -18,20 +18,20 @@ public class Post
 
 	public string? Description { get; set; }
 
-	public Guid PostTypeOfRentId { get; set; }
+	//public Guid PostTypeOfRentId { get; set; }
 
 
-	[ForeignKey(nameof(PostTypeOfRentId))]
-	public PostTypeOfRent? PostTypeOfRent { get; set; }
+	//[ForeignKey(nameof(PostTypeOfRentId))]
+	//public PostTypeOfRent? PostTypeOfRent { get; set; }
 
 	public Guid StreetId { get; set; }
 
 	[ForeignKey(nameof(StreetId))]
 	public PostStreet? Street { get; set; }
 
-	public string? BuildingNumber { get; set; }
+	public int ZipCode { get; set; }
 
-	public int? NumberOfRooms { get; set; }
+	public int? NumberOfGuests { get; set; }
 
 	public int? Area { get; set; }
 
@@ -54,4 +54,10 @@ public class Post
 	public required DateTime PostAt { get; set; }
 
 	public DateTime? EditAt { get; set; }
+
+	public int? Discount { get; set; }
+
+	public float Rate { get; set; }
+
+	public ICollection<Room>? Rooms { get; set; }
 }

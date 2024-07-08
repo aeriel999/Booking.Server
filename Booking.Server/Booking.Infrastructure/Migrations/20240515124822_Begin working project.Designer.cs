@@ -102,7 +102,7 @@ namespace Booking.Infrastructure.Migrations
                         .IsRequired()
                         .HasColumnType("text");
 
-                    b.Property<int?>("NumberOfRooms")
+                    b.Property<int?>("NumberOfGuests")
                         .HasColumnType("integer");
 
                     b.Property<Guid?>("PostCountryId")

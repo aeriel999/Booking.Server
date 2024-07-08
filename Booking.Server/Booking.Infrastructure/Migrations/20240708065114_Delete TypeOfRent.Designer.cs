@@ -12,15 +12,15 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace Booking.Infrastructure.Migrations
 {
     [DbContext(typeof(BookingDbContext))]
-    [Migration("20240612095942_Edit field in User tbl")]
-    partial class EditfieldinUsertbl
+    [Migration("20240708065114_Delete TypeOfRent")]
+    partial class DeleteTypeOfRent
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
-                .HasAnnotation("ProductVersion", "8.0.2")
+                .HasAnnotation("ProductVersion", "8.0.6")
                 .HasAnnotation("Relational:MaxIdentifierLength", 63);
 
             NpgsqlModelBuilderExtensions.UseIdentityByDefaultColumns(modelBuilder);
@@ -89,14 +89,14 @@ namespace Booking.Infrastructure.Migrations
                     b.Property<int?>("Area")
                         .HasColumnType("integer");
 
-                    b.Property<string>("BuildingNumber")
-                        .HasColumnType("text");
-
                     b.Property<Guid>("CategoryId")
                         .HasColumnType("uuid");
 
                     b.Property<string>("Description")
                         .HasColumnType("text");
+
+                    b.Property<int?>("Discount")
+                        .HasColumnType("integer");
 
                     b.Property<DateTime?>("EditAt")
                         .HasColumnType("timestamp with time zone");
@@ -120,11 +120,11 @@ namespace Booking.Infrastructure.Migrations
                     b.Property<Guid?>("PostCountryId")
                         .HasColumnType("uuid");
 
-                    b.Property<Guid>("PostTypeOfRentId")
-                        .HasColumnType("uuid");
-
                     b.Property<decimal>("Price")
                         .HasColumnType("numeric");
+
+                    b.Property<float>("Rate")
+                        .HasColumnType("real");
 
                     b.Property<Guid>("StreetId")
                         .HasColumnType("uuid");
@@ -132,13 +132,14 @@ namespace Booking.Infrastructure.Migrations
                     b.Property<Guid>("UserId")
                         .HasColumnType("uuid");
 
+                    b.Property<int>("ZipCode")
+                        .HasColumnType("integer");
+
                     b.HasKey("Id");
 
                     b.HasIndex("CategoryId");
 
                     b.HasIndex("PostCountryId");
-
-                    b.HasIndex("PostTypeOfRentId");
 
                     b.HasIndex("StreetId");
 
@@ -239,19 +240,57 @@ namespace Booking.Infrastructure.Migrations
                     b.ToTable("Streets");
                 });
 
-            modelBuilder.Entity("Booking.Domain.Posts.PostTypeOfRent", b =>
+            modelBuilder.Entity("Booking.Domain.Posts.Room", b =>
                 {
                     b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("uuid");
 
-                    b.Property<string>("Name")
+                    b.Property<Guid>("HotelId")
+                        .HasColumnType("uuid");
+
+                    b.Property<int?>("NumberOfGuests")
+                        .HasColumnType("integer");
+
+                    b.Property<int>("NumberOfRooms")
+                        .HasColumnType("integer");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("HotelId");
+
+                    b.ToTable("Rooms");
+                });
+
+            modelBuilder.Entity("Booking.Domain.Users.Feedback", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uuid");
+
+                    b.Property<Guid>("ClientId")
+                        .HasColumnType("uuid");
+
+                    b.Property<DateTime>("FeedbackAt")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.Property<float>("Rating")
+                        .HasColumnType("real");
+
+                    b.Property<Guid>("RealtorId")
+                        .HasColumnType("uuid");
+
+                    b.Property<string>("Text")
                         .IsRequired()
                         .HasColumnType("text");
 
                     b.HasKey("Id");
 
-                    b.ToTable("PostTypeOfRent");
+                    b.HasIndex("ClientId");
+
+                    b.HasIndex("RealtorId");
+
+                    b.ToTable("Feedbacks");
                 });
 
             modelBuilder.Entity("Booking.Domain.Users.User", b =>
@@ -495,12 +534,6 @@ namespace Booking.Infrastructure.Migrations
                         .WithMany("Posts")
                         .HasForeignKey("PostCountryId");
 
-                    b.HasOne("Booking.Domain.Posts.PostTypeOfRent", "PostTypeOfRent")
-                        .WithMany("Posts")
-                        .HasForeignKey("PostTypeOfRentId")
-                        .OnDelete(DeleteBehavior.ClientNoAction)
-                        .IsRequired();
-
                     b.HasOne("Booking.Domain.Posts.PostStreet", "Street")
                         .WithMany("Posts")
                         .HasForeignKey("StreetId")
@@ -514,8 +547,6 @@ namespace Booking.Infrastructure.Migrations
                         .IsRequired();
 
                     b.Navigation("Category");
-
-                    b.Navigation("PostTypeOfRent");
 
                     b.Navigation("Street");
 
@@ -538,7 +569,7 @@ namespace Booking.Infrastructure.Migrations
                     b.HasOne("Booking.Domain.Posts.Post", "Post")
                         .WithMany("ImagesPost")
                         .HasForeignKey("PostId")
-                        .OnDelete(DeleteBehavior.ClientCascade)
+                        .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
                     b.Navigation("Post");
@@ -553,6 +584,36 @@ namespace Booking.Infrastructure.Migrations
                         .IsRequired();
 
                     b.Navigation("City");
+                });
+
+            modelBuilder.Entity("Booking.Domain.Posts.Room", b =>
+                {
+                    b.HasOne("Booking.Domain.Posts.Post", "Hotel")
+                        .WithMany("Rooms")
+                        .HasForeignKey("HotelId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Hotel");
+                });
+
+            modelBuilder.Entity("Booking.Domain.Users.Feedback", b =>
+                {
+                    b.HasOne("Booking.Domain.Users.User", "Client")
+                        .WithMany("SentFeedbacks")
+                        .HasForeignKey("ClientId")
+                        .OnDelete(DeleteBehavior.ClientCascade)
+                        .IsRequired();
+
+                    b.HasOne("Booking.Domain.Users.User", "Realtor")
+                        .WithMany("ReceivedFeedbacks")
+                        .HasForeignKey("RealtorId")
+                        .OnDelete(DeleteBehavior.ClientCascade)
+                        .IsRequired();
+
+                    b.Navigation("Client");
+
+                    b.Navigation("Realtor");
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRoleClaim<System.Guid>", b =>
@@ -616,6 +677,8 @@ namespace Booking.Infrastructure.Migrations
                     b.Navigation("ChatRooms");
 
                     b.Navigation("ImagesPost");
+
+                    b.Navigation("Rooms");
                 });
 
             modelBuilder.Entity("Booking.Domain.Posts.PostCategory", b =>
@@ -640,14 +703,13 @@ namespace Booking.Infrastructure.Migrations
                     b.Navigation("Posts");
                 });
 
-            modelBuilder.Entity("Booking.Domain.Posts.PostTypeOfRent", b =>
-                {
-                    b.Navigation("Posts");
-                });
-
             modelBuilder.Entity("Booking.Domain.Users.User", b =>
                 {
                     b.Navigation("Posts");
+
+                    b.Navigation("ReceivedFeedbacks");
+
+                    b.Navigation("SentFeedbacks");
                 });
 #pragma warning restore 612, 618
         }

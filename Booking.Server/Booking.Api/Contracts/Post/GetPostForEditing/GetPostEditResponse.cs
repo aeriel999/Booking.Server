@@ -18,7 +18,7 @@ public record GetPostForEditResponse
 
 	public string? Description { get; set; }
 
-	public required string PostTypeOfRent { get; set; }
+//	public required string PostTypeOfRent { get; set; }
 
 	public required string Street { get; set; }
 

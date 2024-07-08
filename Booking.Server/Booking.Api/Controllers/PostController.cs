@@ -133,16 +133,16 @@ public class PostController(ISender mediatr, IMapper mapper) : ApiController
     }
 
 
-    [AllowAnonymous]
-    [HttpGet("get-type-of-rent-list")]
-	public async Task<IActionResult> GetTypeOfRentListAsync()
-	{
-		var getTypeOfPostListResult = await mediatr.Send(new GetTypeOfRentListQuery());
+ //   [AllowAnonymous]
+ //   [HttpGet("get-type-of-rent-list")]
+	//public async Task<IActionResult> GetTypeOfRentListAsync()
+	//{
+	//	var getTypeOfPostListResult = await mediatr.Send(new GetTypeOfRentListQuery());
 
-		return getTypeOfPostListResult.Match(
-			getTypeOfPostListResult => Ok(mapper.Map<List<GetTypeOfPostResponse>>(getTypeOfPostListResult)),
-			errors => Problem(errors));
-	}
+	//	return getTypeOfPostListResult.Match(
+	//		getTypeOfPostListResult => Ok(mapper.Map<List<GetTypeOfPostResponse>>(getTypeOfPostListResult)),
+	//		errors => Problem(errors));
+	//}
 
 
     [AllowAnonymous]

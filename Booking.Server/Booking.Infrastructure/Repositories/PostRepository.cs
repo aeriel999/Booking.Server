@@ -27,7 +27,7 @@ public class PostRepository(BookingDbContext context) : IPostRepository
 	public async Task<Post?> GetPostWithIncludesByIdAsync(Guid id)
 	{
 		return await _dbSet.Where(post => post.Id == id)
-							.Include(post => post.PostTypeOfRent)
+						//	.Include(post => post.PostTypeOfRent)
 							.Include(post => post.Category)
 							.Include(post => post.Street!.City!.Country)
 							.Include(post => post.User)
@@ -91,7 +91,7 @@ public class PostRepository(BookingDbContext context) : IPostRepository
 	public async Task<List<Post>> GetIncludeListAsync()
 	{
 		return await _dbSet
-			.Include(post => post.PostTypeOfRent)
+			//.Include(post => post.PostTypeOfRent)
 			.Include(post => post.Category)
 			.Include(post => post.Street!.City!.Country)
 			.Include(post => post.User)
@@ -102,7 +102,7 @@ public class PostRepository(BookingDbContext context) : IPostRepository
     {
         return await _dbSet
 			.Where(post => !post.IsArhive)
-            .Include(post => post.PostTypeOfRent)
+           // .Include(post => post.PostTypeOfRent)
             .Include(post => post.Category)
             .Include(post => post.Street!.City!.Country)
             .Include(post => post.User)
@@ -113,7 +113,7 @@ public class PostRepository(BookingDbContext context) : IPostRepository
 	{
 		return await _dbSet
 			.Where(c => c.UserId == realtorId)
-			.Include(post => post.PostTypeOfRent)
+			//.Include(post => post.PostTypeOfRent)
 			.Include(post => post.Category)
 			.Include(post => post.Street!.City!.Country)
 			.OrderByDescending(post => post.PostAt)
@@ -142,7 +142,7 @@ public class PostRepository(BookingDbContext context) : IPostRepository
 	{
 		return await _dbSet
 			.Where(c => c.UserId == realtorId && c.IsArhive == true)
-			.Include(post => post.PostTypeOfRent)
+			//.Include(post => post.PostTypeOfRent)
 			.Include(post => post.Category)
 			.Include(post => post.Street!.City!.Country)
 			.ToListAsync();

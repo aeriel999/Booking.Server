@@ -3,7 +3,7 @@
 public record GetArchivedPostListForRealtorResponse(
 	Guid Id,
 	string Category,
-	string TypeOfRent,
+	//string TypeOfRent,
 	string Adress,
 	string Name,
 	decimal Price,

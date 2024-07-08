@@ -35,18 +35,18 @@ export interface ITypeOfRent {
     name: string;
 }
 export interface IFilteredRequest {
-    filter: IFilter | null,
-    pages: IFetchData
+    filter: IFilter | null;
+    pages: IFetchData;
 }
 export interface IFilter {
-    category: string | null,
-    country: string | null,
-    city: string | null,
-    realtor: string | null
+    category: string | null;
+    country: string | null;
+    city: string | null;
+    realtor: string | null;
 }
 export interface IFilteredRequestName {
-    filter: IFilter | null,
-    name: string | null
+    filter: IFilter | null;
+    name: string | null;
 }
 
 export interface IPageOfPosts {
@@ -73,7 +73,6 @@ export interface IPostInformation {
     name: string;
     category: string;
     description: string;
-    postTypeOfRent: string;
     countryName: string;
     countryId: string;
     cityName: string;
@@ -94,7 +93,6 @@ export interface IPostByRealtorId {
     name: string;
     imagePost: string;
 }
-
 
 export interface IFilteredRequest {
     filter: IFilter | null;
@@ -118,15 +116,15 @@ export interface IPostState {
     countries: ICountry[] | null;
     cities: ICity[] | null;
     streets: IStreet[] | null;
-    typeOfRent: ITypeOfRent[] | null;
+
     searchPost: INamesOfPosts | null;
     postInfoList: IPageOfPostsForRealtor | null;
     postsByRealtorId: IPostByRealtorId[] | null;
 }
 
 export interface INamesOfPosts {
-    $id: string,
-    $values: string[]
+    $id: string;
+    $values: string[];
 }
 
 export interface IFetchData {
@@ -142,7 +140,6 @@ export interface IFetchDataByName {
 
 export interface IPostCreate {
     name: string;
-    postTypeOfRentId: string;
     categoryId: string | null;
     countryId: string | null;
     cityId: string | null;
@@ -155,13 +152,11 @@ export interface IPostCreate {
     price: number;
     description: string | null;
     images: File[];
-  
 }
 
 export interface IPostInfoForRealtor {
     id: string;
     category: string;
-    typeOfRent: string;
     adress: string;
     name: string;
     price: number;
@@ -184,7 +179,6 @@ export interface IPageOfPostsForRealtor {
 export interface IPostEdit {
     id: string;
     name: string;
-    postTypeOfRentId: string | null;
     categoryId: string | null;
     countryId: string | null;
     cityId: string | null;
