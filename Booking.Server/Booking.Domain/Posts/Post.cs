@@ -58,4 +58,6 @@ public class Post
 
     public ICollection<PostPostTypeOfRest>? PostPostTypesOfRest { get; set; }
 
+    public ICollection<PostService>? PostServices { get; set; }
+
 }

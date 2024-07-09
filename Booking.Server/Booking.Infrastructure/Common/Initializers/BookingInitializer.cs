@@ -346,6 +346,99 @@ public static class BookingInitializer
 			context.PostTypesOfRest.AddRange(typesOfRest);
 			context.SaveChanges();
 		}
+		if(!context.Services.Any())
+		{
+			Service[] services =
+			{
+				new(){
+					Id = Guid.NewGuid(),
+					Name = "Pool"
+				},
+
+                new(){
+                    Id = Guid.NewGuid(),
+                    Name = "Beach"
+                },
+
+                new(){
+                    Id = Guid.NewGuid(),
+                    Name = "Breakfast"
+                },
+
+                new(){
+                    Id = Guid.NewGuid(),
+                    Name = "Dinner"
+                },
+
+                new(){
+                    Id = Guid.NewGuid(),
+                    Name = "Spa"
+                },
+
+                new(){
+                    Id = Guid.NewGuid(),
+                    Name = "Sauna"
+                },
+
+                new(){
+                    Id = Guid.NewGuid(),
+                    Name = "Jacuzzi"
+                },
+
+                new(){
+                    Id = Guid.NewGuid(),
+                    Name = "Gym"
+                },
+
+				new(){
+                    Id = Guid.NewGuid(),
+                    Name = "Massage"
+                },
+
+                new(){
+                    Id = Guid.NewGuid(),
+                    Name = "Animated show"
+                },
+
+                new(){
+                    Id = Guid.NewGuid(),
+                    Name = "Restaurant or cafe"
+                },
+
+                new(){
+                    Id = Guid.NewGuid(),
+                    Name = "Bar"
+                },
+
+                new(){
+                    Id = Guid.NewGuid(),
+                    Name = "Wi-Fi"
+                },
+
+                new(){
+                    Id = Guid.NewGuid(),
+                    Name = "Pool for kids"
+                },
+
+                new(){
+                    Id = Guid.NewGuid(),
+                    Name = "Organization of excursions"
+                },
+
+                new(){
+                    Id = Guid.NewGuid(),
+                    Name = "Kids clubs"
+                },
+
+                new(){
+                    Id = Guid.NewGuid(),
+                    Name = "Room service"
+                }
+            };
+
+			context.Services.AddRange(services);
+			context.SaveChanges();
+		}
 
 	}
 	public async static void SeedUserAndRoleData(this IApplicationBuilder app)
