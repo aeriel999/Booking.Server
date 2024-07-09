@@ -18,8 +18,6 @@ public record GetPostResponse
 
 	public string? Description { get; set; }
 
-//	public required string PostTypeOfRent { get; set; }
-
 	public required string Street { get; set; }
 
 	public string? BuildingNumber { get; set; }

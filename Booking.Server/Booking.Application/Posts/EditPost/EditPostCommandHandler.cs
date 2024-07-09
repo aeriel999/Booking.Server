@@ -8,7 +8,6 @@ namespace Booking.Application.Posts.EditPost;
 
 public class EditPostCommandHandler(
 	IPostRepository postRepository,
-	IPostTypeOfRentRepository postTypeOfRentRepository,
 	IPostCategoryRepository postCategoryRepository,
 	IPostCityRepository postCityRepository,
 	IPostStreetRepository postStreetRepository,
@@ -116,12 +115,7 @@ public class EditPostCommandHandler(
 		{
 			post.NumberOfGuests = request.NumberOfRooms;
 		}
-
-		if (request.Area != null && request.Area != post.Area)
-		{
-			post.Area = request.Area;
-		}
-
+ 
 		if (request.Price != post.Price)
 		{
 			post.Price = request.Price;

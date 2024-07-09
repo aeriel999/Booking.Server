@@ -15,4 +15,6 @@ public class Room
 	public int? NumberOfGuests { get; set; }
 
 	public int NumberOfRooms { get; set;}
+
+	public decimal Price { get; set; }
 }
