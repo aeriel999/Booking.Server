@@ -18,13 +18,7 @@ import {
 } from "../../store/post/post.actions.ts";
 import ErrorHandler from "../../components/common/ErrorHandler.ts";
 import OutlinedErrorAlert from "../../components/common/ErrorAlert.tsx";
-import {
-    ICategory,
-    ICity,
-    ICountry,
-    IPostEdit,
-    ITypeOfRent,
-} from "../../interfaces/post";
+import { ICategory, ICity, ICountry, IPostEdit } from "../../interfaces/post";
 import InputGroup from "../../components/common/InputGroup.tsx";
 import {
     AreaValidator,
@@ -223,9 +217,6 @@ export function EditPost() {
             cityName: data.get("cityName") as string,
             streetId: street?.id ?? null,
             streetName: data.get("streetName") as string,
-            buildingNumber: data.get("buildingNumber") as string,
-            numberOfRooms: numberOfRoomsResult,
-            area: areaResult,
             price: parseFloat(data.get("price") as string),
             description: data.get("description") as string,
             images: images,
@@ -398,7 +389,7 @@ export function EditPost() {
                                     />
                                 </Grid>
 
-                                <Grid item xs={12}>
+                                {/* <Grid item xs={12}>
                                     <InputGroup
                                         label="Number of Rooms"
                                         field="numberOfRooms"
@@ -431,7 +422,7 @@ export function EditPost() {
                                                 : post!.area
                                         }
                                     />
-                                </Grid>
+                                </Grid> */}
 
                                 <Grid item xs={12}>
                                     <InputGroup

@@ -14,17 +14,10 @@ import {
     getListOfCitiesByCountryId,
     getListOfCountries,
     getListOfStreetsByCityId,
-    
 } from "../../store/post/post.actions.ts";
 import ErrorHandler from "../../components/common/ErrorHandler.ts";
 import OutlinedErrorAlert from "../../components/common/ErrorAlert.tsx";
-import {
-    ICategory,
-    ICity,
-    ICountry,
-    IPostCreate,
-    ITypeOfRent,
-} from "../../interfaces/post";
+import { ICategory, ICity, ICountry, IPostCreate } from "../../interfaces/post";
 import InputGroup from "../../components/common/InputGroup.tsx";
 import {
     AreaValidator,
@@ -49,8 +42,7 @@ export function AddNewPost() {
     const [errorMessage, setErrorMessage] = useState<string | undefined>(
         undefined
     );
-    const [typeOfRentList, setTypeOfRentList] = useState<ITypeOfRent[]>([]);
-    const [typeOfRent, setTypeOfRent] = useState<ITypeOfRent>();
+
     const [categoryList, setCategoryList] = useState<ICategory[]>([]);
     const [category, setCategory] = useState<ICategory>();
     const [countryList, setCountryList] = useState<ICountry[]>([]);
@@ -61,7 +53,6 @@ export function AddNewPost() {
     const [street, setStreet] = useState<ICity>();
     const formValid = useRef({
         name: false,
-        typeOfRentfield: typeOfRent === undefined ? false : true,
         cityName: false,
         streetName: false,
 
@@ -78,16 +69,6 @@ export function AddNewPost() {
     const [isFormValid, setIsFormValid] = useState<boolean>(false);
     const navigate = useNavigate();
     const [upload, setUpload] = useState<boolean>(false);
-
-    // const getTypeOfRentList = async () => {
-    //     try {
-    //         const response = await dispatch(getTypesOfRentList());
-    //         unwrapResult(response);
-    //         return response;
-    //     } catch (error) {
-    //         setErrorMessage(ErrorHandler(error));
-    //     }
-    // };
 
     const getCategoryList = async () => {
         try {
@@ -132,10 +113,6 @@ export function AddNewPost() {
     };
 
     useEffect(() => {
-        // getTypeOfRentList().then((history) => {
-        //     setTypeOfRentList(history?.payload.$values);
-        // });
-
         getCategoryList().then((history) => {
             setCategoryList(history?.payload.$values);
         });
@@ -204,9 +181,7 @@ export function AddNewPost() {
             cityName: data.get("cityName") as string,
             streetId: street === undefined ? null : street.id,
             streetName: data.get("streetName") as string,
-            buildingNumber: data.get("buildingNumber") as string,
-            numberOfRooms: numberOfRoomsResult,
-            area: areaResult,
+
             price: parseFloat(data.get("price") as string),
             description: data.get("description") as string,
             images: images,
@@ -279,8 +254,8 @@ export function AddNewPost() {
                                     }
                                 />
                             </Grid>
- 
-                         <Grid item xs={12}>
+
+                            <Grid item xs={12}>
                                 <ComboBox
                                     options={categoryList}
                                     onChange={setCategory}

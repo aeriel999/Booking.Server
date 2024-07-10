@@ -2,37 +2,42 @@
 
 public record GetPostResponse
 {
-	public required Guid Id { get; set; }
+	public required Guid Id { get; init; }
 
-	public required string Name { get; set; }
+	public required string Name { get; init; }
 
-	public required string CountryName { get; set; }
+	public required string CountryName { get; init; }
 
-	public required Guid CountryId { get; set; }
+	public required Guid CountryId { get; init; }
 
-	public required string CityName { get; set; }
+	public required string CityName { get; init; }
 
-	public required Guid CityId { get; set; }
+	public required Guid CityId { get; init; }
 
-	public required string Category { get; set; }
+	public required string Category { get; init; }
 
-	public string? Description { get; set; }
+	public string? Description { get; init; }
 
-	public required string Street { get; set; }
+	public required string StreetName { get; init; }
 
-	public string? BuildingNumber { get; set; }
+	public int ZipCode { get; init; }
 
-	public int? NumberOfRooms { get; set; }
+	public int? NumberOfGuests { get; init; }
 
-	public int? Area { get; set; }
+	public required string UserName { get; init; }
 
-	public required string User { get; set; }
-    public required Guid UserId { get; set; }
+    public required Guid UserId { get; init; }
 
-    public required bool IsArhive { get; set; }
+    public required bool IsArhive { get; init; }
 
-	public required decimal Price { get; set; }
+    public required bool IsActive { get; init; }
 
-	public required string[] ImagePostList { get; set; }
+	public required decimal Price { get; init; }
+
+	public int? Discount { get; init; }
+
+	public required float Rate { get; init; }	
+
+	public required string[] ImagePostList { get; init; }
 
 }

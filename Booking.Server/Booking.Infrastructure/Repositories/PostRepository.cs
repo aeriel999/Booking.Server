@@ -27,11 +27,11 @@ public class PostRepository(BookingDbContext context) : IPostRepository
 	public async Task<Post?> GetPostWithIncludesByIdAsync(Guid id)
 	{
 		return await _dbSet.Where(post => post.Id == id)
-						//	.Include(post => post.PostTypeOfRent)
 							.Include(post => post.Category)
 							.Include(post => post.Street!.City!.Country)
 							.Include(post => post.User)
 							.Include(post => post.ImagesPost)
+							.Include(post => post.Rooms)
 							.FirstOrDefaultAsync();
 	}
 
@@ -91,31 +91,31 @@ public class PostRepository(BookingDbContext context) : IPostRepository
 	public async Task<List<Post>> GetIncludeListAsync()
 	{
 		return await _dbSet
-			//.Include(post => post.PostTypeOfRent)
 			.Include(post => post.Category)
 			.Include(post => post.Street!.City!.Country)
 			.Include(post => post.User)
 			.Include(post => post.ImagesPost)
+			.Include(post => post.Rooms)
 			.ToListAsync();
 	}
     public async Task<List<Post>> GetIncludeListNotArchivedAsync()
     {
         return await _dbSet
 			.Where(post => !post.IsArhive)
-           // .Include(post => post.PostTypeOfRent)
             .Include(post => post.Category)
             .Include(post => post.Street!.City!.Country)
             .Include(post => post.User)
             .Include(post => post.ImagesPost)
-            .ToListAsync();
+			.Include(post => post.Rooms)
+			.ToListAsync();
     }
     public async Task<List<Post>> GetPostListWithIncludesByRealtorIdAsync(Guid realtorId)
 	{
 		return await _dbSet
 			.Where(c => c.UserId == realtorId)
-			//.Include(post => post.PostTypeOfRent)
 			.Include(post => post.Category)
 			.Include(post => post.Street!.City!.Country)
+			.Include(post => post.Rooms)
 			.OrderByDescending(post => post.PostAt)
 			.ToListAsync();
 	}
@@ -142,9 +142,9 @@ public class PostRepository(BookingDbContext context) : IPostRepository
 	{
 		return await _dbSet
 			.Where(c => c.UserId == realtorId && c.IsArhive == true)
-			//.Include(post => post.PostTypeOfRent)
 			.Include(post => post.Category)
 			.Include(post => post.Street!.City!.Country)
+			.Include(post => post.Rooms)
 			.ToListAsync();
 	}
 

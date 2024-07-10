@@ -42,7 +42,14 @@ public class CreatePostCommandValidation : AbstractValidator<CreatePostCommand>
 		{
 			RuleFor(r => r.NumberOfGuests)
 				.GreaterThanOrEqualTo(1).WithMessage("Number of guests must be at least 1.")
-				.LessThan(21);
+				.LessThanOrEqualTo(20);
+		});
+
+		When(r => r.Discount.HasValue, () =>
+		{
+			RuleFor(r => r.Discount)
+				.GreaterThanOrEqualTo(5).WithMessage("Number of guests must be at least 1.")
+				.LessThanOrEqualTo(75);
 		});
 
 		RuleFor(r => r.Price).NotEmpty().WithMessage("Field must not be empty");

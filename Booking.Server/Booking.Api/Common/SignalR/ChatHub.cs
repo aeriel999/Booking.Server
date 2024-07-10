@@ -96,7 +96,7 @@ namespace Booking.Api.Common.SignalR
 
 		//public async Task<string> JoinRoomByClientForPost(RoomRequest request)
 		//{
-		//	var userId = Context.User.Claims.FirstOrDefault(x => x.Type == ClaimTypes.NameIdentifier).Value;
+		//	var userId = Context.UserName.Claims.FirstOrDefault(x => x.Type == ClaimTypes.NameIdentifier).Value;
 
 		//	var chatRoom = await chatRoomRepository.GetChatRoomForUserIdAndPostIdAsync(
 		//		Guid.Parse(userId), request.RoomId);

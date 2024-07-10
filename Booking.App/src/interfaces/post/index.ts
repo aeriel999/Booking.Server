@@ -30,20 +30,18 @@ export interface IStreet {
     name: string;
 }
 
-export interface ITypeOfRent {
-    id: string;
-    name: string;
-}
 export interface IFilteredRequest {
     filter: IFilter | null;
     pages: IFetchData;
 }
+
 export interface IFilter {
     category: string | null;
     country: string | null;
     city: string | null;
     realtor: string | null;
 }
+
 export interface IFilteredRequestName {
     filter: IFilter | null;
     name: string | null;
@@ -80,7 +78,6 @@ export interface IPostInformation {
     street: string;
     buildingNumber: string;
     numberOfRooms: number;
-    area: number;
     user: string;
     userId: string;
     isArchive: boolean;
@@ -146,9 +143,7 @@ export interface IPostCreate {
     cityName: string | null;
     streetId: string | null;
     streetName: string | null;
-    buildingNumber: string | null;
-    numberOfRooms: number | null;
-    area: number | null;
+
     price: number;
     description: string | null;
     images: File[];
@@ -185,9 +180,7 @@ export interface IPostEdit {
     cityName: string | null;
     streetId: string | null;
     streetName: string | null;
-    buildingNumber: string | null;
-    numberOfRooms: number | null;
-    area: number | null;
+     
     price: number | null;
     description: string | null;
     images: File[] | null;

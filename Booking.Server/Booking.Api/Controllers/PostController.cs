@@ -132,19 +132,6 @@ public class PostController(ISender mediatr, IMapper mapper) : ApiController
             errors => Problem(errors));
     }
 
-
- //   [AllowAnonymous]
- //   [HttpGet("get-type-of-rent-list")]
-	//public async Task<IActionResult> GetTypeOfRentListAsync()
-	//{
-	//	var getTypeOfPostListResult = await mediatr.Send(new GetTypeOfRentListQuery());
-
-	//	return getTypeOfPostListResult.Match(
-	//		getTypeOfPostListResult => Ok(mapper.Map<List<GetTypeOfPostResponse>>(getTypeOfPostListResult)),
-	//		errors => Problem(errors));
-	//}
-
-
     [AllowAnonymous]
     [HttpGet("get-categories-list")]
 	public async Task<IActionResult> GetCategoriesListAsync()
@@ -209,6 +196,8 @@ public class PostController(ISender mediatr, IMapper mapper) : ApiController
 				mapper.Map<PagedList<GetPostListForRealtorResponse>>(getPostListForRealtor)),
 			errors => Problem(errors));
 	}
+
+
     [AllowAnonymous]
     [HttpGet("get-post-list-by-realtor-id-{id}")]
     public async Task<IActionResult> GetPostListByRealtorIdForChatsAsync([FromRoute] Guid id)
@@ -260,7 +249,6 @@ public class PostController(ISender mediatr, IMapper mapper) : ApiController
 			getPostListForRealtor => Ok(archivePostResult.Value),
 			errors => Problem(errors));
 	}
-
 	
 
 	[HttpGet("get-archived-post-list-for-realtor")]
