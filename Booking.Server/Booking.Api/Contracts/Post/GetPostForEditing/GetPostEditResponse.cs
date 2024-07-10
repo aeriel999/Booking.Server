@@ -14,23 +14,23 @@ public record GetPostForEditResponse
 
 	public required Guid CityId { get; set; }
 
-	public required string Category { get; set; }
+	public required string CategoryName { get; set; }
 
 	public string? Description { get; set; }
 
-	public required string PostTypeOfRent { get; set; }
+	public required string StreetName { get; set; }
 
-	public required string Street { get; set; }
+	public int ZipCode{ get; set; }
 
-	public string? BuildingNumber { get; set; }
+	public int? NumberOfGuests { get; set; }
 
-	public int? NumberOfRooms { get; set; }
-
-	public int? Area { get; set; }
+	public int? Discount { get; set; }
 
 	public required string User { get; set; }
 
 	public required bool IsArhive { get; set; }
+
+	public required bool IsActive { get; set; }
 
 	public required decimal Price { get; set; }
 

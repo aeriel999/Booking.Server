@@ -17,7 +17,7 @@ public class ChatController(ISender mediatr) : ApiController
 	//[HttpPost("create")]
 	//public async Task<IActionResult> CreateChatAsync(CreateChatRequest request)
 	//{
-	//	string userId = User.Claims.First(u => u.Type == ClaimTypes.NameIdentifier).Value;
+	//	string userId = UserName.Claims.First(u => u.Type == ClaimTypes.NameIdentifier).Value;
 
 	//	var createChatResult = await mediatr.Send(mapper.Map<CreateChatCommand>((request, userId)));
 

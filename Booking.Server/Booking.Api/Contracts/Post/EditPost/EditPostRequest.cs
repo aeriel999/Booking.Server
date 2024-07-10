@@ -13,9 +13,6 @@ public record EditPostRequest
 	[Length(8, 124)]
 	public required string Name { get; init; }
 
-
-	public Guid? PostTypeOfRentId { get; init; }
-
 	public Guid? CategoryId { get; init; }
 
 	public Guid? CountryId { get; init; }
@@ -27,24 +24,19 @@ public record EditPostRequest
 	public Guid? StreetId { get; init; }
 
 	public string? StreetName { get; init; }
+ 
+	public int ZipCode { get; init; }
 
-
-	[Required(ErrorMessage = "{PropertyName} must not be empty")]
-	[Length(1, 16)]
-	public required string BuildingNumber { get; init; }
-
-
-	public int? NumberOfRooms { get; init; }
-
-	public int? Area { get; init; }
+	public int? NumberOfGuests { get; init; }
 
 
 	[Required(ErrorMessage = "{PropertyName} must not be empty")]
 	[Range(0, 9999999999999999.99, ErrorMessage = "{PropertyName} must be between {1} and {2}")]
 	public decimal Price { get; init; }
 
-
 	public string? Description { get; init; }
+
+	public int? Discount { get; init; }
 
 
 	[BindProperty(Name = "images[]")]

@@ -153,7 +153,7 @@ export default function ArchivePage() {
                     <TableHead>
                         <TableRow>
                             <StyledTableCell>Category</StyledTableCell>
-                            <StyledTableCell>Type Of Rent</StyledTableCell>
+
                             <StyledTableCell>Adress</StyledTableCell>
                             <StyledTableCell>Name</StyledTableCell>
                             <StyledTableCell>Price</StyledTableCell>
@@ -181,9 +181,7 @@ export default function ArchivePage() {
                                     <StyledTableCell component="th" scope="row">
                                         {row.category}
                                     </StyledTableCell>
-                                    <StyledTableCell align="right">
-                                        {row.typeOfRent}
-                                    </StyledTableCell>
+                                   
                                     <StyledTableCell align="right">
                                         {row.adress}
                                     </StyledTableCell>

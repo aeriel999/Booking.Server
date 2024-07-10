@@ -1,0 +1,47 @@
+/* <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="styles.css"> */
+
+
+:root{
+ /* Fonts */
+ --auth-primary-font-family: "Roboto", sans-serif;
+ --auth-primary-font-weight: 700;
+ --auth-primary-font-size: 34px;
+ --auth-primary-line-height: 39.84px;
+ --auth-primary-text-align: center;
+
+ --auth-form-width: 498px;
+
+ --auth-font-primary-color:  #FFFFFF;
+
+ --auth-button-font-weight: 500;
+ --auth-secondary-font-size: 24px;
+ --auth-secondary-line-height: 28.13px;
+
+ --auth-button-font-weight: 400;
+ --auth-secondary-font-size: 20px;
+ --auth-secondary-line-height: 23.44px;
+
+ --auth-secondary-font-weight: 300;
+ --auth-secondary-font-size: 18px;
+ --auth-secondary-line-height: 21.09px;
+
+ --auth-font-secondary-color:  #808080;
+  
+ --auth-font-button-primary-color:  #000000;
+ 
+ --auth-button-primary-color:  ##00C2C1;
+
+ --inter-font-family: "Inter", sans-serif;
+ --inter-font-weight: 400;
+ --inter-font-size: 16px;
+ --inter-line-height: 19.36px;
+
+ --inter-font-size_2: 18px;
+ --inter-line-height_2: 21.78px;
+  
+ --inter-font-size_3: 20x;
+ --inter-line-height_3: 24.2px;
+  
+}
+ 

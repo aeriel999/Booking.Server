@@ -1,5 +1,6 @@
 ﻿using Booking.Application.Common.Interfaces.Common;
 using Booking.Application.Common.Interfaces.Post;
+using Booking.Application.Common.Interfaces.Users;
 using Booking.Domain.Posts;
 using ErrorOr;
 using MediatR;
@@ -12,19 +13,21 @@ public class CreatePostCommandHandler(
 	IPostImageRepository postImageRepository,
 	IPostCategoryRepository postCategoryRepository,
 	IPostStreetRepository streetRepository,
-	IPostTypeOfRentRepository postTypeOfRentRepository,
 	IPostCountryRepository postCountryRepository,
-	IPostCityRepository postCityRepository)
+	IPostCityRepository postCityRepository,
+	IUserRepository userRepository)
 	: IRequestHandler<CreatePostCommand, ErrorOr<Post>>
 {
 	public async Task<ErrorOr<Post>> Handle(
 		CreatePostCommand request, CancellationToken cancellationToken)
 	{
-		//Check typeOfRent for existing
-		var typeOfRent = await postTypeOfRentRepository.GetTypeOfRentByIdAsync(request.PostTypeOfRentId);
+		//Get user
+		var userOrError = await userRepository.GetUserAsync(request.UserId.ToString());
 
-		if (typeOfRent == null)
-			return Error.NotFound("Type of rent is not found");
+		if(userOrError.IsError)
+			return Error.NotFound("User is not found");
+
+		var user = userOrError.Value;
 
 		//Check category for existing
 		var category = await postCategoryRepository.FindPostCategoryByIdAsync(request.CategoryId);
@@ -104,13 +107,15 @@ public class CreatePostCommandHandler(
 			UserId = request.UserId,
 			Name = request.Name,
 			CategoryId = request.CategoryId,
-			Description = request.Description,
-			PostTypeOfRentId = request.PostTypeOfRentId,
 			StreetId = street.Id,
-			BuildingNumber = request.BuildingNumber,
-			NumberOfRooms = request.NumberOfRooms,
-			Area = request.Area,
+			ZipCode = request.ZipCode,
+			NumberOfGuests = request.NumberOfGuests,
+			Description = request.Description,
 			Price = request.Price,
+			Discount = request.Discount,
+			Rate = 0,
+			IsActive = user.Rating >= 4.5 ? true : false,
+			IsArhive = false,
 			PostAt = DateTime.Now.ToUniversalTime(),
 		};
 

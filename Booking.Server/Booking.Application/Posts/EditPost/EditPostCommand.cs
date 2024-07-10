@@ -8,19 +8,22 @@ public record EditPostCommand(
 	Guid UserId,
 	Guid Id,
 	string Name,
-	Guid? PostTypeOfRentId,
 	Guid? CategoryId,
 	Guid? CountryId,
 	Guid? CityId,
 	string? CityName,
 	Guid? StreetId,
 	string? StreetName,
-	string BuildingNumber,
-	int? NumberOfRooms,
-	int? Area,
-	decimal Price,
+	int ZipCode,
+	int? NumberOfGuests,
 	string? Description,
+	decimal Price,
+	int? Discount,
 	List<byte[]>? Images,
 	List<string>? DeleteImages) : IRequest<ErrorOr<Post>>;
+
+ 
+ 
+	
 
 

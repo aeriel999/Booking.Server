@@ -189,9 +189,9 @@ export default function DashboardLayout() {
         }
     }, [dispatch, user]);
 
-    useEffect(() => {
-        startListening();
-    }, []);
+    // useEffect(() => {
+    //     startListening();
+    // }, []);
 
     const handleDrawerOpen = () => {
         setOpen(true);

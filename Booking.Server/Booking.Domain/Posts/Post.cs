@@ -17,27 +17,24 @@ public class Post
 	[ForeignKey(nameof(CategoryId))]
 	public PostCategory? Category { get; set; }
 
-	public string? Description { get; set; }
-
-	public Guid PostTypeOfRentId { get; set; }
-
-
-	[ForeignKey(nameof(PostTypeOfRentId))]
-	public PostTypeOfRent? PostTypeOfRent { get; set; }
-
 	public Guid StreetId { get; set; }
 
 	[ForeignKey(nameof(StreetId))]
 	public PostStreet? Street { get; set; }
 
-	public string? BuildingNumber { get; set; }
+	public int ZipCode { get; set; }
 
-	public int? NumberOfRooms { get; set; }
+	public int? NumberOfGuests { get; set; }
 
-	public int? Area { get; set; }
+	public string? Description { get; set; }
+
+	public decimal Price { get; set; }
+
+	public int? Discount { get; set; }
+
+	public float Rate { get; set; }
 
 	public Guid UserId { get; set; }
-
 
 	[ForeignKey(nameof(UserId))]
 	public User? User { get; set; }
@@ -46,8 +43,6 @@ public class Post
 
 	public bool IsActive { get; set; }
 
-	public decimal Price { get; set; }
-
 	public ICollection<PostImage>? ImagesPost { get; set; }
 
 	public ICollection<ChatRoom>? ChatRooms { get; set; }
@@ -55,6 +50,8 @@ public class Post
 	public required DateTime PostAt { get; set; }
 
 	public DateTime? EditAt { get; set; }
+
+	public ICollection<Room>? Rooms { get; set; }
 
     public ICollection<PostPostTypeOfRest>? PostPostTypesOfRest { get; set; }
 

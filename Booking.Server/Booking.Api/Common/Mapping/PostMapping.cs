@@ -38,9 +38,8 @@ public class PostMapping : IRegister
 
 		config.NewConfig<Post, GetPostResponse>()
 			.Map(desp => desp.Category, src => src.Category!.Name)
-			.Map(desp => desp.PostTypeOfRent, src => src.PostTypeOfRent!.Name)
-			.Map(desp => desp.Street, src => src.Street!.Name)
-			.Map(desp => desp.User, src => $"{src.User!.FirstName} {src.User.LastName}")
+			.Map(desp => desp.StreetName, src => src.Street!.Name)
+			.Map(desp => desp.UserName, src => $"{src.User!.FirstName} {src.User.LastName}")
             .Map(desp => desp.UserId, src => src.UserId)
 			.Map(desp => desp.CountryName, src => src.Street!.City!.Country!.Name)
 			.Map(desp => desp.CountryId, src => src.Street!.City!.CountryId)
@@ -124,7 +123,6 @@ public class PostMapping : IRegister
 		config.NewConfig<Post, GetPostListForRealtorResponse>()
 			.Map(desp => desp.Id, src => src.Id)
 			.Map(desp => desp.Category, src => src.Category!.Name)
-			.Map(desp => desp.TypeOfRent, src => src.PostTypeOfRent!.Name)
 			.Map(desp => desp.Adress,
 			src => src.Street!.City!.Country!.Name + " " + src.Street.City.Name + " " + src.Street.Name)
 			.Map(desp => desp.Name, src => src.Name)
@@ -132,20 +130,24 @@ public class PostMapping : IRegister
 			.Map(desp => desp.DateOfPost, src => src.PostAt)
 			.Map(desp => desp.DateOfEdit, src => src.EditAt)
 			.Map(desp => desp.IsActive, src => src.IsActive)
-			.Map(desp => desp.IsArhive, src => src.IsArhive);
-		
+			.Map(desp => desp.IsArhive, src => src.IsArhive)
+			.Map(desp => desp.Rate, src => src.Rate)
+			.Map(desp => desp.Discount, src => src.Discount);
+
 		config.NewConfig<PagedList<Post>, PagedList<GetPostListForRealtorResponse>>();
 
 
 		config.NewConfig<Post, GetPostForEditResponse>()
-			.Map(desp => desp.Category, src => src.Category!.Name)
-			.Map(desp => desp.PostTypeOfRent, src => src.PostTypeOfRent!.Name)
-			.Map(desp => desp.Street, src => src.Street!.Name)
+			.Map(desp => desp.CategoryName, src => src.Category!.Name)
+			.Map(desp => desp.StreetName, src => src.Street!.Name)
 			.Map(desp => desp.User, src => $"{src.User!.FirstName} {src.User.LastName}")
 			.Map(desp => desp.CountryName, src => src.Street!.City!.Country!.Name)
 			.Map(desp => desp.CountryId, src => src.Street!.City!.CountryId)
 			.Map(desp => desp.CityName, src => src.Street!.City!.Name)
 			.Map(desp => desp.CityId, src => src.Street!.City!.Id)
+			.Map(desp => desp.NumberOfGuests, src => src.Rate)
+			.Map(desp => desp.Discount, src => src.Discount)
+			.Map(desp => desp.ZipCode, src => src.ZipCode)
 			.Map(desp => desp.ImagePostList, src =>
 			src.ImagesPost != null ? src.ImagesPost.Select(img => img.Name).ToArray() : Array.Empty<string>());
 	
@@ -160,7 +162,6 @@ public class PostMapping : IRegister
 		config.NewConfig<Post, GetArchivedPostListForRealtorResponse>()
 			.Map(desp => desp.Id, src => src.Id)
 			.Map(desp => desp.Category, src => src.Category!.Name)
-			.Map(desp => desp.TypeOfRent, src => src.PostTypeOfRent!.Name)
 			.Map(desp => desp.Adress,
 			src => src.Street!.City!.Country!.Name + " " + src.Street.City.Name + " " + src.Street.Name)
 			.Map(desp => desp.Name, src => src.Name)
