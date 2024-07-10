@@ -6,6 +6,7 @@ using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
+using System.Numerics;
 
 namespace Booking.Infrastructure.Common.Initializers;
 
@@ -300,6 +301,143 @@ public static class BookingInitializer
 			context.Streets.AddRange(streets);
 			context.SaveChanges();
 		}
+
+		if (!context.PostTypesOfRest.Any())
+		{
+			PostTypeOfRest[] typesOfRest = {
+				new()
+				{
+					Id = Guid.NewGuid(),
+					Name = "Rest with family"
+				},
+                new()
+                {
+                    Id = Guid.NewGuid(),
+                    Name = "Ski resorts"
+                },
+                new()
+                {
+                    Id = Guid.NewGuid(),
+                    Name = "Beach vacation"
+                },
+                new()
+                {
+                    Id = Guid.NewGuid(),
+                    Name = "Extreme"
+                },
+                new()
+                {
+                    Id = Guid.NewGuid(),
+                    Name = "Visiting historical places"
+                },
+                new()
+                {
+                    Id = Guid.NewGuid(),
+                    Name = "Health recreation"
+                },
+                new()
+                {
+                    Id = Guid.NewGuid(),
+                    Name = "Sightseeing trips and urban tourism"
+                }
+            };
+			context.PostTypesOfRest.AddRange(typesOfRest);
+			context.SaveChanges();
+		}
+		if(!context.Services.Any())
+		{
+			Service[] services =
+			{
+				new(){
+					Id = Guid.NewGuid(),
+					Name = "Pool"
+				},
+
+                new(){
+                    Id = Guid.NewGuid(),
+                    Name = "Beach"
+                },
+
+                new(){
+                    Id = Guid.NewGuid(),
+                    Name = "Breakfast"
+                },
+
+                new(){
+                    Id = Guid.NewGuid(),
+                    Name = "Dinner"
+                },
+
+                new(){
+                    Id = Guid.NewGuid(),
+                    Name = "Spa"
+                },
+
+                new(){
+                    Id = Guid.NewGuid(),
+                    Name = "Sauna"
+                },
+
+                new(){
+                    Id = Guid.NewGuid(),
+                    Name = "Jacuzzi"
+                },
+
+                new(){
+                    Id = Guid.NewGuid(),
+                    Name = "Gym"
+                },
+
+				new(){
+                    Id = Guid.NewGuid(),
+                    Name = "Massage"
+                },
+
+                new(){
+                    Id = Guid.NewGuid(),
+                    Name = "Animated show"
+                },
+
+                new(){
+                    Id = Guid.NewGuid(),
+                    Name = "Restaurant or cafe"
+                },
+
+                new(){
+                    Id = Guid.NewGuid(),
+                    Name = "Bar"
+                },
+
+                new(){
+                    Id = Guid.NewGuid(),
+                    Name = "Wi-Fi"
+                },
+
+                new(){
+                    Id = Guid.NewGuid(),
+                    Name = "Pool for kids"
+                },
+
+                new(){
+                    Id = Guid.NewGuid(),
+                    Name = "Organization of excursions"
+                },
+
+                new(){
+                    Id = Guid.NewGuid(),
+                    Name = "Kids clubs"
+                },
+
+                new(){
+                    Id = Guid.NewGuid(),
+                    Name = "Room service"
+                }
+            };
+
+			context.Services.AddRange(services);
+			context.SaveChanges();
+		}
+
 	}
 	public async static void SeedUserAndRoleData(this IApplicationBuilder app)
 	{

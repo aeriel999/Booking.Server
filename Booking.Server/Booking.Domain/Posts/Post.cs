@@ -1,4 +1,5 @@
 ﻿using Booking.Domain.Chat;
+using Booking.Domain.Constants;
 using Booking.Domain.Users;
 using System.ComponentModel.DataAnnotations.Schema;
 
@@ -51,4 +52,9 @@ public class Post
 	public DateTime? EditAt { get; set; }
 
 	public ICollection<Room>? Rooms { get; set; }
+
+    public ICollection<PostPostTypeOfRest>? PostPostTypesOfRest { get; set; }
+
+    public ICollection<PostService>? PostServices { get; set; }
+
 }
