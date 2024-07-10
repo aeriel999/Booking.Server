@@ -3,6 +3,7 @@ using System;
 using Booking.Infrastructure.Common.Persistence;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 
@@ -11,9 +12,11 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace Booking.Infrastructure.Migrations
 {
     [DbContext(typeof(BookingDbContext))]
-    partial class BookingDbContextModelSnapshot : ModelSnapshot
+    [Migration("20240707105642_ChangePostPostTypeOfRent")]
+    partial class ChangePostPostTypeOfRent
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -231,21 +234,6 @@ namespace Booking.Infrastructure.Migrations
                     b.ToTable("PostPostTypesOfRest");
                 });
 
-            modelBuilder.Entity("Booking.Domain.Posts.PostService", b =>
-                {
-                    b.Property<Guid>("ServiceId")
-                        .HasColumnType("uuid");
-
-                    b.Property<Guid>("PostId")
-                        .HasColumnType("uuid");
-
-                    b.HasKey("ServiceId", "PostId");
-
-                    b.HasIndex("PostId");
-
-                    b.ToTable("PostServices");
-                });
-
             modelBuilder.Entity("Booking.Domain.Posts.PostStreet", b =>
                 {
                     b.Property<Guid>("Id")
@@ -294,21 +282,6 @@ namespace Booking.Infrastructure.Migrations
                     b.HasKey("Id");
 
                     b.ToTable("PostTypesOfRest");
-                });
-
-            modelBuilder.Entity("Booking.Domain.Posts.Service", b =>
-                {
-                    b.Property<Guid>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("uuid");
-
-                    b.Property<string>("Name")
-                        .IsRequired()
-                        .HasColumnType("text");
-
-                    b.HasKey("Id");
-
-                    b.ToTable("Services");
                 });
 
             modelBuilder.Entity("Booking.Domain.Users.Feedback", b =>
@@ -651,25 +624,6 @@ namespace Booking.Infrastructure.Migrations
                     b.Navigation("PostTypeOfRest");
                 });
 
-            modelBuilder.Entity("Booking.Domain.Posts.PostService", b =>
-                {
-                    b.HasOne("Booking.Domain.Posts.Post", "Post")
-                        .WithMany("PostServices")
-                        .HasForeignKey("PostId")
-                        .OnDelete(DeleteBehavior.ClientCascade)
-                        .IsRequired();
-
-                    b.HasOne("Booking.Domain.Posts.Service", "Service")
-                        .WithMany("PostServices")
-                        .HasForeignKey("ServiceId")
-                        .OnDelete(DeleteBehavior.ClientCascade)
-                        .IsRequired();
-
-                    b.Navigation("Post");
-
-                    b.Navigation("Service");
-                });
-
             modelBuilder.Entity("Booking.Domain.Posts.PostStreet", b =>
                 {
                     b.HasOne("Booking.Domain.Posts.PostCity", "City")
@@ -763,8 +717,6 @@ namespace Booking.Infrastructure.Migrations
                     b.Navigation("ImagesPost");
 
                     b.Navigation("PostPostTypesOfRest");
-
-                    b.Navigation("PostServices");
                 });
 
             modelBuilder.Entity("Booking.Domain.Posts.PostCategory", b =>
@@ -797,11 +749,6 @@ namespace Booking.Infrastructure.Migrations
             modelBuilder.Entity("Booking.Domain.Posts.PostTypeOfRest", b =>
                 {
                     b.Navigation("PostPostTypesOfRest");
-                });
-
-            modelBuilder.Entity("Booking.Domain.Posts.Service", b =>
-                {
-                    b.Navigation("PostServices");
                 });
 
             modelBuilder.Entity("Booking.Domain.Users.User", b =>
