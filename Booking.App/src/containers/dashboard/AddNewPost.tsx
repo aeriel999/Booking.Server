@@ -67,6 +67,7 @@ export function AddNewPost() {
     const [isFormValid, setIsFormValid] = useState<boolean>(false);
     const navigate = useNavigate();
     const [upload, setUpload] = useState<boolean>(false);
+    const [isHotel, setIsHotel] = useState<boolean>(false);
 
     const getCategoryList = async () => {
         try {
@@ -121,6 +122,12 @@ export function AddNewPost() {
     }, []);
 
     useEffect(() => {
+        if (category) {
+            if (category.name.toLowerCase() === "hotel") setIsHotel(true);
+        }
+    }, [category]);
+
+    useEffect(() => {
         if (country) {
             getCityList(country.id).then((history) => {
                 if (history?.payload.$values != null) {
@@ -160,16 +167,6 @@ export function AddNewPost() {
         setUpload(true);
 
         const data = new FormData(event.currentTarget);
-
-        const numberOfRoomsResult =
-            (data.get("numberOfRooms") as string) == ""
-                ? null
-                : parseInt(data.get("numberOfRooms") as string, 10);
-
-        const areaResult =
-            (data.get("area") as string) == ""
-                ? null
-                : parseInt(data.get("area") as string, 10);
 
         const model: IPostCreate = {
             name: data.get("name") as string,
@@ -281,7 +278,7 @@ export function AddNewPost() {
                                     <ComboBox
                                         options={cityList}
                                         onChange={setCity}
-                                        label={"City"}
+                                        label={"City*"}
                                     />
                                 </Grid>
                             )}
@@ -350,19 +347,21 @@ export function AddNewPost() {
                                 />
                             </Grid>
 
-                            <Grid item xs={12}>
-                                <InputGroup
-                                    label="Number of Guests"
-                                    field="numberOfGuests"
-                                    type="number"
-                                    //ToDo Validation
-                                    validator={ZipCodeValidator}
-                                    onChange={(isValid) =>
-                                        (formValid.current.numberOfRooms =
-                                            isValid)
-                                    }
-                                />
-                            </Grid>
+                            {!isHotel && (
+                                <Grid item xs={12}>
+                                    <InputGroup
+                                        label="Number of Guests"
+                                        field="numberOfGuests"
+                                        type="number"
+                                        //ToDo Validation
+                                        validator={ZipCodeValidator}
+                                        onChange={(isValid) =>
+                                            (formValid.current.numberOfRooms =
+                                                isValid)
+                                        }
+                                    />
+                                </Grid>
+                            )}
 
                             <Grid item xs={12}>
                                 <InputGroup
@@ -403,24 +402,21 @@ export function AddNewPost() {
                                 />
                             </Grid>
                             <Grid item xs={12}>
-                            <Typography
-                                        variant="subtitle1"
-                                        color="text.primary"
-                                    >
-                                       You must select at least 1 photo *
-
-                                    </Typography>
-                                    <Typography
-                                        variant="subtitle1"
-                                        color="text.primary"
-                                    >
-                                      Max count of images - 10
-
-                                    </Typography>
-                                    </Grid>
+                                <Typography
+                                    variant="subtitle1"
+                                    color="text.primary"
+                                >
+                                    You must select at least 1 photo *
+                                </Typography>
+                                <Typography
+                                    variant="subtitle1"
+                                    color="text.primary"
+                                >
+                                    Max count of images - 10
+                                </Typography>
+                            </Grid>
 
                             <Grid item xs={12}>
-                                
                                 <FileUploader
                                     images={images}
                                     setImages={setImages}
@@ -433,6 +429,153 @@ export function AddNewPost() {
                                     onDelete={handleChange}
                                 />
                             </Grid>
+
+                            {isHotel && (
+                                <>
+                                    
+
+                                    <Typography padding={2}
+                                        variant="h5"
+                                        color="text.primary"
+                                    >
+                                        <Divider />
+                                        Add availible rooms
+
+                                        <Divider />
+                                    </Typography>
+                                    
+
+                                    <Grid item xs={12}>
+                                        <InputGroup
+                                            label="Number of Guests"
+                                            field="numberOfGuests"
+                                            type="number"
+                                            validator={PriceValidator}
+                                            onChange={(isValid) =>
+                                                (formValid.current.price =
+                                                    isValid)
+                                            }
+                                        />
+                                    </Grid>
+
+                                    <Grid item xs={12}>
+                                        <InputGroup
+                                            label="Number of Rooms"
+                                            field="numberOfrooms"
+                                            type="number"
+                                            validator={PriceValidator}
+                                            onChange={(isValid) =>
+                                                (formValid.current.price =
+                                                    isValid)
+                                            }
+                                        />
+                                    </Grid>
+                                    <Grid item xs={12}>
+                                        <Typography
+                                            variant="subtitle1"
+                                            color="text.primary"
+                                        >
+                                            You must select at least 1 photo *
+                                        </Typography>
+                                        <Typography
+                                            variant="subtitle1"
+                                            color="text.primary"
+                                        >
+                                            Max count of images - 10
+                                        </Typography>
+                                    </Grid>
+
+                                    <Grid item xs={12}>
+                                        <FileUploader 
+                                            images={images}
+                                            setImages={setImages}
+                                            maxImagesUpload={maxImagesCount}
+                                            validator={AvatarValidator}
+                                            defaultImage={DefaultImg}
+                                            onChange={(isValid) =>
+                                                (formValid.current.images =
+                                                    isValid)
+                                            }
+                                            onDelete={handleChange}
+                                        />
+                                        <Grid padding={3}>
+                                    <Divider />
+                                    </Grid>
+                                    </Grid>
+
+
+                                    <Grid item xs={12}>
+                                        <InputGroup
+                                            label="Number of Guests"
+                                            field="numberOfGuests"
+                                            type="number"
+                                            validator={PriceValidator}
+                                            onChange={(isValid) =>
+                                                (formValid.current.price =
+                                                    isValid)
+                                            }
+                                        />
+                                    </Grid>
+
+                                    <Grid item xs={12}>
+                                        <InputGroup
+                                            label="Number of Rooms"
+                                            field="numberOfrooms"
+                                            type="number"
+                                            validator={PriceValidator}
+                                            onChange={(isValid) =>
+                                                (formValid.current.price =
+                                                    isValid)
+                                            }
+                                        />
+                                    </Grid>
+                                    <Grid item xs={12}>
+                                        <Typography
+                                            variant="subtitle1"
+                                            color="text.primary"
+                                        >
+                                            You must select at least 1 photo *
+                                        </Typography>
+                                        <Typography
+                                            variant="subtitle1"
+                                            color="text.primary"
+                                        >
+                                            Max count of images - 10
+                                        </Typography>
+                                    </Grid>
+
+                                    <Grid item xs={12}>
+                                        <FileUploader 
+                                            images={images}
+                                            setImages={setImages}
+                                            maxImagesUpload={maxImagesCount}
+                                            validator={AvatarValidator}
+                                            defaultImage={DefaultImg}
+                                            onChange={(isValid) =>
+                                                (formValid.current.images =
+                                                    isValid)
+                                            }
+                                            onDelete={handleChange}
+                                        />
+                                        <Grid padding={3}>
+                                    <Divider />
+                                    </Grid>
+                                    </Grid>
+                                    <Button
+                            type="submit"
+                            fullWidth
+                            variant="contained"
+                            sx={{ mt: 3, mb: 2 }}
+                            //   disabled={!isFormValid}
+                        >
+                            Add rooms
+                            
+                        </Button>
+                        <Grid padding={3}>
+                                    <Divider />
+                                    </Grid>
+                                </>
+                            )}
                         </Grid>
                         <Button
                             type="submit"

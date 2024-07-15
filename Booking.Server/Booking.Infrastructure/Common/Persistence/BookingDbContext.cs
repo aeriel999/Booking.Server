@@ -29,8 +29,6 @@ public class BookingDbContext : IdentityDbContext<User, IdentityRole<Guid>, Guid
 
 	public DbSet<UserMessage> UserMessages { get; set; }
 
-//	public DbSet<PostTypeOfRent> PostTypeOfRent { get; set; }
-
     public DbSet<Feedback> Feedbacks { get; set; }
 
     public DbSet<PostTypeOfRest> PostTypesOfRest { get; set; }
@@ -42,6 +40,8 @@ public class BookingDbContext : IdentityDbContext<User, IdentityRole<Guid>, Guid
     public DbSet<PostService> PostServices { get; set; }
 
 	public DbSet<Room> Rooms { get; set; }
+
+	public DbSet<PostBooking> Bookings { get; set; }
 
 
 	protected override void OnModelCreating(ModelBuilder builder)
@@ -162,6 +162,16 @@ public class BookingDbContext : IdentityDbContext<User, IdentityRole<Guid>, Guid
 
 		builder.Entity<PostService>()
 			.HasKey(k => new { k.ServiceId, k.PostId });
+
+		builder.Entity<PostBooking>()
+			.HasOne(b => b.User)
+			.WithMany(u => u.Bookings)
+			.HasForeignKey(b => b.UserId);
+
+		builder.Entity<PostBooking>()
+			.HasOne(b => b.Post)
+			.WithMany(p => p.Bookings)
+			.HasForeignKey(b => b.PostId);
 
 	}
        

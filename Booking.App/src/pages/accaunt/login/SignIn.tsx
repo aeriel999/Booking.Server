@@ -1,6 +1,9 @@
+import { useForm, Resolver } from "react-hook-form";
+import InputField from "../../../components/common/InputField";
+
 import * as React from "react";
 import Avatar from "@mui/material/Avatar";
-import Button from "@mui/material/Button";
+
 import CssBaseline from "@mui/material/CssBaseline";
 import Link from "@mui/material/Link";
 import Grid from "@mui/material/Grid";
@@ -18,14 +21,14 @@ import OutlinedErrorAlert from "../../../components/common/ErrorAlert.tsx";
 import { useNavigate } from "react-router-dom";
 import { jwtDecode } from "jwt-decode";
 import InputGroup from "../../../components/common/InputGroup.tsx";
-import {
-    EmailValidator,
-    PasswordValidator,
-} from "../../../validations/account";
+import { loginResolver } from "../../../validations/account";
 
 import { CredentialResponse, GoogleLogin } from "@react-oauth/google";
 import { startListening } from "../../../SignalR";
 import { getListOfChatRooms } from "../../../store/chat/chat.action.ts";
+
+import "../../../css/AuthenticationClases/index.scss"; // Import your CSS file
+import Header from "../../../components/authentification/Header.tsx";
 
 export interface IGoogleLogin {
     googleToken: string;
@@ -39,25 +42,42 @@ export default function SignInPage() {
     const formValid = useRef({ email: false, password: false });
     const navigate = useNavigate();
 
-    const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
-        event.preventDefault();
+    const {
+        register,
+        handleSubmit,
+        formState: { errors },
+        setValue,
+    } = useForm<ILogin>({ resolver: loginResolver });
 
-        const data = new FormData(event.currentTarget);
-
-        const model: ILogin = {
-            email: data.get("email") as string,
-            password: data.get("password") as string,
-        };
-
+    const onSubmit = async (data: ILogin) => {
         try {
-            const response = await dispatch(login(model));
+            const response = await dispatch(login(data));
             unwrapResult(response);
-
             await afterLogin(response.payload);
         } catch (error) {
             setErrorMessage(ErrorHandler(error));
         }
     };
+
+    // const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
+    //     event.preventDefault();
+
+    //     const data = new FormData(event.currentTarget);
+
+    //     const model: ILogin = {
+    //         email: data.get("email") as string,
+    //         password: data.get("password") as string,
+    //     };
+
+    //     try {
+    //         const response = await dispatch(login(model));
+    //         unwrapResult(response);
+
+    //         await afterLogin(response.payload);
+    //     } catch (error) {
+    //         setErrorMessage(ErrorHandler(error));
+    //     }
+    // };
 
     const handleLoginSuccess = async (response: CredentialResponse) => {
         const token: IGoogleLogin = {
@@ -103,102 +123,181 @@ export default function SignInPage() {
     };
 
     return (
-        <Container component="main" maxWidth="md">
-            <CssBaseline />
-            <Box
-                sx={{
-                    marginTop: 8,
-                    display: "flex",
-                    flexDirection: "column",
-                    alignItems: "center",
-                }}
-            >
-                {errorMessage && <OutlinedErrorAlert message={errorMessage} />}
-                <Avatar sx={{ m: 1, bgcolor: "secondary.main" }}>
-                    <LockOutlinedIcon />
-                </Avatar>
-                <Typography component="h1" variant="h5">
-                    Sign in
-                </Typography>
-                <Grid container spacing={2} sx={{ mt: 1 }}>
-                    <Grid item xs={12} md={6}>
-                        <Box
-                            component="form"
-                            onSubmit={handleSubmit}
-                            noValidate
+        <div className="content">
+            <Header />
+            <div id="authContainer">
+                <div id="loginContainer">
+                    <div id="loginForm">
+                        <div id="loginFormTop">
+                            <h1> Sign in</h1>
+                            <form
+                                onSubmit={handleSubmit(onSubmit)}
+                                id="loginFormTop"
+                            >
+                                <div className="loginFields">
+                                    <InputField
+                                        placeholder="Email"
+                                        type="email"
+                                        name="email"
+                                        register={register}
+                                        setValue={setValue}
+                                        className="loginFormInput"
+                                    />
+                                    {errors.email && (
+                                        <p className="error">
+                                            {errors.email.message}
+                                        </p>
+                                    )}
+
+                                    <InputField
+                                        placeholder="Password"
+                                        type="password"
+                                        name="password"
+                                        register={register}
+                                        setValue={setValue}
+                                        className="loginFormInput"
+                                    />
+                                    {errors.password && (
+                                        <p className="error">
+                                            {errors.password.message}
+                                        </p>
+                                    )}
+                                </div>
+                                <div id="loginFormBottom">
+                                    <button
+                                        type="submit"
+                                        className="authButton"
+                                    >
+                                        Sign In
+                                    </button>
+                                    {errorMessage && <p>{errorMessage}</p>}
+                                    <div id="secondaryConfirmation">
+                                        <a
+                                            href="#"
+                                            className="linkConfirmation"
+                                        >
+                                            Forgot password?
+                                        </a>
+                                        <a
+                                            href="#"
+                                            className="linkConfirmation"
+                                        >
+                                            Didn't get a confirmation letter?
+                                        </a>
+                                    </div>
+                                </div>
+                            </form>
+                        </div>
+
+                        <div id="googleLogin">
+                            <p>or</p>
+                            <GoogleLogin   onSuccess={handleLoginSuccess} />
+                        </div>
+                    </div>
+                    <div id="authFoter"></div>
+                </div>
+            </div>
+
+            {/* <Container component="main" maxWidth="md">
+                <CssBaseline />
+                <Box
+                    sx={{
+                        marginTop: 8,
+                        display: "flex",
+                        flexDirection: "column",
+                        alignItems: "center",
+                    }}
+                >
+                    {errorMessage && (
+                        <OutlinedErrorAlert message={errorMessage} />
+                    )}
+                    <Avatar sx={{ m: 1, bgcolor: "secondary.main" }}>
+                        <LockOutlinedIcon />
+                    </Avatar>
+                    <Typography component="h1" variant="h5">
+                        Sign in
+                    </Typography>
+                    <Grid container spacing={2} sx={{ mt: 1 }}>
+                        <Grid item xs={12} md={6}>
+                            <Box
+                                component="form"
+                                onSubmit={handleSubmit}
+                                noValidate
+                                sx={{
+                                    display: "flex",
+                                    flexDirection: "column",
+                                    alignItems: "center",
+                                }}
+                            >
+                                <Grid container spacing={2}>
+                                    <Grid item xs={12}>
+                                        <InputGroup
+                                            label="Email"
+                                            field="email"
+                                            type="email"
+                                            validator={EmailValidator}
+                                            onChange={(isValid) =>
+                                                (formValid.current.email =
+                                                    isValid)
+                                            }
+                                        />
+                                    </Grid>
+                                    <Grid item xs={12}>
+                                        <InputGroup
+                                            label="Password"
+                                            field="password"
+                                            type="password"
+                                            validator={PasswordValidator}
+                                            onChange={(isValid) =>
+                                                (formValid.current.password =
+                                                    isValid)
+                                            }
+                                        />
+                                    </Grid>
+                                </Grid>
+                                <Button
+                                    type="submit"
+                                    fullWidth
+                                    variant="contained"
+                                    sx={{ mt: 3, mb: 2 }}
+                                >
+                                    Sign In
+                                </Button>
+                                <Grid container>
+                                    <Grid item xs>
+                                        <Link
+                                            href="/authentication/forgot-password"
+                                            variant="body2"
+                                        >
+                                            Forgot password?
+                                        </Link>
+                                    </Grid>
+                                    <Grid item>
+                                        <Link
+                                            href="/authentication/reconfirm-email"
+                                            variant="body2"
+                                        >
+                                            {"Don't get a confirmation letter?"}
+                                        </Link>
+                                    </Grid>
+                                </Grid>
+                            </Box>
+                        </Grid>
+                        <Grid
+                            item
+                            xs={12}
+                            md={6}
                             sx={{
                                 display: "flex",
-                                flexDirection: "column",
+                                justifyContent: "center",
                                 alignItems: "center",
                             }}
                         >
-                            <Grid container spacing={2}>
-                                <Grid item xs={12}>
-                                    <InputGroup
-                                        label="Email"
-                                        field="email"
-                                        type="email"
-                                        validator={EmailValidator}
-                                        onChange={(isValid) =>
-                                            (formValid.current.email = isValid)
-                                        }
-                                    />
-                                </Grid>
-                                <Grid item xs={12}>
-                                    <InputGroup
-                                        label="Password"
-                                        field="password"
-                                        type="password"
-                                        validator={PasswordValidator}
-                                        onChange={(isValid) =>
-                                            (formValid.current.password =
-                                                isValid)
-                                        }
-                                    />
-                                </Grid>
-                            </Grid>
-                            <Button
-                                type="submit"
-                                fullWidth
-                                variant="contained"
-                                sx={{ mt: 3, mb: 2 }}
-                            >
-                                Sign In
-                            </Button>
-                            <Grid container>
-                                <Grid item xs>
-                                    <Link
-                                        href="/authentication/forgot-password"
-                                        variant="body2"
-                                    >
-                                        Forgot password?
-                                    </Link>
-                                </Grid>
-                                <Grid item>
-                                    <Link
-                                        href="/authentication/reconfirm-email"
-                                        variant="body2"
-                                    >
-                                        {"Don't get a confirmation letter?"}
-                                    </Link>
-                                </Grid>
-                            </Grid>
-                        </Box>
+                            <GoogleLogin onSuccess={handleLoginSuccess} />
+                        </Grid>
                     </Grid>
-                    <Grid
-                        item
-                        xs={12}
-                        md={6}
-                        sx={{
-                            display: "flex",
-                            justifyContent: "center",
-                            alignItems: "center",
-                        }}
-                    >
-                        <GoogleLogin onSuccess={handleLoginSuccess} />
-                    </Grid>
-                </Grid>
-            </Box>
-        </Container>
+                </Box>
+            </Container> */}
+        </div>
     );
 }

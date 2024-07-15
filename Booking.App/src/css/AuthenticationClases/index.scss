@@ -1,0 +1,214 @@
+$primary-font-family: "Roboto", sans-serif;
+$auth-font-primary-color: #ffffff;
+$auth-primary-font-weight: 700;
+$auth-primary-font-size: 34px;
+$uth-font-secondary-color: #808080;
+$auth-secondary-font-weight: 300;
+$auth-secondary-font-size: 18px;
+$auth-button-primary-color: #00c2c1;
+$auth-button-font-weight: 500;
+$auth-secondary-font-size: 24px;
+$inter-font-family: "Inter", sans-serif;
+$inter-font-weight: 400;
+$inter-font-size: 16px;
+$auth-button-font-weight: 400;
+$auth-secondary-font-size: 20px;
+
+body {
+    margin: 0;
+    padding: 0;
+    display: flex;
+    flex-shrink: 0;
+    flex-direction: column;
+    justify-content: space-between;
+    height: 100vh;
+    background-image: url("../../assets/Background/unsplash_d7M5Xramf8g.webp");
+    background-size: cover;
+    background-repeat: no-repeat;
+    background-position: center center;
+    font-family: $primary-font-family;
+}
+
+.content {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    height: 100%;
+}
+
+.authHeader {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 1199px;
+    width: 1552px;
+}
+
+#authHeaderLogo {
+    width: 226px;
+    height: 80px;
+    flex-shrink: 0;
+
+    img {
+        max-width: 100%;
+        height: auto;
+    }
+}
+
+#authContainer {
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    align-items: center;
+    margin-top: 106px;
+    width: 563px;
+    gap: 51px;
+    padding: 0;
+    color: $auth-font-primary-color;
+    text-align: center;
+
+    h1 {
+        font-size: $auth-primary-font-size;
+        font-weight: $auth-primary-font-weight;
+        font-style: normal;
+        line-height: normal;
+        margin: 0;
+    }
+}
+
+#loginContainer {
+    display: flex;
+    width: 498px;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 30px;
+}
+
+#loginForm {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 30px;
+    align-self: stretch;
+}
+
+#authFoter {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 20px;
+    align-self: stretch;
+}
+
+#loginFormTop {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 40px;
+    align-self: stretch;
+    padding: 0;
+}
+
+.loginFields {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 18px;
+    align-self: stretch;
+}
+
+.loginFormInput {
+    display: flex;
+    height: 50px;
+    padding-left: 10px;
+    align-items: center;
+    gap: 10px;
+    align-self: stretch;
+    border-radius: 5px;
+    border: 1px solid rgba(0, 0, 0, 0.7);
+    background: #fff;
+
+    p {
+        color: $uth-font-secondary-color;
+        font-family: $primary-font-family;
+        font-size: $auth-secondary-font-size;
+        font-style: normal;
+        font-weight: $auth-secondary-font-weight;
+        line-height: normal;
+    }
+}
+
+.authButton {
+    display: flex;
+    height: 60px;
+    // padding: 20px 74px;
+    justify-content: center;
+    align-items: center;
+    gap: 10px;
+    align-self: stretch;
+    border-radius: 5px;
+    background: $auth-button-primary-color;
+    color: $auth-font-primary-color;
+    font-family: $primary-font-family;
+    font-size: $auth-secondary-font-size;
+    font-style: normal;
+    font-weight: $auth-button-font-weight;
+    line-height: normal;
+}
+
+#loginFormBottom {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 10px;
+    align-self: stretch;
+}
+
+#secondaryConfirmation {
+    display: flex;
+    width: 485px;
+    justify-content: space-between;
+    align-items: flex-start;
+}
+
+.linkConfirmation {
+    color: $auth-font-primary-color;
+    font-family: $inter-font-family;
+    font-size: $inter-font-size;
+    font-style: normal;
+    font-weight: $inter-font-weight;
+    line-height: normal;
+}
+
+.error {
+    color: red;
+}
+
+#googleLogin {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 24px;
+    align-self: stretch;
+
+    p {
+        font-family: $inter-font-family;
+        text-align: center;
+        font-family: $primary-font-family;
+        font-size: $auth-secondary-font-size;
+        font-style: normal;
+        font-weight: $auth-button-font-weight;
+        line-height: normal;
+    }
+
+    .googleButton{
+        display: flex;
+        height: 50px;
+        padding: 11px 15px;
+        align-items: center;
+        gap: 62px;
+        align-self: stretch;
+    }
+}
+
