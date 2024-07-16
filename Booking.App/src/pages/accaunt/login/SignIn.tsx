@@ -125,76 +125,90 @@ export default function SignInPage() {
     return (
         <div className="content">
             <Header />
-            <div id="authContainer">
-                <div id="loginContainer">
-                    <div id="loginForm">
-                        <div id="loginFormTop">
-                            <h1> Sign in</h1>
-                            <form
-                                onSubmit={handleSubmit(onSubmit)}
-                                id="loginFormTop"
-                            >
-                                <div className="loginFields">
-                                    <InputField
-                                        placeholder="Email"
-                                        type="email"
-                                        name="email"
-                                        register={register}
-                                        setValue={setValue}
-                                        className="loginFormInput"
-                                    />
-                                    {errors.email && (
-                                        <p className="error">
-                                            {errors.email.message}
-                                        </p>
-                                    )}
 
-                                    <InputField
-                                        placeholder="Password"
-                                        type="password"
-                                        name="password"
-                                        register={register}
-                                        setValue={setValue}
-                                        className="loginFormInput"
-                                    />
-                                    {errors.password && (
-                                        <p className="error">
-                                            {errors.password.message}
-                                        </p>
-                                    )}
-                                </div>
-                                <div id="loginFormBottom">
-                                    <button
-                                        type="submit"
-                                        className="authButton"
+            {errorMessage && <OutlinedErrorAlert message={errorMessage} />}
+
+            <div className="authContainer">
+                <div id="loginContainer">
+                    <h1> Sign in</h1>
+
+                    <div id="loginForm">
+                        <form
+                            onSubmit={handleSubmit(onSubmit)}
+                            id="loginFormTop"
+                        >
+                            <div className="loginFields">
+                                <InputField
+                                    placeholder="Email"
+                                    type="email"
+                                    name="email"
+                                    register={register}
+                                    setValue={setValue}
+                                    className="loginFormInput"
+                                />
+                                {errors.email && (
+                                    <p className="error">
+                                        {errors.email.message}
+                                    </p>
+                                )}
+
+                                <InputField
+                                    placeholder="Password"
+                                    type="password"
+                                    name="password"
+                                    register={register}
+                                    setValue={setValue}
+                                    className="loginFormInput"
+                                />
+                                {errors.password && (
+                                    <p className="error">
+                                        {errors.password.message}
+                                    </p>
+                                )}
+                            </div>
+
+                            <div id="loginFormBottom">
+                                <button type="submit" className="authButton">
+                                    Sign In
+                                </button>
+
+                                <div id="secondaryConfirmation">
+                                    <a
+                                        href="/authentication/forgot-password"
+                                        className="linkConfirmation"
                                     >
-                                        Sign In
-                                    </button>
-                                    {errorMessage && <p>{errorMessage}</p>}
-                                    <div id="secondaryConfirmation">
-                                        <a
-                                            href="#"
-                                            className="linkConfirmation"
-                                        >
-                                            Forgot password?
-                                        </a>
-                                        <a
-                                            href="#"
-                                            className="linkConfirmation"
-                                        >
-                                            Didn't get a confirmation letter?
-                                        </a>
-                                    </div>
+                                        Forgot password?
+                                    </a>
+                                    <a
+                                        href="/authentication/reconfirm-email"
+                                        className="linkConfirmation"
+                                    >
+                                        Didn't get a confirmation letter?
+                                    </a>
                                 </div>
-                            </form>
-                        </div>
+                            </div>
+                        </form>
 
                         <div id="googleLogin">
                             <p>or</p>
-                            <GoogleLogin   onSuccess={handleLoginSuccess} />
+                            <GoogleLogin
+                                onSuccess={handleLoginSuccess}
+                                size="medium"
+                            />
+                            <div className="googleButton"></div>
                         </div>
                     </div>
-                    <div id="authFoter"></div>
+                </div>
+                <div id="authFoter">
+                    <p>
+                        By logging in or creating a new account, you agree to
+                        our <a href="#">Terms and Conditions</a> and{" "}
+                        <a href="#">Privacy Policy</a>.
+                    </p>
+                    <p>
+                        Усі права захищено. <br />
+                        Copyryight (2024 - 2024) - TripBook.com
+                    </p>
                 </div>
             </div>
 
