@@ -12,7 +12,7 @@ $border-color: rgba(0, 0, 0, 0.7);
 
 //font-size
 $secondary-font-small-size: 16px;
-$secondary-font-medium-size: 18px;
+$secondary-font-medium-size: 20px;
 
 $primary-font-small-size: 18px;
 $primary-font-medium-size: 20px;
@@ -29,16 +29,7 @@ $secondary-font-weight: 400;
 body {
     margin: 0;
     padding: 0;
-    // display: flex;
-    // flex-shrink: 0;
-    // flex-direction: column;
-    // justify-content: space-between;
-    // height: 100vh;
-    background-image: url("../../assets/Background/unsplash_d7M5Xramf8g.webp");
-    background-size: cover;
-    background-repeat: no-repeat;
-    background-position: center center;
-    font-family: $primary-font-family;
+
 }
 
 #root {
@@ -58,6 +49,11 @@ body {
     justify-content: space-between;
     align-items: center;
     height: 100%;
+    background-image: url("../../assets/Background/unsplash_d7M5Xramf8g.webp");
+    background-size: cover;
+    background-repeat: no-repeat;
+    background-position: center center;
+    font-family: $primary-font-family;
 }
 
 .authHeader {
@@ -228,7 +224,7 @@ body {
         color: $primary-font-color;
         text-align: center;
         font-family: $secondary-font-family;
-        font-size: $secondary-font-medium-size;
+        font-size: $primary-font-small-size;
         font-style: normal;
         font-weight: $secondary-font-weight;
         line-height: normal;

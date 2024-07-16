@@ -1,4 +1,4 @@
-import "../../css/AuthenticationClases/index.scss"; 
+import "../../css/AuthenticationClasses/index.scss"; 
 import Logo from '../../assets/Logo/tripbook 1.svg'
 
 export default  function Header (){
