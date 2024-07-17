@@ -1,35 +1,8 @@
-//Fonts
-$primary-font-family: "Roboto", sans-serif;
-$secondary-font-family: "Inter", sans-serif;
-
-//colors
-$primary-font-color: #ffffff;
-$secondary-font-color: #808080;
-$error-font-color: rgb(166, 9, 9);
-$primary-button-color: #00c2c1;
-$link-color: #00a7db;
-$border-color: rgba(0, 0, 0, 0.7);
-
-//font-size
-$secondary-font-small-size: 16px;
-$secondary-font-medium-size: 20px;
-
-$primary-font-small-size: 18px;
-$primary-font-medium-size: 20px;
-$primary-font-normal-size: 34px;
-
-//font-weight
-$primary-font-bold-weight: 700;
-$primary-font-medium-weight: 500;
-$primary-font-normal-weight: 400;
-$primary-font-light-weight: 300;
-
-$secondary-font-weight: 400;
+@import "../variables.scss";
 
 body {
     margin: 0;
     padding: 0;
-
 }
 
 #root {
@@ -48,7 +21,6 @@ body {
     flex-direction: column;
     justify-content: space-between;
     align-items: center;
-    height: 100%;
     background-image: url("../../assets/Background/unsplash_d7M5Xramf8g.webp");
     background-size: cover;
     background-repeat: no-repeat;
@@ -76,7 +48,7 @@ body {
     }
 }
 
-.authContainer {
+.loginMaimContainer {
     display: flex;
     flex-direction: column;
     justify-content: space-between;
@@ -89,7 +61,20 @@ body {
     text-align: center;
 }
 
-#loginContainer {
+.regiterMaimContainer {
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 15%;
+    width: 563px;
+    gap: 51px;
+    padding: 0;
+    color: $primary-font-color;
+    text-align: center;
+}
+
+#authCenterContainer {
     display: flex;
     flex-direction: column;
     justify-content: space-between;
@@ -177,11 +162,18 @@ body {
     line-height: normal;
 }
 
-#secondaryConfirmation {
+#secondaryAuthText {
     display: flex;
     width: 485px;
     justify-content: space-between;
     align-items: flex-start;
+}
+
+#secondaryRegisterText {
+    display: flex;
+    width: 485px;
+    justify-content: center;
+    align-items: center;
 }
 
 .linkConfirmation {

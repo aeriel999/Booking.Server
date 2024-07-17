@@ -1,6 +1,6 @@
 import { useForm } from "react-hook-form";
 import InputField from "../../../components/common/InputField";
-import { ILogin } from "../../../interfaces/account";
+import { IGoogleLogin, ILogin } from "../../../interfaces/account";
 import { googleLogin, login } from "../../../store/accounts/account.actions.ts";
 import { unwrapResult } from "@reduxjs/toolkit";
 import ErrorHandler from "../../../components/common/ErrorHandler.ts";
@@ -18,16 +18,13 @@ import { getListOfChatRooms } from "../../../store/chat/chat.action.ts";
 import "../../../css/AuthenticationClasses/index.scss"; // Import your CSS file
 import Header from "../../../components/authentification/Header.tsx";
 
-export interface IGoogleLogin {
-    googleToken: string;
-}
+
 
 export default function SignInPage() {
     const dispatch = useAppDispatch();
     const [errorMessage, setErrorMessage] = useState<string | undefined>(
         undefined
     );
-    //const formValid = useRef({ email: false, password: false });
     const navigate = useNavigate();
 
     const {
@@ -94,10 +91,10 @@ export default function SignInPage() {
         <div className="content">
             <Header />
 
-            <div className="authContainer">
+            <div className="loginMaimContainer">
                 {errorMessage && <OutlinedErrorAlert message={errorMessage} />}
 
-                <div id="loginContainer">
+                <div id="authCenterContainer">
                     <h1> Sign in</h1>
 
                     <div id="loginForm">
@@ -140,7 +137,7 @@ export default function SignInPage() {
                                     Sign In
                                 </button>
 
-                                <div id="secondaryConfirmation">
+                                <div id="secondaryAuthText">
                                     <a
                                         href="/authentication/forgot-password"
                                         className="linkConfirmation"

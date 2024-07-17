@@ -1,12 +1,11 @@
 import { Resolver } from "react-hook-form";
-import { ILogin } from "../../interfaces/account";
+import { ILogin, IUserRegister } from "../../interfaces/account";
 
 export const loginResolver: Resolver<ILogin> = async (values) => {
     const errors: Record<string, any> = {};
 
     const emailError = EmailValidator(values.email);
     if (emailError) {
-        
         errors.email = {
             type: "validation",
             message: emailError,
@@ -15,13 +14,47 @@ export const loginResolver: Resolver<ILogin> = async (values) => {
 
     const passwordError = PasswordValidator(values.password);
     if (passwordError) {
-        
         errors.password = {
             type: "validation",
             message: passwordError,
         };
     }
 
+    return {
+        values: Object.keys(errors).length === 0 ? values : {},
+        errors,
+    };
+};
+
+export const userRegisterResolver: Resolver<IUserRegister> = async (values) => {
+    const errors: Record<string, any> = {};
+
+    const emailError = EmailValidator(values.email);
+    if (emailError) {
+        errors.email = {
+            type: "validation",
+            message: emailError,
+        };
+    }
+
+    const passwordError = PasswordValidator(values.password);
+    if (passwordError) {
+        errors.password = {
+            type: "validation",
+            message: passwordError,
+        };
+    }
+
+    const confirmPasswordError = ConfirmPasswordValidator(
+        values.password,
+        values.confirmPassword
+    );
+    if (confirmPasswordError) {
+        errors.confirmPassword = {
+            type: "validation",
+            message: confirmPasswordError,
+        };
+    }
     return {
         values: Object.keys(errors).length === 0 ? values : {},
         errors,
