@@ -18,8 +18,6 @@ import { getListOfChatRooms } from "../../../store/chat/chat.action.ts";
 import "../../../css/AuthenticationClasses/index.scss"; // Import your CSS file
 import Header from "../../../components/authentification/Header.tsx";
 
-
-
 export default function SignInPage() {
     const dispatch = useAppDispatch();
     const [errorMessage, setErrorMessage] = useState<string | undefined>(
@@ -109,10 +107,15 @@ export default function SignInPage() {
                                     name="email"
                                     register={register}
                                     setValue={setValue}
-                                    className="loginFormInput"
+                                    className={
+                                        errors.email
+                                            ? "errorFormInput"
+                                            : "formInput"
+                                    }
                                 />
                                 {errors.email && (
                                     <p className="error">
+                                        <p>*</p>
                                         {errors.email.message}
                                     </p>
                                 )}
@@ -123,10 +126,15 @@ export default function SignInPage() {
                                     name="password"
                                     register={register}
                                     setValue={setValue}
-                                    className="loginFormInput"
+                                    className={
+                                        errors.password
+                                            ? "errorFormInput"
+                                            : "formInput"
+                                    }
                                 />
                                 {errors.password && (
                                     <p className="error">
+                                        <p>*</p>
                                         {errors.password.message}
                                     </p>
                                 )}

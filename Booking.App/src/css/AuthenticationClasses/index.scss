@@ -117,7 +117,7 @@ body {
     align-self: stretch;
 }
 
-.loginFormInput {
+.formInput {
     display: flex;
     height: 50px;
     padding-left: 10px;
@@ -126,6 +126,27 @@ body {
     align-self: stretch;
     border-radius: 5px;
     border: 1px solid $border-color;
+    background: #fff;
+
+    p {
+        color: $secondary-font-color;
+        font-family: $primary-font-family;
+        font-size: $primary-font-small-size;
+        font-style: normal;
+        font-weight: $primary-font-light-weight;
+        line-height: normal;
+    }
+}
+
+.errorFormInput {
+    display: flex;
+    height: 50px;
+    padding-left: 10px;
+    align-items: center;
+    gap: 10px;
+    align-self: stretch;
+    border-radius: 5px;
+    border: 1px solid $error-border-color;
     background: #fff;
 
     p {
@@ -186,7 +207,23 @@ body {
 }
 
 .error {
+    display: flex;
+    justify-content: flex-start;
+    gap: 5px;
     color: $error-font-color;
+    font-family: $secondary-font-family;
+    font-size: $secondary-font-small-size;
+    font-style: normal;
+    font-weight: $secondary-font-weight;
+    line-height: normal;
+    padding: 0;
+    margin: 0;
+
+    p {
+        padding: 0;
+        margin: 0;
+        color: $error-border-color;
+    }
 }
 
 #googleLogin {

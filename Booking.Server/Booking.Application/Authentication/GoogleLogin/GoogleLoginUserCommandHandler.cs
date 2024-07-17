@@ -12,9 +12,9 @@ namespace Booking.Application.Authentication.GoogleLogin;
 public class GoogleLoginUserCommandHandler(
 	IUserRepository userRepository,
 	IJwtTokenGenerator jwtTokenGenerator)
-	: IRequestHandler<GoogleLoginUserCommand, ErrorOr<string>>
+	: IRequestHandler<GoogleLoginUserCommand, ErrorOr<GoogleLoginUserCommandResult>>
 {
-	public async Task<ErrorOr<string>> Handle(
+	public async Task<ErrorOr<GoogleLoginUserCommandResult>> Handle(
 		GoogleLoginUserCommand request, CancellationToken cancellationToken)
 	{
 		//ValidateToken
@@ -33,6 +33,8 @@ public class GoogleLoginUserCommandHandler(
 		var errorOrUser = await userRepository.FindByEmailAsync(validPayload.Email);
  
 		var googleUser = await userRepository.FindByLoginAsync(info.LoginProvider, info.ProviderKey);
+
+		var isRegister = true;
 
 		//Create user
 		if (googleUser == null && errorOrUser.IsError)
@@ -59,6 +61,8 @@ public class GoogleLoginUserCommandHandler(
 			{
 				return Error.Validation("Error in creating of new googleUser");
 			}
+
+			isRegister = false;
 		}
 		else if (!errorOrUser.IsError)
 		{
@@ -75,6 +79,6 @@ public class GoogleLoginUserCommandHandler(
 		//Validate token
 		var token = await jwtTokenGenerator.GenerateJwtTokenAsync(googleUser!, role!);
 
-		return token;
+		return new GoogleLoginUserCommandResult(token, isRegister);
 	}
 }

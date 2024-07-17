@@ -97,7 +97,7 @@ export const accountsSlice = createSlice({
                 state.status = Status.LOADING;
             })
             .addCase(googleLogin.fulfilled, (state, action) => {
-                updateLoginUserState(state, action.payload);
+                updateLoginUserState(state, action.payload.token);
                 state.status = Status.SUCCESS;
             })
             .addCase(googleLogin.pending, (state) => {

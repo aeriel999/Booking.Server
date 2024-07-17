@@ -1,11 +1,11 @@
 import React from "react";
-import {  UseFormRegister, UseFormSetValue } from "react-hook-form";
+import { UseFormRegister, UseFormSetValue } from "react-hook-form";
 
 type InputFieldProps = {
     placeholder: string;
     register: UseFormRegister<any>;
     name: string;
-    
+
     type: string;
     setValue: UseFormSetValue<any>;
     className: string;
@@ -15,7 +15,6 @@ const InputField: React.FC<InputFieldProps> = ({
     placeholder,
     register,
     name,
-    
     type,
     setValue,
     className,
@@ -37,12 +36,12 @@ const InputField: React.FC<InputFieldProps> = ({
         //     {error && <p>{error.message}</p>}
         // </div>
         <input
-        {...register(name)}
-        placeholder={placeholder}
-        type={type}
-        onChange={handleChange}
-        className={className}
-    />
+            {...register(name)}
+            placeholder={placeholder}
+            type={type}
+            onChange={handleChange}
+            className={className}
+        />
     );
 };
 

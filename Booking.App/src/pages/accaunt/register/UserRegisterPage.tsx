@@ -2,7 +2,7 @@ import { userRegisterResolver } from "../../../validations/account";
 import { useState } from "react";
 import { IGoogleLogin, IUserRegister } from "../../../interfaces/account";
 import { unwrapResult } from "@reduxjs/toolkit";
-import { useAppDispatch } from "../../../hooks/redux";
+import { useAppDispatch, useAppSelector } from "../../../hooks/redux";
 import {
     googleLogin,
     userRegister,
@@ -10,7 +10,7 @@ import {
 import OutlinedErrorAlert from "../../../components/common/ErrorAlert.tsx";
 import { useNavigate } from "react-router-dom";
 import ErrorHandler from "../../../components/common/ErrorHandler.ts";
-import "../../../css/AuthenticationClasses/index.scss"; // Import your CSS file
+import "../../../css/AuthenticationClasses/index.scss"; 
 import Header from "../../../components/authentification/Header.tsx";
 import { CredentialResponse, GoogleLogin } from "@react-oauth/google";
 import InputField from "../../../components/common/InputField.tsx";
@@ -19,6 +19,7 @@ import { useForm } from "react-hook-form";
 export default function UserRegisterPage() {
     const dispatch = useAppDispatch();
     const navigate = useNavigate();
+    const { user } = useAppSelector((state) => state.account);
     const [errorMessage, setErrorMessage] = useState<string | undefined>(
         undefined
     );
@@ -29,30 +30,6 @@ export default function UserRegisterPage() {
         formState: { errors },
         setValue,
     } = useForm<IUserRegister>({ resolver: userRegisterResolver });
-
-    // const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
-    //     event.preventDefault();
-    //     const data = new FormData(event.currentTarget);
-
-    //     if (Object.values(formValid.current).every(isValid => isValid)) {
-    //         const model : IUserRegister = {
-    //             email: data.get("email") as string,
-    //             password: data.get("password")  as string,
-    //             confirmPassword: data.get("confirmPassword")  as string
-    //         }
-
-    //         try {
-    //             const response = await dispatch(userRegister(model));
-    //             unwrapResult(response);
-
-    //             navigate(`/authentication/register-information/${model.email}`);
-
-    //         } catch (error ) {
-
-    //             setErrorMessage(ErrorHandler(error));
-    //         }
-    //     }
-    // };
 
     const onSubmit = async (data: IUserRegister) => {
         try {
@@ -74,7 +51,11 @@ export default function UserRegisterPage() {
 
             unwrapResult(resp);
 
-            //  await afterLogin(resp.payload);
+            if (!resp.payload.isAlreadyRegister) {
+                navigate(`/authentication/register-information/${user?.email}`);
+            } else {
+                navigate("/dashboard/profile");
+            }
         } catch (error) {
             setErrorMessage(ErrorHandler(error));
         }
@@ -102,10 +83,15 @@ export default function UserRegisterPage() {
                                     name="email"
                                     register={register}
                                     setValue={setValue}
-                                    className="loginFormInput"
+                                    className={
+                                        errors.email
+                                            ? "errorFormInput"
+                                            : "formInput"
+                                    }
                                 />
                                 {errors.email && (
                                     <p className="error">
+                                        <p>*</p>
                                         {errors.email.message}
                                     </p>
                                 )}
@@ -116,10 +102,15 @@ export default function UserRegisterPage() {
                                     name="password"
                                     register={register}
                                     setValue={setValue}
-                                    className="loginFormInput"
+                                    className={
+                                        errors.password
+                                            ? "errorFormInput"
+                                            : "formInput"
+                                    }
                                 />
                                 {errors.password && (
                                     <p className="error">
+                                        <p>*</p>
                                         {errors.password.message}
                                     </p>
                                 )}
@@ -130,11 +121,17 @@ export default function UserRegisterPage() {
                                     name="confirmPassword"
                                     register={register}
                                     setValue={setValue}
-                                    className="loginFormInput"
+                                    className={
+                                        errors.confirmPassword
+                                            ? "errorFormInput"
+                                            : "formInput"
+                                    }
                                 />
                                 {errors.password && (
                                     <p className="error">
-                                        {errors.password.message}
+                                        {errors.confirmPassword && <p>*</p>}
+
+                                        {errors.confirmPassword?.message}
                                     </p>
                                 )}
                             </div>
@@ -168,6 +165,5 @@ export default function UserRegisterPage() {
                 </div>
             </div>
         </div>
-        
     );
 }
