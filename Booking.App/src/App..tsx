@@ -1,7 +1,7 @@
 import { Routes, Route } from "react-router-dom";
 import NotFound from "./pages/errors/NotFound.tsx";
 import RealtorRegisterPage from "./pages/accaunt/register/RealtorRegisterPage.tsx";
-import SignInPage from "./pages/accaunt/login/SignIn.tsx";
+ 
 import { useAppSelector } from "./hooks/redux/index.ts";
 import DashboardLayout from "./containers/dashboard/layouts/_DashboardLayot.tsx";
 import ChangeEmailPage from "./pages/accaunt/change-email/ChangeEmailPage.tsx";
@@ -27,10 +27,11 @@ import { EditPost } from "./containers/dashboard/EditPost.tsx";
 import PostPage from "./containers/client/PostPage.tsx";
 import RealtorPage from "./containers/client/RealtorPage.tsx";
 import { EditUserEpailPage } from "./containers/client/EditUserEmailPage.tsx";
-// import {  MessageRight } from "./components/chat/Message.tsx";
-//import { MessageLeft } from "./components/chat/Message.tsx";
+ 
 import ArchivePage from "./containers/dashboard/ArchivePage.tsx";
 import { ReviewsPage } from "./containers/dashboard/ReviewsPage.tsx";
+import SignInPage from "./pages/accaunt/login/SignIn.tsx";
+
 
 export const App: React.FC = () => {
 
@@ -51,6 +52,12 @@ export const App: React.FC = () => {
 
     return (
         <Routes>
+             <Route
+                    path="authentication/user-register"
+                    element={<UserRegisterPage />}
+                />
+                <Route path="authentication/login" element={<SignInPage />} />
+
             {isLogin && (
                 <>
                     <Route
@@ -150,10 +157,7 @@ export const App: React.FC = () => {
                     path="dashboard/profile/change-password"
                     element={<SignInPage />}
                 />
-                <Route
-                    path="authentication/user-register"
-                    element={<UserRegisterPage />}
-                />
+               
                 <Route
                     path="authentication/register-information/:email"
                     element={<RegisterInformationPage />}
@@ -166,7 +170,6 @@ export const App: React.FC = () => {
                     path="authentication/realtor-register"
                     element={<RealtorRegisterPage />}
                 />
-                <Route path="authentication/login" element={<SignInPage />} />
                 <Route
                     path="authentication/forgot-password"
                     element={<ForgotPasswordPage />}

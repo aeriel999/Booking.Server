@@ -21,11 +21,8 @@ import OutlinedErrorAlert from "../../components/common/ErrorAlert.tsx";
 import { ICategory, ICity, ICountry, IPostEdit } from "../../interfaces/post";
 import InputGroup from "../../components/common/InputGroup.tsx";
 import {
-    AreaValidator,
-    BuildingNumberValidator,
     CityNameValidator,
     DescriptionValidator,
-    NumberOfRoomsValidator,
     PostNameValidator,
     PriceValidator,
     StreetNameValidator,
@@ -375,7 +372,7 @@ export function EditPost() {
                                     </Grid>
                                 )}
 
-                                <Grid item xs={12}>
+                                {/* <Grid item xs={12}>
                                     <InputGroup
                                         label="Bulding number"
                                         field="buildingNumber"
@@ -387,7 +384,7 @@ export function EditPost() {
                                         }
                                         defaultValue={post!.buildingNumber}
                                     />
-                                </Grid>
+                                </Grid> */}
 
                                 {/* <Grid item xs={12}>
                                     <InputGroup

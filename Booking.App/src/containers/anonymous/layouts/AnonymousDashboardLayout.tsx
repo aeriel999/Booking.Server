@@ -3,10 +3,9 @@ import Box from '@mui/material/Box';
 import CssBaseline from '@mui/material/CssBaseline';
 import MuiAppBar, { AppBarProps as MuiAppBarProps } from '@mui/material/AppBar';
 import Toolbar from '@mui/material/Toolbar';
-
 import { Outlet, useNavigate } from "react-router-dom";
-
 import Button from "@mui/material/Button";
+
 
 const drawerWidth = 240;
 

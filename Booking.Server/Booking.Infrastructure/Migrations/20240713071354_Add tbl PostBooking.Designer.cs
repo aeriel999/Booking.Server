@@ -12,8 +12,8 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace Booking.Infrastructure.Migrations
 {
     [DbContext(typeof(BookingDbContext))]
-    [Migration("20240708063927_Update Post tbl and add Room tbl")]
-    partial class UpdatePosttblandaddRoomtbl
+    [Migration("20240713071354_Add tbl PostBooking")]
+    partial class AddtblPostBooking
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -25,7 +25,7 @@ namespace Booking.Infrastructure.Migrations
 
             NpgsqlModelBuilderExtensions.UseIdentityByDefaultColumns(modelBuilder);
 
-            modelBuilder.Entity("PostBooking.Domain.Chat.ChatRoom", b =>
+            modelBuilder.Entity("Booking.Domain.Chat.ChatRoom", b =>
                 {
                     b.Property<Guid>("ChatRoomId")
                         .ValueGeneratedOnAdd()
@@ -51,7 +51,7 @@ namespace Booking.Infrastructure.Migrations
                     b.ToTable("ChatRooms");
                 });
 
-            modelBuilder.Entity("PostBooking.Domain.Chat.UserMessage", b =>
+            modelBuilder.Entity("Booking.Domain.Chat.UserMessage", b =>
                 {
                     b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
@@ -80,14 +80,11 @@ namespace Booking.Infrastructure.Migrations
                     b.ToTable("UserMessages");
                 });
 
-            modelBuilder.Entity("PostBooking.Domain.Posts.Post", b =>
+            modelBuilder.Entity("Booking.Domain.Posts.Post", b =>
                 {
                     b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("uuid");
-
-                    b.Property<int?>("Area")
-                        .HasColumnType("integer");
 
                     b.Property<Guid>("CategoryId")
                         .HasColumnType("uuid");
@@ -120,9 +117,6 @@ namespace Booking.Infrastructure.Migrations
                     b.Property<Guid?>("PostCountryId")
                         .HasColumnType("uuid");
 
-                    b.Property<Guid>("PostTypeOfRentId")
-                        .HasColumnType("uuid");
-
                     b.Property<decimal>("Price")
                         .HasColumnType("numeric");
 
@@ -144,8 +138,6 @@ namespace Booking.Infrastructure.Migrations
 
                     b.HasIndex("PostCountryId");
 
-                    b.HasIndex("PostTypeOfRentId");
-
                     b.HasIndex("StreetId");
 
                     b.HasIndex("UserId");
@@ -153,7 +145,34 @@ namespace Booking.Infrastructure.Migrations
                     b.ToTable("Posts");
                 });
 
-            modelBuilder.Entity("PostBooking.Domain.Posts.PostCategory", b =>
+            modelBuilder.Entity("Booking.Domain.Posts.PostBooking", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uuid");
+
+                    b.Property<DateTime>("EndDate")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.Property<Guid>("PostId")
+                        .HasColumnType("uuid");
+
+                    b.Property<DateTime>("StartDate")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.Property<Guid>("UserId")
+                        .HasColumnType("uuid");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("PostId");
+
+                    b.HasIndex("UserId");
+
+                    b.ToTable("Bookings");
+                });
+
+            modelBuilder.Entity("Booking.Domain.Posts.PostCategory", b =>
                 {
                     b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
@@ -168,7 +187,7 @@ namespace Booking.Infrastructure.Migrations
                     b.ToTable("Categories");
                 });
 
-            modelBuilder.Entity("PostBooking.Domain.Posts.PostCity", b =>
+            modelBuilder.Entity("Booking.Domain.Posts.PostCity", b =>
                 {
                     b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
@@ -187,7 +206,7 @@ namespace Booking.Infrastructure.Migrations
                     b.ToTable("Cities");
                 });
 
-            modelBuilder.Entity("PostBooking.Domain.Posts.PostCountry", b =>
+            modelBuilder.Entity("Booking.Domain.Posts.PostCountry", b =>
                 {
                     b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
@@ -202,7 +221,7 @@ namespace Booking.Infrastructure.Migrations
                     b.ToTable("Countries");
                 });
 
-            modelBuilder.Entity("PostBooking.Domain.Posts.PostImage", b =>
+            modelBuilder.Entity("Booking.Domain.Posts.PostImage", b =>
                 {
                     b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
@@ -225,7 +244,37 @@ namespace Booking.Infrastructure.Migrations
                     b.ToTable("Images");
                 });
 
-            modelBuilder.Entity("PostBooking.Domain.Posts.PostStreet", b =>
+            modelBuilder.Entity("Booking.Domain.Posts.PostPostTypeOfRest", b =>
+                {
+                    b.Property<Guid>("PostId")
+                        .HasColumnType("uuid");
+
+                    b.Property<Guid>("PostTypeOfRestId")
+                        .HasColumnType("uuid");
+
+                    b.HasKey("PostId", "PostTypeOfRestId");
+
+                    b.HasIndex("PostTypeOfRestId");
+
+                    b.ToTable("PostPostTypesOfRest");
+                });
+
+            modelBuilder.Entity("Booking.Domain.Posts.PostService", b =>
+                {
+                    b.Property<Guid>("ServiceId")
+                        .HasColumnType("uuid");
+
+                    b.Property<Guid>("PostId")
+                        .HasColumnType("uuid");
+
+                    b.HasKey("ServiceId", "PostId");
+
+                    b.HasIndex("PostId");
+
+                    b.ToTable("PostServices");
+                });
+
+            modelBuilder.Entity("Booking.Domain.Posts.PostStreet", b =>
                 {
                     b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
@@ -245,7 +294,7 @@ namespace Booking.Infrastructure.Migrations
                     b.ToTable("Streets");
                 });
 
-            modelBuilder.Entity("PostBooking.Domain.Posts.PostTypeOfRent", b =>
+            modelBuilder.Entity("Booking.Domain.Posts.PostTypeOfRest", b =>
                 {
                     b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
@@ -257,10 +306,10 @@ namespace Booking.Infrastructure.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("PostTypeOfRent");
+                    b.ToTable("PostTypesOfRest");
                 });
 
-            modelBuilder.Entity("PostBooking.Domain.Posts.Room", b =>
+            modelBuilder.Entity("Booking.Domain.Posts.Room", b =>
                 {
                     b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
@@ -275,6 +324,9 @@ namespace Booking.Infrastructure.Migrations
                     b.Property<int>("NumberOfRooms")
                         .HasColumnType("integer");
 
+                    b.Property<decimal>("Price")
+                        .HasColumnType("numeric");
+
                     b.HasKey("Id");
 
                     b.HasIndex("HotelId");
@@ -282,7 +334,22 @@ namespace Booking.Infrastructure.Migrations
                     b.ToTable("Rooms");
                 });
 
-            modelBuilder.Entity("PostBooking.Domain.Users.Feedback", b =>
+            modelBuilder.Entity("Booking.Domain.Posts.Service", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uuid");
+
+                    b.Property<string>("Name")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("Services");
+                });
+
+            modelBuilder.Entity("Booking.Domain.Users.Feedback", b =>
                 {
                     b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
@@ -313,7 +380,7 @@ namespace Booking.Infrastructure.Migrations
                     b.ToTable("Feedbacks");
                 });
 
-            modelBuilder.Entity("PostBooking.Domain.Users.User", b =>
+            modelBuilder.Entity("Booking.Domain.Users.User", b =>
                 {
                     b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
@@ -520,9 +587,9 @@ namespace Booking.Infrastructure.Migrations
                     b.ToTable("AspNetUserTokens", (string)null);
                 });
 
-            modelBuilder.Entity("PostBooking.Domain.Chat.ChatRoom", b =>
+            modelBuilder.Entity("Booking.Domain.Chat.ChatRoom", b =>
                 {
-                    b.HasOne("PostBooking.Domain.Posts.Post", "Post")
+                    b.HasOne("Booking.Domain.Posts.Post", "Post")
                         .WithMany("ChatRooms")
                         .HasForeignKey("PostId")
                         .OnDelete(DeleteBehavior.ClientCascade)
@@ -531,9 +598,9 @@ namespace Booking.Infrastructure.Migrations
                     b.Navigation("Post");
                 });
 
-            modelBuilder.Entity("PostBooking.Domain.Chat.UserMessage", b =>
+            modelBuilder.Entity("Booking.Domain.Chat.UserMessage", b =>
                 {
-                    b.HasOne("PostBooking.Domain.Chat.ChatRoom", "ChatRoom")
+                    b.HasOne("Booking.Domain.Chat.ChatRoom", "ChatRoom")
                         .WithMany("UserMessages")
                         .HasForeignKey("ChatRoomId")
                         .OnDelete(DeleteBehavior.ClientCascade)
@@ -542,31 +609,25 @@ namespace Booking.Infrastructure.Migrations
                     b.Navigation("ChatRoom");
                 });
 
-            modelBuilder.Entity("PostBooking.Domain.Posts.Post", b =>
+            modelBuilder.Entity("Booking.Domain.Posts.Post", b =>
                 {
-                    b.HasOne("PostBooking.Domain.Posts.PostCategory", "Category")
+                    b.HasOne("Booking.Domain.Posts.PostCategory", "Category")
                         .WithMany("Posts")
                         .HasForeignKey("CategoryId")
                         .OnDelete(DeleteBehavior.ClientNoAction)
                         .IsRequired();
 
-                    b.HasOne("PostBooking.Domain.Posts.PostCountry", null)
+                    b.HasOne("Booking.Domain.Posts.PostCountry", null)
                         .WithMany("Posts")
                         .HasForeignKey("PostCountryId");
 
-                    b.HasOne("PostBooking.Domain.Posts.PostTypeOfRent", "PostTypeOfRent")
-                        .WithMany("Posts")
-                        .HasForeignKey("PostTypeOfRentId")
-                        .OnDelete(DeleteBehavior.ClientNoAction)
-                        .IsRequired();
-
-                    b.HasOne("PostBooking.Domain.Posts.PostStreet", "Street")
+                    b.HasOne("Booking.Domain.Posts.PostStreet", "Street")
                         .WithMany("Posts")
                         .HasForeignKey("StreetId")
                         .OnDelete(DeleteBehavior.ClientNoAction)
                         .IsRequired();
 
-                    b.HasOne("PostBooking.Domain.Users.User", "User")
+                    b.HasOne("Booking.Domain.Users.User", "User")
                         .WithMany("Posts")
                         .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.ClientCascade)
@@ -574,16 +635,33 @@ namespace Booking.Infrastructure.Migrations
 
                     b.Navigation("Category");
 
-                    b.Navigation("PostTypeOfRent");
-
                     b.Navigation("Street");
 
                     b.Navigation("User");
                 });
 
-            modelBuilder.Entity("PostBooking.Domain.Posts.PostCity", b =>
+            modelBuilder.Entity("Booking.Domain.Posts.PostBooking", b =>
                 {
-                    b.HasOne("PostBooking.Domain.Posts.PostCountry", "Country")
+                    b.HasOne("Booking.Domain.Posts.Post", "Post")
+                        .WithMany("Bookings")
+                        .HasForeignKey("PostId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("Booking.Domain.Users.User", "User")
+                        .WithMany("Bookings")
+                        .HasForeignKey("UserId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Post");
+
+                    b.Navigation("User");
+                });
+
+            modelBuilder.Entity("Booking.Domain.Posts.PostCity", b =>
+                {
+                    b.HasOne("Booking.Domain.Posts.PostCountry", "Country")
                         .WithMany("Cities")
                         .HasForeignKey("CountryId")
                         .OnDelete(DeleteBehavior.ClientNoAction)
@@ -592,9 +670,9 @@ namespace Booking.Infrastructure.Migrations
                     b.Navigation("Country");
                 });
 
-            modelBuilder.Entity("PostBooking.Domain.Posts.PostImage", b =>
+            modelBuilder.Entity("Booking.Domain.Posts.PostImage", b =>
                 {
-                    b.HasOne("PostBooking.Domain.Posts.Post", "Post")
+                    b.HasOne("Booking.Domain.Posts.Post", "Post")
                         .WithMany("ImagesPost")
                         .HasForeignKey("PostId")
                         .OnDelete(DeleteBehavior.Cascade)
@@ -603,9 +681,47 @@ namespace Booking.Infrastructure.Migrations
                     b.Navigation("Post");
                 });
 
-            modelBuilder.Entity("PostBooking.Domain.Posts.PostStreet", b =>
+            modelBuilder.Entity("Booking.Domain.Posts.PostPostTypeOfRest", b =>
                 {
-                    b.HasOne("PostBooking.Domain.Posts.PostCity", "City")
+                    b.HasOne("Booking.Domain.Posts.Post", "Post")
+                        .WithMany("PostPostTypesOfRest")
+                        .HasForeignKey("PostId")
+                        .OnDelete(DeleteBehavior.ClientCascade)
+                        .IsRequired();
+
+                    b.HasOne("Booking.Domain.Posts.PostTypeOfRest", "PostTypeOfRest")
+                        .WithMany("PostPostTypesOfRest")
+                        .HasForeignKey("PostTypeOfRestId")
+                        .OnDelete(DeleteBehavior.ClientCascade)
+                        .IsRequired();
+
+                    b.Navigation("Post");
+
+                    b.Navigation("PostTypeOfRest");
+                });
+
+            modelBuilder.Entity("Booking.Domain.Posts.PostService", b =>
+                {
+                    b.HasOne("Booking.Domain.Posts.Post", "Post")
+                        .WithMany("PostServices")
+                        .HasForeignKey("PostId")
+                        .OnDelete(DeleteBehavior.ClientCascade)
+                        .IsRequired();
+
+                    b.HasOne("Booking.Domain.Posts.Service", "Service")
+                        .WithMany("PostServices")
+                        .HasForeignKey("ServiceId")
+                        .OnDelete(DeleteBehavior.ClientCascade)
+                        .IsRequired();
+
+                    b.Navigation("Post");
+
+                    b.Navigation("Service");
+                });
+
+            modelBuilder.Entity("Booking.Domain.Posts.PostStreet", b =>
+                {
+                    b.HasOne("Booking.Domain.Posts.PostCity", "City")
                         .WithMany("Streets")
                         .HasForeignKey("CityId")
                         .OnDelete(DeleteBehavior.ClientNoAction)
@@ -614,9 +730,9 @@ namespace Booking.Infrastructure.Migrations
                     b.Navigation("City");
                 });
 
-            modelBuilder.Entity("PostBooking.Domain.Posts.Room", b =>
+            modelBuilder.Entity("Booking.Domain.Posts.Room", b =>
                 {
-                    b.HasOne("PostBooking.Domain.Posts.Post", "Hotel")
+                    b.HasOne("Booking.Domain.Posts.Post", "Hotel")
                         .WithMany("Rooms")
                         .HasForeignKey("HotelId")
                         .OnDelete(DeleteBehavior.Cascade)
@@ -625,15 +741,15 @@ namespace Booking.Infrastructure.Migrations
                     b.Navigation("Hotel");
                 });
 
-            modelBuilder.Entity("PostBooking.Domain.Users.Feedback", b =>
+            modelBuilder.Entity("Booking.Domain.Users.Feedback", b =>
                 {
-                    b.HasOne("PostBooking.Domain.Users.User", "Client")
+                    b.HasOne("Booking.Domain.Users.User", "Client")
                         .WithMany("SentFeedbacks")
                         .HasForeignKey("ClientId")
                         .OnDelete(DeleteBehavior.ClientCascade)
                         .IsRequired();
 
-                    b.HasOne("PostBooking.Domain.Users.User", "Realtor")
+                    b.HasOne("Booking.Domain.Users.User", "Realtor")
                         .WithMany("ReceivedFeedbacks")
                         .HasForeignKey("RealtorId")
                         .OnDelete(DeleteBehavior.ClientCascade)
@@ -655,7 +771,7 @@ namespace Booking.Infrastructure.Migrations
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserClaim<System.Guid>", b =>
                 {
-                    b.HasOne("PostBooking.Domain.Users.User", null)
+                    b.HasOne("Booking.Domain.Users.User", null)
                         .WithMany()
                         .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade)
@@ -664,7 +780,7 @@ namespace Booking.Infrastructure.Migrations
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserLogin<System.Guid>", b =>
                 {
-                    b.HasOne("PostBooking.Domain.Users.User", null)
+                    b.HasOne("Booking.Domain.Users.User", null)
                         .WithMany()
                         .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade)
@@ -679,7 +795,7 @@ namespace Booking.Infrastructure.Migrations
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("PostBooking.Domain.Users.User", null)
+                    b.HasOne("Booking.Domain.Users.User", null)
                         .WithMany()
                         .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade)
@@ -688,56 +804,69 @@ namespace Booking.Infrastructure.Migrations
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserToken<System.Guid>", b =>
                 {
-                    b.HasOne("PostBooking.Domain.Users.User", null)
+                    b.HasOne("Booking.Domain.Users.User", null)
                         .WithMany()
                         .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
                 });
 
-            modelBuilder.Entity("PostBooking.Domain.Chat.ChatRoom", b =>
+            modelBuilder.Entity("Booking.Domain.Chat.ChatRoom", b =>
                 {
                     b.Navigation("UserMessages");
                 });
 
-            modelBuilder.Entity("PostBooking.Domain.Posts.Post", b =>
+            modelBuilder.Entity("Booking.Domain.Posts.Post", b =>
                 {
+                    b.Navigation("Bookings");
+
                     b.Navigation("ChatRooms");
 
                     b.Navigation("ImagesPost");
 
+                    b.Navigation("PostPostTypesOfRest");
+
+                    b.Navigation("PostServices");
+
                     b.Navigation("Rooms");
                 });
 
-            modelBuilder.Entity("PostBooking.Domain.Posts.PostCategory", b =>
+            modelBuilder.Entity("Booking.Domain.Posts.PostCategory", b =>
                 {
                     b.Navigation("Posts");
                 });
 
-            modelBuilder.Entity("PostBooking.Domain.Posts.PostCity", b =>
+            modelBuilder.Entity("Booking.Domain.Posts.PostCity", b =>
                 {
                     b.Navigation("Streets");
                 });
 
-            modelBuilder.Entity("PostBooking.Domain.Posts.PostCountry", b =>
+            modelBuilder.Entity("Booking.Domain.Posts.PostCountry", b =>
                 {
                     b.Navigation("Cities");
 
                     b.Navigation("Posts");
                 });
 
-            modelBuilder.Entity("PostBooking.Domain.Posts.PostStreet", b =>
+            modelBuilder.Entity("Booking.Domain.Posts.PostStreet", b =>
                 {
                     b.Navigation("Posts");
                 });
 
-            modelBuilder.Entity("PostBooking.Domain.Posts.PostTypeOfRent", b =>
+            modelBuilder.Entity("Booking.Domain.Posts.PostTypeOfRest", b =>
                 {
-                    b.Navigation("Posts");
+                    b.Navigation("PostPostTypesOfRest");
                 });
 
-            modelBuilder.Entity("PostBooking.Domain.Users.User", b =>
+            modelBuilder.Entity("Booking.Domain.Posts.Service", b =>
                 {
+                    b.Navigation("PostServices");
+                });
+
+            modelBuilder.Entity("Booking.Domain.Users.User", b =>
+                {
+                    b.Navigation("Bookings");
+
                     b.Navigation("Posts");
 
                     b.Navigation("ReceivedFeedbacks");

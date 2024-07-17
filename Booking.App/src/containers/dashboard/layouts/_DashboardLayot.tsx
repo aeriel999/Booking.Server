@@ -44,7 +44,7 @@ import {
     IChatRoomList,
     IChatsForPostListInfo,
 } from "../../../interfaces/chat/index.ts";
-
+import "../../../css/DashBoardRealtorClasses/index.scss";
 const drawerWidth = 240;
 
 const Main = styled("main", { shouldForwardProp: (prop) => prop !== "open" })<{
