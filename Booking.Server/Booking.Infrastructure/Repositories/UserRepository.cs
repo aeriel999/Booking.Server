@@ -65,7 +65,7 @@ public class UserRepository(UserManager<User> userManager) : IUserRepository
 
         var result = await userManager.DeleteAsync(user);
 
-        if(!result.Succeeded) return Error.Conflict(result.Errors.FirstOrDefault().Description);
+        if(!result.Succeeded) return Error.Conflict(result.Errors.FirstOrDefault()!.Description);
 
         return Result.Deleted;
     }
@@ -73,6 +73,7 @@ public class UserRepository(UserManager<User> userManager) : IUserRepository
     public async Task<ErrorOr<Updated>> EditUserAsync(Guid id, string? email)
     {
         var user = await userManager.FindByIdAsync(id.ToString());
+
         if (email == null && user.Email.Equals(email))
         {
             return Result.Updated;

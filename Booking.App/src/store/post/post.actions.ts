@@ -10,20 +10,6 @@ import {
     IPostEdit,
 } from "../../interfaces/post";
 
-export const getTypesOfRentList = createAsyncThunk(
-    "Post/get-type-of-rent-list",
-    async (_, { rejectWithValue }) => {
-        try {
-            const response = await apiClient.get(
-                "/api/Post/get-type-of-rent-list"
-            );
-            return response.data;
-        } catch (error) {
-            return rejectWithValue(handleAxiosError(error, "Network error"));
-        }
-    }
-);
-
 export const getListOfCategories = createAsyncThunk(
     "Post/get-categories-list",
     async (_, { rejectWithValue }) => {
@@ -39,15 +25,17 @@ export const getListOfCategories = createAsyncThunk(
 );
 
 export const getPostListByRealtorId = createAsyncThunk(
-    'Post/get-post-list-by-realtor-id',
+    "Post/get-post-list-by-realtor-id",
     async (id: string, { rejectWithValue }) => {
         try {
-            const response = await apiClient.get(`/api/Post/get-post-list-by-realtor-id-${id}`);
+            const response = await apiClient.get(
+                `/api/Post/get-post-list-by-realtor-id-${id}`
+            );
             return response.data;
         } catch (error) {
             return rejectWithValue(handleAxiosError(error, "Network error"));
         }
-    },
+    }
 );
 
 export const getFilteredListByType = createAsyncThunk(
@@ -95,8 +83,7 @@ export const getListOfPostsByName = createAsyncThunk(
     "Post/get-list-of-posts-by-name",
     async (payload: IFetchDataByName, { rejectWithValue }) => {
         try {
-            const response = await apiClient.get(
-                `/api/Post/get-post-by-name`, {
+            const response = await apiClient.get(`/api/Post/get-post-by-name`, {
                 params: {
                     category: payload.filter.category,
                     country: payload.filter.country,
@@ -104,10 +91,9 @@ export const getListOfPostsByName = createAsyncThunk(
                     realtor: payload.filter.realtor,
                     name: payload.name,
                     page: payload.pages.page,
-                    sizeOfPage: payload.pages.sizeOfPage
-                }
-            }
-            );
+                    sizeOfPage: payload.pages.sizeOfPage,
+                },
+            });
             return response.data;
         } catch (error) {
             return rejectWithValue(handleAxiosError(error, "Network error"));

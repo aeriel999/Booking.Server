@@ -12,7 +12,7 @@ import {
 } from "../../validations/account";
 import MuiPhoneNumber from "mui-phone-number";
 import { isValidPhoneNumber } from "libphonenumber-js";
-import FileUploader from "../../components/common/FileUploader.tsx";
+import FileEditUploader from "../../components/common/FileEditUploader.tsx";
 import Button from "@mui/material/Button";
 import * as React from "react";
 import { IEditRealtorInfo } from "../../interfaces/account";
@@ -131,7 +131,7 @@ export default function RealtorProfileEditPage() {
                 <Grid container spacing={2}>
                     <Grid container spacing={2} item xs={6}>
                         <Grid item xs={5}>
-                            <FileUploader
+                            <FileEditUploader
                                 images={images}
                                 setImages={setImages}
                                 maxImagesUpload={1}
@@ -141,7 +141,7 @@ export default function RealtorProfileEditPage() {
                                     (formValid.current.avatar = isValid)
                                 }
                                 onDelete={handleChange}
-                            ></FileUploader>
+                            ></FileEditUploader>
                         </Grid>
                     </Grid>
                     <Grid item container spacing={4} xs={6}>

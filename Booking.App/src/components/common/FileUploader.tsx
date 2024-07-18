@@ -1,179 +1,129 @@
-import React, { useState, useEffect } from "react";
-import Button from "@mui/material/Button";
-import IconButton from "@mui/material/IconButton";
-import CancelIcon from "@mui/icons-material/Cancel";
-import { Grid } from "@mui/material";
+import React, {useState} from 'react'
+import Button from '@mui/material/Button'
+import IconButton from '@mui/material/IconButton'
+import CancelIcon from '@mui/icons-material/Cancel'
+import { Grid } from '@mui/material'
+import IMG from  "../../assets/avatar-profile-icon-vector-illustration_276184-165.jpg"
 import OutlinedErrorAlert from "./ErrorAlert.tsx";
 
 type FileUploadProps = {
     images: File[];
     setImages: (arg: File[]) => void;
     maxImagesUpload: number;
-    defaultImage: string | undefined; // Single default image
-    validator: (value: File[]) => string | false | undefined;
-    onChange: (isValid: boolean) => void;
-    onDelete: (image: string) => void; // Image for the image being deleted
-    setDeleteImages?: (arg: string[]) => void; // Nullable
-};
+    defaultImage?: string | undefined; // New prop for default image
+    validator: (value: File[]) => string | false | undefined,
+    onChange: (isValid: boolean) => void,
+    onDelete: () => void
+}
 
 const FileUploader = (props: FileUploadProps) => {
-    const {
-        maxImagesUpload,
-        defaultImage,
-        images,
-        setImages,
-        validator,
-        onChange,
-        onDelete,
-        setDeleteImages,
-    } = props;
-
-    const inputId = Math.random().toString(32).substring(2);
-    const [defaultImages, setDefaultImages] = useState<string[]>([]);
-    const [deleteImages, setDeleteImagesState] = useState<string[]>([]);
+    const maxImagesUpload = props.maxImagesUpload;
+    const inputId = Math.random().toString(32).substring(2)
+    const defaultIMG = props.defaultImage ?? IMG;
     const [error, setError] = useState<string | false | undefined>(false);
-    const [currentImg, setCurrentImg] = useState<File | null>(null);
-
-    useEffect(() => {
-        if (defaultImage) {
-            setDefaultImages([defaultImage]);
-        }
-    }, [defaultImage]);
-
-    useEffect(() => {
-        if (setDeleteImages) {
-            setDeleteImages(deleteImages);
-        }
-    }, [deleteImages, setDeleteImages]);
 
     const handleOnAddImage = async (e: React.ChangeEvent<HTMLInputElement>) => {
-        if (!e.target.files) return;
-        const files: File[] = Array.from(e.target.files);
-        const errorMessage = validator(files);
+        if (!e.target.files) return
+        const files: File[] = [];
+
+        for (const file of e.target.files) {
+            files.push(file);
+        }
+
+        const errorMessage = props.validator(files);
+
         setError(errorMessage);
-        onChange(!errorMessage);
-        setImages([...images, ...files]);
-        setCurrentImg(files[0]);
-        e.target.value = "";
-    };
+        props.onChange(!errorMessage);
+
+        props.setImages([...props.images, ...files])
+        e.target.value = ''
+    }
 
     const handleOnRemoveImage = (index: number) => {
-        const newImages = [...images];
-        newImages.splice(index, 1);
-        setImages(newImages);
-        const errorMessage = validator(newImages);
-        setError(errorMessage);
-        onChange(!errorMessage);
-    };
+        const newImages = [...props.images]
+        newImages.splice(index, 1)
+        props.setImages(newImages)
 
-    const handleOnRemoveDefaultImage = (image: string) => {
-        const newDefaultImages = defaultImages.filter((img) => img !== image);
-        setDefaultImages(newDefaultImages);
-        setDeleteImagesState([...deleteImages, image]);
-        onDelete(image);
-    };
+        const errorMessage = props.validator(newImages);
+
+        setError(errorMessage);
+        props.onChange(!errorMessage);
+
+        props.onDelete();
+    }
 
     return (
         <>
             <Grid container spacing={{ xs: 2, md: 3 }} columns={{ xs: 8, sm: 12, md: 12 }}>
                 {error && <OutlinedErrorAlert message={error} />}
-                {currentImg && (
+                {props.images.map((image, i) => (
                     <Grid
                         item
                         xs={4}
                         sm={4}
                         md={4}
+                        key={i}
                         sx={{
-                            display: "flex",
-                            justifyContent: "start",
-                            alignItems: "center",
-                            position: "relative",
+                            display: 'flex',
+                            justifyContent: 'start',
+                            alignItems: 'center',
+                            position: 'relative'
                         }}
                     >
                         <IconButton
-                            aria-label="delete image"
+                            aria-label='delete image'
                             style={{
-                                position: "absolute",
+                                position: 'absolute',
                                 top: 10,
                                 right: 0,
-                                color: "#aaa",
+                                color: '#aaa'
                             }}
-                            onClick={() => handleOnRemoveImage(0)}
+                            onClick={() => handleOnRemoveImage(i)}
                         >
                             <CancelIcon />
                         </IconButton>
                         <img
-                            src={URL.createObjectURL(currentImg)}
+                            src={URL.createObjectURL(image)}
                             style={{
-                                width: "100%",
-                                height: "100%",
-                                objectFit: "contain",
-                                aspectRatio: "1 / 1",
+                                width: '100%',
+                                height: '100%',
+                                objectFit: 'contain',
+                                aspectRatio: '1 / 1'
                             }}
-                            alt=""
+                            alt=''
                         />
                     </Grid>
-                )}
-                {!currentImg &&
-                    defaultImages.map((image, i) => (
-                        <Grid
-                            item
-                            xs={4}
-                            sm={4}
-                            md={4}
-                            key={i}
-                            sx={{
-                                display: "flex",
-                                justifyContent: "start",
-                                alignItems: "center",
-                                position: "relative",
-                            }}
-                        >
-                            <IconButton
-                                aria-label="delete image"
-                                style={{
-                                    position: "absolute",
-                                    top: 10,
-                                    right: 0,
-                                    color: "#aaa",
-                                }}
-                                onClick={() => handleOnRemoveDefaultImage(image)}
-                            >
-                                <CancelIcon />
-                            </IconButton>
-                            <img
-                                src={image}
-                                style={{
-                                    width: "100%",
-                                    height: "100%",
-                                    objectFit: "contain",
-                                    aspectRatio: "1 / 1",
-                                }}
-                                alt="Default"
-                            />
-                        </Grid>
-                    ))}
+                ))}
             </Grid>
+            {props.images.length === 0 && ( // Display default image if no images are uploaded
+                <img
+                    src={defaultIMG}
+                    alt='Default'
+                    style={{
+                        width: '100%',
+                        height: "200px",
+                        objectFit: 'contain',
+                        aspectRatio: '1 / 1'
+                    }}
+
+                />
+            )}
             <label htmlFor={inputId}>
-                <Button
-                    variant="contained"
-                    disabled={images.length >= maxImagesUpload}
-                    component="span"
-                    sx={{ mt: 4 }}
-                >
+                <Button variant='contained' disabled={props.images.length >= maxImagesUpload} component='span' sx={{ mt: 4 }}>
                     Upload Files
                 </Button>
                 <input
                     id={inputId}
-                    type="file"
+                    type='file'
                     multiple
-                    accept="image/*,.png,.jpg,.jpeg,.gif"
+                    accept='image/*,.png,.jpg,.jpeg,.gif'
                     onChange={(e: React.ChangeEvent<HTMLInputElement>) => handleOnAddImage(e)}
-                    style={{ display: "none" }}
+                    style={{ display: 'none' }}
+
                 />
             </label>
         </>
-    );
-};
+    )
+}
 
-export default FileUploader;
+export default FileUploader

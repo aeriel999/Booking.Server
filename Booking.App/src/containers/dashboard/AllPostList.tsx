@@ -175,9 +175,7 @@ export default function AllPostList() {
                                     <StyledTableCell component="th" scope="row">
                                         {row.category}
                                     </StyledTableCell>
-                                    <StyledTableCell align="right">
-                                        {row.typeOfRent}
-                                    </StyledTableCell>
+                                    
                                     <StyledTableCell align="right">
                                         {row.adress}
                                     </StyledTableCell>

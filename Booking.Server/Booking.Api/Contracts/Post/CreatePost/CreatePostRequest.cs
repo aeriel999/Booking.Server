@@ -11,10 +11,6 @@ public record CreatePostRequest
 
 
 	[Required(ErrorMessage = "{PropertyName} must not be empty")]
-	public Guid PostTypeOfRentId { get; init; }
-
-
-	[Required(ErrorMessage = "{PropertyName} must not be empty")]
 	public Guid CategoryId { get; init; }
 
 
@@ -29,23 +25,21 @@ public record CreatePostRequest
 
 	public string? StreetName { get; init; }
 
-
 	[Required(ErrorMessage = "{PropertyName} must not be empty")]
-	[Length(1, 16)]
-	public required string BuildingNumber { get; init; }
+	[Range(10000, 99999)]
+	public int ZipCode { get; init; }
+	
+	public int? NumberOfGuests { get; init; }
 
-	public int? NumberOfRooms { get; init; }
-
-	public int? Area { get; init; }
+	public string? Description { get; init; }
 
 
 	[Required(ErrorMessage = "{PropertyName} must not be empty")]
 	[Range(0, 9999999999999999.99, ErrorMessage = "{PropertyName} must be between {1} and {2}")]
 	public decimal Price { get; init; }
 
+	public int? Discount { get; init; }
 
-	public string? Description { get; init; }
-	
 
 	[BindProperty(Name = "images[]")]
 	public required List<IFormFile> Images { get; init; }

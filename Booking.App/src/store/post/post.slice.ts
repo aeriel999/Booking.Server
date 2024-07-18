@@ -2,6 +2,7 @@ import { AnyAction, createSlice, PayloadAction } from "@reduxjs/toolkit";
 import { RejectedAction } from "../../utils/types";
 import { Status } from "../../utils/enum";
 import {
+    INamesOfPosts,
     IPageOfPosts,
     IPostInformation,
     IPostState,
@@ -22,10 +23,8 @@ import {
     getListOfStreetsByCityId,
     getListPostsForRealtor,
     getPostById,
-    getTypesOfRentList,
+    getPostListByRealtorId,
     repostPost,
-    getListOfCountries, getListOfPosts, getListOfPostsByName, getListOfPostsName,
-    getListOfStreetsByCityId, getListPostsForRealtor, getPostById, getPostListByRealtorId, getTypesOfRentList
 } from "./post.actions.ts";
 
 function isRejectedAction(action: AnyAction): action is RejectedAction {
@@ -40,8 +39,8 @@ const initialState: IPostState = {
     countries: null,
     cities: null,
     streets: null,
-    typeOfRent: null,
-    searchPost: [],
+   // typeOfRent: null,
+    searchPost: null,
     postInfoList: null,
     postsByRealtorId : null
 };
@@ -52,13 +51,7 @@ export const postSlice = createSlice({
     reducers: {},
     extraReducers: (builder) => {
         builder
-            .addCase(getTypesOfRentList.fulfilled, (state, action) => {
-                state.typeOfRent = action.payload.$values;
-                state.status = Status.SUCCESS;
-            })
-            .addCase(getTypesOfRentList.pending, (state) => {
-                state.status = Status.LOADING;
-            })
+
             .addCase(
                 getPostById.fulfilled,
                 (state, action: PayloadAction<IPostInformation>) => {
@@ -81,7 +74,7 @@ export const postSlice = createSlice({
             })
             .addCase(
                 getListOfPostsName.fulfilled,
-                (state, action: PayloadAction<string[]>) => {
+                (state, action: PayloadAction<INamesOfPosts>) => {
                     state.searchPost = action.payload;
                     state.status = Status.SUCCESS;
                 }

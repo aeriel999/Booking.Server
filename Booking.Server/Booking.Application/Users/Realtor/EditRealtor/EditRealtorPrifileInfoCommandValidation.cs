@@ -10,7 +10,7 @@ public class EditRealtorPrifileInfoCommandValidation : AbstractValidator<EditRea
 
         RuleFor(r => r.UserId.ToString()).NotEmpty().WithMessage("{PropertyName} must not be empty").IsGuid();
 
-        RuleFor(r => r.BaseUrl.ToString()).NotEmpty().WithMessage("{PropertyName} must not be empty");
+        RuleFor(r => r.BaseUrl).NotEmpty().WithMessage("{PropertyName} must not be empty");
 
         When(r => !string.IsNullOrEmpty(r.Email), () =>
         {

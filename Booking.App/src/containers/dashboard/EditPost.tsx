@@ -15,17 +15,10 @@ import {
     getListOfCountries,
     getListOfStreetsByCityId,
     getPostById,
-    getTypesOfRentList,
 } from "../../store/post/post.actions.ts";
 import ErrorHandler from "../../components/common/ErrorHandler.ts";
 import OutlinedErrorAlert from "../../components/common/ErrorAlert.tsx";
-import {
-    ICategory,
-    ICity,
-    ICountry,
-    IPostEdit,
-    ITypeOfRent,
-} from "../../interfaces/post";
+import { ICategory, ICity, ICountry, IPostEdit } from "../../interfaces/post";
 import InputGroup from "../../components/common/InputGroup.tsx";
 import {
     AreaValidator,
@@ -37,13 +30,13 @@ import {
     PriceValidator,
     StreetNameValidator,
 } from "../../validations/post";
-import FileUploader from "../../components/common/FileUploader.tsx";
+import FileEditUploader from "../../components/common/FileEditUploader.tsx";
 import { AvatarValidator } from "../../validations/account";
 import Button from "@mui/material/Button";
 import * as React from "react";
 import { APP_ENV } from "../../env/index.ts";
-import IMG from "../../assets/avatar-profile-icon-vector-illustration_276184-165.jpg";
 import { maxImagesCount } from "../../constants/index.ts";
+import DefaultImg from "../../assets/images.png";
 
 export function EditPost() {
     const { postId } = useParams();
@@ -53,8 +46,6 @@ export function EditPost() {
     const [errorMessage, setErrorMessage] = useState<string | undefined>(
         undefined
     );
-    const [typeOfRentList, setTypeOfRentList] = useState<ITypeOfRent[]>([]);
-    const [typeOfRent, setTypeOfRent] = useState<ITypeOfRent>();
     const [categoryList, setCategoryList] = useState<ICategory[]>([]);
     const [category, setCategory] = useState<ICategory>();
     const [countryList, setCountryList] = useState<ICountry[]>([]);
@@ -124,16 +115,6 @@ export function EditPost() {
         });
     }, [postId]);
 
-    const getTypeOfRentList = async () => {
-        try {
-            const response = await dispatch(getTypesOfRentList());
-            unwrapResult(response);
-            return response;
-        } catch (error) {
-            setErrorMessage(ErrorHandler(error));
-        }
-    };
-
     const getCategoryList = async () => {
         try {
             const response = await dispatch(getListOfCategories());
@@ -177,10 +158,6 @@ export function EditPost() {
     };
 
     useEffect(() => {
-        getTypeOfRentList().then((history) => {
-            setTypeOfRentList(history?.payload.$values);
-        });
-
         getCategoryList().then((history) => {
             setCategoryList(history?.payload.$values);
         });
@@ -234,16 +211,12 @@ export function EditPost() {
         const model: IPostEdit = {
             id: postId as string,
             name: data.get("name") as string,
-            postTypeOfRentId: typeOfRent?.id ?? null,
             categoryId: category?.id ?? null,
             countryId: country?.id ?? null,
             cityId: city?.id ?? null,
             cityName: data.get("cityName") as string,
             streetId: street?.id ?? null,
             streetName: data.get("streetName") as string,
-            buildingNumber: data.get("buildingNumber") as string,
-            numberOfRooms: numberOfRoomsResult,
-            area: areaResult,
             price: parseFloat(data.get("price") as string),
             description: data.get("description") as string,
             images: images,
@@ -278,7 +251,7 @@ export function EditPost() {
                     </Typography>
                 </Link>
                 <Typography variant="h6" color="text.primary">
-                   Edit Post
+                    Edit Post
                 </Typography>
             </Breadcrumbs>
             <Divider />
@@ -315,15 +288,6 @@ export function EditPost() {
                                             (formValid.current.name = isValid)
                                         }
                                         defaultValue={post?.name}
-                                    />
-                                </Grid>
-
-                                <Grid item xs={12}>
-                                    <ComboBox
-                                        options={typeOfRentList}
-                                        onChange={setTypeOfRent}
-                                        label={"Type Of Rent"}
-                                        defaultValue={post!.postTypeOfRent}
                                     />
                                 </Grid>
 
@@ -425,7 +389,7 @@ export function EditPost() {
                                     />
                                 </Grid>
 
-                                <Grid item xs={12}>
+                                {/* <Grid item xs={12}>
                                     <InputGroup
                                         label="Number of Rooms"
                                         field="numberOfRooms"
@@ -458,7 +422,7 @@ export function EditPost() {
                                                 : post!.area
                                         }
                                     />
-                                </Grid>
+                                </Grid> */}
 
                                 <Grid item xs={12}>
                                     <InputGroup
@@ -503,10 +467,10 @@ export function EditPost() {
                                             Image # {index + 1}
                                         </Typography>
 
-                                        <FileUploader
+                                        <FileEditUploader
                                             images={images}
                                             setImages={setImages}
-                                            maxImagesUpload={1}
+                                            maxImagesUpload={maxImagesCount}
                                             validator={AvatarValidator}
                                             defaultImage={img}
                                             onChange={(isValid) =>
@@ -532,12 +496,12 @@ export function EditPost() {
                                             {postImages.length + index + 1}
                                         </Typography>
 
-                                        <FileUploader
+                                        <FileEditUploader
                                             images={images}
                                             setImages={setImages}
-                                            maxImagesUpload={10}
+                                            maxImagesUpload={maxImagesCount}
                                             validator={AvatarValidator}
-                                            defaultImage={IMG}
+                                            defaultImage={DefaultImg}
                                             onChange={(isValid) =>
                                                 (formValid.current.images =
                                                     isValid)

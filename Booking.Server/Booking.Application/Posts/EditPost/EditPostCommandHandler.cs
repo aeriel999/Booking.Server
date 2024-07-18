@@ -1,5 +1,6 @@
 ﻿using Booking.Application.Common.Interfaces.Common;
 using Booking.Application.Common.Interfaces.Post;
+using Booking.Application.Common.Interfaces.Users;
 using Booking.Domain.Posts;
 using ErrorOr;
 using MediatR;
@@ -8,12 +9,12 @@ namespace Booking.Application.Posts.EditPost;
 
 public class EditPostCommandHandler(
 	IPostRepository postRepository,
-	IPostTypeOfRentRepository postTypeOfRentRepository,
 	IPostCategoryRepository postCategoryRepository,
 	IPostCityRepository postCityRepository,
 	IPostStreetRepository postStreetRepository,
 	IImageStorageService imageStorageService,
-	IPostImageRepository postImageRepository) 
+	IPostImageRepository postImageRepository,
+	IUserRepository userRepository) 
 	: IRequestHandler<EditPostCommand, ErrorOr<Post>>
 {
 	public async Task<ErrorOr<Post>> Handle(EditPostCommand request, CancellationToken cancellationToken)
@@ -24,6 +25,14 @@ public class EditPostCommandHandler(
 		if (post == null)
 			return Error.NotFound("Post was not found");
 
+		//Get user
+		var userOrError = await userRepository.GetUserAsync(request.UserId.ToString());
+
+		if (userOrError.IsError)
+			return Error.NotFound("User is not found");
+
+		var user = userOrError.Value;
+
 		//Check for Realtor Id matching
 		if (post.UserId != request.UserId)
 			return Error.Validation("Access deny");
@@ -32,17 +41,6 @@ public class EditPostCommandHandler(
 		if (request.Name != post.Name)
 		{
 			post.Name = request.Name;
-		}
-
-		if (request.PostTypeOfRentId != null && request.PostTypeOfRentId != post.PostTypeOfRentId)
-		{
-			// Check typeOfRent for existing
-			var typeOfRent = await postTypeOfRentRepository.GetTypeOfRentByIdAsync((Guid)request.PostTypeOfRentId);
-
-			if (typeOfRent == null)
-				return Error.NotFound("Type of rent is not found");
-
-			post.PostTypeOfRentId = (Guid)request.PostTypeOfRentId;
 		}
 
 		if (request.CategoryId != null && request.CategoryId != post.CategoryId)
@@ -107,21 +105,16 @@ public class EditPostCommandHandler(
 			}
 		}
 
-		if (request.BuildingNumber != post.BuildingNumber)
+		if (request.ZipCode != post.ZipCode)
 		{
-			post.BuildingNumber = request.BuildingNumber;
+			post.ZipCode = request.ZipCode;
 		}
 
-		if ( request.NumberOfRooms != null &&request.BuildingNumber != post.BuildingNumber)
+		if ( request.NumberOfGuests != null &&request.NumberOfGuests != post.NumberOfGuests)
 		{
-			post.NumberOfRooms = request.NumberOfRooms;
+			post.NumberOfGuests = request.NumberOfGuests;
 		}
-
-		if (request.Area != null && request.Area != post.Area)
-		{
-			post.Area = request.Area;
-		}
-
+ 
 		if (request.Price != post.Price)
 		{
 			post.Price = request.Price;
@@ -132,7 +125,7 @@ public class EditPostCommandHandler(
 			post.Description = request.Description;
 		}
 
-		post.IsActive = false;
+		post.IsActive = user.Rating >= 4.5 ? true : false;
 
 		post.EditAt = DateTime.Now.ToUniversalTime();
 
