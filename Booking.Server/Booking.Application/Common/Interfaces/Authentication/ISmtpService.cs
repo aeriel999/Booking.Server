@@ -6,10 +6,10 @@ public interface ISmtpService
 
 }
 
-//using Booking.Domain.Users;
+//using PostBooking.Domain.Users;
 //using ErrorOr;
 
-//namespace Booking.Application.Common.Interfaces.Authentication;
+//namespace PostBooking.Application.Common.Interfaces.Authentication;
 
 //public interface IUserAuthenticationService
 //{

@@ -146,20 +146,26 @@ export default function AllPostList() {
                     <TableHead>
                         <TableRow>
                             <StyledTableCell>Category</StyledTableCell>
-                            <StyledTableCell>Type Of Rent</StyledTableCell>
                             <StyledTableCell>Adress</StyledTableCell>
-                            <StyledTableCell>Name</StyledTableCell>
+                            
                             <StyledTableCell>Price</StyledTableCell>
-                            <StyledTableCell>Date of post</StyledTableCell>
-                            <StyledTableCell>Date of edit</StyledTableCell>
+                       
+                            <StyledTableCell>Discount</StyledTableCell>
 
-                            <StyledTableCell align="right">
+                            <StyledTableCell>Date of post</StyledTableCell>
+
+
+                            <StyledTableCell>Is Booking</StyledTableCell>
+
+                            <StyledTableCell >
                                 Is Active
                             </StyledTableCell>
-                            <StyledTableCell align="right">
+                            <StyledTableCell>
                                 Is Archived
                             </StyledTableCell>
-                            <StyledTableCell align="right">
+                            <StyledTableCell>More info</StyledTableCell>
+
+                            <StyledTableCell align="center">
                                 Edit
                             </StyledTableCell>
                             <StyledTableCell align="right">

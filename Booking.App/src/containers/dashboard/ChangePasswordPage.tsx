@@ -29,7 +29,7 @@ export  default function  ChangePasswordPage(){
     const [isFormValid, setIsFormValid] = useState(false);
     const formValid = useRef({ password: false, confirmPassword: false});
 
-    const confirmPassValidator = (value: string): string | false | undefined => {
+    const confirmPassValidator = (value: string | number): string | false | undefined => {
         return ConfirmPasswordValidator(password, value);
     };
 

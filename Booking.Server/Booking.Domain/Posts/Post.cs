@@ -1,5 +1,4 @@
 ﻿using Booking.Domain.Chat;
-using Booking.Domain.Constants;
 using Booking.Domain.Users;
 using System.ComponentModel.DataAnnotations.Schema;
 
@@ -56,5 +55,7 @@ public class Post
     public ICollection<PostPostTypeOfRest>? PostPostTypesOfRest { get; set; }
 
     public ICollection<PostService>? PostServices { get; set; }
+
+	public ICollection<PostBooking>? Bookings { get; set; }
 
 }

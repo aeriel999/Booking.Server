@@ -1,7 +1,7 @@
 import { Routes, Route } from "react-router-dom";
 import NotFound from "./pages/errors/NotFound.tsx";
 import RealtorRegisterPage from "./pages/accaunt/register/RealtorRegisterPage.tsx";
-import SignInPage from "./pages/accaunt/login/SignIn.tsx";
+ 
 import { useAppSelector } from "./hooks/redux/index.ts";
 import DashboardLayout from "./containers/dashboard/layouts/_DashboardLayot.tsx";
 import ChangeEmailPage from "./pages/accaunt/change-email/ChangeEmailPage.tsx";
@@ -27,12 +27,13 @@ import { EditPost } from "./containers/dashboard/EditPost.tsx";
 import PostPage from "./containers/client/PostPage.tsx";
 import RealtorPage from "./containers/client/RealtorPage.tsx";
 import { EditUserEpailPage } from "./containers/client/EditUserEmailPage.tsx";
-// import {  MessageRight } from "./components/chat/Message.tsx";
-//import { MessageLeft } from "./components/chat/Message.tsx";
+ 
 import ArchivePage from "./containers/dashboard/ArchivePage.tsx";
 import { ReviewsPage } from "./containers/dashboard/ReviewsPage.tsx";
 import './App.scss';
 import { HomePage } from "./containers/client/HomePage/HomePage.tsx";
+import SignInPage from "./pages/accaunt/login/SignIn.tsx";
+
 
 export const App: React.FC = () => {
 
@@ -53,6 +54,12 @@ export const App: React.FC = () => {
 
     return (
         <Routes>
+             <Route
+                    path="authentication/user-register"
+                    element={<UserRegisterPage />}
+                />
+                <Route path="authentication/login" element={<SignInPage />} />
+
             {isLogin && (
                 <>
                     <Route
@@ -193,6 +200,42 @@ export const App: React.FC = () => {
                 path="/authentication/reconfirm-email"
                 element={<ReConfirmEmailPage />}
             />
+               
+                <Route
+                    path="authentication/register-information/:email"
+                    element={<RegisterInformationPage />}
+                />
+                <Route
+                    path="authentication/confirm-email/:userId/:token"
+                    element={<ConfirmEmailPage />}
+                />
+                <Route
+                    path="authentication/realtor-register"
+                    element={<RealtorRegisterPage />}
+                />
+                <Route
+                    path="authentication/forgot-password"
+                    element={<ForgotPasswordPage />}
+                />
+                <Route
+                    path="authentication/forgot-password-information/:email"
+                    element={<ForgotPasswordInformationPage />}
+                />
+                <Route
+                    path="authentication/reset-password/:email/:token"
+                    element={<ResetPasswordPage />}
+                />
+                <Route
+                    path="authentication/change-email/:userId/:email/:token"
+                    element={<ChangeEmailPage />}
+                />
+                <Route
+                    path="authentication/reconfirm-email"
+                    element={<ReConfirmEmailPage />}
+                />
+                <Route path="*" element={<NotFound />} />
+            </Route>
+
         </Routes>
     );
 };

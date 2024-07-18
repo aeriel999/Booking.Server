@@ -5,7 +5,7 @@ interface InputGroupProps {
     label: string,
     type?: "text" | "password" | "email" | "number",
     field: string,
-    validator: (value: string) => string | false | undefined,
+    validator: (value: string | number) => string | false | undefined,
     onChange: (isValid: boolean) => void,
     setIncomeValue?: (value: string) => void,
     defaultValue?: string | null | number,
@@ -15,7 +15,7 @@ interface InputGroupProps {
 
 const InputGroup: FC<InputGroupProps> = ({
     label,
-    type = "text",
+    type = "text" ,
     field,
     onChange,
     validator,

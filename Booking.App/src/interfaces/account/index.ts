@@ -90,4 +90,6 @@ export interface IChangeEmail{
     userId: string | undefined,
 }
 
-
+export interface IGoogleLogin {
+    googleToken: string;
+}

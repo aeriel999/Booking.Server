@@ -3,10 +3,9 @@ import Box from '@mui/material/Box';
 import CssBaseline from '@mui/material/CssBaseline';
 import MuiAppBar, { AppBarProps as MuiAppBarProps } from '@mui/material/AppBar';
 import Toolbar from '@mui/material/Toolbar';
-
 import { Outlet, useNavigate } from "react-router-dom";
-
 import Button from "@mui/material/Button";
+
 
 import './style.scss';
 import logo from './logo.png';
@@ -76,18 +75,18 @@ export default function AnonymousDashboardLayout() {
 
                     <button onClick={() => {
                         navigate("/authentication/user-register");
-                    }}>Зареєструватися</button>
+                    }}>��������������</button>
                     <button onClick={() => {
                         navigate("/authentication/login");
-                    }}>Увійти</button>
+                    }}>�����</button>
                 </div>
                 <div className="searching">
                     <div>Travel, visit new places with TripBook!</div>
                     <div>
-                        <input placeholder="Місце подорожі?" />
-                        <input type="date" placeholder="Дата приїзду - виїзду" />
-                        <input placeholder="Кількість осіб - номер" />
-                        <button>Знайти</button>
+                        <input placeholder="̳��� �������?" />
+                        <input type="date" placeholder="���� ������ - �����" />
+                        <input placeholder="ʳ������ ��� - �����" />
+                        <button>������</button>
                     </div>
                 </div>
             </div>
@@ -106,18 +105,18 @@ export default function AnonymousDashboardLayout() {
 
                     <button onClick={() => {
                         navigate("/authentication/user-register");
-                    }}>Зареєструватися</button>
+                    }}>��������������</button>
                     <button onClick={() => {
                         navigate("/authentication/login");
-                    }}>Увійти</button>
+                    }}>�����</button>
                 </div>
                 <div className="searching">
                     <div>Travel, visit new places with TripBook!</div>
                     <div>
-                        <input placeholder="Місце подорожі?" />
-                        <input type="date" placeholder="Дата приїзду - виїзду" />
-                        <input placeholder="Кількість осіб - номер" />
-                        <button>Знайти</button>
+                        <input placeholder="̳��� �������?" />
+                        <input type="date" placeholder="���� ������ - �����" />
+                        <input placeholder="ʳ������ ��� - �����" />
+                        <button>������</button>
                     </div>
                 </div>
             </div>
