@@ -4,7 +4,7 @@ import { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { AppDispatch, RootState } from "../../store";
 import { getPostById } from "../../store/post/post.actions.ts";
-import { Button, CardMedia, Typography } from "@mui/material";
+import { Box, Button, CardMedia, Rating, Typography } from "@mui/material";
 import Grid from "@mui/material/Grid";
 import Stack from "@mui/material/Stack";
 import { APP_ENV } from "../../env";
@@ -56,15 +56,9 @@ export default function PostPage() {
                                     </Typography>
                                 }
 
-                                {post.postTypeOfRent == null ? "" :
+                                {post.numberOfGuests == null ? "" :
                                     <Typography sx={{ fontSize: 21, textAlign: "center" }} color="text.secondary" gutterBottom>
-                                        Type of rent :
-                                    </Typography>
-                                }
-
-                                {post.numberOfRooms == null ? "" :
-                                    <Typography sx={{ fontSize: 21, textAlign: "center" }} color="text.secondary" gutterBottom>
-                                        Number of rooms :
+                                        Number Of Guests :
                                     </Typography>
                                 }
 
@@ -87,17 +81,30 @@ export default function PostPage() {
                                     </Typography>
                                 }
 
-                                {post.buildingNumber == null ? "" :
+                                {post.zipCode == null ? "" :
                                     <Typography sx={{ fontSize: 21, textAlign: "center" }} color="text.secondary" gutterBottom>
-                                        Building number :
+                                        Zip Code :
                                     </Typography>
                                 }
 
-                                {post.area == null ? "" :
+                                {post.discount == null ? "" :
                                     <Typography sx={{ fontSize: 21, textAlign: "center" }} color="text.secondary" gutterBottom>
-                                        Area :
+                                        Discount :
                                     </Typography>
                                 }
+
+                                <Typography sx={{ fontSize: 21, textAlign: "center" }} color="text.secondary" gutterBottom>
+                                    Rating :
+                                </Typography>
+
+
+                                <Typography sx={{ fontSize: 21, textAlign: "center" }} color="text.secondary" gutterBottom>
+                                    Typest of rest :
+                                </Typography>
+
+                                <Typography sx={{ fontSize: 21, textAlign: "center" }} color="text.secondary" gutterBottom>
+                                    Services :
+                                </Typography>
 
                                 <Typography sx={{ fontSize: 21, textAlign: "center" }} color="text.secondary" gutterBottom>
                                     Price :
@@ -131,18 +138,11 @@ export default function PostPage() {
                                     </Typography>
                                 }
 
-                                {post.postTypeOfRent == null ? "" :
+                                {post.numberOfGuests == null ? "" :
                                     <Typography sx={{ fontSize: 21, textAlign: "center" }} color="text.secondary" gutterBottom>
-                                        {post.postTypeOfRent}
+                                        {post.numberOfGuests}
                                     </Typography>
                                 }
-
-                                {post.numberOfRooms == null ? "" :
-                                    <Typography sx={{ fontSize: 21, textAlign: "center" }} color="text.secondary" gutterBottom>
-                                        {post.numberOfRooms}
-                                    </Typography>
-                                }
-
 
                                 {post.countryName == null ? "" :
                                     <Typography sx={{ fontSize: 21, textAlign: "center" }} color="text.secondary" gutterBottom>
@@ -162,17 +162,35 @@ export default function PostPage() {
                                     </Typography>
                                 }
 
-                                {post.buildingNumber == null ? "" :
+                                {post.zipCode == null ? "" :
                                     <Typography sx={{ fontSize: 21, textAlign: "center" }} color="text.secondary" gutterBottom>
-                                        {post.buildingNumber}
+                                        {post.zipCode}
                                     </Typography>
                                 }
 
-                                {post.area == null ? "" :
+                                {post.discount == null ? "" :
                                     <Typography sx={{ fontSize: 21, textAlign: "center" }} color="text.secondary" gutterBottom>
-                                        {post.area}
+                                        {post.discount}
                                     </Typography>
                                 }
+
+                                <Rating name="half-rating-read" defaultValue={post.rate} precision={0.5} readOnly />
+
+                                <Box sx={{ display: "flex", flexWrap: "wrap" }}>
+                                    {post.typesOfRest.map((type) => (
+                                        <Box sx={{ display: "inline-block", padding: 1, border: "1px solid green" }}>
+                                            {type}
+                                        </Box>
+                                    ))}
+                                </Box>
+
+                                <Box sx={{ display: "flex", flexWrap: "wrap" }}>
+                                    {post.services.map((type) => (
+                                        <Box sx={{ display: "inline-block", padding: 1, border: "1px solid green" }}>
+                                            {type}
+                                        </Box>
+                                    ))}
+                                </Box>
 
                                 <Typography sx={{ fontSize: 21, textAlign: "center" }} color="text.secondary" gutterBottom>
                                     {post.price} UAH

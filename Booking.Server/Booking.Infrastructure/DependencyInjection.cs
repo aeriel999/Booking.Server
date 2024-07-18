@@ -87,8 +87,10 @@ public static class DependencyInjection
 		services.AddScoped<IUserMessageRepository, UserMessageRepository>();
 		services.AddScoped<IPostTypeOfRentRepository, PostTypeOfRentRepository>();
 		services.AddScoped<IUserFeedbackRepository, UserFeedbackRepository>();
-		
-		return services;
+		services.AddScoped<IPostPostTypeOfRestRepository,PostPostTypeOfRestRepository>();
+        services.AddScoped<IPostServiceRepository, PostServiceRepository>();
+
+        return services;
 	}
 
 	private static IServiceCollection AddInfrastructureServices(this IServiceCollection services)

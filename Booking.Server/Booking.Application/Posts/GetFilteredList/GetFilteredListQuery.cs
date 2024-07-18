@@ -11,6 +11,6 @@ public record GetFilteredListQuery(
     Guid? City,
     Guid? Realtor,
     int Page,
-    int SizeOfPage):IRequest<ErrorOr<PagedList<Post>>>;
+    int SizeOfPage):IRequest<ErrorOr<PagedList<Post>?>>;
 
 

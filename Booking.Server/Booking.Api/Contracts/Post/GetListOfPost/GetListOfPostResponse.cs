@@ -8,4 +8,5 @@ public record GetListOfPostResponse
     public decimal Price { get; set; }
     public required string ImagePost { get; set; }
     public DateTime PostAt { get; set; }
+    public required string[] TypesOfRest { get; set; }
 }

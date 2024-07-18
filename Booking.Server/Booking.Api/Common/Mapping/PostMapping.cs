@@ -47,7 +47,9 @@ public class PostMapping : IRegister
 			.Map(desp => desp.CityId, src => src.Street!.City!.Id)
 			.Map(desp => desp.ImagePostList, src =>
 			 src.ImagesPost != null ? src.ImagesPost.OrderBy(img => img.Priority)
-			 .Select(img => img.Name).ToArray() : Array.Empty<string>());
+			 .Select(img => img.Name).ToArray() : Array.Empty<string>())
+            .Map(desp => desp.TypesOfRest, src => src.PostPostTypesOfRest!.Select(p => p.PostTypeOfRest!.Name))
+            .Map(desp => desp.Services, src => src.PostServices!.Select(p => p.Service!.Name));
 
         config.NewConfig<Post, GetPostListByRealtorIdResponse>()
             .Map(desp => desp.Id, src => src.Id)
@@ -57,7 +59,8 @@ public class PostMapping : IRegister
         config.NewConfig<Post, GetListOfPostResponse>()
             .Map(desp => desp.Category, src => src.Category!.Name)
             .Map(desp => desp.User, src => $"{src.User!.FirstName} {src.User.LastName}")
-            .Map(desp => desp.ImagePost, src => src.ImagesPost!.FirstOrDefault(img => img.Priority == 1)!.Name);
+            .Map(desp => desp.ImagePost, src => src.ImagesPost!.FirstOrDefault(img => img.Priority == 1)!.Name)
+            .Map(desp => desp.TypesOfRest, src => src.PostPostTypesOfRest!.Select(p => p.PostTypeOfRest!.Name));
 
 
         config.NewConfig<PagedList<GetListOfPostResponse>, PagedList<Post>>()

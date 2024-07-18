@@ -31,6 +31,8 @@ import { EditUserEpailPage } from "./containers/client/EditUserEmailPage.tsx";
 //import { MessageLeft } from "./components/chat/Message.tsx";
 import ArchivePage from "./containers/dashboard/ArchivePage.tsx";
 import { ReviewsPage } from "./containers/dashboard/ReviewsPage.tsx";
+import './App.scss';
+import { HomePage } from "./containers/client/HomePage/HomePage.tsx";
 
 export const App: React.FC = () => {
 
@@ -141,7 +143,8 @@ export const App: React.FC = () => {
             )}
             <Route />
             <Route path="/" element={<AnonymousDashboardLayout />}>
-                <Route index element={<ListOfPostPage />} />
+                <Route index element={//<ListOfPostPage />
+                    <HomePage />} />
                 <Route path="post/:postId" element={<PostPage />} />
                 <Route path="post/:postId/realtor/:realtorId" element={<RealtorPage />} />
                 <Route path="dashboard/profile" element={<SignInPage />} />
@@ -150,46 +153,46 @@ export const App: React.FC = () => {
                     path="dashboard/profile/change-password"
                     element={<SignInPage />}
                 />
-                <Route
-                    path="authentication/user-register"
-                    element={<UserRegisterPage />}
-                />
-                <Route
-                    path="authentication/register-information/:email"
-                    element={<RegisterInformationPage />}
-                />
-                <Route
-                    path="authentication/confirm-email/:userId/:token"
-                    element={<ConfirmEmailPage />}
-                />
-                <Route
-                    path="authentication/realtor-register"
-                    element={<RealtorRegisterPage />}
-                />
-                <Route path="authentication/login" element={<SignInPage />} />
-                <Route
-                    path="authentication/forgot-password"
-                    element={<ForgotPasswordPage />}
-                />
-                <Route
-                    path="authentication/forgot-password-information/:email"
-                    element={<ForgotPasswordInformationPage />}
-                />
-                <Route
-                    path="authentication/reset-password/:email/:token"
-                    element={<ResetPasswordPage />}
-                />
-                <Route
-                    path="authentication/change-email/:userId/:email/:token"
-                    element={<ChangeEmailPage />}
-                />
-                <Route
-                    path="authentication/reconfirm-email"
-                    element={<ReConfirmEmailPage />}
-                />
+
                 <Route path="*" element={<NotFound />} />
             </Route>
-
+            <Route
+                path="/authentication/user-register"
+                element={<UserRegisterPage />}
+            />
+            <Route
+                path="/authentication/register-information/:email"
+                element={<RegisterInformationPage />}
+            />
+            <Route
+                path="/authentication/confirm-email/:userId/:token"
+                element={<ConfirmEmailPage />}
+            />
+            <Route
+                path="/authentication/realtor-register"
+                element={<RealtorRegisterPage />}
+            />
+            <Route path="/authentication/login" element={<SignInPage />} />
+            <Route
+                path="authentication/forgot-password"
+                element={<ForgotPasswordPage />}
+            />
+            <Route
+                path="/authentication/forgot-password-information/:email"
+                element={<ForgotPasswordInformationPage />}
+            />
+            <Route
+                path="/authentication/reset-password/:email/:token"
+                element={<ResetPasswordPage />}
+            />
+            <Route
+                path="/authentication/change-email/:userId/:email/:token"
+                element={<ChangeEmailPage />}
+            />
+            <Route
+                path="/authentication/reconfirm-email"
+                element={<ReConfirmEmailPage />}
+            />
         </Routes>
     );
 };

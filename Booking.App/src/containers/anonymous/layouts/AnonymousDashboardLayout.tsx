@@ -8,6 +8,10 @@ import { Outlet, useNavigate } from "react-router-dom";
 
 import Button from "@mui/material/Button";
 
+import './style.scss';
+import logo from './logo.png';
+import { HomePage } from '../../client/HomePage/HomePage';
+
 const drawerWidth = 240;
 
 const Main = styled("main", { shouldForwardProp: (prop) => prop !== "open" })<{
@@ -64,7 +68,62 @@ export default function AnonymousDashboardLayout() {
     const navigate = useNavigate();
 
     return (
-        <Box sx={{ display: "flex" }}>
+
+        <div className='head'>
+            <div className="shapka">
+                <div className="auth">
+                    <img src={logo} />
+
+                    <button onClick={() => {
+                        navigate("/authentication/user-register");
+                    }}>Зареєструватися</button>
+                    <button onClick={() => {
+                        navigate("/authentication/login");
+                    }}>Увійти</button>
+                </div>
+                <div className="searching">
+                    <div>Travel, visit new places with TripBook!</div>
+                    <div>
+                        <input placeholder="Місце подорожі?" />
+                        <input type="date" placeholder="Дата приїзду - виїзду" />
+                        <input placeholder="Кількість осіб - номер" />
+                        <button>Знайти</button>
+                    </div>
+                </div>
+            </div>
+            <Outlet />
+        </div>
+
+
+    );
+}
+/*
+
+<header>
+            <div className="shapka">
+                <div className="auth">
+                    <img src={logo} />
+
+                    <button onClick={() => {
+                        navigate("/authentication/user-register");
+                    }}>Зареєструватися</button>
+                    <button onClick={() => {
+                        navigate("/authentication/login");
+                    }}>Увійти</button>
+                </div>
+                <div className="searching">
+                    <div>Travel, visit new places with TripBook!</div>
+                    <div>
+                        <input placeholder="Місце подорожі?" />
+                        <input type="date" placeholder="Дата приїзду - виїзду" />
+                        <input placeholder="Кількість осіб - номер" />
+                        <button>Знайти</button>
+                    </div>
+                </div>
+            </div>
+        </header>
+
+ <Box sx={{ display: "flex" }}>
             <CssBaseline />
             <AppBar position="fixed" open={false}>
                 <Toolbar sx={{ backgroundColor: "#BD8BE7" }}>
@@ -93,5 +152,4 @@ export default function AnonymousDashboardLayout() {
                 <Outlet />
             </Main>
         </Box>
-    );
-}
+*/

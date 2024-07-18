@@ -1,0 +1,263 @@
+@mixin fontFamilyRoboto {
+    font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
+}
+
+@mixin fontFamilyBaloo2 {
+    font-family: "Baloo 2";
+}
+
+@mixin pointPosition($TOP, $RIGHT, $BOTTOM, $LEFT, $ROTATE) {
+    position: absolute;
+    top: $TOP;
+    right: $RIGHT;
+    left: $LEFT;
+    bottom: $BOTTOM;
+    transform: rotate($ROTATE);
+}
+
+@mixin move($FROM, $TO, $NUMBER) {
+
+
+
+
+    @keyframes #{movePoint+$NUMBER} {
+        from {
+            top: #{$FROM};
+        }
+
+        to {
+            top: #{$TO};
+        }
+    }
+
+    animation: #{movePoint+$NUMBER} 1s #{$NUMBER/20}s forwards;
+}
+
+/*$FROM : 0px;
+$TO : 0px;*/
+
+
+
+main {
+    width: 100%;
+    height: 2832px;
+    display: flex;
+    flex-direction: column;
+    @include fontFamilyRoboto();
+
+    .popular-places {
+        margin-top: 80px;
+        width: 100%;
+        min-height: 10.9%;
+        max-height: auto;
+        padding: 0px 2.2%;
+        box-sizing: border-box;
+
+        h2 {
+            text-align: center;
+            @include fontFamilyBaloo2();
+            color: #000;
+            font-size: 32px;
+            font-style: normal;
+            font-weight: 600;
+            line-height: normal;
+        }
+
+        h5 {
+            text-align: center;
+            @include fontFamilyBaloo2();
+            color: #000;
+            font-size: 18px;
+            font-style: normal;
+            font-weight: 400;
+            line-height: normal;
+        }
+
+        .places {
+            display: flex;
+            flex-wrap: wrap;
+            row-gap: 10px;
+            width: 100%;
+            height: 58.1%;
+            column-gap: 2.3%;
+            justify-content: center;
+
+            div {
+
+                display: flex;
+                flex-direction: column;
+
+                border-radius: 5px;
+                border: 1px solid #A2A2A2;
+                padding-bottom: 5px;
+
+                p {
+                    margin-left: 3px;
+                    margin-top: 1px;
+                    font-size: 14px;
+                    font-style: normal;
+                    font-weight: 600;
+                    line-height: normal;
+                    color: #000;
+                }
+            }
+        }
+    }
+
+    .find-dwelling {
+        display: flex;
+        width: 100%;
+        //min-width: 944px;
+        //min-height: 9.9%;
+        max-height: auto;
+        margin: 4.2% 0px;
+        border-radius: 10px;
+        border: 1px solid rgba(0, 0, 0, 0.50);
+
+        background: linear-gradient(90deg, #FFF 0%, rgba(1, 147, 146, 0.25) 59.45%);
+        box-sizing: border-box;
+
+        div {
+
+            &:first-child {
+                display: flex;
+                flex-direction: column;
+                row-gap: 21.5%;
+                height: 172px;
+                flex-basis: 25.5%;
+                //width: 25.5%;
+                min-width: 200px;
+                height: auto;
+                margin: 55px 6.7% 55px 2.9%;
+
+                p {
+                    color: #000;
+                    font-size: 30px;
+                    font-style: normal;
+                    font-weight: 700;
+                    line-height: 41px;
+                }
+
+                button {
+                    color: var(--Backgrounds-Primary, #FFF);
+                    font-size: 20px;
+                    font-style: normal;
+                    font-weight: 600;
+                    line-height: normal;
+                    padding: 10px 15px;
+                    border-radius: 10px;
+                    background: #019392;
+                    border: none;
+                    outline: none;
+                }
+            }
+
+            &:last-child {
+                position: relative;
+                height: 100%;
+                width: 526px;
+                margin-left: auto;
+                margin-right: 6.7%;
+
+
+                .point1 {
+                    @include pointPosition(72px, 522.87px, 133.87px, 5px, -13.378deg);
+                    //@include move(72px, 112px, 1);
+
+
+                }
+
+                .point2 {
+                    @include pointPosition(93.88px, 488.88px, 111.88px, 38.88px, -13.679deg);
+                    //@include move(93.88px, 133.88px, 2);
+                }
+
+                .point3 {
+                    @include pointPosition(135px, 428.33px, 71.33px, 98px, 12.222deg);
+                    //@include move(135px, 175px, 3);
+                }
+
+                .point4 {
+                    @include pointPosition(176px, 509.87px, 29.87px, 16px, -13.378deg);
+                    //@include move(176px, 216px, 4);
+                }
+
+                .point5 {
+                    @include pointPosition(5.44px, 100.32px, 260.32px, 413.56px, 19.606deg);
+                    //@include move(5.44px, 15.44px, 5);
+                    width: 18.093px;
+                    height: 18.093px;
+                }
+
+                .point6 {
+                    @include pointPosition(15px, 151.31px, 240.31px, 346.99px, -7.59deg);
+                    //@include move(15px, 25px, 6);
+                }
+
+                .point7 {
+                    @include pointPosition(0.7px, 48.74px, 222.74px, 449.7px, 7.29deg);
+                    //@include move(0.7px, 40.7px, 7);
+                }
+
+                .point8 {
+                    @include pointPosition(90.04px, 193.07px, 131.07px, 318.04px, 1.726deg);
+                    //@include move(90.04px, 130.04px, 8);
+                }
+
+                .point9 {
+                    @include pointPosition(119.37px, 95.67px, 101.67px, 425.37px, 1.868deg);
+                    //@include move(119.37px, 159.37px, 9);
+                }
+
+                .point10 {
+                    @include pointPosition(8.79px, 492.66px, 212.66px, 38.79px, 1.055deg);
+                    //@include move(8.79px, 38.79px, 10);
+                }
+
+
+            }
+        }
+
+
+    }
+
+    .bestPosts {
+        width: 100%;
+        height: 17.9%;
+
+        .text {
+            height: 24%;
+
+            p {
+                @include fontFamilyRoboto();
+                color: #000;
+                font-style: normal;
+                text-align: center;
+                line-height: normal;
+
+                &:first-child {
+                    font-size: 32px;
+                    font-weight: 600;
+                }
+
+                &:last-child {
+                    font-size: 18px;
+                    font-weight: 400;
+                    margin-bottom: 1.9%;
+                }
+            }
+        }
+
+        .posts {
+            display: flex;
+            width: 100%;
+            height: 76%;
+            column-gap: 0.7%;
+        }
+
+
+
+    }
+
+
+}

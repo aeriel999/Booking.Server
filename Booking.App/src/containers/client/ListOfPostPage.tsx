@@ -276,6 +276,13 @@ export default function ListOfPostPage() {
                                     <Typography variant="body2" color="text.secondary">
                                         Realtor : {item.user}
                                     </Typography>
+                                    <Box sx={{ display: "flex", flexWrap: "wrap" }}>
+                                        {item.typesOfRest.map((type) => (
+                                            <Box sx={{ display: "inline-block", padding: 1, border: "1px solid green" }}>
+                                                {type}
+                                            </Box>
+                                        ))}
+                                    </Box>
                                 </CardContent>
                                 <CardActions>
                                     <Button size="small" onClick={() => isLogin ? navigate(`/dashboard/post/${item.id}`) : navigate(`/post/${item.id}`)}>Learn More</Button>

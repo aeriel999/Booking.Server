@@ -107,6 +107,7 @@ public class PostRepository(BookingDbContext context) : IPostRepository
             .Include(post => post.User)
             .Include(post => post.ImagesPost)
 			.Include(post => post.Rooms)
+			.Include(post => post.PostPostTypesOfRest)
 			.ToListAsync();
     }
     public async Task<List<Post>> GetPostListWithIncludesByRealtorIdAsync(Guid realtorId)
