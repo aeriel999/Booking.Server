@@ -40,4 +40,8 @@ public record GetPostResponse
 
 	public required string[] ImagePostList { get; init; }
 
+    public required string[] TypesOfRest { get; set; }
+
+    public required string[] Services { get; set; }
+
 }

@@ -5,9 +5,9 @@ using ErrorOr;
 using MediatR;
 
 namespace Booking.Application.Posts.GetFilteredList;
-public class GetFilteredListQueryHandler(IPostRepository repository) : IRequestHandler<GetFilteredListQuery, ErrorOr<PagedList<Post>>>
+public class GetFilteredListQueryHandler(IPostRepository repository) : IRequestHandler<GetFilteredListQuery, ErrorOr<PagedList<Post>?>>
 {
-    public async Task<ErrorOr<PagedList<Post>>> Handle(GetFilteredListQuery request, CancellationToken cancellationToken)
+    public async Task<ErrorOr<PagedList<Post>?>> Handle(GetFilteredListQuery request, CancellationToken cancellationToken)
     {
        var posts = await repository.GetFilteredListAsync(request.Category,request.Country,request.City,request.Realtor);
 

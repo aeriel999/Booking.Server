@@ -64,6 +64,7 @@ export interface IPost {
     user: string;
     price: number;
     imagePost: string;
+    typesOfRest: string[];
 }
 
 export interface IPostInformation {
@@ -76,8 +77,12 @@ export interface IPostInformation {
     cityName: string;
     cityId: string;
     street: string;
-    buildingNumber: string;
-    numberOfRooms: number;
+    zipCode: number;
+    discount: number;
+    rate: number;
+    typesOfRest: string[];
+    services: string[];
+    numberOfGuests: number;
     user: string;
     userId: string;
     isArchive: boolean;
@@ -180,7 +185,7 @@ export interface IPostEdit {
     cityName: string | null;
     streetId: string | null;
     streetName: string | null;
-     
+
     price: number | null;
     description: string | null;
     images: File[] | null;
