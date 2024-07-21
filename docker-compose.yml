@@ -16,8 +16,8 @@ services:
     networks:
       - myAppNetwork
     volumes:
-    #   - c:/web/booking/postgresql:/var/lib/postgresql/data  # Use the volume name msvol here
-       - /data/postgresql/data:/var/lib/postgresql/data
+       - c:/web/booking/postgresql:/var/lib/postgresql/data  # Use the volume name msvol here
+    #   - /data/postgresql/data:/var/lib/postgresql/data
     deploy:
       restart_policy:
         condition: on-failure
@@ -25,10 +25,10 @@ services:
 
   app:
     container_name: web_booking_container
-   # build:
-   #   context: .
-    #  dockerfile: Booking.Server/Dockerfile
-    image: tanmos/bookingapi
+    build:
+      context: .
+      dockerfile: Booking.Server/Dockerfile
+    #image: tanmos/bookingapi
     ports:
       - "5926:8080"
     networks:
@@ -36,19 +36,11 @@ services:
     depends_on:
       - postgresServerDb
     volumes:
- #      - c:/web/booking/images:/app/images  # Use the volume name appvol here
-     - /data/website/images:/app/images  # Use the volume name appvol here
+       - c:/web/booking/images:/app/images  # Use the volume name appvol here
+ #    - /data/website/images:/app/images  # Use the volume name appvol here
     deploy:
       restart_policy:
         condition: on-failure
         max_attempts: 5
       
 
-  client:
-    container_name: booking_client_container
-#    build:
-#      context: .
-#      dockerfile: my-react-app/Dockerfile
-    image: tanmos/booking_client
-    ports:
-      - "8526:80"
