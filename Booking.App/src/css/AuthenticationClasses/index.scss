@@ -3,6 +3,7 @@
 body {
     margin: 0;
     padding: 0;
+    font-family: $primary-font-family;
 }
 
 #root {
@@ -17,6 +18,7 @@ body {
 
 .content {
     height: 100vh;
+    min-height: 700px;
     display: flex;
     flex-direction: column;
     justify-content: space-between;
@@ -25,7 +27,6 @@ body {
     background-size: cover;
     background-repeat: no-repeat;
     background-position: center center;
-    font-family: $primary-font-family;
 }
 
 .authHeader {
@@ -84,8 +85,8 @@ body {
     text-align: center;
 
     h1 {
-        font-size: $primary-font-normal-size;
-        font-weight: $primary-font-bold-weight;
+        font-size: $big-font-size;
+        font-weight: $bold-font-weight;
         font-style: normal;
         line-height: normal;
         margin: 0;
@@ -127,15 +128,11 @@ body {
     border-radius: 5px;
     border: 1px solid $border-color;
     background: #fff;
-
-    p {
-        color: $secondary-font-color;
-        font-family: $primary-font-family;
-        font-size: $primary-font-small-size;
-        font-style: normal;
-        font-weight: $primary-font-light-weight;
-        line-height: normal;
-    }
+    color: $secondary-font-color;
+    font-size: $medium-font-size;
+    font-style: normal;
+    font-weight: $light-font-weight;
+    line-height: normal;
 }
 
 .errorFormInput {
@@ -151,10 +148,9 @@ body {
 
     p {
         color: $secondary-font-color;
-        font-family: $primary-font-family;
-        font-size: $primary-font-small-size;
+        font-size: $medium-font-size;
         font-style: normal;
-        font-weight: $primary-font-light-weight;
+        font-weight: $light-font-weight;
         line-height: normal;
     }
 }
@@ -176,10 +172,9 @@ body {
     border-radius: 5px;
     background: $primary-button-color;
     color: $primary-font-color;
-    font-family: $primary-font-family;
-    font-size: $primary-font-small-size;
+    font-size: $medium-font-size;
     font-style: normal;
-    font-weight: $primary-font-medium-weight;
+    font-weight: $normal-font-weight;
     line-height: normal;
 }
 
@@ -199,10 +194,9 @@ body {
 
 .linkConfirmation {
     color: $primary-font-color;
-    font-family: $secondary-font-family;
-    font-size: $secondary-font-small-size;
+    font-size: $small-font-size;
     font-style: normal;
-    font-weight: $secondary-font-weight;
+    font-weight: $medium-font-weight;
     line-height: normal;
 }
 
@@ -211,10 +205,9 @@ body {
     justify-content: flex-start;
     gap: 5px;
     color: $error-font-color;
-    font-family: $secondary-font-family;
-    font-size: $secondary-font-small-size;
+    font-size: $small-font-size;
     font-style: normal;
-    font-weight: $secondary-font-weight;
+    font-weight: $medium-font-weight;
     line-height: normal;
     padding: 0;
     margin: 0;
@@ -234,10 +227,9 @@ body {
 
     p {
         text-align: center;
-        font-family: $primary-font-family;
-        font-size: $primary-font-medium-size;
+        font-size: $normal-font-size;
         font-style: normal;
-        font-weight: $primary-font-normal-weight;
+        font-weight: $medium-font-weight;
         line-height: normal;
     }
 }
@@ -252,15 +244,15 @@ body {
     p {
         color: $primary-font-color;
         text-align: center;
-        font-family: $secondary-font-family;
-        font-size: $primary-font-small-size;
+        font-size: $extra-small-font-size;
         font-style: normal;
-        font-weight: $secondary-font-weight;
+        font-weight: $medium-font-weight;
         line-height: normal;
         margin: 0;
 
         a {
             color: $link-color;
+            text-decoration: none;
         }
     }
 }

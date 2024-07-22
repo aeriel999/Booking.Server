@@ -4,7 +4,9 @@ body {
 }
 
 @mixin fontFamily {
-    font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
+    font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI",
+        Roboto, Oxygen, Ubuntu, Cantarell, "Open Sans", "Helvetica Neue",
+        sans-serif;
 }
 
 .head {
@@ -14,7 +16,12 @@ body {
     //max-width: 1620px;
     min-width: 1363px;
     height: 543px;
-    background: linear-gradient(0deg, rgba(0, 0, 0, 0.35) 0%, rgba(0, 0, 0, 0.35) 100%), url('./background.png') lightgray 50% / cover no-repeat;
+    background: linear-gradient(
+            0deg,
+            rgba(0, 0, 0, 0.35) 0%,
+            rgba(0, 0, 0, 0.35) 100%
+        ),
+        url("./background.png") lightgray 50% / cover no-repeat;
     padding: 10px 180px 10px 180px;
 
     div.shapka {
@@ -40,12 +47,12 @@ body {
 
             button {
                 height: auto;
-                background-color: #00C2C1;
+                background-color: #00c2c1;
                 border-radius: 7px;
                 font-size: 20px;
                 outline: none;
                 padding: 10px 15px;
-                color: #FFFFFF;
+                color: #ffffff;
                 align-self: center;
                 border: 1px solid transparent;
 
@@ -53,11 +60,9 @@ body {
                     border-color: white;
                 }
             }
-
         }
 
         div.searching {
-
             display: flex;
             flex-direction: column;
             row-gap: 25.8%;
@@ -71,12 +76,11 @@ body {
                     font-size: 50px;
                     font-style: normal;
                     font-weight: 700;
-                    color: #FFFFFF;
+                    color: #ffffff;
                     width: 59.4%;
                     height: 42.7%;
                     line-height: 115%;
                     min-width: 510px;
-
                 }
 
                 &:last-child {
@@ -86,7 +90,7 @@ body {
                     column-gap: 0.87%;
                     width: 98.6%;
                     height: 31.4%;
-                    background-color: #FFFFFF;
+                    background-color: #ffffff;
                     border-radius: 10px;
                     padding: 1.3%;
                     outline: none;
@@ -99,21 +103,19 @@ body {
                         border: 1px solid #363838;
 
                         &:nth-child(1)::placeholder::before {
-                            content: url('./location.png');
+                            content: url("./location.png");
                         }
 
                         &:nth-child(2)::placeholder::before {
-                            content: url('./calendar.png');
+                            content: url("./calendar.png");
                         }
 
                         &:nth-child(3)::placeholder::before {
-                            content: url('./users.png');
-
+                            content: url("./users.png");
                         }
                     }
 
                     button {
-
                         display: flex;
                         column-gap: 10px;
                         align-items: center;
@@ -122,8 +124,8 @@ body {
                         height: 100%;
                         padding: 18.8px;
                         border-radius: 5px;
-                        background: #00C2C1;
-                        color: #FFFFFF;
+                        background: #00c2c1;
+                        color: #ffffff;
                         outline: none;
                         border: 1px solid transparent;
 
@@ -132,15 +134,11 @@ body {
                         }
 
                         &::before {
-                            content: url('./tabler_search.png');
+                            content: url("./tabler_search.png");
                         }
                     }
-
                 }
             }
-
         }
-
-
     }
 }

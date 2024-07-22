@@ -1,5 +1,6 @@
 import React from "react";
 import { UseFormRegister, UseFormSetValue } from "react-hook-form";
+import "../../css/AuthenticationClasses/index.scss";
 
 type InputFieldProps = {
     placeholder: string;
