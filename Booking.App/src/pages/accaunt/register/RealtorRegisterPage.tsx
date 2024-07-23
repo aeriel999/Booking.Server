@@ -53,16 +53,7 @@ export default function RealtorRegisterPage() {
     const [errorMessage, setErrorMessage] = useState<string | undefined>(
         undefined
     );
-    const [isFormValid, setIsFormValid] = useState(false);
-    const formValid = useRef({
-        email: false,
-        password: false,
-        confirmPassword: false,
-        firstName: false,
-        lastName: false,
-        phoneNumber: false,
-        avatar: false,
-    });
+
     const [isPhoneValid, setIsPhoneValid] = useState(true);
     const [images, setImages] = useState<File[]>([]);
     const [phone, setPhone] = useState<string>("");
