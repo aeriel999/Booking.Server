@@ -30,9 +30,9 @@ import MuiPhoneNumber from "mui-phone-number";
 import { isValidPhoneNumber } from "libphonenumber-js";
 import IMG from "../../../assets/avatar-profile-icon-vector-illustration_276184-165.jpg";
 import FileUploader from "../../../components/common/FileUploader.tsx";
+import Header from "../../../components/authentification/Header.tsx";
 import { useForm } from "react-hook-form";
 import InputField from "../../../components/common/InputField.tsx";
-import Header from "../../../components/authentification/Header.tsx";
 
 export interface IUploadedFile {
     lastModified: number;
@@ -57,18 +57,6 @@ export default function RealtorRegisterPage() {
     const [isPhoneValid, setIsPhoneValid] = useState(true);
     const [images, setImages] = useState<File[]>([]);
     const [phone, setPhone] = useState<string>("");
-
-    // const confirmPassValidator = (
-    //     value: string
-    // ): string | false | undefined => {
-    //     return ConfirmPasswordValidator(password, value);
-    // };
-
-    // function handleChange() {
-    //     setIsFormValid(
-    //         Object.values(formValid.current).every((isValid) => isValid)
-    //     );
-    // }
 
     const {
         register,
@@ -113,7 +101,7 @@ export default function RealtorRegisterPage() {
     //         }
     //     }
     // };
-    // console.log("isFormValidt", isFormValid);
+
     return (
         <div className="content">
             <Header />
@@ -130,6 +118,57 @@ export default function RealtorRegisterPage() {
                             id="loginFormTop"
                         >
                             <div className="loginFields">
+                                <InputField
+                                    placeholder="First name"
+                                    type="text"
+                                    name="firstName"
+                                    register={register}
+                                    setValue={setValue}
+                                    className={
+                                        errors.firstName
+                                            ? "errorFormInput"
+                                            : "formInput"
+                                    }
+                                />
+                                {errors.firstName && (
+                                    <p className="error">
+                                        <p>*</p>
+                                        {errors.firstName.message}
+                                    </p>
+                                )}
+
+                                <InputField
+                                    placeholder="Last name"
+                                    type="text"
+                                    name="lastName"
+                                    register={register}
+                                    setValue={setValue}
+                                    className={
+                                        errors.lastName
+                                            ? "errorFormInput"
+                                            : "formInput"
+                                    }
+                                />
+                                {errors.lastName && (
+                                    <p className="error">
+                                        <p>*</p>
+                                        {errors.lastName.message}
+                                    </p>
+                                )}
+
+                                <Grid item xs={12}>
+                                    <MuiPhoneNumber
+                                        defaultCountry={"ua"}
+                                        onChange={(e) => {
+                                            setIsPhoneValid(
+                                                isValidPhoneNumber(e as string)
+                                            );
+                                            setPhone(e as string);
+                                        }}
+                                        error={!isPhoneValid}
+                                    />
+                                </Grid>
+
                                 <InputField
                                     placeholder="Email"
                                     type="email"
@@ -191,7 +230,7 @@ export default function RealtorRegisterPage() {
 
                             <div id="loginFormBottom">
                                 <button type="submit" className="authButton">
-                                    Register
+                                    Submit
                                 </button>
 
                                 <div id="secondaryRegisterText">
