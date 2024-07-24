@@ -38,6 +38,7 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using System.Security.Claims;
 using Booking.Application.Posts.GetPostPostTypesOfRestList;
+using Booking.Api.Contracts.Post.GetPostPostTypesOfRest;
 
 namespace Booking.Api.Controllers;
 
@@ -294,12 +295,12 @@ public class PostController(ISender mediatr, IMapper mapper) : ApiController
 
 	 
 	[HttpGet("get-post-types-of-rest-list")]
-	public async Task<IActionResult> GetPostPostTypesOfRestListAsync()
+	public async Task<IActionResult> GetPostTypesOfRestListAsync()
 	{
-		var getPostTypesOfRestResult = await mediatr.Send(new GetPostPostTypesOfRestListQuery());
+		var getPostTypesOfRestResult = await mediatr.Send(new GetPostTypesOfRestListQuery());
 
 		return getPostTypesOfRestResult.Match(
-			getPostTypesOfRestResult => Ok(mapper.Map<List<GetCountryResponse>>(getPostTypesOfRestResult)),
+			getPostTypesOfRestResult => Ok(mapper.Map<List<GetPostTypesOfRestResponse>>(getPostTypesOfRestResult)),
 			errors => Problem(errors));
 	}
 }

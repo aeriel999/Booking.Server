@@ -5,16 +5,16 @@ using Microsoft.EntityFrameworkCore;
 
 namespace Booking.Infrastructure.Repositories;
 
-public class PostTypeOfRentRepository(BookingDbContext context) : IPostTypeOfRentRepository
+public class PostTypeOfRestRepository(BookingDbContext context) : IPostTypeOfRestRepository
 {
-	private readonly DbSet<PostTypeOfRent> _dbSet = context.Set<PostTypeOfRent>();
+	private readonly DbSet<PostTypeOfRest> _dbSet = context.Set<PostTypeOfRest>();
 	 
-	public async Task<List<PostTypeOfRent>> GetListTypeOfRentAsync()
+	public async Task<List<PostTypeOfRest>> GetListTypeOfRentAsync()
 	{
 		return await _dbSet.ToListAsync();
 	}
 
-	public async Task<PostTypeOfRent?> GetTypeOfRentByIdAsync(Guid id)
+	public async Task<PostTypeOfRest?> GetTypeOfRentByIdAsync(Guid id)
 	{
 		return await _dbSet.FindAsync(id);
 	}

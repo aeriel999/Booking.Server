@@ -10,12 +10,10 @@ public class PostPostTypeOfRestRepository(BookingDbContext context) : IPostPostT
 
     public async Task Create(PostPostTypeOfRest postPostTypeOfRest)
     {
-        await _dbSet.AddAsync(postPostTypeOfRest);      
-    }
+        await _dbSet.AddAsync(postPostTypeOfRest);
 
-	public async Task<List<PostPostTypeOfRest>?> GetListPostPostTypeOfRestAsync()
-	{
-		return await _dbSet.ToListAsync();
+		await context.SaveChangesAsync();
 	}
+
 }
 

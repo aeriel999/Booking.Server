@@ -9,6 +9,7 @@ using Booking.Api.Contracts.Post.GetPost;
 using Booking.Api.Contracts.Post.GetPostForEditing;
 using Booking.Api.Contracts.Post.GetPostListByRealtorId;
 using Booking.Api.Contracts.Post.GetPostListForRealtor;
+using Booking.Api.Contracts.Post.GetPostPostTypesOfRest;
 using Booking.Api.Contracts.Post.GetStreets;
 using Booking.Api.Contracts.Post.GetTypeOfPost;
 using Booking.Application.Common.Behaviors;
@@ -176,7 +177,7 @@ public class PostMapping : IRegister
 		config.NewConfig<PagedList<Post>, PagedList<GetArchivedPostListForRealtorResponse>>();
 
 
-		config.NewConfig<PostCategory, GetCategoryResponse>();
-		config.NewConfig<List<PostCategory>, List<GetCategoryResponse>>();
+		config.NewConfig<PostTypeOfRest, GetPostTypesOfRestResponse>();
+		config.NewConfig<List<PostTypeOfRest>, List<GetPostTypesOfRestResponse>>();
 	}
 }

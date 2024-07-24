@@ -4,5 +4,5 @@ using MediatR;
 
 namespace Booking.Application.Posts.GetPostPostTypesOfRestList;
 
-public class GetPostPostTypesOfRestListQuery() : IRequest<ErrorOr<List<PostPostTypeOfRest>>>;
+public class GetPostTypesOfRestListQuery() : IRequest<ErrorOr<List<PostTypeOfRest>>>;
  
