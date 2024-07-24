@@ -13,7 +13,7 @@ import {
     userRegister
 } from "./account.actions.ts";
 import {Status} from "../../utils/enum";
-import {IAccountState} from "../../interfaces/account";
+import {IAccountState, IRealtorRegister} from "../../interfaces/account";
 
 function isRejectedAction(action: AnyAction): action is RejectedAction {
     return action.type.endsWith('/rejected');
@@ -68,6 +68,7 @@ const initialState: IAccountState = {
     token: null,
     isLogin: false,
     status: Status.IDLE,
+    refisterData: null
 };
 
 export const accountsSlice = createSlice({
@@ -85,6 +86,12 @@ export const accountsSlice = createSlice({
             state.token = null;
             state.isLogin = false;
         },
+
+        realtorRegisterFirstStep: (state, action: PayloadAction<IRealtorRegister>) => {
+ 
+            state.refisterData =  action.payload;
+
+        }
 
     },
     extraReducers: (builder) => {
@@ -156,5 +163,6 @@ export const accountsSlice = createSlice({
 });
 
 export const { autoLogin,
-                logout} = accountsSlice.actions;
+                logout,
+                realtorRegisterFirstStep} = accountsSlice.actions;
 export default accountsSlice.reducer;

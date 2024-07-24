@@ -33,6 +33,7 @@ import { ReviewsPage } from "./containers/dashboard/ReviewsPage.tsx";
 import "./App.scss";
 import { HomePage } from "./containers/client/HomePage/HomePage.tsx";
 import SignInPage from "./pages/accaunt/login/SignIn.tsx";
+import RealtorRegisterAvatarPage from "./pages/accaunt/register/RealtotRegisterAvatarPage.tsx";
 
 export const App: React.FC = () => {
     const { isLogin, user } = useAppSelector((state) => state.account);
@@ -59,6 +60,11 @@ export const App: React.FC = () => {
             <Route
                 path="/authentication/realtor-register"
                 element={<RealtorRegisterPage />}
+            />
+
+            <Route
+                path="/authentication/realtor-register-add-avatar"
+                element={<RealtorRegisterAvatarPage />}
             />
             <Route path="authentication/login" element={<SignInPage />} />
 

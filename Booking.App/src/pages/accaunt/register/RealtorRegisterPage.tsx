@@ -28,34 +28,25 @@ import { useNavigate } from "react-router-dom";
 import ErrorHandler from "../../../components/common/ErrorHandler.ts";
 import MuiPhoneNumber from "mui-phone-number";
 import { isValidPhoneNumber } from "libphonenumber-js";
-import IMG from "../../../assets/avatar-profile-icon-vector-illustration_276184-165.jpg";
+
 import FileUploader from "../../../components/common/FileUploader.tsx";
 import Header from "../../../components/authentification/Header.tsx";
 import { useForm } from "react-hook-form";
 import InputField from "../../../components/common/InputField.tsx";
+import { realtorRegisterFirstStep } from "../../../store/accounts/account.slice.ts";
 
-export interface IUploadedFile {
-    lastModified: number;
-    lastModifiedDate: Date;
-    name: string;
-    originFileObj: File;
-    percent: number;
-    size: number;
-    thumbUrl: string;
-    type: string;
-    uid: string;
-}
+
 
 export default function RealtorRegisterPage() {
     const dispatch = useAppDispatch();
     const navigate = useNavigate();
-    const [password, setPassword] = useState("");
+     
     const [errorMessage, setErrorMessage] = useState<string | undefined>(
         undefined
     );
 
     const [isPhoneValid, setIsPhoneValid] = useState(true);
-    const [images, setImages] = useState<File[]>([]);
+   
     const [phone, setPhone] = useState<string>("");
 
     const {
@@ -67,10 +58,10 @@ export default function RealtorRegisterPage() {
 
     const onSubmit = async (data: IRealtorRegister) => {
         try {
-            const response = await dispatch(realtorRegister(data));
+            const response = await dispatch(realtorRegisterFirstStep(data));
             unwrapResult(response);
 
-            navigate(`/authentication/register-information/${data.email}`);
+            navigate(`/authentication/realtor-register-add-avatar`);
         } catch (error) {
             setErrorMessage(ErrorHandler(error));
         }
@@ -156,19 +147,21 @@ export default function RealtorRegisterPage() {
                                     </p>
                                 )}
 
-                                <Grid item xs={12}>
+                                <Grid className="formInput">
                                     <MuiPhoneNumber
+                                     
                                         defaultCountry={"ua"}
                                         onChange={(e) => {
                                             setIsPhoneValid(
                                                 isValidPhoneNumber(e as string)
                                             );
                                             setPhone(e as string);
-                                        }}
+                                        }
+                                    }
                                         error={!isPhoneValid}
                                     />
                                 </Grid>
-
+ 
                                 <InputField
                                     placeholder="Email"
                                     type="email"
@@ -308,19 +301,7 @@ export default function RealtorRegisterPage() {
         //                         error={!isPhoneValid}
         //                     />
         //                 </Grid>
-        //                 <Grid item xs={12}>
-        //                     <FileUploader
-        //                         images={images}
-        //                         setImages={setImages}
-        //                         maxImagesUpload={1}
-        //                         validator={AvatarValidator}
-        //                         onChange={(isValid) =>
-        //                             (formValid.current.avatar = isValid)
-        //                         }
-        //                         onDelete={handleChange}
-        //                         defaultImage={IMG}
-        //                     ></FileUploader>
-        //                 </Grid>
+       
         //                 <Grid item xs={12}>
         //                     <InputGroup
         //                         label="Email"
