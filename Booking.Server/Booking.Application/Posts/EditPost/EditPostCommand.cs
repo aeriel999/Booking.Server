@@ -19,6 +19,8 @@ public record EditPostCommand(
 	string? Description,
 	decimal Price,
 	int? Discount,
+	List<Guid>? PostPostTypesOfRest,
+	List<Guid>? PostServices,
 	List<byte[]>? Images,
 	List<string>? DeleteImages) : IRequest<ErrorOr<Post>>;
 

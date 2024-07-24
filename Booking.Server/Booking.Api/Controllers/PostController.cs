@@ -37,6 +37,7 @@ using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using System.Security.Claims;
+using Booking.Application.Posts.GetPostPostTypesOfRestList;
 
 namespace Booking.Api.Controllers;
 
@@ -168,6 +169,7 @@ public class PostController(ISender mediatr, IMapper mapper) : ApiController
 
 		return Ok(response);
 	}
+
     [AllowAnonymous]
     [HttpGet("get-street-list")]
 	public async Task<IActionResult> GetStreetsListByCityIdAsync(
@@ -287,6 +289,17 @@ public class PostController(ISender mediatr, IMapper mapper) : ApiController
 
 		return repostPostResult.Match(
 			getPostListForRealtor => Ok(repostPostResult.Value),
+			errors => Problem(errors));
+	}
+
+	 
+	[HttpGet("get-post-types-of-rest-list")]
+	public async Task<IActionResult> GetPostPostTypesOfRestListAsync()
+	{
+		var getPostTypesOfRestResult = await mediatr.Send(new GetPostPostTypesOfRestListQuery());
+
+		return getPostTypesOfRestResult.Match(
+			getPostTypesOfRestResult => Ok(mapper.Map<List<GetCountryResponse>>(getPostTypesOfRestResult)),
 			errors => Problem(errors));
 	}
 }

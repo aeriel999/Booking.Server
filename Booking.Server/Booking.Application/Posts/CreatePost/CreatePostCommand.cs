@@ -18,5 +18,7 @@ public record CreatePostCommand(
 	string? Description,
 	decimal Price,
 	int? Discount,
+	List<Guid>? PostPostTypesOfRest,
+	List<Guid>? PostServices,
 	List<byte[]> Images) : IRequest<ErrorOr<Post>>;
  

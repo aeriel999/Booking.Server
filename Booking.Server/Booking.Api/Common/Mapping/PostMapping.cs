@@ -174,5 +174,9 @@ public class PostMapping : IRegister
 			.Map(desp => desp.IsActive, src => src.IsActive);
 
 		config.NewConfig<PagedList<Post>, PagedList<GetArchivedPostListForRealtorResponse>>();
+
+
+		config.NewConfig<PostCategory, GetCategoryResponse>();
+		config.NewConfig<List<PostCategory>, List<GetCategoryResponse>>();
 	}
 }
