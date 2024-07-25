@@ -120,7 +120,7 @@ export default function RealtorRegisterPage() {
                                         error={!isPhoneValid}
                                     />
                                 </Grid>
-
+                                
                                 <InputField
                                     placeholder="Email"
                                     type="email"

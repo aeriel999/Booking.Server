@@ -31,7 +31,7 @@ export default function RealtorRegisterAvatarPage() {
                 const response = await dispatch(realtorRegister(model));
                 unwrapResult(response);
 
-                navigate(`/authentication/realtor-register-add-avatar`);
+                navigate(`/authentication/register-information/${model.email}`);
             } catch (error) {
                 setErrorMessage(ErrorHandler(error));
             }
