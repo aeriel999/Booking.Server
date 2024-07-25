@@ -11,7 +11,7 @@ export interface IAccountState {
     token: string | null;
     isLogin: boolean;
     status: Status;
-    refisterData: IRealtorRegister | null;
+    registerData: IRealtorRegister | null;
 }
 
 export interface IConfirmEmail {

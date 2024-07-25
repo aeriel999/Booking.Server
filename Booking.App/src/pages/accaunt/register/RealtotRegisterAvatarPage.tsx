@@ -4,15 +4,45 @@ import { AvatarValidator } from "../../../validations/account";
 import { useState } from "react";
 import AvatarUploader from "../../../components/common/AvatarUploader";
 import { useNavigate } from "react-router-dom";
+import { useAppDispatch, useAppSelector } from "../../../hooks/redux";
+import { IRealtorRegister } from "../../../interfaces/account";
+import { realtorRegister } from "../../../store/accounts/account.actions";
+import { unwrapResult } from "@reduxjs/toolkit";
+import ErrorHandler from "../../../components/common/ErrorHandler";
+import OutlinedErrorAlert from "../../../components/common/ErrorAlert";
 
 export default function RealtorRegisterAvatarPage() {
+    const { registerData } = useAppSelector((state) => state.account);
+    const dispatch = useAppDispatch();
     const [image, setImage] = useState<File | null>();
     const navigate = useNavigate();
-    
+    const [errorMessage, setErrorMessage] = useState<string | undefined>(
+        undefined
+    );
+
+    const handleSubmit = async () => {
+        if (registerData) {
+            const model: IRealtorRegister = {
+                ...registerData,
+                avatar: image,
+            };
+
+            try {
+                const response = await dispatch(realtorRegister(model));
+                unwrapResult(response);
+
+                navigate(`/authentication/realtor-register-add-avatar`);
+            } catch (error) {
+                setErrorMessage(ErrorHandler(error));
+            }
+        }
+    };
+
     return (
         <div className="content">
             <Header />
             <div id="addAavatarContainer">
+                {errorMessage && <OutlinedErrorAlert message={errorMessage} />}
                 <div id="avatarContainer">
                     <AvatarUploader
                         image={image}
@@ -27,11 +57,12 @@ export default function RealtorRegisterAvatarPage() {
                 </div>
 
                 <div className="endRegisterArea">
-                    <button className="backArrow" onClick={
-                        () => {
+                    <button
+                        className="backArrow"
+                        onClick={() => {
                             navigate(`/authentication/realtor-register`);
-                        }
-                    }>
+                        }}
+                    >
                         <div id="arrow">
                             <svg
                                 xmlns="http://www.w3.org/2000/svg"
@@ -52,10 +83,12 @@ export default function RealtorRegisterAvatarPage() {
                         </div>
                     </button>
 
-                    <button  
-                    className={`endRegisterButton ${image ? "active" : ""}`}>
-                            Complete Registration
-                        </button>
+                    <button
+                        onClick={handleSubmit}
+                        className={`endRegisterButton ${image ? "active" : ""}`}
+                    >
+                        Complete Registration
+                    </button>
                 </div>
             </div>
         </div>

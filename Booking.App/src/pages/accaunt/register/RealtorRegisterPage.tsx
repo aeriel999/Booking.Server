@@ -4,7 +4,7 @@ import { realtorRegisterResolver } from "../../../validations/account";
 import { useState } from "react";
 import { IRealtorRegister } from "../../../interfaces/account";
 import { unwrapResult } from "@reduxjs/toolkit";
-import { useAppDispatch } from "../../../hooks/redux";
+import { useAppDispatch, useAppSelector } from "../../../hooks/redux";
 import OutlinedErrorAlert from "../../../components/common/ErrorAlert.tsx";
 import { useNavigate } from "react-router-dom";
 import ErrorHandler from "../../../components/common/ErrorHandler.ts";
@@ -16,6 +16,7 @@ import InputField from "../../../components/common/InputField.tsx";
 import { realtorRegisterFirstStep } from "../../../store/accounts/account.slice.ts";
 
 export default function RealtorRegisterPage() {
+    const { registerData } = useAppSelector((state) => state.account);
     const dispatch = useAppDispatch();
     const navigate = useNavigate();
 
@@ -77,6 +78,7 @@ export default function RealtorRegisterPage() {
                                             ? "errorFormInput"
                                             : "formInput"
                                     }
+                                    defaultValue={registerData?.firstName}
                                 />
                                 {errors.firstName && (
                                     <p className="error">
@@ -96,6 +98,8 @@ export default function RealtorRegisterPage() {
                                             ? "errorFormInput"
                                             : "formInput"
                                     }
+                                    defaultValue={registerData?.lastName}
+
                                 />
                                 {errors.lastName && (
                                     <p className="error">
@@ -128,6 +132,7 @@ export default function RealtorRegisterPage() {
                                             ? "errorFormInput"
                                             : "formInput"
                                     }
+                                    defaultValue={registerData?.email}
                                 />
                                 {errors.email && (
                                     <p className="error">
