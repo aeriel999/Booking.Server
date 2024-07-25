@@ -256,3 +256,95 @@ body {
         }
     }
 }
+
+#addAavatarContainer {
+    display: flex;
+    width: 460px;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 48px;
+    margin-bottom: 20%;
+}
+
+#avatarContainer {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 34px;
+    align-self: stretch;
+}
+
+#avatarUpload {
+    display: flex;
+    width: 220px;
+    flex-direction: column;
+    align-items: center;
+    gap: 14px;
+}
+
+#uploadAvatarButton {
+    color: $primary-font-color;
+    text-align: center;
+    font-size: $pre-small-font-size;
+    font-style: normal;
+    font-weight: $light-font-weight;
+    line-height: normal;
+    text-decoration-line: underline;
+}
+
+#uploadAvatarText {
+    color: $primary-font-color;
+    text-align: center;
+    font-size: $normal-font-size;
+    font-style: normal;
+    font-weight: $medium-font-weight;
+    line-height: normal;
+}
+
+.endRegisterArea {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 30px;
+    align-self: stretch;
+}
+
+.backArrow {
+    display: flex;
+    width: 60px;
+    height: 60px;
+    padding-left: 10px;
+    align-items: center;
+    border-radius: 5px;
+    border: 1.5px solid $primary-font-color;
+    background: $back-button-background;
+
+    &:hover {
+        background-color: $primary-button-color;
+    }
+}
+
+#arrow {
+    display: flex;
+    align-self: center;
+}
+
+.endRegisterButton {
+    display: flex;
+    width: 365px;
+    height: 60px;
+    justify-content: center;
+    align-items: center;
+    border-radius: 5px;
+    background: $register-button-background;
+    box-shadow: 0px 4px 4px 0px $register-button-border-color;
+    color: $primary-font-color;
+    font-size: 24px;
+    font-style: normal;
+    font-weight: 500;
+    line-height: normal;
+
+    &.active {
+        background: $primary-button-color;
+    }
+}

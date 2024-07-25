@@ -3,7 +3,7 @@ import Button from '@mui/material/Button'
 import IconButton from '@mui/material/IconButton'
 import CancelIcon from '@mui/icons-material/Cancel'
 import { Grid } from '@mui/material'
-import IMG from  "../../assets/avatar-profile-icon-vector-illustration_276184-165.jpg"
+import IMG from  "../../assets/Auth/image 20.svg";
 import OutlinedErrorAlert from "./ErrorAlert.tsx";
 
 type FileUploadProps = {
