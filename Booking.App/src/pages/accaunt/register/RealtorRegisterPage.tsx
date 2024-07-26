@@ -61,12 +61,12 @@ export default function RealtorRegisterPage() {
                 <div id="authCenterContainer">
                     <h1> Register</h1>
 
-                    <div id="loginForm">
+                    <div className="authFormContainer">
                         <form
                             onSubmit={handleSubmit(onSubmit)}
-                            id="loginFormTop"
+                            className="authForm"
                         >
-                            <div className="loginFields">
+                            <div className="authFields">
                                 <InputField
                                     placeholder="First name"
                                     type="text"
@@ -99,7 +99,6 @@ export default function RealtorRegisterPage() {
                                             : "formInput"
                                     }
                                     defaultValue={registerData?.lastName}
-
                                 />
                                 {errors.lastName && (
                                     <p className="error">
@@ -120,7 +119,7 @@ export default function RealtorRegisterPage() {
                                         error={!isPhoneValid}
                                     />
                                 </Grid>
-                                
+
                                 <InputField
                                     placeholder="Email"
                                     type="email"
@@ -181,7 +180,7 @@ export default function RealtorRegisterPage() {
                                 )}
                             </div>
 
-                            <div id="loginFormBottom">
+                            <div className="authFormBottom">
                                 <button type="submit" className="authButton">
                                     Submit
                                 </button>

@@ -16,6 +16,22 @@ body {
     height: 100vh;
 }
 
+.authButton {
+    display: flex;
+    height: 60px;
+    justify-content: center;
+    align-items: center;
+    align-self: stretch;
+    padding: 10px 15px;
+    border-radius: 5px;
+    background: $primary-button-color;
+    color: $primary-font-color;
+    font-size: $medium-font-size;
+    font-style: normal;
+    font-weight: $normal-font-weight;
+    line-height: normal;
+}
+
 .content {
     height: 100vh;
     min-height: 700px;
@@ -27,25 +43,25 @@ body {
     background-size: cover;
     background-repeat: no-repeat;
     background-position: center center;
-}
 
-.authHeader {
-    display: flex;
-    justify-content: start;
-    align-items: center;
-    align-self: stretch;
-    margin-top: 10px;
-    margin-left: 10%;
-}
+    .authHeader {
+        display: flex;
+        justify-content: start;
+        align-items: center;
+        align-self: stretch;
+        margin-top: 10px;
+        margin-left: 10%;
 
-#authHeaderLogo {
-    width: 226px;
-    height: 80px;
-    flex-shrink: 0;
+        #authHeaderLogo {
+            width: 226px;
+            height: 80px;
+            flex-shrink: 0;
 
-    img {
-        max-width: 100%;
-        height: auto;
+            img {
+                max-width: 100%;
+                height: auto;
+            }
+        }
     }
 }
 
@@ -93,24 +109,32 @@ body {
     }
 }
 
-#loginForm {
+.authFormContainer {
     display: flex;
     flex-direction: column;
     align-items: center;
     gap: 30px;
     align-self: stretch;
+
+    .authForm {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        gap: 30px;
+        align-self: stretch;
+        padding: 0;
+
+        .authFormBottom {
+            display: flex;
+            flex-direction: column;
+            align-items: flex-start;
+            gap: 10px;
+            align-self: stretch;
+        }
+    }
 }
 
-#loginFormTop {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    gap: 30px;
-    align-self: stretch;
-    padding: 0;
-}
-
-.loginFields {
+.authFields {
     display: flex;
     flex-direction: column;
     align-items: flex-start;
@@ -153,29 +177,6 @@ body {
         font-weight: $light-font-weight;
         line-height: normal;
     }
-}
-
-#loginFormBottom {
-    display: flex;
-    flex-direction: column;
-    align-items: flex-start;
-    gap: 10px;
-    align-self: stretch;
-}
-
-.authButton {
-    display: flex;
-    height: 60px;
-    justify-content: center;
-    align-items: center;
-    align-self: stretch;
-    border-radius: 5px;
-    background: $primary-button-color;
-    color: $primary-font-color;
-    font-size: $medium-font-size;
-    font-style: normal;
-    font-weight: $normal-font-weight;
-    line-height: normal;
 }
 
 #secondaryAuthText {
@@ -257,48 +258,48 @@ body {
     }
 }
 
-#addAavatarContainer {
+.addAavatarContainer {
     display: flex;
     width: 460px;
     flex-direction: column;
     align-items: flex-start;
     gap: 48px;
     margin-bottom: 20%;
-}
 
-#avatarContainer {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    gap: 34px;
-    align-self: stretch;
-}
+    #avatarContainer {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        gap: 34px;
+        align-self: stretch;
 
-#avatarUpload {
-    display: flex;
-    width: 220px;
-    flex-direction: column;
-    align-items: center;
-    gap: 14px;
-}
+        #uploadAvatarText {
+            color: $primary-font-color;
+            text-align: center;
+            font-size: $normal-font-size;
+            font-style: normal;
+            font-weight: $medium-font-weight;
+            line-height: normal;
+        }
+    }
 
-#uploadAvatarButton {
-    color: $primary-font-color;
-    text-align: center;
-    font-size: $pre-small-font-size;
-    font-style: normal;
-    font-weight: $light-font-weight;
-    line-height: normal;
-    text-decoration-line: underline;
-}
+    #avatarUpload {
+        display: flex;
+        width: 220px;
+        flex-direction: column;
+        align-items: center;
+        gap: 14px;
 
-#uploadAvatarText {
-    color: $primary-font-color;
-    text-align: center;
-    font-size: $normal-font-size;
-    font-style: normal;
-    font-weight: $medium-font-weight;
-    line-height: normal;
+        #uploadAvatarButton {
+            color: $primary-font-color;
+            text-align: center;
+            font-size: $pre-small-font-size;
+            font-style: normal;
+            font-weight: $light-font-weight;
+            line-height: normal;
+            text-decoration-line: underline;
+        }
+    }
 }
 
 .endRegisterArea {
@@ -322,11 +323,11 @@ body {
     &:hover {
         background-color: $primary-button-color;
     }
-}
 
-#arrow {
-    display: flex;
-    align-self: center;
+    #arrow {
+        display: flex;
+        align-self: center;
+    }
 }
 
 .endRegisterButton {
@@ -339,12 +340,50 @@ body {
     background: $register-button-background;
     box-shadow: 0px 4px 4px 0px $register-button-border-color;
     color: $primary-font-color;
-    font-size: 24px;
+    font-size: $large-font-size;
     font-style: normal;
-    font-weight: 500;
+    font-weight: $normal-font-weight;
     line-height: normal;
 
     &.active {
         background: $primary-button-color;
+    }
+}
+
+.registerInformationContainer {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 30px;
+    margin-bottom: 30%;
+
+    #messageContainer {
+        display: flex;
+        padding: 24px;
+        align-items: center;
+        gap: 22px;
+        border-radius: 5px;
+        border: 1px solid var(--Backgrounds-Primary, #fff);
+
+        #point {
+            width: 30px;
+            height: 30px;
+            flex-shrink: 0;
+        }
+
+        #message {
+            color: var(--Backgrounds-Primary, #fff);
+            font-family: Inter;
+            font-size: 20px;
+            font-style: normal;
+            font-weight: 400;
+            line-height: normal;
+        }
+    }
+
+    .buttonContainer {
+        display: flex;
+        align-items: center;
+        gap: 20px;
     }
 }

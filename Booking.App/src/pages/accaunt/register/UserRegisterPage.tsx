@@ -1,3 +1,4 @@
+import "../../../css/AuthenticationClasses/index.scss"; 
 import { userRegisterResolver } from "../../../validations/account";
 import { useState } from "react";
 import { IGoogleLogin, IUserRegister } from "../../../interfaces/account";
@@ -10,7 +11,6 @@ import {
 import OutlinedErrorAlert from "../../../components/common/ErrorAlert.tsx";
 import { useNavigate } from "react-router-dom";
 import ErrorHandler from "../../../components/common/ErrorHandler.ts";
-import "../../../css/AuthenticationClasses/index.scss"; 
 import Header from "../../../components/authentification/Header.tsx";
 import { CredentialResponse, GoogleLogin } from "@react-oauth/google";
 import InputField from "../../../components/common/InputField.tsx";
@@ -71,12 +71,12 @@ export default function UserRegisterPage() {
                 <div id="authCenterContainer">
                     <h1> Register</h1>
 
-                    <div id="loginForm">
+                    <div className="authFormContainer">
                         <form
                             onSubmit={handleSubmit(onSubmit)}
-                            id="loginFormTop"
+                            className="authForm"
                         >
-                            <div className="loginFields">
+                            <div className="authFields">
                                 <InputField
                                     placeholder="Email"
                                     type="email"
@@ -136,7 +136,7 @@ export default function UserRegisterPage() {
                                 )}
                             </div>
 
-                            <div id="loginFormBottom">
+                            <div className="authFormBottom">
                                 <button type="submit" className="authButton">
                                     Register
                                 </button>

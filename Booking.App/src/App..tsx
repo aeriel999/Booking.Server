@@ -68,6 +68,11 @@ export const App: React.FC = () => {
             />
             <Route path="authentication/login" element={<SignInPage />} />
 
+            <Route
+                path="/authentication/register-information/:email"
+                element={<RegisterInformationPage />}
+            />
+            
             {isLogin && (
                 <>
                     <Route
@@ -183,10 +188,7 @@ export const App: React.FC = () => {
                 path="/authentication/user-register"
                 element={<UserRegisterPage />}
             />
-            <Route
-                path="/authentication/register-information/:email"
-                element={<RegisterInformationPage />}
-            />
+           
             <Route
                 path="/authentication/confirm-email/:userId/:token"
                 element={<ConfirmEmailPage />}

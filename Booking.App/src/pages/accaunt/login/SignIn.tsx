@@ -95,12 +95,12 @@ export default function SignInPage() {
                 <div id="authCenterContainer">
                     <h1> Sign in</h1>
 
-                    <div id="loginForm">
+                    <div className="authFormContainer">
                         <form
                             onSubmit={handleSubmit(onSubmit)}
-                            id="loginFormTop"
+                            className="authForm"
                         >
-                            <div className="loginFields">
+                            <div className="authFields">
                                 <InputField
                                     placeholder="Email"
                                     type="email"
@@ -140,7 +140,7 @@ export default function SignInPage() {
                                 )}
                             </div>
 
-                            <div id="loginFormBottom">
+                            <div className="authFormBottom">
                                 <button type="submit" className="authButton">
                                     Sign In
                                 </button>
