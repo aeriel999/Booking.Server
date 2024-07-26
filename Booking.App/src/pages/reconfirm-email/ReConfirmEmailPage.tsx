@@ -1,106 +1,100 @@
-import {useRef, useState} from "react";
-import {useAppDispatch} from "../../hooks/redux";
-import {useNavigate} from "react-router-dom";
-import * as React from "react";
-import {IForgotPassword} from "../../interfaces/account";
-import {forgotPassword} from "../../store/accounts/account.actions.ts";
-import {unwrapResult} from "@reduxjs/toolkit";
+import { useState } from "react";
+import { useAppDispatch } from "../../hooks/redux";
+import { useNavigate } from "react-router-dom";
+import { IReconfirmEmail } from "../../interfaces/account";
+import {
+    forgotPassword,
+    reconfirmEmail,
+} from "../../store/accounts/account.actions.ts";
+import { unwrapResult } from "@reduxjs/toolkit";
 import ErrorHandler from "../../components/common/ErrorHandler.ts";
-import Container from "@mui/material/Container";
-import CssBaseline from "@mui/material/CssBaseline";
-import Box from "@mui/material/Box";
 import OutlinedErrorAlert from "../../components/common/ErrorAlert.tsx";
-import Avatar from "@mui/material/Avatar";
-import LockOutlinedIcon from "@mui/icons-material/LockOutlined";
-import Typography from "@mui/material/Typography";
-import Grid from "@mui/material/Grid";
-import InputGroup from "../../components/common/InputGroup.tsx";
-import {EmailValidator} from "../../validations/account";
-import Button from "@mui/material/Button";
-import Link from "@mui/material/Link";
+import { reconfirmemaildResolver } from "../../validations/account";
+import Header from "../../components/authentification/Header.tsx";
+import InputField from "../../components/common/InputField.tsx";
+import { useForm } from "react-hook-form";
 
-export default function ReConfirmEmailPage()
-{
-    const formValid = useRef({ email: false});
-    const [errorMessage, setErrorMessage] = useState<string | undefined >(undefined);
+export default function ReConfirmEmailPage() {
+    const [errorMessage, setErrorMessage] = useState<string | undefined>(
+        undefined
+    );
     const dispatch = useAppDispatch();
     const navigate = useNavigate();
+    const {
+        register,
+        handleSubmit,
+        formState: { errors },
+        setValue,
+    } = useForm<IReconfirmEmail>({ resolver: reconfirmemaildResolver });
 
-    const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
-        event.preventDefault();
-        const data = new FormData(event.currentTarget);
+    const onSubmit = async (data: IReconfirmEmail) => {
+        try {
+            const response = await dispatch(reconfirmEmail(data));
+            unwrapResult(response);
 
-        if (Object.values(formValid.current).every(isValid => isValid)) {
-
-            const model : IForgotPassword = {
-                email: data.get("email") as string
-            }
-
-            try {
-                const response = await dispatch(forgotPassword(model));
-                unwrapResult(response);
-
-                navigate(`/authentication/forgot-password-information/${model.email}`);
-
-            } catch (error ) {
-
-                setErrorMessage(ErrorHandler(error));
-            }
+            navigate(`/authentication/register-information/${data.email}`);
+        } catch (error) {
+            setErrorMessage(ErrorHandler(error));
         }
     };
 
     return (
-        <Container component="main" maxWidth="xs">
-            <CssBaseline />
-            <Box
-                sx={{
-                    marginTop: 8,
-                    display: 'flex',
-                    flexDirection: 'column',
-                    alignItems: 'center',
-                }}
-            >
+        <div className="content">
+            <Header />
+            <div className="resetPasswordMainContainer">
                 {errorMessage && <OutlinedErrorAlert message={errorMessage} />}
 
-                <Avatar sx={{ m: 1, bgcolor: 'secondary.main' }}>
-                    <LockOutlinedIcon />
-                </Avatar>
-                <Typography component="h1" variant="h5">
-                    Reconfirm Email
-                </Typography>
-                <Typography variant="body1"  align={'center'}>
-                    Please enter the email address that you used to register,
-                    and we will send you a confirmation link.
-                </Typography>
-                <p></p>
-                <Box component="form" onSubmit={handleSubmit} noValidate sx={{ mt: 1 }}>
-                    <Grid container spacing={2}>
-                        <Grid item xs={12}>
-                            <InputGroup
-                                label="Email"
-                                field="email"
-                                type= "email"
-                                validator={EmailValidator}
-                                onChange={isValid => (formValid.current.email = isValid)}
-                            />
-                        </Grid>
-                    </Grid>
-                    <Button
-                        type="submit"
-                        fullWidth
-                        variant="contained"
-                        sx={{ mt: 3, mb: 2 }}
-                    >
-                        Sign In
-                    </Button>
-                    <Grid item>
-                        <Link href="/authentication/login" variant="body2">
-                            Back to Sign in
-                        </Link>
-                    </Grid>
-                </Box>
-            </Box>
+                <div id="topContainer">
+                    <h1> Reconfirm Email </h1>
+                    <div id="instructionText">
+                        Please enter the email address that you used to
+                        register, and we will send you a confirmation link.
+                    </div>
+                </div>
 
-        </Container>
+                <div className="authFormContainer">
+                    <form
+                        onSubmit={handleSubmit(onSubmit)}
+                        className="authForm"
+                    >
+                        <div className="authFields">
+                            <InputField
+                                placeholder="Email"
+                                type="email"
+                                name="email"
+                                register={register}
+                                setValue={setValue}
+                                className={
+                                    errors.email
+                                        ? "errorFormInput"
+                                        : "formInput"
+                                }
+                            />
+                            {errors.email && (
+                                <p className="error">
+                                    <p>*</p>
+                                    {errors.email.message}
+                                </p>
+                            )}
+                        </div>
+
+                        <div className="authFormBottom">
+                            <button type="submit" className="authButton">
+                                Continue
+                            </button>
+
+                            <div id="secondaryAuthText">
+                                <a
+                                    href="/authentication/login"
+                                    className="linkConfirmation"
+                                >
+                                    Back to Sign in
+                                </a>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
     );
 }

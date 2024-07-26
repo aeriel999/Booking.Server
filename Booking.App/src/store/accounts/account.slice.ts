@@ -13,6 +13,7 @@ import {
     googleLogin,
     login,
     realtorRegister,
+    reconfirmEmail,
     resetPassword,
     userRegister,
 } from "./account.actions.ts";
@@ -160,6 +161,12 @@ export const accountsSlice = createSlice({
                 state.status = Status.SUCCESS;
             })
             .addCase(changeEmail.pending, (state) => {
+                state.status = Status.LOADING;
+            })
+            .addCase(reconfirmEmail.fulfilled, (state) => {
+                state.status = Status.SUCCESS;
+            })
+            .addCase(reconfirmEmail.pending, (state) => {
                 state.status = Status.LOADING;
             })
             .addMatcher(isRejectedAction, (state) => {

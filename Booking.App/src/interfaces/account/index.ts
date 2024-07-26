@@ -51,6 +51,7 @@ export interface IServerError {
     numericType: number;
     type: number;
 }
+
 export interface ILogin {
     email: string;
     password: string;
@@ -70,11 +71,15 @@ export interface IForgotPassword {
     email: string;
 }
 
+export interface IReconfirmEmail {
+    email: string;
+}
+
 export interface IResetPassword {
-    email: string | undefined;
-    token: string | undefined;
-    password: string | undefined;
-    confirmPassword: string | undefined;
+    email: string;
+    token: string;
+    password: string;
+    confirmPassword: string;
 }
 
 export interface IEditRealtorInfo {

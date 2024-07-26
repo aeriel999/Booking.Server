@@ -91,6 +91,91 @@ body {
     text-align: center;
 }
 
+.resetPasswordMainContainer {
+    display: flex;
+    width: 563px;
+    flex-direction: column;
+    align-items: center;
+    gap: 48px;
+    color: $primary-font-color;
+    margin-bottom: 20%;
+
+    #topContainer {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        gap: 22px;
+        align-self: stretch;
+
+        #instructionText {
+            align-self: stretch;
+            text-align: center;
+            font-size: $normal-font-size;
+            font-style: normal;
+            font-weight: $medium-font-weight;
+            line-height: normal;
+        }
+    }
+}
+
+.enterNewPasswordMaimContainer {
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 25%;
+    width: 563px;
+    gap: 51px;
+    padding: 0;
+    color: $primary-font-color;
+    text-align: center;
+}
+
+.instructionPageContainer {
+    display: flex;
+    width: 849px;
+    flex-direction: column;
+    align-items: center;
+    gap: 30px;
+    color: $primary-font-color;
+    margin-bottom: 20%;
+
+    #instructionTextContainer {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        gap: 44px;
+        align-self: stretch;
+
+        #topContainer {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 6px;
+            align-self: stretch;
+
+            #afterTitleText {
+                text-align: center;
+                font-size: 16px;
+                font-style: normal;
+                font-weight: 400;
+                line-height: normal;
+            }
+
+            ol {
+                font-size: 20px;
+                font-style: normal;
+                font-weight: 100;
+                line-height: normal;
+
+                li {
+                    margin-bottom: 15px;
+                }
+            }
+        }
+    }
+}
+
 #authCenterContainer {
     display: flex;
     flex-direction: column;
@@ -99,14 +184,14 @@ body {
     gap: 30px;
     width: 498px;
     text-align: center;
+}
 
-    h1 {
-        font-size: $big-font-size;
-        font-weight: $bold-font-weight;
-        font-style: normal;
-        line-height: normal;
-        margin: 0;
-    }
+h1 {
+    font-size: $big-font-size;
+    font-weight: $bold-font-weight;
+    font-style: normal;
+    line-height: normal;
+    margin: 0;
 }
 
 .authFormContainer {
@@ -199,6 +284,7 @@ body {
     font-style: normal;
     font-weight: $medium-font-weight;
     line-height: normal;
+    text-decoration: none;
 }
 
 .error {
@@ -363,7 +449,7 @@ body {
         align-items: center;
         gap: 22px;
         border-radius: 5px;
-        border: 1px solid var(--Backgrounds-Primary, #fff);
+        border: 1px solid $primary-font-color;
 
         #point {
             width: 30px;
@@ -372,7 +458,7 @@ body {
         }
 
         #message {
-            color: var(--Backgrounds-Primary, #fff);
+            color: $primary-font-color;
             font-family: Inter;
             font-size: 20px;
             font-style: normal;

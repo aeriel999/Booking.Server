@@ -72,7 +72,25 @@ export const App: React.FC = () => {
                 path="/authentication/register-information/:email"
                 element={<RegisterInformationPage />}
             />
-            
+
+            <Route
+                path="authentication/forgot-password"
+                element={<ForgotPasswordPage />}
+            />
+
+            <Route
+                path="/authentication/forgot-password-information/:email"
+                element={<ForgotPasswordInformationPage />}
+            />
+
+            <Route
+                path="/authentication/reset-password/:email/:token"
+                element={<ResetPasswordPage />}
+            />
+             <Route
+                path="/authentication/reconfirm-email"
+                element={<ReConfirmEmailPage />}
+            />
             {isLogin && (
                 <>
                     <Route
@@ -199,22 +217,13 @@ export const App: React.FC = () => {
                 path="authentication/forgot-password"
                 element={<ForgotPasswordPage />}
             />
-            <Route
-                path="/authentication/forgot-password-information/:email"
-                element={<ForgotPasswordInformationPage />}
-            />
-            <Route
-                path="/authentication/reset-password/:email/:token"
-                element={<ResetPasswordPage />}
-            />
+          
+          
             <Route
                 path="/authentication/change-email/:userId/:email/:token"
                 element={<ChangeEmailPage />}
             />
-            <Route
-                path="/authentication/reconfirm-email"
-                element={<ReConfirmEmailPage />}
-            />
+           
 
             <Route
                 path="authentication/register-information/:email"
@@ -228,10 +237,7 @@ export const App: React.FC = () => {
                 path="authentication/realtor-register"
                 element={<RealtorRegisterPage />}
             />
-            <Route
-                path="authentication/forgot-password"
-                element={<ForgotPasswordPage />}
-            />
+            
             <Route
                 path="authentication/forgot-password-information/:email"
                 element={<ForgotPasswordInformationPage />}
