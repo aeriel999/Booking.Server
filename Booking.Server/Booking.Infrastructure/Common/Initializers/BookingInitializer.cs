@@ -447,7 +447,7 @@ public static class BookingInitializer
 
 		var context = service.GetRequiredService<BookingDbContext>();
 
-		//context.Database.Migrate();
+		context.Database.Migrate();
 
 		var userManager = scope.ServiceProvider
 			.GetRequiredService<UserManager<User>>();

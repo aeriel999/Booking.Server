@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Booking.Domain.Posts;
+using Microsoft.AspNetCore.Mvc;
 using System.ComponentModel.DataAnnotations;
 
 namespace Booking.Api.Contracts.Post.CreatePost;
@@ -40,6 +41,9 @@ public record CreatePostRequest
 
 	public int? Discount { get; init; }
 
+	public List<Guid>? PostPostTypesOfRest { get; set; }
+
+	public List<Guid>? PostServices { get; set; }
 
 	[BindProperty(Name = "images[]")]
 	public required List<IFormFile> Images { get; init; }

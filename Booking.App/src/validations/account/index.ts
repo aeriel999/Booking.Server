@@ -1,5 +1,12 @@
 import { Resolver } from "react-hook-form";
-import { ILogin, IRealtorRegister, IUserRegister } from "../../interfaces/account";
+import {
+    IForgotPassword,
+    ILogin,
+    IRealtorRegister,
+    IReconfirmEmail,
+    IResetPassword,
+    IUserRegister,
+} from "../../interfaces/account";
 
 export const loginResolver: Resolver<ILogin> = async (values) => {
     const errors: Record<string, any> = {};
@@ -61,8 +68,9 @@ export const userRegisterResolver: Resolver<IUserRegister> = async (values) => {
     };
 };
 
-
-export const realtorRegisterResolver: Resolver<IRealtorRegister> = async (values) => {
+export const realtorRegisterResolver: Resolver<IRealtorRegister> = async (
+    values
+) => {
     const errors: Record<string, any> = {};
 
     const firstNameError = FirstNameValidator(values.firstName);
@@ -80,7 +88,7 @@ export const realtorRegisterResolver: Resolver<IRealtorRegister> = async (values
             message: lastNameError,
         };
     }
-    
+
     const emailError = EmailValidator(values.email);
     if (emailError) {
         errors.email = {
@@ -107,6 +115,74 @@ export const realtorRegisterResolver: Resolver<IRealtorRegister> = async (values
             message: confirmPasswordError,
         };
     }
+    return {
+        values: Object.keys(errors).length === 0 ? values : {},
+        errors,
+    };
+};
+
+export const forgotPasswordResolver: Resolver<IForgotPassword> = async (
+    values
+) => {
+    const errors: Record<string, any> = {};
+
+    const emailError = EmailValidator(values.email);
+    if (emailError) {
+        errors.email = {
+            type: "validation",
+            message: emailError,
+        };
+    }
+
+    return {
+        values: Object.keys(errors).length === 0 ? values : {},
+        errors,
+    };
+};
+
+export const resetPasswordResolver: Resolver<IResetPassword> = async (
+    values
+) => {
+    const errors: Record<string, any> = {};
+
+    const passwordError = PasswordValidator(values.password);
+    if (passwordError) {
+        errors.password = {
+            type: "validation",
+            message: passwordError,
+        };
+    }
+
+    const confirmPasswordError = ConfirmPasswordValidator(
+        values.password,
+        values.confirmPassword
+    );
+    if (confirmPasswordError) {
+        errors.confirmPassword = {
+            type: "validation",
+            message: confirmPasswordError,
+        };
+    }
+
+    return {
+        values: Object.keys(errors).length === 0 ? values : {},
+        errors,
+    };
+};
+
+export const reconfirmemaildResolver: Resolver<IReconfirmEmail> = async (
+    values
+) => {
+    const errors: Record<string, any> = {};
+
+    const emailError = EmailValidator(values.email);
+    if (emailError) {
+        errors.email = {
+            type: "validation",
+            message: emailError,
+        };
+    }
+
     return {
         values: Object.keys(errors).length === 0 ? values : {},
         errors,

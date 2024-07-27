@@ -9,6 +9,7 @@ import {
     IGoogleLogin,
     ILogin,
     IRealtorRegister,
+    IReconfirmEmail,
     IResetPassword,
     IUserRegister,
 } from "../../interfaces/account";
@@ -144,18 +145,27 @@ export const changeEmail = createAsyncThunk(
     "Authentication/change-email",
     async (payload: IChangeEmail, { rejectWithValue }) => {
         try {
-            console.log("payload", payload);
-
             const response = await apiClient.post(
                 "/api/Authentication/change-email",
                 payload
             );
-            console.log("response", response);
-
             return response.status;
         } catch (error) {
-            console.log("error", error);
+            return rejectWithValue(handleAxiosError(error, "Network error"));
+        }
+    }
+);
 
+export const reconfirmEmail = createAsyncThunk(
+    "Authentication/reconfirm-email",
+    async (payload: IReconfirmEmail, { rejectWithValue }) => {
+        try {
+            const response = await apiClient.post(
+                "/api/Authentication/reconfirm-email",
+                payload
+            );
+            return response.status;
+        } catch (error) {
             return rejectWithValue(handleAxiosError(error, "Network error"));
         }
     }

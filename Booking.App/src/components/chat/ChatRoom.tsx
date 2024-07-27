@@ -6,7 +6,7 @@ import { useAppSelector } from "../../hooks/redux";
 import { MessageLeft, MessageRight } from "./Message";
 import { ChatTextInput } from "./ChatTextInput";
 import { Link } from "react-router-dom";
-import UAvatar from "../../assets/avatar-profile-icon-vector-illustration_276184-165.jpg";
+import UAvatar from "../../assets/Auth/image 20.svg";
 import { deepOrange } from "@mui/material/colors";
 const Container = styled("div")({
     width: "100vw",

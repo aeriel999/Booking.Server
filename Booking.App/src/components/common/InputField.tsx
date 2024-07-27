@@ -1,14 +1,15 @@
 import React from "react";
 import { UseFormRegister, UseFormSetValue } from "react-hook-form";
+import "../../css/AuthenticationClasses/index.scss";
 
 type InputFieldProps = {
     placeholder: string;
     register: UseFormRegister<any>;
     name: string;
-
     type: string;
     setValue: UseFormSetValue<any>;
     className: string;
+    defaultValue?: string | number | readonly string[] | undefined;
 };
 
 const InputField: React.FC<InputFieldProps> = ({
@@ -18,6 +19,7 @@ const InputField: React.FC<InputFieldProps> = ({
     type,
     setValue,
     className,
+    defaultValue,
 }) => {
     const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
         const newValue = e.target.value;
@@ -41,6 +43,7 @@ const InputField: React.FC<InputFieldProps> = ({
             type={type}
             onChange={handleChange}
             className={className}
+            defaultValue={defaultValue ? defaultValue : undefined}
         />
     );
 };

@@ -25,7 +25,7 @@ import { Breadcrumbs } from "@mui/material";
 import Typography from "@mui/material/Typography";
 import CustomizedDialogs from "../../components/common/Dialog.tsx";
 import Divider from "@mui/material/Divider";
-import IMG from "../../assets/avatar-profile-icon-vector-illustration_276184-165.jpg";
+import IMG from "../../assets/Auth/image 20.svg";
 
 export default function RealtorProfileEditPage() {
     const { user } = useAppSelector((state) => state.account);

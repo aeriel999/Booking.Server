@@ -11,6 +11,7 @@ using Booking.Api.Contracts.Post.GetPostListByRealtorId;
 using Booking.Api.Contracts.Post.GetPostListForRealtor;
 using Booking.Api.Contracts.Post.GetPostWithMostDiscount;
 using Booking.Api.Contracts.Post.GetPostWithMostRating;
+using Booking.Api.Contracts.Post.GetPostPostTypesOfRest;
 using Booking.Api.Contracts.Post.GetStreets;
 using Booking.Api.Contracts.Post.GetTypeOfPost;
 using Booking.Api.Contracts.Post.GetTypeOfRest;
@@ -196,5 +197,9 @@ public class PostMapping : IRegister
 			.Map(desp => desp.IsActive, src => src.IsActive);
 
 		config.NewConfig<PagedList<Post>, PagedList<GetArchivedPostListForRealtorResponse>>();
+
+
+		config.NewConfig<PostTypeOfRest, GetPostTypesOfRestResponse>();
+		config.NewConfig<List<PostTypeOfRest>, List<GetPostTypesOfRestResponse>>();
 	}
 }

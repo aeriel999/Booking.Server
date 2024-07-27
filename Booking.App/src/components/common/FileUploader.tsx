@@ -3,7 +3,7 @@ import Button from '@mui/material/Button'
 import IconButton from '@mui/material/IconButton'
 import CancelIcon from '@mui/icons-material/Cancel'
 import { Grid } from '@mui/material'
-import IMG from  "../../assets/avatar-profile-icon-vector-illustration_276184-165.jpg"
+import IMG from  "../../assets/Auth/image 20.svg";
 import OutlinedErrorAlert from "./ErrorAlert.tsx";
 
 type FileUploadProps = {
@@ -12,8 +12,8 @@ type FileUploadProps = {
     maxImagesUpload: number;
     defaultImage?: string | undefined; // New prop for default image
     validator: (value: File[]) => string | false | undefined,
-    onChange: (isValid: boolean) => void,
-    onDelete: () => void
+    //onChange: (isValid: boolean) => void,
+  //  onDelete: () => void
 }
 
 const FileUploader = (props: FileUploadProps) => {
@@ -33,7 +33,7 @@ const FileUploader = (props: FileUploadProps) => {
         const errorMessage = props.validator(files);
 
         setError(errorMessage);
-        props.onChange(!errorMessage);
+      //  props.onChange(!errorMessage);
 
         props.setImages([...props.images, ...files])
         e.target.value = ''
@@ -47,9 +47,9 @@ const FileUploader = (props: FileUploadProps) => {
         const errorMessage = props.validator(newImages);
 
         setError(errorMessage);
-        props.onChange(!errorMessage);
+     //   props.onChange(!errorMessage);
 
-        props.onDelete();
+     //   props.onDelete();
     }
 
     return (
