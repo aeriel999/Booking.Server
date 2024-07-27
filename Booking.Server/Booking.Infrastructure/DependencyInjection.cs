@@ -89,6 +89,7 @@ public static class DependencyInjection
 		services.AddScoped<IUserFeedbackRepository, UserFeedbackRepository>();
 		services.AddScoped<IPostPostTypeOfRestRepository,PostPostTypeOfRestRepository>();
         services.AddScoped<IPostServiceRepository, PostServiceRepository>();
+        services.AddScoped<IPostTypeOfRestRepository, PostTypeOfRestRepository>();
 
         return services;
 	}

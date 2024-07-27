@@ -256,3 +256,45 @@ export const repostPost = createAsyncThunk(
         }
     }
 );
+
+export const getTypesOfRest = createAsyncThunk(
+    "Post/get-types-of-rest",
+    async (_, { rejectWithValue }) => {
+        try {
+            const response = await apiClient.get(
+                `api/Post/get-types-of-rest`
+            );
+            return response.data.$values;
+        } catch (error) {
+            return rejectWithValue(handleAxiosError(error, "Network error"));
+        }
+    }
+)
+
+export const getPostsWithMostRating = createAsyncThunk(
+    "Post/get-posts-with-most-rating",
+    async (_, { rejectWithValue }) => {
+        try {
+            const response = await apiClient.get(
+                `api/Post/get-posts-with-most-rating`
+            );
+            return response.data.$values;
+        } catch (error) {
+            return rejectWithValue(handleAxiosError(error, "Network error"));
+        }
+    }
+)
+
+export const getPostsWithMostDiscount = createAsyncThunk(
+    "Post/get-posts-with-most-discount",
+    async (_, { rejectWithValue }) => {
+        try {
+            const response = await apiClient.get(
+                `api/Post/get-posts-with-most-discount`
+            );
+            return response.data.$values;
+        } catch (error) {
+            return rejectWithValue(handleAxiosError(error, "Network error"));
+        }
+    }
+)

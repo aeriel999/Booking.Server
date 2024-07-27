@@ -48,4 +48,8 @@ public interface IPostRepository
 
 
 	Task<List<Post>?> GetArchivedListPostByRealtorIdAsync(Guid realtorId);
+
+	Task<List<Post>> GetListOfPostWithMostRatingAsync();
+
+	Task<List<Post>> GetListOfPostWithMostDiscountAsync();
 }

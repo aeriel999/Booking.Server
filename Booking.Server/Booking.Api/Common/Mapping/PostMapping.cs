@@ -9,8 +9,11 @@ using Booking.Api.Contracts.Post.GetPost;
 using Booking.Api.Contracts.Post.GetPostForEditing;
 using Booking.Api.Contracts.Post.GetPostListByRealtorId;
 using Booking.Api.Contracts.Post.GetPostListForRealtor;
+using Booking.Api.Contracts.Post.GetPostWithMostDiscount;
+using Booking.Api.Contracts.Post.GetPostWithMostRating;
 using Booking.Api.Contracts.Post.GetStreets;
 using Booking.Api.Contracts.Post.GetTypeOfPost;
+using Booking.Api.Contracts.Post.GetTypeOfRest;
 using Booking.Application.Common.Behaviors;
 using Booking.Application.Posts.CreatePost;
 using Booking.Application.Posts.EditPost;
@@ -83,6 +86,25 @@ public class PostMapping : IRegister
 			.Map(dest => dest.Page, src => src.page)
             .Map(dest => dest.SizeOfPage, src => src.sizeOfPage);
 
+		config.NewConfig<Post, GetPostWithMostRatingResponse>()
+			.Map(desp => desp.Id, src => src.Id)
+			.Map(desp => desp.Name, src => src.Name)
+			.Map(desp => desp.Rating, src => src.Rate)
+			.Map(desp => desp.Country, src => src.Street!.City!.Country!.Name)
+			.Map(desp => desp.City, src => src.Street!.City!.Name);
+
+        config.NewConfig<Post, GetPostWithMostDiscountResponse>()
+            .Map(desp => desp.Id, src => src.Id)
+            .Map(desp => desp.Name, src => src.Name)
+            .Map(desp => desp.Rating, src => src.Rate)
+            .Map(desp => desp.Country, src => src.Street!.City!.Country!.Name)
+            .Map(desp => desp.City, src => src.Street!.City!.Name)
+			.Map(desp => desp.Discount, src => src.Discount);
+
+        config.NewConfig<PostTypeOfRest, GetTypeOfRestResponse>()
+			.Map(desp => desp.Id, src => src.Id)
+			.Map(desp => desp.Name, src => src.Name)
+			.Map(desp => desp.Image, src => src.PostPostTypesOfRest!.FirstOrDefault()!.Post!.ImagesPost!.FirstOrDefault(img => img.Priority == 1)!.Name);
 
         config.NewConfig<(GetFilteredListRequest request,string name, int page, int sizeOfPage),
 			GetPostByNameQuery>()
