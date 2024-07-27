@@ -1,0 +1,439 @@
+@import '../variables.scss';
+
+#root {
+    width: 100vw;
+    height: 3924px;
+    margin: 0;
+    padding: 0;
+
+}
+
+@mixin position($TOP, $RIGHT, $BOTTOM, $LEFT, $ROTATE) {
+    position: absolute;
+    top: $TOP;
+    right: $RIGHT;
+    left: $LEFT;
+    bottom: $BOTTOM;
+    transform: rotate($ROTATE);
+}
+
+@mixin forPosts {
+    width: 100%;
+    height: auto;
+    box-sizing: border-box;
+
+    .text {
+        height: 20%;
+
+        p {
+            font-family: $primary-font-family;
+            color: $default-color;
+            font-style: $primary-font-normal-style;
+            text-align: center;
+            line-height: normal;
+
+            &:first-child {
+                font-size: $primary-font-normal-size;
+                font-weight: $primary-font-semi-bold-weight;
+            }
+
+            &:last-child {
+                font-size: $primary-font-small-size;
+                font-weight: $secondary-font-weight;
+                margin-bottom: 1.9%;
+            }
+        }
+    }
+
+    .posts {
+        width: 100%;
+        height: 70%;
+        display: flex;
+        box-sizing: border-box;
+        justify-content: space-between;
+    }
+}
+
+main {
+    width: 100%;
+    min-width: 1369px;
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    row-gap: 3%;
+    padding: $default-padding;
+    box-sizing: border-box;
+
+    font-family: $primary-font-family;
+
+    .popular-places {
+        width: 100%;
+        margin-top: 80px;
+        height: auto;
+        padding: 0px 2.2%;
+        box-sizing: border-box;
+
+        h2 {
+            font-family: $baloo-font-family;
+            text-align: center;
+            color: $default-color;
+            font-size: $primary-font-normal-size;
+            font-style: $primary-font-normal-weight;
+            font-weight: $primary-font-semi-bold-weight;
+            line-height: normal;
+        }
+
+        h5 {
+            font-family: $baloo-font-family;
+            text-align: center;
+            color: $default-color;
+            font-size: $primary-font-small-size;
+            font-style: $primary-font-normal-weight;
+            font-weight: $secondary-font-weight;
+            line-height: normal;
+        }
+
+        .places {
+            width: 100%;
+            height: auto;
+            display: flex;
+            flex-wrap: wrap;
+            row-gap: 10px;
+            column-gap: 1.3%;
+            justify-content: center;
+
+            div {
+                display: flex;
+                flex-direction: column;
+                border-radius: 5px;
+                border: 1px solid #A2A2A2;
+                padding-bottom: 5px;
+                width: 181px;
+                height: 181px;
+
+
+                img {
+                    min-height: 145px;
+                    width: 100%;
+                }
+
+                p {
+                    margin-left: 3px;
+                    margin-top: 1px;
+                    font-size: $primary-font-short-size;
+                    font-style: $primary-font-normal-style;
+                    font-weight: $primary-font-semi-bold-weight;
+                    line-height: normal;
+                    color: $default-color;
+                }
+            }
+        }
+    }
+
+    .find-dwelling {
+        width: 100%;
+        display: flex;
+        border-radius: 10px;
+        border: 1px solid rgba(0, 0, 0, 0.50);
+        background: linear-gradient(90deg, $primary-font-color 0%, rgba(1, 147, 146, 0.25) 59.45%);
+        box-sizing: border-box;
+
+        div {
+
+            &:first-child {
+                flex-basis: 25.5%;
+                height: auto;
+                min-width: 200px;
+                display: flex;
+                flex-direction: column;
+                row-gap: 21.5%;
+                margin: 55px 6.7% 55px 2.9%;
+
+                p {
+                    color: #000;
+                    font-size: $primary-font-bigger-medium-size;
+                    font-style: $primary-font-normal-style;
+                    font-weight: $primary-font-bold-weight;
+                    line-height: 41px;
+                }
+
+                button {
+                    color: var(--Backgrounds-Primary, $primary-font-color);
+                    font-size: $primary-font-medium-size;
+                    font-style: $primary-font-normal-style;
+                    font-weight: $primary-font-semi-bold-weight;
+                    line-height: normal;
+                    padding: 10px 15px;
+                    border-radius: 10px;
+                    background: $background-color;
+                    border: none;
+                    outline: none;
+                }
+            }
+
+            &:last-child {
+                height: 100%;
+                width: 526px;
+                position: relative;
+                margin-left: auto;
+                margin-right: 6.7%;
+
+                .point1 {
+                    @include position(72px, 522.87px, 133.87px, 5px, -13.378deg);
+                }
+
+                .point2 {
+                    @include position(93.88px, 488.88px, 111.88px, 38.88px, -13.679deg);
+                }
+
+                .point3 {
+                    @include position(135px, 428.33px, 71.33px, 98px, 12.222deg);
+                }
+
+                .point4 {
+                    @include position(176px, 509.87px, 29.87px, 16px, -13.378deg);
+                }
+
+                .point5 {
+                    @include position(5.44px, 100.32px, 260.32px, 413.56px, 19.606deg);
+                    width: 18.093px;
+                    height: 18.093px;
+                }
+
+                .point6 {
+                    @include position(15px, 151.31px, 240.31px, 346.99px, -7.59deg);
+                }
+
+                .point7 {
+                    @include position(0.7px, 48.74px, 222.74px, 449.7px, 7.29deg);
+                }
+
+                .point8 {
+                    @include position(90.04px, 193.07px, 131.07px, 318.04px, 1.726deg);
+                }
+
+                .point9 {
+                    @include position(119.37px, 95.67px, 101.67px, 425.37px, 1.868deg);
+                }
+
+                .point10 {
+                    @include position(8.79px, 492.66px, 212.66px, 38.79px, 1.055deg);
+                }
+            }
+        }
+
+
+    }
+
+    .bestPosts {
+        @include forPosts();
+    }
+
+    .eco {
+        width: 100%;
+        height: auto;
+        border-radius: 10px;
+        border: 1px solid rgba(0, 0, 0, 0.50);
+        background: linear-gradient(0deg, $background-color -25%, $primary-font-color 412.14%);
+        position: relative;
+        box-sizing: border-box;
+        padding: 60px;
+
+
+        .eco-block {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            color: $primary-font-color;
+            padding: 10px 50px;
+            box-sizing: border-box;
+            text-align: center;
+            color: var(--Backgrounds-Primary, $primary-font-color);
+            font-family: $baloo-font-family;
+            font-style: $primary-font-normal-style;
+            font-weight: $primary-font-semi-bold-weight;
+            line-height: normal;
+            scale: 0.5;
+
+            &:nth-child(1) {
+                width: 11%;
+                height: 27.1%;
+                border-radius: $border-radius-eco-block-big;
+                font-size: $primary-font-big-size;
+                background: linear-gradient(87deg, $eco-block-color 0.15%, $primary-font-color 145.66%);
+
+                @include position(17.3%, 88.4%, 41.6%, 1.6%, -58.71deg);
+            }
+
+            &:nth-child(2) {
+                border-radius: $border-radius-eco-block-big;
+                background: linear-gradient(89deg, $eco-block-color -2.62%, $primary-font-color 184.78%);
+                width: 11%;
+                height: 27.1%;
+                font-size: $primary-font-big-size;
+                @include position(56%, 78.4%, 11.5%, 9.8%, -6.212deg);
+            }
+
+            &:nth-child(3) {
+                border-radius: $border-radius-eco-block-medium;
+                background: linear-gradient(91deg, $eco-block-color 3.39%, $primary-font-color 145.99%);
+                width: 6.8%;
+                height: 16.4%;
+                font-size: $primary-font-bigger-medium-size;
+
+                @include position(7.8%, 73.9%, 60.8%, 18.4%, -37.669deg);
+            }
+
+            &:nth-child(4) {
+                border-radius: $border-radius-eco-block-small;
+                background: linear-gradient(92deg, $eco-block-color -6.27%, $primary-font-color 149.46%);
+                width: 5.5%;
+                height: 13.7%;
+                font-size: $primary-font-medium-2-size;
+
+                @include position(44.7%, 66.2%, 29.6%, 27.5%, 34.953deg);
+            }
+
+            &:nth-child(5) {
+                border-radius: $border-radius-eco-block-medium-2;
+                background: linear-gradient(271deg, $eco-block-color 0.15%, $primary-font-color 145.55%);
+                width: 5.5%;
+                height: 13.7%;
+                font-size: $primary-font-medium-2-size;
+
+                @include position(14.6%, 27.1%, 60.7%, 66.4%, 33.096deg);
+            }
+
+            &:nth-child(6) {
+                border-radius: $border-radius-eco-block-medium;
+                background: linear-gradient(271deg, $eco-block-color 6.51%, $primary-font-color 170.85%);
+                width: 7.4%;
+                height: 18.2%;
+                font-size: $primary-font-medium-2-size;
+
+                @include position(59.5%, 21.9%, 11.5%, 69.6%, -20.956deg);
+            }
+
+            &:nth-child(7) {
+                border-radius: $border-radius-eco-block-big;
+                background: linear-gradient(270deg, $eco-block-color -0.22%, $primary-font-color 153.51%);
+                width: 8.2%;
+                height: 20.2%;
+                font-size: $primary-font-bigger-medium-size;
+
+                @include position(19.6%, 9%, 49.8%, 81.7%, 17.408deg);
+            }
+
+            &:nth-child(8) {
+                border-radius: $border-radius-eco-block-big;
+                background: linear-gradient(270deg, $eco-block-color -1.18%, $primary-font-color 166.87%);
+                width: 11%;
+                height: 27.1%;
+                font-size: $primary-font-big-size;
+
+                @include position(44.5%, 1.7%, 0.8%, 85.7%, -37.669deg);
+            }
+        }
+
+
+        .text {
+            width: 23.8%;
+            margin: auto;
+            margin-bottom: 5%;
+
+            p {
+                font-family: $primary-font-family;
+                color: var(--Backgrounds-Primary, $primary-font-color);
+                text-align: center;
+                font-style: $primary-font-normal-style;
+                line-height: normal;
+
+                &:first-of-type {
+                    font-size: $primary-font-bigger-medium-size;
+                    font-weight: $primary-font-medium-weight;
+                }
+
+                &:last-of-type {
+                    font-size: $primary-font-medium-size;
+                    font-weight: $primary-font-normal-weight;
+                }
+            }
+
+        }
+
+        .buttons {
+            width: 23.8%;
+            display: flex;
+            margin: auto;
+
+            button {
+                flex-basis: 33%;
+                padding: 10px 15px;
+                border-radius: 7px;
+                outline: none;
+                border: none;
+                margin: auto;
+
+                &:first-of-type {
+                    background: $primary-font-color;
+                    color: $primary-button-color;
+
+                }
+
+                &:last-of-type {
+                    background: linear-gradient(0deg, $background-color -25%, $primary-font-color 412.14%);
+                    color: $primary-font-color;
+                }
+            }
+        }
+    }
+
+    .discounts {
+        @include forPosts();
+    }
+
+    .other-places {
+        width: 100%;
+        height: 10%;
+
+        .text {
+            color: $default-color;
+            font-family: $primary-font-family;
+            font-size: $primary-font-normal-size;
+            font-style: $primary-font-normal-style;
+            font-weight: $primary-font-semi-bold-weight;
+            line-height: normal;
+            margin-bottom: 30px;
+        }
+
+        .places {
+            height: 69%;
+            display: grid;
+            grid-template-columns: repeat(6, 16.6%);
+            grid-template-rows: repeat(3, 15.4%);
+            row-gap: 32px;
+            box-sizing: border-box;
+
+            p {
+                margin: 5px;
+                font-family: $primary-font-family;
+                font-style: $primary-font-normal-style;
+                line-height: normal;
+
+                &:first-child {
+                    color: $default-color;
+                    font-size: $primary-font-medium-size;
+                    font-weight: $primary-font-medium-weight;
+                }
+
+                &:last-child {
+                    color: $background-color;
+                    font-size: $secondary-font-small-size;
+                    font-weight: $primary-font-normal-weight;
+                }
+            }
+
+
+        }
+    }
+}

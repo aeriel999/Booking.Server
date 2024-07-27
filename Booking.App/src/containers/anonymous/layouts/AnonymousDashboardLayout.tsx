@@ -1,154 +1,56 @@
-import { styled } from '@mui/material/styles';
-import Box from '@mui/material/Box';
-import CssBaseline from '@mui/material/CssBaseline';
-import MuiAppBar, { AppBarProps as MuiAppBarProps } from '@mui/material/AppBar';
-import Toolbar from '@mui/material/Toolbar';
 import { Outlet, useNavigate } from "react-router-dom";
-import Button from "@mui/material/Button";
-
-
-import './style.scss';
-import logo from './logo.png';
-import { HomePage } from '../../client/HomePage/HomePage';
-
-const drawerWidth = 240;
-
-const Main = styled("main", { shouldForwardProp: (prop) => prop !== "open" })<{
-    open?: boolean;
-}>(({ theme, open }) => ({
-    flexGrow: 1,
-    padding: theme.spacing(3),
-    transition: theme.transitions.create("margin", {
-        easing: theme.transitions.easing.sharp,
-        duration: theme.transitions.duration.leavingScreen,
-    }),
-    marginLeft: `-${drawerWidth}px`,
-    ...(open && {
-        transition: theme.transitions.create("margin", {
-            easing: theme.transitions.easing.easeOut,
-            duration: theme.transitions.duration.enteringScreen,
-        }),
-        marginLeft: 0,
-    }),
-}));
-
-interface AppBarProps extends MuiAppBarProps {
-    open?: boolean;
-}
-
-const AppBar = styled(MuiAppBar, {
-    shouldForwardProp: (prop) => prop !== "open",
-})<AppBarProps>(({ theme, open }) => ({
-    transition: theme.transitions.create(["margin", "width"], {
-        easing: theme.transitions.easing.sharp,
-        duration: theme.transitions.duration.leavingScreen,
-    }),
-    ...(open && {
-        width: `calc(100% - ${drawerWidth}px)`,
-        marginLeft: `${drawerWidth}px`,
-        transition: theme.transitions.create(["margin", "width"], {
-            easing: theme.transitions.easing.easeOut,
-            duration: theme.transitions.duration.enteringScreen,
-        }),
-    }),
-}));
-
-const DrawerHeader = styled("div")(({ theme }) => ({
-    display: "flex",
-    alignItems: "center",
-    padding: theme.spacing(0, 1),
-    // necessary for content to be below app bar
-    ...theme.mixins.toolbar,
-    justifyContent: "flex-end",
-}));
+import '../../../css/DashBoardAnonymousClasses/index.scss';
+import logo from '../../../assets/Logo/tripbook 1.svg';
+import dot from '../../../assets/Icons/mingcute_map-pin-line.svg';
+import calendar from '../../../assets/Icons/calendar-06.svg';
+import human from '../../../assets/Icons/user-profile-03.svg';
 
 export default function AnonymousDashboardLayout() {
-    // const [open, setOpen] = React.useState(false);
     const navigate = useNavigate();
 
     return (
+        <>
+            <header>
+                <div className="shapka">
+                    <div className="auth">
+                        <img src={logo} />
 
-        <div className='head'>
-            <div className="shapka">
-                <div className="auth">
-                    <img src={logo} />
-
-                    <button onClick={() => {
-                        navigate("/authentication/user-register");
-                    }}>��������������</button>
-                    <button onClick={() => {
-                        navigate("/authentication/login");
-                    }}>�����</button>
-                </div>
-                <div className="searching">
-                    <div>Travel, visit new places with TripBook!</div>
-                    <div>
-                        <input placeholder="̳��� �������?" />
-                        <input type="date" placeholder="���� ������ - �����" />
-                        <input placeholder="ʳ������ ��� - �����" />
-                        <button>������</button>
+                        <button onClick={() => {
+                            navigate("/authentication/user-register");
+                        }}>Register</button>
+                        <button onClick={() => {
+                            navigate("/authentication/login");
+                        }}>Login</button>
+                    </div>
+                    <div className="searching">
+                        <div>Travel, visit new places with TripBook!</div>
+                        <form>
+                            <img src={dot} />
+                            <input placeholder="Place of travel?" />
+                            <img src={calendar} />
+                            <input type="text" placeholder="Date of arrival - departure" onFocus={(event) => { event.target.type = "date" }} onBlur={(event) => { event.target.type = "text" }} />
+                            <img src={human} />
+                            <input placeholder="Count of people - number" />
+                            <button>Find</button>
+                        </form>
                     </div>
                 </div>
-            </div>
+
+            </header>
             <Outlet />
-        </div>
+            <footer>
+                <img src={logo} />
+                <div className="explore">
+                    <p>Explore</p>
+                    <div><a>Countries</a> <a>Regions</a> <a>Cities</a> <a>Districts</a> <a>Attractions</a> <a>Airports</a> <a>Hotels</a></div>
+                </div>
+            </footer>
+        </>
+
 
 
     );
 }
 /*
 
-<header>
-            <div className="shapka">
-                <div className="auth">
-                    <img src={logo} />
-
-                    <button onClick={() => {
-                        navigate("/authentication/user-register");
-                    }}>��������������</button>
-                    <button onClick={() => {
-                        navigate("/authentication/login");
-                    }}>�����</button>
-                </div>
-                <div className="searching">
-                    <div>Travel, visit new places with TripBook!</div>
-                    <div>
-                        <input placeholder="̳��� �������?" />
-                        <input type="date" placeholder="���� ������ - �����" />
-                        <input placeholder="ʳ������ ��� - �����" />
-                        <button>������</button>
-                    </div>
-                </div>
-            </div>
-        </header>
-
- <Box sx={{ display: "flex" }}>
-            <CssBaseline />
-            <AppBar position="fixed" open={false}>
-                <Toolbar sx={{ backgroundColor: "#BD8BE7" }}>
-                    <Button
-                        sx={{ marginLeft: "auto" }}
-                        onClick={() => {
-                            navigate("/authentication/login");
-                        }}
-                        color={"inherit"}
-                    >
-                        Login
-                    </Button>
-                    <Button
-                        onClick={() => {
-                            navigate("/authentication/user-register");
-                        }}
-                        color={"inherit"}
-                    >
-                        Register
-                    </Button>
-                </Toolbar>
-            </AppBar>
-
-            <Main open={false}>
-                <DrawerHeader />
-                <Outlet />
-            </Main>
-        </Box>
-*/
+*/ 

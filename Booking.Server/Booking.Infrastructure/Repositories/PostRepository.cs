@@ -107,7 +107,8 @@ public class PostRepository(BookingDbContext context) : IPostRepository
             .Include(post => post.User)
             .Include(post => post.ImagesPost)
 			.Include(post => post.Rooms)
-			.Include(post => post.PostPostTypesOfRest)
+			.Include(post => post.PostPostTypesOfRest!)
+			.ThenInclude(post => post.PostTypeOfRest)
 			.ToListAsync();
     }
     public async Task<List<Post>> GetPostListWithIncludesByRealtorIdAsync(Guid realtorId)
@@ -164,4 +165,18 @@ public class PostRepository(BookingDbContext context) : IPostRepository
 	{
 		return await _dbSet.Where(p => p.Id == postId).FirstOrDefaultAsync();
 	}
+
+	public async Task<List<Post>> GetListOfPostWithMostRatingAsync()
+	{
+		var posts = await GetIncludeListNotArchivedAsync();
+
+		return posts.OrderByDescending(p => p.Rate).Take(4).ToList();
+	}
+
+    public async Task<List<Post>> GetListOfPostWithMostDiscountAsync()
+    {
+        var posts = await GetIncludeListNotArchivedAsync();
+
+        return posts.Where(p => p.Discount != null).OrderByDescending(p => p.Discount).Take(4).ToList();
+    }
 }

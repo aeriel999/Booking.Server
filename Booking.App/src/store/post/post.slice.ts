@@ -24,6 +24,9 @@ import {
     getListPostsForRealtor,
     getPostById,
     getPostListByRealtorId,
+    getPostsWithMostDiscount,
+    getPostsWithMostRating,
+    getTypesOfRest,
     repostPost,
 } from "./post.actions.ts";
 
@@ -39,10 +42,12 @@ const initialState: IPostState = {
     countries: null,
     cities: null,
     streets: null,
-   // typeOfRent: null,
+    typesOfRest: null,
     searchPost: null,
     postInfoList: null,
-    postsByRealtorId : null
+    postsByRealtorId: null,
+    postMostRating: null,
+    postMostDiscount: null
 };
 
 export const postSlice = createSlice({
@@ -178,6 +183,27 @@ export const postSlice = createSlice({
                 state.status = Status.SUCCESS;
             })
             .addCase(repostPost.pending, (state) => {
+                state.status = Status.LOADING;
+            })
+            .addCase(getTypesOfRest.fulfilled, (state, action) => {
+                state.status = Status.SUCCESS;
+                state.typesOfRest = action.payload;
+            })
+            .addCase(getTypesOfRest.pending, (state) => {
+                state.status = Status.LOADING;
+            })
+            .addCase(getPostsWithMostRating.fulfilled, (state, action) => {
+                state.postMostRating = action.payload;
+                state.status = Status.SUCCESS;
+            })
+            .addCase(getPostsWithMostRating.pending, (state) => {
+                state.status = Status.LOADING;
+            })
+            .addCase(getPostsWithMostDiscount.fulfilled, (state, action) => {
+                state.postMostDiscount = action.payload;
+                state.status = Status.SUCCESS;
+            })
+            .addCase(getPostsWithMostDiscount.pending, (state) => {
                 state.status = Status.LOADING;
             })
             .addMatcher(isRejectedAction, (state) => {
