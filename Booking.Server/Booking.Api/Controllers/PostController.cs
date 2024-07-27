@@ -44,6 +44,8 @@ using Booking.Application.Posts.GetPostsWithMostRating;
 using Booking.Api.Contracts.Post.GetPostWithMostRating;
 using Booking.Application.Posts.GetPostsWithMostDiscount;
 using Booking.Api.Contracts.Post.GetPostWithMostDiscount;
+using Booking.Application.Posts.GetPostPostTypesOfRestList;
+using Booking.Api.Contracts.Post.GetPostPostTypesOfRest;
 
 namespace Booking.Api.Controllers;
 
@@ -175,6 +177,7 @@ public class PostController(ISender mediatr, IMapper mapper) : ApiController
 
 		return Ok(response);
 	}
+
     [AllowAnonymous]
     [HttpGet("get-street-list")]
 	public async Task<IActionResult> GetStreetsListByCityIdAsync(
@@ -332,4 +335,15 @@ public class PostController(ISender mediatr, IMapper mapper) : ApiController
             result => Ok(mapper.Map<List<GetPostWithMostDiscountResponse>>(result)),
             errors => Problem(errors));
     }
+
+	 
+	[HttpGet("get-post-types-of-rest-list")]
+	public async Task<IActionResult> GetPostTypesOfRestListAsync()
+	{
+		var getPostTypesOfRestResult = await mediatr.Send(new GetPostTypesOfRestListQuery());
+
+		return getPostTypesOfRestResult.Match(
+			getPostTypesOfRestResult => Ok(mapper.Map<List<GetPostTypesOfRestResponse>>(getPostTypesOfRestResult)),
+			errors => Problem(errors));
+	}
 }

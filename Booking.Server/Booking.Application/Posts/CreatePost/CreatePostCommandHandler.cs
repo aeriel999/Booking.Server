@@ -15,14 +15,15 @@ public class CreatePostCommandHandler(
 	IPostStreetRepository streetRepository,
 	IPostCountryRepository postCountryRepository,
 	IPostCityRepository postCityRepository,
-	IUserRepository userRepository)
+	IUserRepository userRepository,
+	IPostPostTypeOfRestRepository postPostTypeOfRestRepository)
 	: IRequestHandler<CreatePostCommand, ErrorOr<Post>>
 {
 	public async Task<ErrorOr<Post>> Handle(
 		CreatePostCommand request, CancellationToken cancellationToken)
 	{
 		//Get user
-		var userOrError = await userRepository.GetUserAsync(request.UserId.ToString());
+		var userOrError = await userRepository.FindByIdAsync(request.UserId);
 
 		if(userOrError.IsError)
 			return Error.NotFound("User is not found");
@@ -146,6 +147,23 @@ public class CreatePostCommandHandler(
 				await postImageRepository.SavePostImageAsync();
 			}
 		}
+
+		//Save type of rest
+
+		if (request.PostPostTypesOfRest != null)
+		{
+			foreach(var type in request.PostPostTypesOfRest)
+			{
+				var typeOfRest = new PostPostTypeOfRest
+				{
+					PostTypeOfRestId = type,
+					PostId = post.Id,
+				};
+
+				await postPostTypeOfRestRepository.Create(typeOfRest);
+			}
+		}
+		
 
 		return post;
 	}

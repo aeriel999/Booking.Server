@@ -1,3 +1,4 @@
+import "../../../css/AuthenticationClasses/index.scss"; // Import your CSS file
 import { useForm } from "react-hook-form";
 import InputField from "../../../components/common/InputField";
 import { IGoogleLogin, ILogin } from "../../../interfaces/account";
@@ -10,12 +11,9 @@ import OutlinedErrorAlert from "../../../components/common/ErrorAlert.tsx";
 import { useNavigate } from "react-router-dom";
 import { jwtDecode } from "jwt-decode";
 import { loginResolver } from "../../../validations/account";
-
 import { CredentialResponse, GoogleLogin } from "@react-oauth/google";
 import { startListening } from "../../../SignalR";
 import { getListOfChatRooms } from "../../../store/chat/chat.action.ts";
-
-import "../../../css/AuthenticationClasses/index.scss"; // Import your CSS file
 import Header from "../../../components/authentification/Header.tsx";
 
 export default function SignInPage() {
@@ -48,18 +46,17 @@ export default function SignInPage() {
         };
         try {
             const resp = await dispatch(googleLogin(token));
-
             unwrapResult(resp);
-
-            await afterLogin(resp.payload);
+            await afterLogin(resp.payload.token);
         } catch (error) {
             setErrorMessage(ErrorHandler(error));
         }
     };
 
     const afterLogin = async (token: string) => {
+         
         await startListening();
-
+  
         const decodedToken: { [key: string]: string } = jwtDecode(token);
 
         const role =
@@ -95,12 +92,12 @@ export default function SignInPage() {
                 <div id="authCenterContainer">
                     <h1> Sign in</h1>
 
-                    <div id="loginForm">
+                    <div className="authFormContainer">
                         <form
                             onSubmit={handleSubmit(onSubmit)}
-                            id="loginFormTop"
+                            className="authForm"
                         >
-                            <div className="loginFields">
+                            <div className="authFields">
                                 <InputField
                                     placeholder="Email"
                                     type="email"
@@ -140,7 +137,7 @@ export default function SignInPage() {
                                 )}
                             </div>
 
-                            <div id="loginFormBottom">
+                            <div className="authFormBottom">
                                 <button type="submit" className="authButton">
                                     Sign In
                                 </button>

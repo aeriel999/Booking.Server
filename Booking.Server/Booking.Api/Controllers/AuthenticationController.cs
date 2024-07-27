@@ -133,7 +133,7 @@ public class AuthenticationController(
 
 
 	[HttpPost("reconfirm-email")]
-	public async Task<IActionResult> ReconfirmEmailAsync([FromBody] ReconfirmEmailRequest request)
+	public async Task<IActionResult> ReconfirmEmailAsync(ReconfirmEmailRequest request)
 	{
 		var baseUrl = configuration.GetRequiredSection("HostSettings:ClientURL").Value;
 
