@@ -10,6 +10,7 @@ import ErrorHandler from "../../../components/common/ErrorHandler.ts";
 import Header from "../../../components/authentification/Header.tsx";
 import InputField from "../../../components/common/InputField.tsx";
 import { useForm } from "react-hook-form";
+import "../../../css/AuthenticationClasses/index.scss";
 
 export default function ResetPasswordPage() {
     const { email, token } = useParams();

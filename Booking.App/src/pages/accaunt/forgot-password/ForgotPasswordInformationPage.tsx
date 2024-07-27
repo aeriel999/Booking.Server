@@ -2,6 +2,7 @@ import { useNavigate, useParams } from "react-router-dom";
 import { useEffect, useState } from "react";
 import Header from "../../../components/authentification/Header.tsx";
 import BackArrowButton from "../../../components/common/BackArrowButton.tsx";
+import "../../../css/AuthenticationClasses/index.scss";
 
 export default function ForgotPasswordInformationPage() {
     const { email } = useParams();

@@ -1,5 +1,63 @@
-// body {
-//     margin: 0;
-//     background-image: none;
-//     background-color: azure;
-// }
+@import "../variables.scss";
+
+.dashboardMainContainer{
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    height: 100%;
+}
+
+.dashboardHeaderContainer {
+    background: $primary-style-color;
+    width: 100%;
+    height: 8%;
+    min-height: 80px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+
+    #headerMainPart {
+        width: 80%;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+
+        #logo {
+            width: 226px;
+            min-height: 80px;
+            flex-shrink: 0;
+        }
+
+        #userInfo{
+            display: flex;
+            align-items: center;
+            gap: 11px;
+
+            #avatar{
+                width: 40px;
+                height: 40px;
+                border-radius: 50%;
+                overflow: hidden;
+                align-Self: stretch;
+            }
+
+            #name{
+                color: #FFF;
+                font-size: 20px;
+                font-style: normal;
+                font-weight: 500;
+                line-height: normal;
+            }
+        }
+    }
+}
+
+.dashboardFooter{
+    background: $secondary-font-color;
+    width: 100%;
+    height: 4%;
+    min-height: 30px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}

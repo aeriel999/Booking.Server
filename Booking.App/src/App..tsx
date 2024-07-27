@@ -34,6 +34,7 @@ import "./App.scss";
 import { HomePage } from "./containers/client/HomePage/HomePage.tsx";
 import SignInPage from "./pages/accaunt/login/SignIn.tsx";
 import RealtorRegisterAvatarPage from "./pages/accaunt/register/RealtotRegisterAvatarPage.tsx";
+import DashboardHeader from "./containers/dashboard/layouts/_Header.tsx";
 
 export const App: React.FC = () => {
     const { isLogin, user } = useAppSelector((state) => state.account);
@@ -91,6 +92,12 @@ export const App: React.FC = () => {
                 path="/authentication/reconfirm-email"
                 element={<ReConfirmEmailPage />}
             />
+
+            <Route
+                path="/test"
+                element={<DashboardHeader />}
+            />
+
             {isLogin && (
                 <>
                     <Route
@@ -100,6 +107,7 @@ export const App: React.FC = () => {
 
                     {role() === "realtor" && (
                         <Route path="/dashboard" element={<DashboardLayout />}>
+                           
                             <Route index element={<RealtorProfilePage />} />
                             <Route
                                 path="/dashboard/profile"
