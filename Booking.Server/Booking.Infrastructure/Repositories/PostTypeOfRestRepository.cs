@@ -9,18 +9,22 @@ public class PostTypeOfRestRepository(BookingDbContext context) : IPostTypeOfRes
 {
     private readonly DbSet<PostTypeOfRest> _dbSet = context.Set<PostTypeOfRest>();
 
-	public async Task<List<PostTypeOfRest>> GetListTypeOfRentAsync()
+	public async Task<List<PostTypeOfRest>> GetAsync()
+	{
+		return await _dbSet
+			.Include(p => p.PostPostTypesOfRest!)
+			.ThenInclude(p => p.Post!.ImagesPost)
+			.ToListAsync();
+	}
+
+	public async Task<List<PostTypeOfRest>> GetListTypeOfRestAsync()
 	{
 		return await _dbSet.ToListAsync();
 	}
 
-	public async Task<PostTypeOfRest?> GetTypeOfRentByIdAsync(Guid id)
+	public async Task<PostTypeOfRest?> GetTypeOfRestByIdAsync(Guid id)
     {
 		return await _dbSet.FindAsync(id);
-        return await _dbSet
-            .Include(p => p.PostPostTypesOfRest!)
-            .ThenInclude(p => p.Post!.ImagesPost)
-            .ToListAsync();
     }
 }
 

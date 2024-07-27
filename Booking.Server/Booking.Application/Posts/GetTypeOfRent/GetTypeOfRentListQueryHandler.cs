@@ -11,7 +11,7 @@ public class GetTypeOfRentListQueryHandler(IPostTypeOfRestRepository postTypeOfR
 	public async Task<ErrorOr<List<PostTypeOfRent>>> Handle(
 		GetTypeOfRentListQuery request, CancellationToken cancellationToken)
 	{
-		//var listOfTypes  = await postTypeOfRentRepository.GetListTypeOfRentAsync();
+		//var listOfTypes  = await postTypeOfRentRepository.GetListTypeOfRestAsync();
 
 		//if (listOfTypes == null)
 			return Error.NotFound("Error in loading of Types Of Rent");

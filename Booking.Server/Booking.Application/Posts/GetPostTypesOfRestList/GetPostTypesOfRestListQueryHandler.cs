@@ -12,7 +12,7 @@ public class GetPostTypesOfRestListQueryHandler(
 	public async Task<ErrorOr<List<PostTypeOfRest>>> Handle(
 		GetPostTypesOfRestListQuery request, CancellationToken cancellationToken)
 	{
-		var getPostTypeOfRestResult = await postTypeOfRestRepository.GetListTypeOfRentAsync();
+		var getPostTypeOfRestResult = await postTypeOfRestRepository.GetListTypeOfRestAsync();
 
 		if (getPostTypeOfRestResult == null)
 			return Error.NotFound("Error in loading Type Of Rest list");
