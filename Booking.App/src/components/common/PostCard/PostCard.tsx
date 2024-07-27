@@ -1,18 +1,20 @@
-
-import './style.scss';
+import '../../../css/PostCardClasses/index.scss';
+import { APP_ENV } from '../../../env';
 
 interface IPostCard {
     post: string;
     image: string;
     rating: number;
     city: string;
-    country: string
+    country: string;
+    discount?: number | null;
 }
 
 export const PostCard = (info: IPostCard) => {
     return (
         <div className="card">
-            <img src={info.image}></img>
+            <img src={`${APP_ENV.BASE_URL}/images/posts/${info.image}`}></img>
+            {(info.discount != null && info.discount != 0) ? <div className='discount'>-{info.discount}%</div> : ""}
             <div className="location">
                 <p>{info.post}</p>
                 <p>{info.country}, {info.city}</p>
@@ -23,3 +25,4 @@ export const PostCard = (info: IPostCard) => {
         </div>
     )
 }
+// ${APP_ENV.BASE_URL}/images/posts/${info.image}

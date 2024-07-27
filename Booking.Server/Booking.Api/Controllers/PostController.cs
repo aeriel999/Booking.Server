@@ -37,6 +37,13 @@ using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using System.Security.Claims;
+using Booking.Application.Posts.GetTypesOfRest;
+using Mapster;
+using Booking.Api.Contracts.Post.GetTypeOfRest;
+using Booking.Application.Posts.GetPostsWithMostRating;
+using Booking.Api.Contracts.Post.GetPostWithMostRating;
+using Booking.Application.Posts.GetPostsWithMostDiscount;
+using Booking.Api.Contracts.Post.GetPostWithMostDiscount;
 using Booking.Application.Posts.GetPostPostTypesOfRestList;
 using Booking.Api.Contracts.Post.GetPostPostTypesOfRest;
 
@@ -292,6 +299,42 @@ public class PostController(ISender mediatr, IMapper mapper) : ApiController
 			getPostListForRealtor => Ok(repostPostResult.Value),
 			errors => Problem(errors));
 	}
+
+	[AllowAnonymous]
+	[HttpGet("get-types-of-rest")]
+
+	public async Task<IActionResult> GetTypesOfRestAsync()
+	{
+		var typesOfRest = await mediatr.Send(new GetTypesOfRestQuery());
+
+		return typesOfRest.Match(
+			result => Ok(mapper.Map<List<GetTypeOfRestResponse>>(result)),
+			errors => Problem(errors));
+	}
+
+    [AllowAnonymous]
+    [HttpGet("get-posts-with-most-rating")]
+
+    public async Task<IActionResult> GetPostsWithMostRatingAsync()
+    {
+        var postsWithMostRating = await mediatr.Send(new GetPostsWithMostRatingQuery());
+
+        return postsWithMostRating.Match(
+            result => Ok(mapper.Map<List<GetPostWithMostRatingResponse>>(result)),
+            errors => Problem(errors));
+    }
+
+    [AllowAnonymous]
+    [HttpGet("get-posts-with-most-discount")]
+
+    public async Task<IActionResult> GetPostsWithMostDiscountAsync()
+    {
+        var postsWithMostDiscount = await mediatr.Send(new GetPostsWithMostDiscountQuery());
+
+        return postsWithMostDiscount.Match(
+            result => Ok(mapper.Map<List<GetPostWithMostDiscountResponse>>(result)),
+            errors => Problem(errors));
+    }
 
 	 
 	[HttpGet("get-post-types-of-rest-list")]

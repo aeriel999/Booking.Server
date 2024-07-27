@@ -118,10 +118,28 @@ export interface IPostState {
     countries: ICountry[] | null;
     cities: ICity[] | null;
     streets: IStreet[] | null;
-
+    typesOfRest: ITypeOfRest[] | null;
     searchPost: INamesOfPosts | null;
     postInfoList: IPageOfPostsForRealtor | null;
     postsByRealtorId: IPostByRealtorId[] | null;
+    postMostRating: IPostRatingAndDiscount[] | null;
+    postMostDiscount: IPostRatingAndDiscount[] | null;
+}
+
+interface IPostRatingAndDiscount {
+    id: string;
+    name: string;
+    image: string;
+    country: string;
+    city: string;
+    rating: number;
+    discount: number | null;
+}
+
+interface ITypeOfRest {
+    id: number;
+    name: string;
+    image: string;
 }
 
 export interface INamesOfPosts {

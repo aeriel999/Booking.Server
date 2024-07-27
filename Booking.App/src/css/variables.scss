@@ -1,7 +1,10 @@
 //Fonts
 $primary-font-family: "Roboto", sans-serif;
+$secondary-font-family: "Inter", sans-serif;
+$baloo-font-family: "Baloo 2", sans-serif;
 
 //colors
+$default-color: #000;
 $primary-font-color: #ffffff;
 $secondary-font-color: #808080;
 $error-font-color: #ffffff;
@@ -14,7 +17,21 @@ $back-button-background: rgba(255, 255, 255, 0.24);
 $register-button-background: #b9b9b9;
  
 
+$error-border-color: #EB0000;
+$background-color: #019392;
+$eco-block-color: #00DFC4;
+
 //font-size
+$secondary-font-small-size: 16px;
+$secondary-font-medium-size: 20px;
+$secondary-font-short-size: 12px;
+
+$primary-font-short-size: 14px;
+$primary-font-small-size: 18px;
+$primary-font-medium-size: 20px;
+$primary-font-medium-2-size: 25px;
+$primary-font-bigger-medium-size: 30px;
+$primary-font-normal-size: 34px;
 $extra-small-font-size: 12px;
 $pre-small-font-size: 14px;
 $small-font-size: 16px;
@@ -22,9 +39,28 @@ $medium-font-size: 18px;
 $normal-font-size: 20px;
 $large-font-size: 24px;
 $big-font-size: 34px;
+$primary-font-big-size: 40px;
 
 //font-weight
+$primary-font-bold-weight: 700;
 $light-font-weight: 300;
 $medium-font-weight: 400;
 $normal-font-weight: 500;
 $bold-font-weight: 700;
+$primary-font-normal-weight: 400;
+$primary-font-light-weight: 300;
+
+$secondary-font-weight: 400;
+
+//font-style
+$primary-font-normal-style: normal;
+
+//padding
+$default-padding: 10px 180px;
+
+//border-radius
+
+$border-radius-eco-block-big: 20px 20px 20px 0px;
+$border-radius-eco-block-medium: 15px 15px 15px 0px;
+$border-radius-eco-block-medium-2: 15px 5px 15px 0px;
+$border-radius-eco-block-small: 10px 10px 10px 0px;
