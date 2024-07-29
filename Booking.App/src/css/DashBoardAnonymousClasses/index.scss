@@ -45,7 +45,7 @@ header {
                 height: auto;
                 background-color: #00C2C1;
                 border-radius: 7px;
-                font-size: $primary-font-medium-size;
+                font-size: $normal-font-size;
                 outline: none;
                 padding: 10px 15px;
                 color: $primary-font-color;
@@ -73,7 +73,7 @@ header {
                 height: auto;
                 font-size: $primary-font-big-size;
                 font-style: $primary-font-normal-style;
-                font-weight: $primary-font-bold-weight;
+                font-weight: $bold-font-weight;
                 color: $primary-font-color;
                 line-height: 115%;
             }
@@ -119,9 +119,9 @@ header {
                     border: 1px solid #363838;
                     padding-left: 6.1%;
                     color: rgba(0, 0, 0, 0.50);
-                    font-size: $primary-font-small-size;
+                    font-size: $medium-font-size;
                     font-family: $primary-font-family;
-                    font-weight: $primary-font-normal-weight
+                    font-weight: $medium-font-weight
                 }
 
                 button {
@@ -137,9 +137,9 @@ header {
                     color: var(--Backgrounds-Primary, $primary-font-color);
                     outline: none;
                     border: 1px solid transparent;
-                    font-size: $primary-font-small-size;
+                    font-size: $medium-font-size;
                     font-family: $primary-font-family;
-                    font-weight: $primary-font-normal-weight;
+                    font-weight: $medium-font-weight;
 
                     &:hover {
                         border-color: #363838;
@@ -186,7 +186,7 @@ footer {
         p {
             text-align: center;
             font-size: 26px;
-            font-weight: $primary-font-semi-bold-weight;
+            font-weight: $big-font-weight;
         }
 
         div {
@@ -195,8 +195,8 @@ footer {
 
 
             a {
-                font-size: $primary-font-medium-size;
-                font-weight: $secondary-font-weight;
+                font-size: $normal-font-size;
+                font-weight: $medium-font-weight;
                 flex-basis: 14.2%;
                 text-decoration: none;
                 cursor: pointer;

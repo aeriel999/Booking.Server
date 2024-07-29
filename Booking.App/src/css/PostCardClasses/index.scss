@@ -1,4 +1,4 @@
-@import '../variables.scss';
+@import "../variables.scss";
 
 .card {
     width: 23.8%;
@@ -8,10 +8,9 @@
     grid-template-columns: 73.3% 26.7%;
     row-gap: 2.3%;
     border-radius: 10px;
-    border: 1px solid #A2A2A2;
+    border: 1px solid #a2a2a2;
     background: $primary-font-color;
     position: relative;
-
 
     img {
         height: 100%;
@@ -22,8 +21,6 @@
     }
 
     .location {
-
-
         p {
             color: $default-color;
             line-height: normal;
@@ -35,16 +32,15 @@
                 padding: 5px 10px 5px 10px;
 
                 &:first-child {
-                    font-size: $primary-font-short-size;
-                    font-weight: $primary-font-semi-bold-weight;
+                    font-size: $pre-small-font-size;
+                    font-weight: $big-font-weight;
                     font-family: $baloo-font-family;
-
                 }
 
                 &:last-child {
                     padding: 0px 10px 0px 10px;
-                    font-size: $secondary-font-short-size;
-                    font-weight: $secondary-font-weight;
+                    font-size: $extra-small-font-size;
+                    font-weight: $medium-font-weight;
                     font-family: $primary-font-color;
                     margin-bottom: 4.9%;
                 }
@@ -52,20 +48,18 @@
 
             @media (max-width: 1630px) {
                 &:first-child {
-                    font-size: $secondary-font-short-size;
-                    font-weight: $primary-font-semi-bold-weight;
+                    font-size: $extra-small-font-size;
+                    font-weight: $big-font-weight;
                     font-family: $baloo-font-family;
-
                 }
 
                 &:last-child {
                     font-size: 10px;
-                    font-weight: $secondary-font-weight;
+                    font-weight: $medium-font-weight;
                     font-family: $primary-font-color;
                     margin-bottom: 4.9%;
                 }
             }
-
         }
     }
 
@@ -92,10 +86,9 @@
         top: 2.3%;
         color: $default-color;
         font-family: $primary-font-family;
-        font-size: $primary-font-small-size;
+        font-size: $medium-font-size;
         font-style: $primary-font-normal-style;
-        font-weight: $primary-font-semi-bold-weight;
+        font-weight: $big-font-weight;
         line-height: normal;
     }
-
 }
