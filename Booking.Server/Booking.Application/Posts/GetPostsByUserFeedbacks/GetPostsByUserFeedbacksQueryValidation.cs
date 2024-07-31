@@ -1,10 +1,10 @@
 ﻿using Booking.Application.Common.Behaviors.CustomValidators;
 using FluentValidation;
 
-namespace Booking.Application.Users.Realtor.GetRealtorsByUserFeedbacks;
-public class GetRealtorsByUserFeedbacksQueryValidation : AbstractValidator<GetRealtorsByUserFeedbacksQuery>
+namespace Booking.Application.Posts.GetRealtorsByUserFeedbacks;
+public class GetPostsByUserFeedbacksQueryValidation : AbstractValidator<GetPostsByUserFeedbacksQuery>
 {
-    public GetRealtorsByUserFeedbacksQueryValidation()
+    public GetPostsByUserFeedbacksQueryValidation()
     {
         RuleFor(x => x.Id.ToString())
             .NotEmpty().WithMessage("{ProperyName} must be not empty")

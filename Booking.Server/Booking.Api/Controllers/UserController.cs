@@ -1,29 +1,20 @@
 ﻿using Booking.Api.Contracts.Users.Common.ChangePassword;
 using Booking.Api.Contracts.Users.Realtor.Edit;
 using Booking.Api.Contracts.Users.Realtor.Get;
-using Booking.Api.Contracts.Users.Realtor.Get.Feedback;
-using Booking.Api.Contracts.Users.Realtor.Get.GetRealtorByUserFeedback;
 using Booking.Api.Contracts.Users.Realtor.Get.Information;
 using Booking.Api.Contracts.Users.User.Edit;
-using Booking.Api.Contracts.Users.User.SentFeedback;
 using Booking.Api.Infrastructure;
-using Booking.Application.Common.Behaviors;
 using Booking.Application.Users.Common.ChangePassword;
-using Booking.Application.Users.Realtor;
-using Booking.Application.Users.Realtor.GetFeedbacks;
 using Booking.Application.Users.Realtor.GetRealtorById;
-using Booking.Application.Users.Realtor.GetRealtorsByUserFeedbacks;
 using Booking.Application.Users.Realtor.EditRealtor;
 using Booking.Application.Users.Realtor.GetRealtorsList;
 using Booking.Application.Users.User.DeleteUser;
 using Booking.Application.Users.User.EditUser;
-using Booking.Application.Users.User.SendFeedback;
 using MapsterMapper;
 using MediatR;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.Mvc.RazorPages;
 using System.Security.Claims;
 
 namespace Booking.Api.Controllers;
@@ -96,7 +87,7 @@ public class UserController(ISender mediatr, IMapper mapper, IConfiguration conf
     }
 
 
-    [HttpPost("send-feedback")]
+    /*[HttpPost("send-feedback")]
     public async Task<IActionResult> SendFeedbackAsync([FromBody] SendFeedbackRequest request)
     {
         string clientId = User.Claims.First(u => u.Type == ClaimTypes.NameIdentifier).Value;
@@ -106,10 +97,10 @@ public class UserController(ISender mediatr, IMapper mapper, IConfiguration conf
         return sendFeedbackResult.Match(
             sendFeedbackResult => Ok(sendFeedbackResult),
             errors => Problem(errors));
-    }
+    }*/
 
 
-    [AllowAnonymous]
+    /*[AllowAnonymous]
     [HttpGet("get-feedbacks-{id}")]
     public async Task<IActionResult> GetFeedbacksAsync([FromRoute] Guid id, [FromQuery] int page, int sizeOfPage)
     {      
@@ -131,7 +122,7 @@ public class UserController(ISender mediatr, IMapper mapper, IConfiguration conf
         return getRealtorsResult.Match(
             getRealtorsResult => Ok(mapper.Map<List<GetRealtorByUserFeedbackResponse>>(getRealtorsResult)),
             errors => Problem(errors));
-    }
+    }*/
 
 
     [HttpDelete("delete-user")]

@@ -58,4 +58,6 @@ public class Post
 
 	public ICollection<PostBooking>? Bookings { get; set; }
 
+    public ICollection<Feedback>? ReceivedFeedbacks { get; set; }
+
 }

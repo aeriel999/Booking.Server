@@ -2,6 +2,7 @@
 
 using Booking.Application.Common.Behaviors;
 using Booking.Domain.Posts;
+using ErrorOr;
 
 public interface IPostRepository
 {
@@ -52,4 +53,6 @@ public interface IPostRepository
 	Task<List<Post>> GetListOfPostWithMostRatingAsync();
 
 	Task<List<Post>> GetListOfPostWithMostDiscountAsync();
+
+	Task<ErrorOr<Post>> ChangeRatingForPostAsync(Guid id, float rating);
 }

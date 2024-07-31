@@ -1,13 +1,14 @@
 ﻿using Booking.Application.Common.Behaviors;
-using Booking.Application.Common.Interfaces.Users;
+using Booking.Application.Common.Interfaces.Post;
 using Booking.Domain.Constants;
+using Booking.Domain.Posts;
 using Booking.Domain.Users;
 using Booking.Infrastructure.Common.Persistence;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 
 namespace Booking.Infrastructure.Repositories;
-public class UserFeedbackRepository(BookingDbContext context,UserManager<User> userManager) : IUserFeedbackRepository
+public class PostFeedbackRepository(BookingDbContext context,UserManager<User> userManager) : IPostFeedbackRepository
 {
     private readonly DbSet<Feedback> _dbSet = context.Set<Feedback>();
     public async Task CreateAsync(Feedback feedback)
@@ -17,7 +18,7 @@ public class UserFeedbackRepository(BookingDbContext context,UserManager<User> u
     public async  Task<PagedList<Feedback>> GetFeedbacksAsync(Guid id, int page, int sizeOfPage)
     {
             var list = await _dbSet
-            .Where(f => f.RealtorId == id)
+            .Where(f => f.PostId == id)
             .OrderByDescending(f => f.FeedbackAt)
             .Include(f => f.Client)
             .ToListAsync();
@@ -37,16 +38,17 @@ public class UserFeedbackRepository(BookingDbContext context,UserManager<User> u
        await context.SaveChangesAsync();
     }
 
-    public async Task<List<User>> GetRealtorsByUserFeedbacksAsync(Guid id)
+    public async Task<List<Post>> GetPostsByUserFeedbacksAsync(Guid id)
     {
         var res = await _dbSet
-            .Where(r => r.ClientId == id)
-            .Include(r => r.Realtor)
-            .Select(r => r.Realtor)
+            .Where(p => p.ClientId == id)
+            .Include(p => p.Post)
+            .ThenInclude(p => p!.ImagesPost)
+            .Select(p => p.Post)
             .Distinct()
             .ToListAsync();
 
-        return res;
+        return res!;
     }
 }
 

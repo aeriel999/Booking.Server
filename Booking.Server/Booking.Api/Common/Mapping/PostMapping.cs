@@ -22,10 +22,13 @@ using Booking.Application.Posts.GetCities;
 using Booking.Application.Posts.GetFilteredList;
 using Booking.Application.Posts.GetNameOfPost;
 using Booking.Application.Posts.GetPostByName;
-using Booking.Application.Posts.GetPostListForRealtor;
 using Booking.Application.Posts.GetStreets;
 using Booking.Domain.Posts;
 using Mapster;
+using Booking.Application.Posts.SendFeedback;
+using Booking.Api.Contracts.Post.SentFeedback;
+using Booking.Api.Contracts.Post.Feedback;
+using Booking.Api.Contracts.Post.GetRealtorByUserFeedback;
 
 namespace Booking.Api.Common.Mapping;
 
@@ -49,6 +52,8 @@ public class PostMapping : IRegister
 			.Map(desp => desp.CountryId, src => src.Street!.City!.CountryId)
 			.Map(desp => desp.CityName, src => src.Street!.City!.Name)
 			.Map(desp => desp.CityId, src => src.Street!.City!.Id)
+			.Map(desp => desp.Rate, src => src.Rate)
+			.Map(desp => desp.CountOfFeedbacks, src => src.ReceivedFeedbacks == null ? 0 : src.ReceivedFeedbacks.Count)
 			.Map(desp => desp.ImagePostList, src =>
 			 src.ImagesPost != null ? src.ImagesPost.OrderBy(img => img.Priority)
 			 .Select(img => img.Name).ToArray() : Array.Empty<string>())
@@ -91,6 +96,7 @@ public class PostMapping : IRegister
 			.Map(desp => desp.Id, src => src.Id)
 			.Map(desp => desp.Name, src => src.Name)
 			.Map(desp => desp.Rating, src => src.Rate)
+			.Map(desp => desp.Image, src => src.ImagesPost!.FirstOrDefault(img => img.Priority == 1)!.Name)
 			.Map(desp => desp.Country, src => src.Street!.City!.Country!.Name)
 			.Map(desp => desp.City, src => src.Street!.City!.Name);
 
@@ -98,9 +104,31 @@ public class PostMapping : IRegister
             .Map(desp => desp.Id, src => src.Id)
             .Map(desp => desp.Name, src => src.Name)
             .Map(desp => desp.Rating, src => src.Rate)
+            .Map(desp => desp.Image, src => src.ImagesPost!.FirstOrDefault(img => img.Priority == 1)!.Name)
             .Map(desp => desp.Country, src => src.Street!.City!.Country!.Name)
             .Map(desp => desp.City, src => src.Street!.City!.Name)
-			.Map(desp => desp.Discount, src => src.Discount);
+            .Map(desp => desp.Discount, src => src.Discount);
+
+        config.NewConfig<(SendFeedbackRequest request, string id), SendFeedbackCommand>()
+            .Map(dest => dest.Text, src => src.request.Text)
+            .Map(dest => dest.Rating, src => src.request.Rating)
+            .Map(dest => dest.PostId, src => src.request.PostId)
+            .Map(dest => dest.ClientId, src => Guid.Parse(src.id));
+
+        config.NewConfig<Feedback, GetFeedbackResponse>()
+            .Map(desp => desp.Text, src => src.Text)
+            .Map(desp => desp.Rating, src => src.Rating)
+            .Map(desp => desp.ClientId, src => src.ClientId)
+            .Map(desp => desp.Client, src => src.Client!.Email)
+            .Map(desp => desp.FeedbackAt, src => src.FeedbackAt);
+
+        config.NewConfig<PagedList<GetFeedbackResponse>, PagedList<Feedback>>()
+            .Map(desp => desp.items, src => src.items.Adapt<List<GetFeedbackResponse>>());      
+
+        config.NewConfig<Post, GetPostByUserFeedbackResponse>()
+            .Map(desp => desp.Id, src => src.Id)
+            .Map(desp => desp.Post, src => src.Name)
+            .Map(desp => desp.Image, src => src.ImagesPost!.FirstOrDefault(img => img.Priority == 1)!.Name);
 
         config.NewConfig<PostTypeOfRest, GetTypeOfRestResponse>()
 			.Map(desp => desp.Id, src => src.Id)

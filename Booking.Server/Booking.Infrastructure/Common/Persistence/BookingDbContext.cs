@@ -115,10 +115,10 @@ public class BookingDbContext : IdentityDbContext<User, IdentityRole<Guid>, Guid
 		//	.WithOne(p => p.PostTypeOfRent)
 		//	.OnDelete(DeleteBehavior.ClientNoAction);
 
-		builder.Entity<User>()
+		builder.Entity<Post>()
 			.HasMany(u => u.ReceivedFeedbacks)
-			.WithOne(u => u.Realtor)
-			.HasForeignKey(u => u.RealtorId)
+			.WithOne(u => u.Post)
+			.HasForeignKey(u => u.PostId)
             .OnDelete(DeleteBehavior.ClientCascade);
 
         builder.Entity<User>()

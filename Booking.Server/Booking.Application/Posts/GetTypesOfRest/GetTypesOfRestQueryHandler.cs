@@ -8,7 +8,7 @@ public class GetTypesOfRestQueryHandler(IPostTypeOfRestRepository repository) : 
 {
     public async Task<ErrorOr<List<PostTypeOfRest>>> Handle(GetTypesOfRestQuery request, CancellationToken cancellationToken)
     {
-        var response = await repository.GetAsync();
+        var response = await repository.GetListTypeOfRestWithImagesAsync();
 
         if (response == null) return Error.NotFound("Types of rest are not found");
 

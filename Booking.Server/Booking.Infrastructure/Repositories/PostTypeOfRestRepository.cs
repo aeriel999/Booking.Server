@@ -9,7 +9,7 @@ public class PostTypeOfRestRepository(BookingDbContext context) : IPostTypeOfRes
 {
     private readonly DbSet<PostTypeOfRest> _dbSet = context.Set<PostTypeOfRest>();
 
-	public async Task<List<PostTypeOfRest>> GetAsync()
+	public async Task<List<PostTypeOfRest>> GetListTypeOfRestWithImagesAsync()
 	{
 		return await _dbSet
 			.Include(p => p.PostPostTypesOfRest!)

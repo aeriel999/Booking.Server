@@ -1,6 +1,6 @@
 import { useEffect } from 'react';
 import '../../../css/HomePageClasses/index.scss';
-import point from './point.png';
+import point from '../../../assets/Icons/ph_map-pin.svg';
 import gsap from 'gsap';
 import { ScrollTrigger } from 'gsap/ScrollTrigger';
 import { points } from './pointsAnimation';
@@ -27,8 +27,8 @@ export const HomePage = () => {
         await dispatch(getPostsWithMostDiscount());
     }
     useEffect(() => {
-        console.log(typesOfRest)
-    }, [typesOfRest])
+        console.log(mostRating)
+    }, [mostRating])
     useEffect(() => {
         gsap.registerPlugin(ScrollTrigger);
         points.map((item) => {
@@ -59,7 +59,7 @@ export const HomePage = () => {
         getPostsDiscount();
 
     }, [])
-
+    //<img src={`${APP_ENV.BASE_URL}/images/posts/${item.image}`}></img>
     return (
         <>
             <main>
@@ -70,8 +70,14 @@ export const HomePage = () => {
                     <div className='places'>
                         {typesOfRest != null ? typesOfRest.map((item) => (
                             <div>
-                                <img src={`${APP_ENV.BASE_URL}/images/posts/${item.image}`}></img>
-                                <p>{item.name}</p>
+                                <div className='place-image' style={
+                                    {
+                                        backgroundImage: `url(${APP_ENV.BASE_URL}/images/posts/${item.image})`,
+                                        backgroundSize: "cover",
+                                        backgroundPosition: 'center',
+                                    }
+                                }></div>
+                                <div className='place-name'><p>{item.name}</p></div>
                             </div>
                         )) : ""}
                     </div>
