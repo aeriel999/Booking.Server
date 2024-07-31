@@ -4,7 +4,7 @@ namespace Booking.Application.Common.Interfaces.Post;
 
 public interface IPostTypeOfRestRepository
 {
-    Task<List<PostTypeOfRest>> GetAsync();
+    Task<List<PostTypeOfRest>> GetListTypeOfRestWithImagesAsync();
 
 
 	Task<List<PostTypeOfRest>> GetListTypeOfRestAsync(); 

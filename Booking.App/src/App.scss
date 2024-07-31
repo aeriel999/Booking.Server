@@ -13,5 +13,22 @@ body {
     flex-shrink: 0;
     flex-direction: column;
     justify-content: space-between;
-    height: 100vh;
+    width: 100%;
+    box-sizing: border-box;
+
+    @media (max-width:1920px) {
+        height: 3524px;
+    }
+
+    @media (max-width:1814px) {
+        height: 3924px;
+    }
 }
+
+/*#root {
+    width: 100vw;
+    height: 3924px;
+    margin: 0;
+    padding: 0;
+
+}*/

@@ -7,6 +7,9 @@ using Microsoft.EntityFrameworkCore;
 using System.Text.RegularExpressions;
 using System.IO;
 using MailKit.Search;
+using Booking.Domain.Users;
+using ErrorOr;
+using Microsoft.AspNetCore.Identity;
 
 namespace Booking.Infrastructure.Repositories;
 
@@ -29,6 +32,11 @@ public class PostRepository(BookingDbContext context) : IPostRepository
 		return await _dbSet.Where(post => post.Id == id)
 							.Include(post => post.Category)
 							.Include(post => post.Street!.City!.Country)
+							.Include(post => post.PostPostTypesOfRest!)
+							.ThenInclude(post => post.PostTypeOfRest)
+							.Include(post => post.PostServices!)
+							.ThenInclude(post => post.Service)
+							.Include(post => post.ReceivedFeedbacks)
 							.Include(post => post.User)
 							.Include(post => post.ImagesPost)
 							.Include(post => post.Rooms)
@@ -178,5 +186,25 @@ public class PostRepository(BookingDbContext context) : IPostRepository
         var posts = await GetIncludeListNotArchivedAsync();
 
         return posts.Where(p => p.Discount != null).OrderByDescending(p => p.Discount).Take(4).ToList();
+    }
+
+    public async Task<ErrorOr<Post>> ChangeRatingForPostAsync(Guid id, float rating)
+    {
+        var post = await GetPostById(id);
+
+        if (post == null)
+            return Error.NotFound("Post is not found");
+
+		if(post.Rate == 0)
+			post.Rate = rating;
+		else
+			post.Rate = (post.Rate + rating) / 2;
+
+	    _dbSet.Update(post);
+
+        await SavePostAsync();
+
+        return post;
+
     }
 }
