@@ -69,6 +69,7 @@ export function EditPost() {
     const navigate = useNavigate();
     const [postImages, setPostImages] = useState<string[]>();
     const [deleteImg, setDeleteImg] = useState<string[]>();
+    console.log(isFormValid)
 
     //ToDo make hasCountOfRooms and hasArea
     //ToDo request.CityId == null && request.CityName != null
@@ -195,15 +196,15 @@ export function EditPost() {
 
         const data = new FormData(event.currentTarget);
 
-        const numberOfRoomsResult =
-            (data.get("numberOfRooms") as string) == ""
-                ? null
-                : parseInt(data.get("numberOfRooms") as string, 10);
+        // const numberOfRoomsResult =
+        //     (data.get("numberOfRooms") as string) == ""
+        //         ? null
+        //         : parseInt(data.get("numberOfRooms") as string, 10);
 
-        const areaResult =
-            (data.get("area") as string) == ""
-                ? null
-                : parseInt(data.get("area") as string, 10);
+        // const areaResult =
+        //     (data.get("area") as string) == ""
+        //         ? null
+        //         : parseInt(data.get("area") as string, 10);
 
         const model: IPostEdit = {
             id: postId as string,

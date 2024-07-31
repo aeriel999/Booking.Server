@@ -17,7 +17,7 @@ import { useAppDispatch } from "../../hooks/redux";
 import { unwrapResult } from "@reduxjs/toolkit";
 import { IFetchData, IPostInfoForRealtor } from "../../interfaces/post";
 import {
-    archivePost,
+    
     deletePost,
     getArchivedPostList,
     repostPost,
@@ -68,6 +68,7 @@ export default function ArchivePage() {
         event: React.MouseEvent<HTMLButtonElement> | null,
         newPage: number
     ) => {
+        console.log(event)
         setPage(newPage);
     };
 

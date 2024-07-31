@@ -35,6 +35,8 @@ export default function ComboBox({
         if (newValue) {
             onChange(newValue);
         }
+        //ToDo Delete console.log
+        console.log(event);
     };
 
     return (

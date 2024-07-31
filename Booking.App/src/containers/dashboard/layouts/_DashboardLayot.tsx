@@ -27,7 +27,7 @@ import { Collapse, Rating } from "@mui/material";
 import Button from "@mui/material/Button";
 import { logout } from "../../../store/accounts/account.slice.ts";
 import LogoutIcon from "@mui/icons-material/Logout";
-import { endListening, startListening } from "../../../SignalR";
+import { endListening } from "../../../SignalR";
 // import {getListOfChatRooms} from "../../../store/chat/chat.action.ts";
 // import { unwrapResult} from "@reduxjs/toolkit";
 import { DotBadge } from "../../common/Badge.tsx";

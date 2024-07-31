@@ -3,7 +3,7 @@ import { Box } from "@mui/system"
 import { useEffect, useState } from "react";
 import CloseIcon from '@mui/icons-material/Close';
 import { APP_ENV } from "../../env";
-import { isCancel } from "axios";
+ 
 
 interface IImagesPage {
     isOpen: boolean,

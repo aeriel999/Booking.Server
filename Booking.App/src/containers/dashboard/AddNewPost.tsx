@@ -69,6 +69,9 @@ export function AddNewPost() {
     const [upload, setUpload] = useState<boolean>(false);
     const [isHotel, setIsHotel] = useState<boolean>(false);
 
+//ToDo Delete console.log
+console.log(isFormValid)
+
     const getCategoryList = async () => {
         try {
             const response = await dispatch(getListOfCategories());
