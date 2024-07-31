@@ -8,14 +8,16 @@ using Booking.Application.Users.Common.ChangePassword;
 using Booking.Application.Users.Realtor.GetRealtorById;
 using Booking.Application.Users.Realtor.EditRealtor;
 using Booking.Application.Users.Realtor.GetRealtorsList;
-using Booking.Application.Users.User.DeleteUser;
-using Booking.Application.Users.User.EditUser;
 using MapsterMapper;
 using MediatR;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using System.Security.Claims;
+using Booking.Api.Contracts.Users.Common.ChangeAvatar;
+using Booking.Application.Users.Client.EditUser;
+using Booking.Application.Users.Common.ChangeAvatar;
+using Booking.Application.Users.Client.DeleteUser;
 
 namespace Booking.Api.Controllers;
 
@@ -73,8 +75,26 @@ public class UserController(ISender mediatr, IMapper mapper, IConfiguration conf
 			errors => Problem(errors));
 	}
 
+	[HttpPost("reupload-avatar")]
+	public async Task<IActionResult> ChangeAvatarAsync(ChangeAvatarRequest request)
+	{
+		string userId = User.Claims.First(u => u.Type == ClaimTypes.NameIdentifier).Value;
 
-    [HttpPost("change-password")]
+		using MemoryStream memoryStream = new MemoryStream();
+
+		await request.Avatar.CopyToAsync(memoryStream);
+
+		var image = memoryStream.ToArray();
+
+		var changeAvatarResult = await mediatr.Send(new ChangeAvatarCommand(image, Guid.Parse(userId)));
+
+		return changeAvatarResult.Match(
+		   changeAvatarResult => Ok(changeAvatarResult),
+		   errors => Problem(errors));
+	}
+
+
+	[HttpPost("change-password")]
     public async Task<IActionResult> ChangePasswordAsync([FromBody] ChangePasswordRequest request)
     {
         string userId = User.Claims.First(u => u.Type == ClaimTypes.NameIdentifier).Value;

@@ -25,6 +25,7 @@ using Booking.Application.Posts.GetPostByName;
 using Booking.Application.Posts.GetStreets;
 using Booking.Domain.Posts;
 using Mapster;
+using Booking.Api.Contracts.Post.EditPost;
 using Booking.Application.Posts.SendFeedback;
 using Booking.Api.Contracts.Post.SentFeedback;
 using Booking.Api.Contracts.Post.Feedback;

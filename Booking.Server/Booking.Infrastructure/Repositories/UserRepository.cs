@@ -8,7 +8,8 @@ using Org.BouncyCastle.Asn1.Ocsp;
 
 namespace Booking.Infrastructure.Repositories;
 
-public class UserRepository(UserManager<User> userManager) : IUserRepository
+public class UserRepository(UserManager<User> userManager) 
+    : IUserRepository
 {
     public async Task<List<User>> GetRealtorsAsync()
 	{
@@ -92,7 +93,6 @@ public class UserRepository(UserManager<User> userManager) : IUserRepository
         return Result.Updated;
     }
 
-
     public async Task<ErrorOr<User>> FindByEmailAsync(string email)
     {
         var user = await userManager.FindByEmailAsync(email);
@@ -103,7 +103,6 @@ public class UserRepository(UserManager<User> userManager) : IUserRepository
         return user;
     }
 
-
     public async Task<ErrorOr<User>> FindByIdAsync(Guid userId)
     {
 		var user = await userManager.FindByIdAsync(userId.ToString());
@@ -113,7 +112,6 @@ public class UserRepository(UserManager<User> userManager) : IUserRepository
 
         return user;
 	}
-
 
 	public async Task<ErrorOr<List<string>>> FindRolesByUserIdAsync(User user)
 	{
@@ -160,11 +158,7 @@ public class UserRepository(UserManager<User> userManager) : IUserRepository
 		else
 			return user.FirstName + " " + user.LastName;
 	}
-	public Task<ErrorOr<List<User>>> GetAllUsersAsync()
-    {
-        throw new NotImplementedException();
-    }
-
+	 
 
 	public async Task<User?> FindByLoginAsync(string loginProvider, string providerKey)
 	{
@@ -185,5 +179,15 @@ public class UserRepository(UserManager<User> userManager) : IUserRepository
 	public Task<ErrorOr<User>> GetUserAsync(string userId)
 	{
 		throw new NotImplementedException();
+	}
+
+    public async Task<ErrorOr<string>> GetRoleByUserAsync(User user)
+    {
+        var roles = await userManager.GetRolesAsync(user);
+
+        if (roles == null)
+            return Error.NotFound();
+
+		return roles.FirstOrDefault()!;
 	}
 }

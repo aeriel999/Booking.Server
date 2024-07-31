@@ -24,9 +24,6 @@ public interface IUserRepository
 	Task<ErrorOr<User>> CreateUserAsync(User user, string role);
 
 
-	Task<ErrorOr<List<User>>> GetAllUsersAsync();
-
-
 	Task<ErrorOr<User>> UpdateProfileAsync(User user);
 
 
@@ -51,6 +48,9 @@ public interface IUserRepository
 
 
 	Task<ErrorOr<User>> ChangeRatingForRealtorAsync(Guid id, float rating);
+
+
+	Task<ErrorOr<string>> GetRoleByUserAsync(User user);
 
 
 	//Task<ErrorOr<Deleted>> DeleteUserAsync(Guid userId);

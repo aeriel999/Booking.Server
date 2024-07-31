@@ -1,4 +1,6 @@
-@import '../variables.scss';
+@import "../variables.scss";
+
+
 
 
 
@@ -28,13 +30,13 @@
             line-height: normal;
 
             &:first-child {
-                font-size: $primary-font-normal-size;
-                font-weight: $primary-font-semi-bold-weight;
+                font-size: $big-font-size;
+                font-weight: $big-font-weight;
             }
 
             &:last-child {
-                font-size: $primary-font-small-size;
-                font-weight: $secondary-font-weight;
+                font-size: $medium-font-size;
+                font-weight: $medium-font-weight;
                 margin-bottom: 1.9%;
             }
         }
@@ -58,7 +60,6 @@ main {
     row-gap: 3%;
     padding: $default-padding;
     box-sizing: border-box;
-
     font-family: $primary-font-family;
 
     .popular-places {
@@ -72,9 +73,9 @@ main {
             font-family: $baloo-font-family;
             text-align: center;
             color: $default-color;
-            font-size: $primary-font-normal-size;
-            font-style: $primary-font-normal-weight;
-            font-weight: $primary-font-semi-bold-weight;
+            font-size: $big-font-size;
+            font-style: $medium-font-weight;
+            font-weight: $big-font-weight;
             line-height: normal;
         }
 
@@ -82,9 +83,9 @@ main {
             font-family: $baloo-font-family;
             text-align: center;
             color: $default-color;
-            font-size: $primary-font-small-size;
-            font-style: $primary-font-normal-weight;
-            font-weight: $secondary-font-weight;
+            font-size: $medium-font-size;
+            font-style: $medium-font-weight;
+            font-weight: $medium-font-weight;
             line-height: normal;
         }
 
@@ -128,14 +129,13 @@ main {
 
                     p {
                         margin: 0;
-                        font-size: $primary-font-short-size;
+                        font-size: $pre-small-font-size;
                         font-style: $primary-font-normal-style;
-                        font-weight: $primary-font-semi-bold-weight;
+                        font-weight: $big-font-weight;
                         line-height: normal;
                         color: $default-color;
                     }
                 }
-
             }
         }
     }
@@ -144,12 +144,11 @@ main {
         width: 100%;
         display: flex;
         border-radius: 10px;
-        border: 1px solid rgba(0, 0, 0, 0.50);
-        background: linear-gradient(90deg, $primary-font-color 0%, rgba(1, 147, 146, 0.25) 59.45%);
+        border: 1px solid rgba(0, 0, 0, 0.5);
+        background: linear-gradient( 90deg, $primary-font-color 0%, rgba(1, 147, 146, 0.25) 59.45% );
         box-sizing: border-box;
 
         div {
-
             &:first-child {
                 flex-basis: 25.5%;
                 height: auto;
@@ -161,17 +160,17 @@ main {
 
                 p {
                     color: #000;
-                    font-size: $primary-font-bigger-medium-size;
+                    font-size: $extra-large-font-size;
                     font-style: $primary-font-normal-style;
-                    font-weight: $primary-font-bold-weight;
+                    font-weight: $bold-font-weight;
                     line-height: 41px;
                 }
 
                 button {
                     color: var(--Backgrounds-Primary, $primary-font-color);
-                    font-size: $primary-font-medium-size;
+                    font-size: $normal-font-size;
                     font-style: $primary-font-normal-style;
-                    font-weight: $primary-font-semi-bold-weight;
+                    font-weight: $big-font-weight;
                     line-height: normal;
                     padding: 10px 15px;
                     border-radius: 10px;
@@ -189,50 +188,48 @@ main {
                 margin-right: 6.7%;
 
                 .point1 {
-                    @include position(72px, 522.87px, 133.87px, 5px, -13.378deg);
+                    @include position( 72px, 522.87px, 133.87px, 5px, -13.378deg );
                 }
 
                 .point2 {
-                    @include position(93.88px, 488.88px, 111.88px, 38.88px, -13.679deg);
+                    @include position( 93.88px, 488.88px, 111.88px, 38.88px, -13.679deg );
                 }
 
                 .point3 {
-                    @include position(135px, 428.33px, 71.33px, 98px, 12.222deg);
+                    @include position( 135px, 428.33px, 71.33px, 98px, 12.222deg );
                 }
 
                 .point4 {
-                    @include position(176px, 509.87px, 29.87px, 16px, -13.378deg);
+                    @include position( 176px, 509.87px, 29.87px, 16px, -13.378deg );
                 }
 
                 .point5 {
-                    @include position(5.44px, 100.32px, 260.32px, 413.56px, 19.606deg);
+                    @include position( 5.44px, 100.32px, 260.32px, 413.56px, 19.606deg );
                     width: 18.093px;
                     height: 18.093px;
                 }
 
                 .point6 {
-                    @include position(15px, 151.31px, 240.31px, 346.99px, -7.59deg);
+                    @include position( 15px, 151.31px, 240.31px, 346.99px, -7.59deg );
                 }
 
                 .point7 {
-                    @include position(0.7px, 48.74px, 222.74px, 449.7px, 7.29deg);
+                    @include position( 0.7px, 48.74px, 222.74px, 449.7px, 7.29deg );
                 }
 
                 .point8 {
-                    @include position(90.04px, 193.07px, 131.07px, 318.04px, 1.726deg);
+                    @include position( 90.04px, 193.07px, 131.07px, 318.04px, 1.726deg );
                 }
 
                 .point9 {
-                    @include position(119.37px, 95.67px, 101.67px, 425.37px, 1.868deg);
+                    @include position( 119.37px, 95.67px, 101.67px, 425.37px, 1.868deg );
                 }
 
                 .point10 {
-                    @include position(8.79px, 492.66px, 212.66px, 38.79px, 1.055deg);
+                    @include position( 8.79px, 492.66px, 212.66px, 38.79px, 1.055deg );
                 }
             }
         }
-
-
     }
 
     .bestPosts {
@@ -243,12 +240,11 @@ main {
         width: 100%;
         height: auto;
         border-radius: 10px;
-        border: 1px solid rgba(0, 0, 0, 0.50);
-        background: linear-gradient(0deg, $background-color -25%, $primary-font-color 412.14%);
+        border: 1px solid rgba(0, 0, 0, 0.5);
+        background: linear-gradient( 0deg, $background-color -25%, $primary-font-color 412.14% );
         position: relative;
         box-sizing: border-box;
         padding: 60px;
-
 
         .eco-block {
             display: flex;
@@ -261,7 +257,7 @@ main {
             color: var(--Backgrounds-Primary, $primary-font-color);
             font-family: $baloo-font-family;
             font-style: $primary-font-normal-style;
-            font-weight: $primary-font-semi-bold-weight;
+            font-weight: $big-font-weight;
             line-height: normal;
             scale: 0.5;
 
@@ -270,14 +266,14 @@ main {
                 height: 27.1%;
                 border-radius: $border-radius-eco-block-big;
                 font-size: $primary-font-big-size;
-                background: linear-gradient(87deg, $eco-block-color 0.15%, $primary-font-color 145.66%);
+                background: linear-gradient( 87deg, $eco-block-color 0.15%, $primary-font-color 145.66% );
 
                 @include position(17.3%, 88.4%, 41.6%, 1.6%, -58.71deg);
             }
 
             &:nth-child(2) {
                 border-radius: $border-radius-eco-block-big;
-                background: linear-gradient(89deg, $eco-block-color -2.62%, $primary-font-color 184.78%);
+                background: linear-gradient( 89deg, $eco-block-color -2.62%, $primary-font-color 184.78% );
                 width: 11%;
                 height: 27.1%;
                 font-size: $primary-font-big-size;
@@ -286,57 +282,57 @@ main {
 
             &:nth-child(3) {
                 border-radius: $border-radius-eco-block-medium;
-                background: linear-gradient(91deg, $eco-block-color 3.39%, $primary-font-color 145.99%);
+                background: linear-gradient( 91deg, $eco-block-color 3.39%, $primary-font-color 145.99% );
                 width: 6.8%;
                 height: 16.4%;
-                font-size: $primary-font-bigger-medium-size;
+                font-size: $extra-large-font-size;
 
                 @include position(7.8%, 73.9%, 60.8%, 18.4%, -37.669deg);
             }
 
             &:nth-child(4) {
                 border-radius: $border-radius-eco-block-small;
-                background: linear-gradient(92deg, $eco-block-color -6.27%, $primary-font-color 149.46%);
+                background: linear-gradient( 92deg, $eco-block-color -6.27%, $primary-font-color 149.46% );
                 width: 5.5%;
                 height: 13.7%;
-                font-size: $primary-font-medium-2-size;
+                font-size: $large-font-size;
 
                 @include position(44.7%, 66.2%, 29.6%, 27.5%, 34.953deg);
             }
 
             &:nth-child(5) {
                 border-radius: $border-radius-eco-block-medium-2;
-                background: linear-gradient(271deg, $eco-block-color 0.15%, $primary-font-color 145.55%);
+                background: linear-gradient( 271deg, $eco-block-color 0.15%, $primary-font-color 145.55% );
                 width: 5.5%;
                 height: 13.7%;
-                font-size: $primary-font-medium-2-size;
+                font-size: $large-font-size;
 
                 @include position(14.6%, 27.1%, 60.7%, 66.4%, 33.096deg);
             }
 
             &:nth-child(6) {
                 border-radius: $border-radius-eco-block-medium;
-                background: linear-gradient(271deg, $eco-block-color 6.51%, $primary-font-color 170.85%);
+                background: linear-gradient( 271deg, $eco-block-color 6.51%, $primary-font-color 170.85% );
                 width: 7.4%;
                 height: 18.2%;
-                font-size: $primary-font-medium-2-size;
+                font-size: $large-font-size;
 
                 @include position(59.5%, 21.9%, 11.5%, 69.6%, -20.956deg);
             }
 
             &:nth-child(7) {
                 border-radius: $border-radius-eco-block-big;
-                background: linear-gradient(270deg, $eco-block-color -0.22%, $primary-font-color 153.51%);
+                background: linear-gradient( 270deg, $eco-block-color -0.22%, $primary-font-color 153.51% );
                 width: 8.2%;
                 height: 20.2%;
-                font-size: $primary-font-bigger-medium-size;
+                font-size: $extra-large-font-size;
 
                 @include position(19.6%, 9%, 49.8%, 81.7%, 17.408deg);
             }
 
             &:nth-child(8) {
                 border-radius: $border-radius-eco-block-big;
-                background: linear-gradient(270deg, $eco-block-color -1.18%, $primary-font-color 166.87%);
+                background: linear-gradient( 270deg, $eco-block-color -1.18%, $primary-font-color 166.87% );
                 width: 11%;
                 height: 27.1%;
                 font-size: $primary-font-big-size;
@@ -344,7 +340,6 @@ main {
                 @include position(44.5%, 1.7%, 0.8%, 85.7%, -37.669deg);
             }
         }
-
 
         .text {
             width: 23.8%;
@@ -359,16 +354,15 @@ main {
                 line-height: normal;
 
                 &:first-of-type {
-                    font-size: $primary-font-bigger-medium-size;
-                    font-weight: $primary-font-medium-weight;
+                    font-size: $extra-large-font-size;
+                    font-weight: $normal-font-weight;
                 }
 
                 &:last-of-type {
-                    font-size: $primary-font-medium-size;
-                    font-weight: $primary-font-normal-weight;
+                    font-size: $normal-font-size;
+                    font-weight: $medium-font-weight;
                 }
             }
-
         }
 
         .buttons {
@@ -386,12 +380,11 @@ main {
 
                 &:first-of-type {
                     background: $primary-font-color;
-                    color: $primary-button-color;
-
+                    color: $primary-style-color;
                 }
 
                 &:last-of-type {
-                    background: linear-gradient(0deg, $background-color -25%, $primary-font-color 412.14%);
+                    background: linear-gradient( 0deg, $background-color -25%, $primary-font-color 412.14% );
                     color: $primary-font-color;
                 }
             }
@@ -409,9 +402,9 @@ main {
         .text {
             color: $default-color;
             font-family: $primary-font-family;
-            font-size: $primary-font-normal-size;
+            font-size: $big-font-size;
             font-style: $primary-font-normal-style;
-            font-weight: $primary-font-semi-bold-weight;
+            font-weight: $big-font-weight;
             line-height: normal;
             margin-bottom: 30px;
         }
@@ -432,18 +425,16 @@ main {
 
                 &:first-child {
                     color: $default-color;
-                    font-size: $primary-font-medium-size;
-                    font-weight: $primary-font-medium-weight;
+                    font-size: $normal-font-size;
+                    font-weight: $normal-font-weight;
                 }
 
                 &:last-child {
                     color: $background-color;
-                    font-size: $secondary-font-small-size;
-                    font-weight: $primary-font-normal-weight;
+                    font-size: $small-font-size;
+                    font-weight: $medium-font-weight;
                 }
             }
-
-
         }
     }
 }

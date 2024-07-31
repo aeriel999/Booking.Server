@@ -1,56 +1,48 @@
+@import url(http://fonts.googleapis.com/css?family=Roboto:400,100,100italic,300,300italic,400italic,500,500italic,700,700italic,900italic,900);
+@import url(https://fonts.googleapis.com/css2?family=Baloo+2:wght@400..800&family=Inter:wght@100..900&display=swap);
+
 //Fonts
 $primary-font-family: "Roboto", sans-serif;
-$secondary-font-family: "Inter", sans-serif;
 $baloo-font-family: "Baloo 2", sans-serif;
 
 //colors
 $default-color: #000;
 $primary-font-color: #ffffff;
 $secondary-font-color: #808080;
-$error-font-color: #ffffff;
+$error-font-color: rgba(255, 255, 255, 0.70);
 $primary-style-color: #00c2c1;
 $link-color: #00a7db;
 $border-color: rgba(0, 0, 0, 0.7);
+$menu-border-color: #6C6C6C;
 $register-button-border-color: rgba(0, 0, 0, 0.25);
 $error-border-color: #eb0000;
 $back-button-background: rgba(255, 255, 255, 0.24);
 $register-button-background: #b9b9b9;
- 
-
-$error-border-color: #EB0000;
+$error-border-color: #eb0000;
 $background-color: #019392;
-$eco-block-color: #00DFC4;
+$eco-block-color: #00dfc4;
+$menu-background: #ECECEC;
+$header-menu-background: #23A1A0;
+$dashboard-text-color: #6B6B6B;
+$dashboard-title-color: #5d5d5d;
 
 //font-size
-$secondary-font-small-size: 16px;
-$secondary-font-medium-size: 20px;
-$secondary-font-short-size: 12px;
-
-$primary-font-short-size: 14px;
-$primary-font-small-size: 18px;
-$primary-font-medium-size: 20px;
-$primary-font-medium-2-size: 25px;
-$primary-font-bigger-medium-size: 30px;
-$primary-font-normal-size: 34px;
 $extra-small-font-size: 12px;
 $pre-small-font-size: 14px;
 $small-font-size: 16px;
 $medium-font-size: 18px;
 $normal-font-size: 20px;
 $large-font-size: 24px;
+$extra-large-font-size: 30px;
 $big-font-size: 34px;
 $primary-font-big-size: 40px;
 
 //font-weight
-$primary-font-bold-weight: 700;
 $light-font-weight: 300;
 $medium-font-weight: 400;
 $normal-font-weight: 500;
+$big-font-weight: 600;
 $bold-font-weight: 700;
-$primary-font-normal-weight: 400;
-$primary-font-light-weight: 300;
-
-$secondary-font-weight: 400;
 
 //font-style
 $primary-font-normal-style: normal;
@@ -65,56 +57,4 @@ $border-radius-eco-block-medium: 15px 15px 15px 0px;
 $border-radius-eco-block-medium-2: 15px 5px 15px 0px;
 $border-radius-eco-block-small: 10px 10px 10px 0px;
 
-////
-/// 
-//Fonts
-$primary-font-family: "Roboto", sans-serif;
-$secondary-font-family: "Inter", sans-serif;
-$baloo-font-family: "Baloo 2", sans-serif;
-
-//colors
-$default-color: #000;
-$primary-font-color: #ffffff;
-$secondary-font-color: #808080;
-$error-font-color: rgba(141, 29, 29, 0.7);
-$primary-button-color: #00c2c1;
-$link-color: #00a7db;
-$border-color: rgba(0, 0, 0, 0.7);
-$error-border-color: #EB0000;
-$background-color: #019392;
-$eco-block-color: #00DFC4;
-
-//font-size
-$secondary-font-small-size: 16px;
-$secondary-font-medium-size: 20px;
-$secondary-font-short-size: 12px;
-
-$primary-font-short-size: 14px;
-$primary-font-small-size: 18px;
-$primary-font-medium-size: 20px;
-$primary-font-medium-2-size: 25px;
-$primary-font-bigger-medium-size: 30px;
-$primary-font-normal-size: 34px;
-$primary-font-big-size: 40px;
-
-//font-weight
-$primary-font-bold-weight: 700;
-$primary-font-semi-bold-weight: 600;
-$primary-font-medium-weight: 500;
-$primary-font-normal-weight: 400;
-$primary-font-light-weight: 300;
-
-$secondary-font-weight: 400;
-
-//font-style
-$primary-font-normal-style: normal;
-
-//padding
-$default-padding: 10px 180px;
-
-//border-radius
-
-$border-radius-eco-block-big: 20px 20px 20px 0px;
-$border-radius-eco-block-medium: 15px 15px 15px 0px;
-$border-radius-eco-block-medium-2: 15px 5px 15px 0px;
-$border-radius-eco-block-small: 10px 10px 10px 0px;
+ 
