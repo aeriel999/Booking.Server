@@ -1,9 +1,7 @@
 import { Routes, Route } from "react-router-dom";
 import NotFound from "./pages/errors/NotFound.tsx";
 import RealtorRegisterPage from "./pages/accaunt/register/RealtorRegisterPage.tsx";
-
 import { useAppSelector } from "./hooks/redux/index.ts";
-import DashboardLayout from "./containers/dashboard/layouts/_DashboardLayot.tsx";
 import ChangeEmailPage from "./pages/accaunt/change-email/ChangeEmailPage.tsx";
 import UserRegisterPage from "./pages/accaunt/register/UserRegisterPage.tsx";
 import InformationAfterConfirmationEmail from "./pages/accaunt/instruction/InformationAfterConfirmationEmail.tsx";
@@ -34,7 +32,7 @@ import "./App.scss";
 import { HomePage } from "./containers/client/HomePage/HomePage.tsx";
 import SignInPage from "./pages/accaunt/login/SignIn.tsx";
 import RealtorRegisterAvatarPage from "./pages/accaunt/register/RealtotRegisterAvatarPage.tsx";
-import DashboardHeader from "./containers/dashboard/layouts/_Header.tsx";
+import DashboardLayout from "./containers/dashboard/layouts/DashboardLayout.tsx";
 
 export const App: React.FC = () => {
     const { isLogin, user } = useAppSelector((state) => state.account);
@@ -88,15 +86,12 @@ export const App: React.FC = () => {
                 path="/authentication/reset-password/:email/:token"
                 element={<ResetPasswordPage />}
             />
-             <Route
+            <Route
                 path="/authentication/reconfirm-email"
                 element={<ReConfirmEmailPage />}
             />
 
-            <Route
-                path="/test"
-                element={<DashboardHeader />}
-            />
+            <Route path="/test" element={<DashboardLayout />} />
 
             {isLogin && (
                 <>
@@ -107,7 +102,6 @@ export const App: React.FC = () => {
 
                     {role() === "realtor" && (
                         <Route path="/dashboard" element={<DashboardLayout />}>
-                           
                             <Route index element={<RealtorProfilePage />} />
                             <Route
                                 path="/dashboard/profile"
@@ -214,7 +208,7 @@ export const App: React.FC = () => {
                 path="/authentication/user-register"
                 element={<UserRegisterPage />}
             />
-           
+
             <Route
                 path="/authentication/confirm-email/:userId/:token"
                 element={<ConfirmEmailPage />}
@@ -225,13 +219,11 @@ export const App: React.FC = () => {
                 path="authentication/forgot-password"
                 element={<ForgotPasswordPage />}
             />
-          
-          
+
             <Route
                 path="/authentication/change-email/:userId/:email/:token"
                 element={<ChangeEmailPage />}
             />
-           
 
             <Route
                 path="authentication/register-information/:email"
@@ -245,7 +237,7 @@ export const App: React.FC = () => {
                 path="authentication/realtor-register"
                 element={<RealtorRegisterPage />}
             />
-            
+
             <Route
                 path="authentication/forgot-password-information/:email"
                 element={<ForgotPasswordInformationPage />}
