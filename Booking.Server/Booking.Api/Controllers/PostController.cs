@@ -28,8 +28,7 @@ using Booking.Application.Posts.GetPostByName;
 using Booking.Application.Posts.GetPostListByRealtorId;
 using Booking.Application.Posts.GetPostListForRealtor;
 using Booking.Application.Posts.GetStreets;
-using Booking.Application.Posts.GetTypeOfRent;
-using Booking.Application.Users.User.DeleteUser;
+ 
 using Booking.Application.Posts.RepostPost;
 using MapsterMapper;
 using MediatR;
@@ -44,7 +43,7 @@ using Booking.Application.Posts.GetPostsWithMostRating;
 using Booking.Api.Contracts.Post.GetPostWithMostRating;
 using Booking.Application.Posts.GetPostsWithMostDiscount;
 using Booking.Api.Contracts.Post.GetPostWithMostDiscount;
-using Booking.Application.Posts.GetPostPostTypesOfRestList;
+ 
 using Booking.Api.Contracts.Post.GetPostPostTypesOfRest;
 using Booking.Api.Contracts.Post.EditPost;
 using Booking.Application.Posts.SendFeedback;
@@ -53,6 +52,7 @@ using Booking.Application.Posts.GetRealtorsByUserFeedbacks;
 using Booking.Api.Contracts.Post.SentFeedback;
 using Booking.Api.Contracts.Post.Feedback;
 using Booking.Api.Contracts.Post.GetRealtorByUserFeedback;
+using Booking.Application.Posts.GetPostTypesOfRestList;
 
 namespace Booking.Api.Controllers;
 

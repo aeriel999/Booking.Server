@@ -5,7 +5,6 @@ using Booking.Api.Contracts.Users.Realtor.Get.Information;
 using Booking.Api.Contracts.Users.User.Edit;
 using Booking.Api.Infrastructure;
 using Booking.Application.Users.Common.ChangePassword;
-using Booking.Application.Users.Realtor.GetFeedbacks;
 using Booking.Application.Users.Realtor.GetRealtorById;
 using Booking.Application.Users.Realtor.EditRealtor;
 using Booking.Application.Users.Realtor.GetRealtorsList;
@@ -17,7 +16,6 @@ using Microsoft.AspNetCore.Mvc;
 using System.Security.Claims;
 using Booking.Api.Contracts.Users.Common.ChangeAvatar;
 using Booking.Application.Users.Client.EditUser;
-using Booking.Application.Users.Client.SendFeedback;
 using Booking.Application.Users.Common.ChangeAvatar;
 using Booking.Application.Users.Client.DeleteUser;
 

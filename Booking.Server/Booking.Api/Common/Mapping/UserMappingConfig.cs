@@ -4,12 +4,12 @@ using Booking.Api.Contracts.Users.Realtor.Get;
 using Booking.Api.Contracts.Users.Realtor.Get.Information;
 using Booking.Api.Contracts.Users.User.Edit;
 using Booking.Application.Users.Common.ChangePassword;
-using Booking.Application.Users.Realtor;
+ 
 using Booking.Application.Users.Realtor.EditRealtor;
 using Booking.Domain.Users;
 using Mapster;
 using Booking.Application.Users.Client.EditUser;
-using Booking.Application.Users.Client.SendFeedback;
+ 
 
 namespace Booking.Api.Common.Mapping;
 
