@@ -46,6 +46,7 @@ using Booking.Application.Posts.GetPostsWithMostDiscount;
 using Booking.Api.Contracts.Post.GetPostWithMostDiscount;
 using Booking.Application.Posts.GetPostPostTypesOfRestList;
 using Booking.Api.Contracts.Post.GetPostPostTypesOfRest;
+using Booking.Api.Contracts.Post.EditPost;
 
 namespace Booking.Api.Controllers;
 

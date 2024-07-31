@@ -1,6 +1,5 @@
 import "../../../css/DashBoardRealtorClasses/index.scss";
 import Logo from "../../../assets/Logo/tripbook 1.svg";
-import TestImg from "../../../assets/Test/image 20.svg";
 import ActiveUserProfiler from "../../../assets/DashboardIcons/Active/user-profile-03.svg";
 import UserProfiler from "../../../assets/DashboardIcons/user-profile-03.svg";
 import AllPost from "../../../assets/DashboardIcons/image-01.svg";
@@ -45,14 +44,14 @@ const initialMenuData: IDashboardMenuItem[] = [
         isActive: false,
         image: AddNewPost,
         activeImage: AddNewPost,
-        link: "/dashboard/show-all-post",
+        link: "/dashboard/post/add",
     },
     {
         name: "Archive",
         isActive: false,
         image: Archive,
         activeImage: Archive,
-        link: "/dashboard/show-all-post",
+        link: "/dashboard/archive",
     },
     {
         name: "Inbox",
@@ -117,7 +116,9 @@ export default function DashboardLayout() {
                                 background: `url(${avatarUrl}) center / cover no-repeat`,
                             }}
                         />
-                        <div id="name">{user?.lastName + " " + user?.firstName}</div>
+                        <div id="name">
+                            {user?.lastName + " " + user?.firstName}
+                        </div>
                     </div>
                 </div>
             </div>

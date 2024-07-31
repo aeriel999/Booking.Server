@@ -26,6 +26,7 @@ using Booking.Application.Posts.GetPostListForRealtor;
 using Booking.Application.Posts.GetStreets;
 using Booking.Domain.Posts;
 using Mapster;
+using Booking.Api.Contracts.Post.EditPost;
 
 namespace Booking.Api.Common.Mapping;
 

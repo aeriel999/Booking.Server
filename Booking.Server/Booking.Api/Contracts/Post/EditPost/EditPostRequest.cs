@@ -2,7 +2,7 @@
 using Microsoft.AspNetCore.Mvc;
 using System.ComponentModel.DataAnnotations;
 
-namespace Booking.Application.Posts.EditPost;
+namespace Booking.Api.Contracts.Post.EditPost;
 
 public record EditPostRequest
 {
@@ -25,7 +25,7 @@ public record EditPostRequest
 	public Guid? StreetId { get; init; }
 
 	public string? StreetName { get; init; }
- 
+
 	public int ZipCode { get; init; }
 
 	public int? NumberOfGuests { get; init; }

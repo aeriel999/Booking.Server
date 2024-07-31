@@ -3,7 +3,7 @@ using Booking.Domain.Posts;
 using ErrorOr;
 using MediatR;
 
-namespace Booking.Application.Posts.GetPostPostTypesOfRestList;
+namespace Booking.Application.Posts.GetPostTypesOfRestList;
 
 public class GetPostTypesOfRestListQueryHandler(
 	IPostTypeOfRestRepository postTypeOfRestRepository)
@@ -16,7 +16,7 @@ public class GetPostTypesOfRestListQueryHandler(
 
 		if (getPostTypeOfRestResult == null)
 			return Error.NotFound("Error in loading Type Of Rest list");
-		
+
 		return getPostTypeOfRestResult;
 	}
 }

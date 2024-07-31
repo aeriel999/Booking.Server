@@ -9,11 +9,11 @@ using Booking.Api.Contracts.Users.User.SentFeedback;
 using Booking.Application.Common.Behaviors;
 using Booking.Application.Users.Common.ChangePassword;
 using Booking.Application.Users.Realtor;
-using Booking.Application.Users.User.EditUser;
-using Booking.Application.Users.User.SendFeedback;
 using Booking.Application.Users.Realtor.EditRealtor;
 using Booking.Domain.Users;
 using Mapster;
+using Booking.Application.Users.Client.EditUser;
+using Booking.Application.Users.Client.SendFeedback;
 
 namespace Booking.Api.Common.Mapping;
 

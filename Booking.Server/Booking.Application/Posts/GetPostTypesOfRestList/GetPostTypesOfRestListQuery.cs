@@ -2,7 +2,7 @@
 using ErrorOr;
 using MediatR;
 
-namespace Booking.Application.Posts.GetPostPostTypesOfRestList;
+namespace Booking.Application.Posts.GetPostTypesOfRestList;
 
 public class GetPostTypesOfRestListQuery() : IRequest<ErrorOr<List<PostTypeOfRest>>>;
- 
+

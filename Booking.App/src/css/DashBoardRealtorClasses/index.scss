@@ -336,7 +336,7 @@
                     background: $header-menu-background;
                     color: $primary-font-color;
 
-                    &:hover{
+                    &:hover {
                         background: $menu-border-color;
                     }
                 }
@@ -345,11 +345,24 @@
                     border: 1px solid $menu-border-color;
                     color: $default-color;
 
-                    &:hover{
+                    &:hover {
                         background: $header-menu-background;
                     }
                 }
             }
         }
     }
+}
+
+.subMenu {
+    padding-left: 20px;
+}
+
+.subMenuItem {
+    padding: 10px;
+    cursor: pointer;
+}
+
+.subMenuItem.active {
+    background-color: #f0f0f0;
 }

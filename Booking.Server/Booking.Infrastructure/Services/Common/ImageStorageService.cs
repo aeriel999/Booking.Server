@@ -13,6 +13,7 @@ public class ImageStorageService : IImageStorageService
 	{
 		var uploadFolderPath = Path.Combine(Directory.GetCurrentDirectory(), "images", "avatars");
  
+		//Delete Avatar if it already exist
 		if (!user.Avatar.IsNullOrEmpty())
 		{
 			var delFilePath = Path.Combine(uploadFolderPath, user.Avatar!);
