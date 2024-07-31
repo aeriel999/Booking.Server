@@ -47,6 +47,12 @@ using Booking.Api.Contracts.Post.GetPostWithMostDiscount;
 using Booking.Application.Posts.GetPostPostTypesOfRestList;
 using Booking.Api.Contracts.Post.GetPostPostTypesOfRest;
 using Booking.Api.Contracts.Post.EditPost;
+using Booking.Application.Posts.SendFeedback;
+using Booking.Application.Posts.GetFeedbacks;
+using Booking.Application.Posts.GetRealtorsByUserFeedbacks;
+using Booking.Api.Contracts.Post.SentFeedback;
+using Booking.Api.Contracts.Post.Feedback;
+using Booking.Api.Contracts.Post.GetRealtorByUserFeedback;
 
 namespace Booking.Api.Controllers;
 
@@ -347,4 +353,39 @@ public class PostController(ISender mediatr, IMapper mapper) : ApiController
 			getPostTypesOfRestResult => Ok(mapper.Map<List<GetPostTypesOfRestResponse>>(getPostTypesOfRestResult)),
 			errors => Problem(errors));
 	}
+
+    [HttpPost("send-feedback")]
+    public async Task<IActionResult> SendFeedbackAsync([FromBody] SendFeedbackRequest request)
+    {
+        string clientId = User.Claims.First(u => u.Type == ClaimTypes.NameIdentifier).Value;
+
+        var sendFeedbackResult = await mediatr.Send(mapper.Map<SendFeedbackCommand>((request, clientId)));
+
+        return sendFeedbackResult.Match(
+            sendFeedbackResult => Ok(sendFeedbackResult),
+            errors => Problem(errors));
+    }
+    [AllowAnonymous]
+    [HttpGet("get-feedbacks-{id}")]
+    public async Task<IActionResult> GetFeedbacksAsync([FromRoute] Guid id, [FromQuery] int page, int sizeOfPage)
+    {
+        var getFeedbacksResult = await mediatr.Send(new GetFeedbacksQuery(id, page, sizeOfPage));
+
+        return getFeedbacksResult.Match(
+            getFeedbacksResult => Ok(mapper.Map<PagedList<GetFeedbackResponse>>(getFeedbacksResult)),
+            errors => Problem(errors));
+    }
+
+
+    [HttpGet("get-posts-by-user-feedbacks")]
+    public async Task<IActionResult> GetPostsByUserFeedbacksAsync()
+    {
+        string clientId = User.Claims.First(u => u.Type == ClaimTypes.NameIdentifier).Value;
+
+        var getPostsResult = await mediatr.Send(new GetPostsByUserFeedbacksQuery(Guid.Parse(clientId)));
+
+        return getPostsResult.Match(
+            getPostsResult => Ok(mapper.Map<List<GetPostByUserFeedbackResponse>>(getPostsResult)),
+            errors => Problem(errors));
+    }
 }

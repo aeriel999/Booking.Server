@@ -17,7 +17,5 @@ public class User : IdentityUser<Guid>
 
     public ICollection<Feedback>? SentFeedbacks { get; set; }
 
-    public ICollection<Feedback>? ReceivedFeedbacks { get; set; }
-
 	public ICollection<PostBooking>? Bookings  { get; set; }
 }

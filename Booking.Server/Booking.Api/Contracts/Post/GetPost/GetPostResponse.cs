@@ -36,7 +36,9 @@ public record GetPostResponse
 
 	public int? Discount { get; init; }
 
-	public required float Rate { get; init; }	
+	public required float Rate { get; init; }
+
+	public required int CountOfFeedbacks { get; set; }
 
 	public required string[] ImagePostList { get; init; }
 

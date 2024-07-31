@@ -1,8 +1,8 @@
 ﻿using Booking.Application.Common.Behaviors.CustomValidators;
 using FluentValidation;
 
-namespace Booking.Application.Users.Realtor.GetFeedbacks;
-public class GetFeedbacksQueryValidation:AbstractValidator<GetFeedbacksQuery>
+namespace Booking.Application.Posts.GetFeedbacks;
+public class GetFeedbacksQueryValidation : AbstractValidator<GetFeedbacksQuery>
 {
     public GetFeedbacksQueryValidation()
     {

@@ -1,16 +1,12 @@
 ﻿using Booking.Application.Common.Behaviors;
-using Booking.Domain.Users;
+using Booking.Domain.Posts;
 
-namespace Booking.Application.Common.Interfaces.Users;
-public interface IUserFeedbackRepository
+namespace Booking.Application.Common.Interfaces.Post;
+public interface IPostFeedbackRepository
 {
     Task CreateAsync(Feedback feedback);
-
-
     Task<PagedList<Feedback>> GetFeedbacksAsync(Guid id, int page, int sizeOfPage);
-
-
     Task DeleteAllFeedbacksAsync(string id);
-    Task<List<User>> GetRealtorsByUserFeedbacksAsync(Guid id);
+    Task<List<Booking.Domain.Posts.Post>> GetPostsByUserFeedbacksAsync(Guid id);
 }
 
