@@ -28,6 +28,7 @@ export interface IUser {
     phoneNumber: string | null;
     avatar: string | null;
     rating: number | null;
+    profileHeaderImage: string | null;
 }
 
 export interface IErrorResponse {

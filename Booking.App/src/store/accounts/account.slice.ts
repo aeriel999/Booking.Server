@@ -33,6 +33,8 @@ const updateLoginUserState = (state: IAccountState, token: string): void => {
             "http://schemas.microsoft.com/ws/2008/06/identity/claims/role"
         ];
     const id = decodedToken["sub"];
+    const headerImage = decodedToken["ProfileHeaderImage"];
+    const avatar = decodedToken["Avatar"];
 
     if (role === "realtor") {
         const firstName = decodedToken["family_name"];
@@ -41,7 +43,7 @@ const updateLoginUserState = (state: IAccountState, token: string): void => {
             decodedToken[
                 "http://schemas.xmlsoap.org/ws/2005/05/identity/claims/mobilephone"
             ];
-        const avatar = decodedToken["Avatar"];
+
         const rating = decodedToken["Rating"];
 
         state.user = {
@@ -53,6 +55,8 @@ const updateLoginUserState = (state: IAccountState, token: string): void => {
             phoneNumber: phoneNumber,
             avatar: "/images/avatars/" + avatar,
             rating: Number(rating),
+            profileHeaderImage:
+                headerImage === "" ? "/images/avatars/" + headerImage : null,
         };
     } else {
         state.user = {
@@ -62,13 +66,16 @@ const updateLoginUserState = (state: IAccountState, token: string): void => {
             firstName: null,
             lastName: null,
             phoneNumber: null,
-            avatar: null,
+            avatar: avatar === "" ? "/images/avatars/" + avatar : null,
             rating: null,
+            profileHeaderImage:
+                headerImage === "" ? "/images/avatars/" + headerImage : null,
         };
     }
     state.token = token;
     state.isLogin = true;
 
+    
     addLocalStorage("authToken", token);
 };
 
@@ -105,6 +112,7 @@ export const accountsSlice = createSlice({
     extraReducers: (builder) => {
         builder
             .addCase(login.fulfilled, (state, action) => {
+                console.log("authToken", action.payload)
                 updateLoginUserState(state, action.payload);
                 state.status = Status.SUCCESS;
             })
@@ -125,7 +133,6 @@ export const accountsSlice = createSlice({
                 state.status = Status.LOADING;
             })
             .addCase(confirmEmail.fulfilled, (state, action) => {
-                console.log("action.payload", action.payload);
                 updateLoginUserState(state, action.payload);
                 state.status = Status.SUCCESS;
             })
@@ -159,8 +166,7 @@ export const accountsSlice = createSlice({
                 state.status = Status.LOADING;
             })
             .addCase(reloadAvatar.fulfilled, (state, action) => {
-                
-                updateLoginUserState(state,  action.payload);
+                updateLoginUserState(state, action.payload);
                 state.status = Status.SUCCESS;
             })
             .addCase(reloadAvatar.pending, (state) => {

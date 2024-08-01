@@ -23,6 +23,7 @@ export const login = createAsyncThunk(
                 "/api/Authentication/login",
                 payload
             );
+            console.log("response.data", response.data);
             return response.data;
         } catch (error) {
             return rejectWithValue(handleAxiosError(error, "Error"));

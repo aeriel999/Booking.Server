@@ -29,7 +29,11 @@ export default function RealtorProfilePage() {
 
     useEffect(() => {
         if (user) {
-            setAvatarUrl(APP_ENV.BASE_URL + user?.avatar);
+            if (user.avatar) {
+                setAvatarUrl(APP_ENV.BASE_URL + user.avatar);
+
+                console.log("avatarUrl", avatarUrl);
+            }
             setRating(user?.rating ?? 0);
         }
     }, [user]);

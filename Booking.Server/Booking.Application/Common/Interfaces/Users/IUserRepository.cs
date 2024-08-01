@@ -35,9 +35,6 @@ public interface IUserRepository
 	Task<ErrorOr<Updated>> EditUserAsync(Guid id, string? email);
 
 
-	Task<ErrorOr<User>> SaveUserAsync(User user);
-
-
 	Task<string> GetUserNameByUserAsync(User user);
 
 
