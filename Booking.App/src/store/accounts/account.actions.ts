@@ -11,6 +11,7 @@ import {
     IRealtorRegister,
     IReconfirmEmail,
     IReloadAvatar,
+    IReloadImage,
     IResetPassword,
     IUserRegister,
 } from "../../interfaces/account";
@@ -179,6 +180,21 @@ export const reloadAvatar = createAsyncThunk(
         try {
             const response = await apiMediaClient.post(
                 "/api/User/reupload-avatar",
+                payload
+            );
+            return response.data;
+        } catch (error) {
+            return rejectWithValue(handleAxiosError(error, "Network error"));
+        }
+    }
+);
+
+export const reloadProfileHeaderImage = createAsyncThunk(
+    "User/upload-header",
+    async (payload: IReloadImage, { rejectWithValue }) => {
+        try {
+            const response = await apiMediaClient.post(
+                "/api/User/upload-header",
                 payload
             );
             return response.data;

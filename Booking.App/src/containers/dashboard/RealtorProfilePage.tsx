@@ -10,8 +10,11 @@ import { Rating } from "@mui/material";
 import { useNavigate } from "react-router-dom";
 import { AvatarValidator } from "../../validations/account";
 import OutlinedErrorAlert from "../../components/common/ErrorAlert";
-import { reloadAvatar } from "../../store/accounts/account.actions";
-import { IReloadAvatar } from "../../interfaces/account";
+import {
+    reloadAvatar,
+    reloadProfileHeaderImage,
+} from "../../store/accounts/account.actions";
+import { IReloadAvatar, IReloadImage } from "../../interfaces/account";
 import { unwrapResult } from "@reduxjs/toolkit";
 import ErrorHandler from "../../components/common/ErrorHandler";
 
@@ -31,12 +34,12 @@ export default function RealtorProfilePage() {
     useEffect(() => {
         if (user) {
             setAvatarUrl(APP_ENV.BASE_URL + user.avatar);
-            
+
             setRating(user?.rating ?? 0);
 
-            if(user.profileHeaderImage !== null){
-                 setHeaderUrl(APP_ENV.BASE_URL + user.profileHeaderImage)
-            }else{
+            if (user.profileHeaderImage !== null) {
+                setHeaderUrl(APP_ENV.BASE_URL + user.profileHeaderImage);
+            } else {
                 setHeaderUrl(HeaderImg);
             }
         }
@@ -67,22 +70,28 @@ export default function RealtorProfilePage() {
         }
     };
 
-    const handleOnReloadHeaderImage = async (e: React.ChangeEvent<HTMLInputElement>) => {
+    const handleOnReloadHeaderImage = async (
+        e: React.ChangeEvent<HTMLInputElement>
+    ) => {
         if (!e.target.files) return;
 
         const file = e.target.files[0];
 
-        const errorMessage = AvatarValidator(file);
+        console.log("file", file);
+
+       // const errorMessage = AvatarValidator(file);
 
         if (!errorMessage) {
             setErrorMessage(undefined);
 
-            setImage(file);
+            // setImage(file);
 
-            const avatar: IReloadAvatar = { avatar: file };
+            const headerImage: IReloadImage = { profileHeaderImage: file };
 
             try {
-                const response = await dispatch(reloadAvatar(avatar));
+                const response = await dispatch(
+                    reloadProfileHeaderImage(headerImage)
+                );
                 unwrapResult(response);
             } catch (error) {
                 setErrorMessage(ErrorHandler(error));
@@ -105,13 +114,12 @@ export default function RealtorProfilePage() {
             <div
                 className="header"
                 style={{
-                    background: `url(${headerUrl
-                        }) center / cover no-repeat`,
+                    background: `url(${headerUrl}) center / cover no-repeat`,
                 }}
             >
                 <div id="reload">
                     <label htmlFor="header-upload">
-                        <img   src={HeaderUpload} alt="HeaderUpload" />
+                        <img src={HeaderUpload} alt="HeaderUpload" />
                     </label>
                     <input
                         id="header-upload"

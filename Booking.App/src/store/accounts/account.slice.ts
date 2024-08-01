@@ -15,6 +15,7 @@ import {
     realtorRegister,
     reconfirmEmail,
     reloadAvatar,
+    reloadProfileHeaderImage,
     resetPassword,
     userRegister,
 } from "./account.actions.ts";
@@ -34,6 +35,8 @@ const updateLoginUserState = (state: IAccountState, token: string): void => {
         ];
     const id = decodedToken["sub"];
     const headerImage = decodedToken["ProfileHeaderImage"];
+
+    console.log("headerImage", headerImage)
 
     const avatar = decodedToken["Avatar"];
 
@@ -57,7 +60,7 @@ const updateLoginUserState = (state: IAccountState, token: string): void => {
             avatar: "/images/avatars/" + avatar,
             rating: Number(rating),
             profileHeaderImage:
-                headerImage === null  ? "/images/avatars/" + headerImage : null,
+                headerImage === null ? null : "/images/avatars/" + headerImage ,
         };
     } else {
         state.user = {
@@ -67,10 +70,10 @@ const updateLoginUserState = (state: IAccountState, token: string): void => {
             firstName: null,
             lastName: null,
             phoneNumber: null,
-            avatar: avatar === null ? "/images/avatars/" + avatar : null,
+            avatar: avatar === null ? null : "/images/avatars/" + avatar ,
             rating: null,
             profileHeaderImage:
-                headerImage === null ? "/images/avatars/" + headerImage : null,
+                headerImage === null ? null :  "/images/avatars/" + headerImage ,
         };
     }
     state.token = token;
@@ -112,7 +115,6 @@ export const accountsSlice = createSlice({
     extraReducers: (builder) => {
         builder
             .addCase(login.fulfilled, (state, action) => {
-                console.log("authToken", action.payload);
                 updateLoginUserState(state, action.payload);
                 state.status = Status.SUCCESS;
             })
@@ -170,6 +172,13 @@ export const accountsSlice = createSlice({
                 state.status = Status.SUCCESS;
             })
             .addCase(reloadAvatar.pending, (state) => {
+                state.status = Status.LOADING;
+            })
+            .addCase(reloadProfileHeaderImage.fulfilled, (state, action) => {
+                updateLoginUserState(state, action.payload);
+                state.status = Status.SUCCESS;
+            })
+            .addCase(reloadProfileHeaderImage.pending, (state) => {
                 state.status = Status.LOADING;
             })
             .addCase(changeEmail.fulfilled, (state) => {

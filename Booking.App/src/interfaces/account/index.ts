@@ -95,6 +95,10 @@ export interface IReloadAvatar {
     avatar: File;
 }
 
+export interface IReloadImage {
+    profileHeaderImage: File;
+}
+
 export interface IChangeEmail {
     email: string | undefined;
     token: string | undefined;

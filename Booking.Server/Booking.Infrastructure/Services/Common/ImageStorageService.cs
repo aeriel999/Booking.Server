@@ -25,6 +25,22 @@ public class ImageStorageService : IImageStorageService
 		return await SaveImageAsync(file, uploadFolderPath, 600, 600);
 	}
 
+	public async Task<string> AddProfileHeaderImageAsync(User user, byte[] file)
+	{
+		var uploadFolderPath = Path.Combine(Directory.GetCurrentDirectory(), "images", "avatars");
+
+		//Delete Avatar if it already exist
+		if (!user.ProfileHeaderImage.IsNullOrEmpty())
+		{
+			var delFilePath = Path.Combine(uploadFolderPath, user.ProfileHeaderImage!);
+
+			if (File.Exists(delFilePath))
+				File.Delete(delFilePath);
+		}
+
+		return await SaveImageAsync(file, uploadFolderPath, 1200, 1200);
+	}
+
 	public async Task<string> SavePostImageInStorageAsync(byte[] file)
 	{
 		var uploadFolderPath = Path.Combine(Directory.GetCurrentDirectory(), "images", "posts");
@@ -63,7 +79,6 @@ public class ImageStorageService : IImageStorageService
 	}
 
 
-	//ToDo delete avatar
 	public async Task DeleteImageAsync(string imageName, string path)
 	{
 		await Task.Run
