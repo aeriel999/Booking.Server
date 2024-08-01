@@ -278,12 +278,28 @@ export const LastNameValidator = (
     return undefined; // Return undefined if validation passes
 };
 
-export const AvatarValidator = (files: File[]): string | undefined => {
+export const ImageValidator = (files: File[]): string | undefined => {
     if (files.length === 0) return "Files are required";
 
     const maxSizeInBytes = 5 * 1024 * 1024; // 5 MB in bytes
+    const validFormats = ["image/png", "image/jpeg", "image/jpg", "image/gif"];
+
     for (const file of files) {
         if (file.size > maxSizeInBytes) return "File size must not exceed 5 MB";
+        if (!validFormats.includes(file.type)) return "Invalid file format";
     }
+
+    return undefined;
+};
+
+export const AvatarValidator = (file: File): string | undefined => {
+    if (file === null) return "Files are required";
+
+    const maxSizeInBytes = 5 * 1024 * 1024; // 5 MB in bytes
+    const validFormats = ["image/png", "image/jpeg", "image/jpg", "image/gif"];
+    
+    if (file.size > maxSizeInBytes) return "File size must not exceed 5 MB";
+        if (!validFormats.includes(file.type)) return "Invalid file format";
+    
     return undefined;
 };

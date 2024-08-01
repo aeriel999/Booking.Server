@@ -5,7 +5,7 @@ import UserAvatar from "../../assets/Auth/image 20.svg";
 type AvatarUploadProps = {
     image: File | null | undefined;
     setImage: (file: File | null) => void;
-    validator: (value: File[]) => string | false | undefined;
+    validator: (value: File) => string | false | undefined;
 };
 
 const AvatarUploader = (props: AvatarUploadProps) => {
@@ -15,7 +15,7 @@ const AvatarUploader = (props: AvatarUploadProps) => {
         if (!e.target.files) return;
 
         const file = e.target.files[0];
-        const errorMessage = props.validator([file]);
+        const errorMessage = props.validator(file);
 
         setError(errorMessage);
         if (!errorMessage) {

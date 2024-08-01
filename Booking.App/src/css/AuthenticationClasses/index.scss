@@ -422,10 +422,11 @@ h1 {
 
 .registerInformationContainer {
     display: flex;
+    width: 70%;
     flex-direction: column;
     align-items: flex-start;
     gap: 30px;
-    margin-bottom: 30%;
+    margin-bottom: 40vh;
 
     #messageContainer {
         display: flex;

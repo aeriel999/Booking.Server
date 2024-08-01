@@ -5,7 +5,7 @@ import Box from "@mui/material/Box";
 import Grid from "@mui/material/Grid";
 import InputGroup from "../../components/common/InputGroup.tsx";
 import {
-    AvatarValidator,
+    ImageValidator,
     EmailValidator,
     FirstNameValidator,
     LastNameValidator,
@@ -136,7 +136,7 @@ export default function RealtorProfileEditPage() {
                                 setImages={setImages}
                                 maxImagesUpload={1}
                                 defaultImage={avatarUrl ?? IMG}
-                                validator={AvatarValidator}
+                                validator={ImageValidator}
                                 onChange={(isValid) =>
                                     (formValid.current.avatar = isValid)
                                 }

@@ -14,6 +14,7 @@ import {
     login,
     realtorRegister,
     reconfirmEmail,
+    reloadAvatar,
     resetPassword,
     userRegister,
 } from "./account.actions.ts";
@@ -155,6 +156,14 @@ export const accountsSlice = createSlice({
                 state.status = Status.SUCCESS;
             })
             .addCase(editProfile.pending, (state) => {
+                state.status = Status.LOADING;
+            })
+            .addCase(reloadAvatar.fulfilled, (state, action) => {
+                
+                updateLoginUserState(state,  action.payload);
+                state.status = Status.SUCCESS;
+            })
+            .addCase(reloadAvatar.pending, (state) => {
                 state.status = Status.LOADING;
             })
             .addCase(changeEmail.fulfilled, (state) => {

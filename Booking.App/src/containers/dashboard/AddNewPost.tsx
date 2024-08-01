@@ -27,7 +27,7 @@ import {
     StreetNameValidator,
     ZipCodeValidator,
 } from "../../validations/post";
-import { AvatarValidator } from "../../validations/account";
+import { ImageValidator } from "../../validations/account";
 import Button from "@mui/material/Button";
 import * as React from "react";
 import { joinForPostListening } from "../../SignalR";
@@ -69,8 +69,8 @@ export function AddNewPost() {
     const [upload, setUpload] = useState<boolean>(false);
     const [isHotel, setIsHotel] = useState<boolean>(false);
 
-//ToDo Delete console.log
-console.log(isFormValid)
+    //ToDo Delete console.log
+    console.log(isFormValid);
 
     const getCategoryList = async () => {
         try {
@@ -424,7 +424,7 @@ console.log(isFormValid)
                                     images={images}
                                     setImages={setImages}
                                     maxImagesUpload={maxImagesCount}
-                                    validator={AvatarValidator}
+                                    validator={ImageValidator}
                                     defaultImage={DefaultImg}
                                     onChange={(isValid) =>
                                         (formValid.current.images = isValid)
@@ -435,18 +435,15 @@ console.log(isFormValid)
 
                             {isHotel && (
                                 <>
-                                    
-
-                                    <Typography padding={2}
+                                    <Typography
+                                        padding={2}
                                         variant="h5"
                                         color="text.primary"
                                     >
                                         <Divider />
                                         Add availible rooms
-
                                         <Divider />
                                     </Typography>
-                                    
 
                                     <Grid item xs={12}>
                                         <InputGroup
@@ -489,11 +486,11 @@ console.log(isFormValid)
                                     </Grid>
 
                                     <Grid item xs={12}>
-                                        <FileUploader 
+                                        <FileUploader
                                             images={images}
                                             setImages={setImages}
                                             maxImagesUpload={maxImagesCount}
-                                            validator={AvatarValidator}
+                                            validator={ImageValidator}
                                             defaultImage={DefaultImg}
                                             onChange={(isValid) =>
                                                 (formValid.current.images =
@@ -502,10 +499,9 @@ console.log(isFormValid)
                                             onDelete={handleChange}
                                         />
                                         <Grid padding={3}>
-                                    <Divider />
+                                            <Divider />
+                                        </Grid>
                                     </Grid>
-                                    </Grid>
-
 
                                     <Grid item xs={12}>
                                         <InputGroup
@@ -548,11 +544,11 @@ console.log(isFormValid)
                                     </Grid>
 
                                     <Grid item xs={12}>
-                                        <FileUploader 
+                                        <FileUploader
                                             images={images}
                                             setImages={setImages}
                                             maxImagesUpload={maxImagesCount}
-                                            validator={AvatarValidator}
+                                            validator={ImageValidator}
                                             defaultImage={DefaultImg}
                                             onChange={(isValid) =>
                                                 (formValid.current.images =
@@ -561,21 +557,20 @@ console.log(isFormValid)
                                             onDelete={handleChange}
                                         />
                                         <Grid padding={3}>
-                                    <Divider />
-                                    </Grid>
+                                            <Divider />
+                                        </Grid>
                                     </Grid>
                                     <Button
-                            type="submit"
-                            fullWidth
-                            variant="contained"
-                            sx={{ mt: 3, mb: 2 }}
-                            //   disabled={!isFormValid}
-                        >
-                            Add rooms
-                            
-                        </Button>
-                        <Grid padding={3}>
-                                    <Divider />
+                                        type="submit"
+                                        fullWidth
+                                        variant="contained"
+                                        sx={{ mt: 3, mb: 2 }}
+                                        //   disabled={!isFormValid}
+                                    >
+                                        Add rooms
+                                    </Button>
+                                    <Grid padding={3}>
+                                        <Divider />
                                     </Grid>
                                 </>
                             )}

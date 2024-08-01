@@ -90,6 +90,10 @@ export interface IEditRealtorInfo {
     avatar: File | undefined | null;
 }
 
+export interface IReloadAvatar {
+    avatar: File;
+}
+
 export interface IChangeEmail {
     email: string | undefined;
     token: string | undefined;

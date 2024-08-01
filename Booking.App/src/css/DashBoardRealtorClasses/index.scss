@@ -7,25 +7,18 @@
     gap: 20px;
     align-items: center;
     height: 100%;
-     // @media (max-width:1920px) {
-    //     height: 3524px;
-    // }
-
-    // @media (max-width:1814px) {
-    //     height: 3924px;
-    // }
 }
 
 .dashboardHeaderContainer {
     background: $primary-style-color;
-    width: 100%;
+    min-width: 1150px;
     height: 8%;
     min-height: 80px;
     display: flex;
     justify-content: center;
     align-items: center;
-    position: sticky;
-    top: 0;
+    align-self: stretch;
+     
 
     #headerMainPart {
         width: 80%;
@@ -188,6 +181,10 @@
         min-width: 800px;
         display: flex;
     }
+}
+
+#errorContainer{
+    margin-bottom: 20px;
 }
 
 .profileMainContainer {

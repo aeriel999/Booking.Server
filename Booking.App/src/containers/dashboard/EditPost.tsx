@@ -28,7 +28,7 @@ import {
     StreetNameValidator,
 } from "../../validations/post";
 import FileEditUploader from "../../components/common/FileEditUploader.tsx";
-import { AvatarValidator } from "../../validations/account";
+import { ImageValidator } from "../../validations/account";
 import Button from "@mui/material/Button";
 import * as React from "react";
 import { APP_ENV } from "../../env/index.ts";
@@ -69,7 +69,7 @@ export function EditPost() {
     const navigate = useNavigate();
     const [postImages, setPostImages] = useState<string[]>();
     const [deleteImg, setDeleteImg] = useState<string[]>();
-    console.log(isFormValid)
+    console.log(isFormValid);
 
     //ToDo make hasCountOfRooms and hasArea
     //ToDo request.CityId == null && request.CityName != null
@@ -469,7 +469,7 @@ export function EditPost() {
                                             images={images}
                                             setImages={setImages}
                                             maxImagesUpload={maxImagesCount}
-                                            validator={AvatarValidator}
+                                            validator={ImageValidator}
                                             defaultImage={img}
                                             onChange={(isValid) =>
                                                 (formValid.current.images =
@@ -498,7 +498,7 @@ export function EditPost() {
                                             images={images}
                                             setImages={setImages}
                                             maxImagesUpload={maxImagesCount}
-                                            validator={AvatarValidator}
+                                            validator={ImageValidator}
                                             defaultImage={DefaultImg}
                                             onChange={(isValid) =>
                                                 (formValid.current.images =
