@@ -34,6 +34,7 @@ const updateLoginUserState = (state: IAccountState, token: string): void => {
         ];
     const id = decodedToken["sub"];
     const headerImage = decodedToken["ProfileHeaderImage"];
+
     const avatar = decodedToken["Avatar"];
 
     if (role === "realtor") {
@@ -56,7 +57,7 @@ const updateLoginUserState = (state: IAccountState, token: string): void => {
             avatar: "/images/avatars/" + avatar,
             rating: Number(rating),
             profileHeaderImage:
-                headerImage === "" ? "/images/avatars/" + headerImage : null,
+                headerImage === null  ? "/images/avatars/" + headerImage : null,
         };
     } else {
         state.user = {
@@ -66,16 +67,15 @@ const updateLoginUserState = (state: IAccountState, token: string): void => {
             firstName: null,
             lastName: null,
             phoneNumber: null,
-            avatar: avatar === "" ? "/images/avatars/" + avatar : null,
+            avatar: avatar === null ? "/images/avatars/" + avatar : null,
             rating: null,
             profileHeaderImage:
-                headerImage === "" ? "/images/avatars/" + headerImage : null,
+                headerImage === null ? "/images/avatars/" + headerImage : null,
         };
     }
     state.token = token;
     state.isLogin = true;
 
-    
     addLocalStorage("authToken", token);
 };
 
@@ -112,7 +112,7 @@ export const accountsSlice = createSlice({
     extraReducers: (builder) => {
         builder
             .addCase(login.fulfilled, (state, action) => {
-                console.log("authToken", action.payload)
+                console.log("authToken", action.payload);
                 updateLoginUserState(state, action.payload);
                 state.status = Status.SUCCESS;
             })

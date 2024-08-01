@@ -200,6 +200,17 @@
         flex-shrink: 0;
         border-radius: 10px;
         position: "relative";
+        display: flex;
+
+        #reload{
+            width: 30px;
+            height: 30px;
+            flex-shrink: 0;
+            align-self: end;
+            margin-left: auto;
+            padding-right: 10px;
+            padding-bottom: 10px;
+        }
     }
 
     .avatar {

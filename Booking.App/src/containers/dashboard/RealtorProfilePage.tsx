@@ -5,10 +5,10 @@ import HeaderImg from "../../assets/Templates/Rectangle-50.webp";
 import Upload from "../../assets/DashboardIcons/camera-01.svg";
 import Edit from "../../assets/DashboardIcons/Icon.svg";
 import Lock from "../../assets/DashboardIcons/lock-02.svg";
+import HeaderUpload from "../../assets/DashboardIcons/mdi_pencil-outline.svg";
 import { Rating } from "@mui/material";
 import { useNavigate } from "react-router-dom";
-
-import { AvatarValidator, ImageValidator } from "../../validations/account";
+import { AvatarValidator } from "../../validations/account";
 import OutlinedErrorAlert from "../../components/common/ErrorAlert";
 import { reloadAvatar } from "../../store/accounts/account.actions";
 import { IReloadAvatar } from "../../interfaces/account";
@@ -23,22 +23,51 @@ export default function RealtorProfilePage() {
     const navigate = useNavigate();
     const dispatch = useAppDispatch();
     const [image, setImage] = useState<File | null>(null);
+    const [headerUrl, setHeaderUrl] = useState<string | null>(null);
     const [errorMessage, setErrorMessage] = useState<string | undefined>(
         undefined
     );
 
     useEffect(() => {
         if (user) {
-            if (user.avatar) {
-                setAvatarUrl(APP_ENV.BASE_URL + user.avatar);
-
-                console.log("avatarUrl", avatarUrl);
-            }
+            setAvatarUrl(APP_ENV.BASE_URL + user.avatar);
+            
             setRating(user?.rating ?? 0);
+
+            if(user.profileHeaderImage !== null){
+                 setHeaderUrl(APP_ENV.BASE_URL + user.profileHeaderImage)
+            }else{
+                setHeaderUrl(HeaderImg);
+            }
         }
     }, [user]);
 
     const handleOnAddImage = async (e: React.ChangeEvent<HTMLInputElement>) => {
+        if (!e.target.files) return;
+
+        const file = e.target.files[0];
+
+        const errorMessage = AvatarValidator(file);
+
+        if (!errorMessage) {
+            setErrorMessage(undefined);
+
+            setImage(file);
+
+            const avatar: IReloadAvatar = { avatar: file };
+
+            try {
+                const response = await dispatch(reloadAvatar(avatar));
+                unwrapResult(response);
+            } catch (error) {
+                setErrorMessage(ErrorHandler(error));
+            }
+        } else {
+            setErrorMessage(errorMessage);
+        }
+    };
+
+    const handleOnReloadHeaderImage = async (e: React.ChangeEvent<HTMLInputElement>) => {
         if (!e.target.files) return;
 
         const file = e.target.files[0];
@@ -76,9 +105,23 @@ export default function RealtorProfilePage() {
             <div
                 className="header"
                 style={{
-                    background: `url(${HeaderImg}) center / cover no-repeat`,
+                    background: `url(${headerUrl
+                        }) center / cover no-repeat`,
                 }}
-            ></div>
+            >
+                <div id="reload">
+                    <label htmlFor="header-upload">
+                        <img   src={HeaderUpload} alt="HeaderUpload" />
+                    </label>
+                    <input
+                        id="header-upload"
+                        type="file"
+                        accept="image/*,.png,.jpg,.jpeg,.gif"
+                        onChange={handleOnReloadHeaderImage}
+                        style={{ display: "none" }}
+                    />
+                </div>
+            </div>
 
             <div
                 className="avatar"
