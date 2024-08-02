@@ -81,10 +81,10 @@ export default function RealtorRegisterPage() {
                                     defaultValue={registerData?.firstName}
                                 />
                                 {errors.firstName && (
-                                    <p className="error">
+                                    <div className="error">
                                         <p>*</p>
                                         {errors.firstName.message}
-                                    </p>
+                                    </div>
                                 )}
 
                                 <InputField
@@ -101,10 +101,10 @@ export default function RealtorRegisterPage() {
                                     defaultValue={registerData?.lastName}
                                 />
                                 {errors.lastName && (
-                                    <p className="error">
+                                    <div className="error">
                                         <p>*</p>
                                         {errors.lastName.message}
-                                    </p>
+                                    </div>
                                 )}
 
                                 <Grid className="formInput">
@@ -134,10 +134,10 @@ export default function RealtorRegisterPage() {
                                     defaultValue={registerData?.email}
                                 />
                                 {errors.email && (
-                                    <p className="error">
+                                    <div className="error">
                                         <p>*</p>
                                         {errors.email.message}
-                                    </p>
+                                    </div>
                                 )}
 
                                 <InputField
@@ -153,10 +153,10 @@ export default function RealtorRegisterPage() {
                                     }
                                 />
                                 {errors.password && (
-                                    <p className="error">
+                                    <div className="error">
                                         <p>*</p>
                                         {errors.password.message}
-                                    </p>
+                                    </div>
                                 )}
 
                                 <InputField
@@ -172,11 +172,11 @@ export default function RealtorRegisterPage() {
                                     }
                                 />
                                 {errors.password && (
-                                    <p className="error">
+                                    <div className="error">
                                         {errors.confirmPassword && <p>*</p>}
 
                                         {errors.confirmPassword?.message}
-                                    </p>
+                                    </div>
                                 )}
                             </div>
 

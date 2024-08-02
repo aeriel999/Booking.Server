@@ -71,10 +71,10 @@ export default function ReConfirmEmailPage() {
                                 }
                             />
                             {errors.email && (
-                                <p className="error">
+                                <div className="error">
                                     <p>*</p>
                                     {errors.email.message}
-                                </p>
+                                </div>
                             )}
                         </div>
 

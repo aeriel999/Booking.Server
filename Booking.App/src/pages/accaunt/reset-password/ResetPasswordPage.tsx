@@ -80,10 +80,10 @@ export default function ResetPasswordPage() {
                                     }
                                 />
                                 {errors.password && (
-                                    <p className="error">
+                                    <div className="error">
                                         <p>*</p>
                                         {errors.password.message}
-                                    </p>
+                                    </div>
                                 )}
                                 <InputField
                                     placeholder="Confirm Password"
@@ -98,11 +98,11 @@ export default function ResetPasswordPage() {
                                     }
                                 />
                                 {errors.password && (
-                                    <p className="error">
+                                    <div className="error">
                                         {errors.confirmPassword && <p>*</p>}
 
                                         {errors.confirmPassword?.message}
-                                    </p>
+                                    </div>
                                 )}
                             </div>
 

@@ -9,6 +9,7 @@ import Archive from "../../../assets/DashboardIcons/box.svg";
 import Inbox from "../../../assets/DashboardIcons/inbox-01.svg";
 import Reviews from "../../../assets/DashboardIcons/user-profile-square.svg";
 import Settings from "../../../assets/DashboardIcons/gear.svg";
+import ArrowBack from "../../../assets/DashboardIcons/chevron-left.svg";
 import { Outlet, useNavigate } from "react-router-dom";
 import { useAppDispatch, useAppSelector } from "../../../hooks/redux";
 import { logout } from "../../../store/accounts/account.slice";
@@ -84,6 +85,7 @@ export default function DashboardLayout() {
     const navigate = useNavigate();
     const [currentMenuItem, setCurrentMenuItem] = useState<string>("Profile");
     const [avatarUrl, setAvatarUrl] = useState<string>();
+    const [isExpanded, setIsExpanded] = useState(false);
 
     useEffect(() => {
         if (user) {
@@ -99,6 +101,7 @@ export default function DashboardLayout() {
         setMenuData(updatedMenuData);
         navigate(menuData[index].link);
         setCurrentMenuItem(menuData[index].name);
+        setIsExpanded(true);
     };
 
     return (
@@ -127,7 +130,7 @@ export default function DashboardLayout() {
                 <p>{currentMenuItem}</p>
             </div>
             <div className="mainContainer">
-                <div className="sideMenu">
+                <div className={`sideMenu ${isExpanded ? "expanded" : ""}`}>
                     <div id="items">
                         {menuData.map((item, index) => (
                             <div
@@ -146,8 +149,17 @@ export default function DashboardLayout() {
                                         }
                                         alt={item.name}
                                     />
-                                    <p>{item.name}</p>
+                                    <p className="menuItemsText">{item.name}</p>
                                 </div>
+                                {isExpanded && currentMenuItem === item.name &&(
+                                    <div className="outIcon" onClick={(e)=>{
+                                        e.stopPropagation();
+                                        setIsExpanded(false)
+                                    }}
+                                   >
+                                        <img src={ArrowBack} alt="Collapes"   />
+                                    </div>
+                                )}
                             </div>
                         ))}
                     </div>
