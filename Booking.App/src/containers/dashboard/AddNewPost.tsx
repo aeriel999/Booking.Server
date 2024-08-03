@@ -17,7 +17,13 @@ import {
 } from "../../store/post/post.actions.ts";
 import ErrorHandler from "../../components/common/ErrorHandler.ts";
 import OutlinedErrorAlert from "../../components/common/ErrorAlert.tsx";
-import { ICategory, ICity, ICountry, IListForCombobox, IPostCreate } from "../../interfaces/post";
+import {
+    ICategory,
+    ICity,
+    ICountry,
+    IListForCombobox,
+    IPostCreate,
+} from "../../interfaces/post";
 import InputGroup from "../../components/common/InputGroup.tsx";
 import {
     addPostResolver,
@@ -44,14 +50,19 @@ export function AddNewPost() {
     const [errorMessage, setErrorMessage] = useState<string | undefined>(
         undefined
     );
-
     const [categoryList, setCategoryList] = useState<ICategory[]>([]);
-    const [category, setCategory] = useState<ICategory>();
+    const [category, setCategory] = useState<ICategory | null>(null);
     const [isCategoryValid, setIsCategoryValid] = useState<boolean>(true);
+
     const [countryList, setCountryList] = useState<ICountry[]>([]);
-    const [country, setCountry] = useState<ICountry>();
+    const [country, setCountry] = useState<ICountry | null>(null);
+    const [isCountryValid, setIsCountryValid] = useState<boolean>(true);
+
     const [cityList, setCityList] = useState<ICity[]>([]);
-    const [city, setCity] = useState<ICity>();
+    const [city, setCity] = useState<ICity | null>(null);
+    const [isCityValid, setIsCityValid] = useState<boolean>(true);
+    const [isCityExist, setIsCityExist] = useState<boolean>(false);
+
     const [streetList, setStreetList] = useState<ICity[]>([]);
     const [street, setStreet] = useState<ICity>();
     const formValid = useRef({
@@ -73,13 +84,6 @@ export function AddNewPost() {
     const navigate = useNavigate();
     const [upload, setUpload] = useState<boolean>(false);
     const [isHotel, setIsHotel] = useState<boolean>(false);
-    const [selectedOption, setSelectedOption] = useState<IListForCombobox | null>(null);
-
-    const handleComboBoxChange = (newValue: IListForCombobox) => {
-        setSelectedOption(newValue);
-        console.log("Selected option:", newValue);
-    };
- 
 
     const {
         register,
@@ -179,19 +183,34 @@ export function AddNewPost() {
     // }
 
     const onSubmit = async (data: IPostCreate) => {
-        console.log("category", category);
-
+        console.log("Start");
         if (!category) {
             setIsCategoryValid(false);
-            console.log("isCategoryValid", isCategoryValid);
-        }else{
+            return;
+        }
+        if (!country) {
+            setIsCountryValid(false);
+            return;
+        }
+        if (!city) {
+            console.log("isCityExist", isCityExist);
+
+            //  setIsCityValid(false);
+
+            //  return;
+        }
+        if (isCategoryValid && isCountryValid) {
             const model: IPostCreate = {
                 ...data,
                 categoryId: category?.id!,
+                countryId: category?.id!,
+               cityId: city === undefined || city === null ? null : city?.id!,
             };
+            console.log("model", model);
+        } else {
+            console.log("HELLO");
         }
 
-        
         // try {
         //     const response = await dispatch(login(data));
         //     unwrapResult(response);
@@ -249,7 +268,7 @@ export function AddNewPost() {
                     >
                         <div className="fieldContainer">
                             <InputField
-                                placeholder="Title"
+                                placeholder="Title*"
                                 type="text"
                                 name="name"
                                 register={register}
@@ -264,13 +283,13 @@ export function AddNewPost() {
                                 </div>
                             )}
                         </div>
-  
 
                         <div className="fieldContainer">
                             <ComboBox
                                 options={categoryList}
                                 onChange={setCategory}
                                 label={"Category*"}
+                                isValid={setIsCategoryValid}
                             />
                             {!isCategoryValid && (
                                 <div className="dashboardError">
@@ -283,26 +302,56 @@ export function AddNewPost() {
                             <ComboBox
                                 options={countryList}
                                 onChange={setCountry}
-                                label={"Country *"}
+                                label={"Country*"}
+                                isValid={setIsCountryValid}
                             />
+                            {!isCountryValid && (
+                                <div className="dashboardError">
+                                    *This field is required
+                                </div>
+                            )}
                         </div>
 
-                        {/* {cityList.length > 0 && (
-                            <Grid item xs={12}>
-                                <Typography
-                                    variant="subtitle1"
-                                    color="text.primary"
-                                >
+                        {cityList.length > 0 && !isCityExist && (
+                            <div className="fieldContainer">
+                                <div className="instructionText">
                                     Select City from the list or enter it in a
-                                    field. *
-                                </Typography>
+                                    field.*
+                                </div>
                                 <ComboBox
                                     options={cityList}
                                     onChange={setCity}
-                                    label={"City*"}
+                                    label={"City"}
+                                    isValid={setIsCityValid}
                                 />
-                            </Grid>
-                        )} */}
+                                {!isCityValid && (
+                                    <div className="dashboardError">
+                                        *This field is required
+                                    </div>
+                                )}
+                            </div>
+                        )}
+
+                        {(!city || !isCityValid) && (
+                            <div className="fieldContainer">
+                                <InputField
+                                    placeholder="City*"
+                                    type="text"
+                                    name="cityName"
+                                    register={register}
+                                    setValue={setValue}
+                                    className={
+                                        errors.name ? "errorFormInput" : "field"
+                                    }
+                                    isExist={setIsCityExist}
+                                />
+                                {errors.cityName && (
+                                    <div className="dashboardError">
+                                        * {errors.cityName.message}
+                                    </div>
+                                )}
+                            </div>
+                        )}
 
                         <div>
                             <button type="submit">Submit</button>

@@ -5,9 +5,10 @@ import { IListForCombobox } from "../../interfaces/post";
 
 interface ComboBoxProps {
     options: IListForCombobox[];
-    onChange: (newValue: IListForCombobox) => void;
+    onChange: (newValue: IListForCombobox | null) => void;
     label: string;
     defaultValue?: string;
+    isValid: (isValid: boolean) => void;
 }
 
 export default function ComboBox({
@@ -15,6 +16,7 @@ export default function ComboBox({
     onChange,
     label,
     defaultValue,
+    isValid,
 }: ComboBoxProps) {
     const [selectedOption, setSelectedOption] =
         useState<IListForCombobox | null>(
@@ -28,15 +30,16 @@ export default function ComboBox({
     }, [defaultValue, options]);
 
     const handleChange = (
-        event: React.SyntheticEvent,
+        _event: React.SyntheticEvent,
         newValue: IListForCombobox | null
     ) => {
-        setSelectedOption(newValue);
-        if (newValue) {
-            onChange(newValue);
+        if (newValue === null) {
+            isValid(false);
+        } else {
+            isValid(true);
         }
-        //ToDo Delete console.log
-        console.log(event);
+        setSelectedOption(newValue);
+        onChange(newValue);
     };
 
     return (
@@ -46,12 +49,15 @@ export default function ComboBox({
             options={options}
             value={selectedOption}
             getOptionLabel={(option) => option.name} // Display the name in the dropdown
-            sx={{ minHeight: 40}}
+            sx={{ minHeight: 40 }}
             onChange={handleChange} // Handle change event
-            renderInput={(params) => <TextField {...params} label={label} 
-            sx={{ fontFamily: "Roboto, sans-serif"}}
-            />}
+            renderInput={(params) => (
+                <TextField
+                    {...params}
+                    label={label}
+                    sx={{ fontFamily: "Roboto, sans-serif" }}
+                />
+            )}
         />
     );
 }
- 
