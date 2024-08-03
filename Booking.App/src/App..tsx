@@ -38,9 +38,6 @@ export const App: React.FC = () => {
     const { isLogin, user } = useAppSelector((state) => state.account);
 
     const role = () => {
-        console.log("user", user);
-        console.log("isLogin", isLogin);
-
         if (user?.role.toLowerCase().includes("realtor")) {
             return "realtor";
         } else if (user?.role.toLowerCase().includes("user")) {
@@ -167,11 +164,16 @@ export const App: React.FC = () => {
             <Route path="dashboard/profile" element={<SignInPage />} />
 
             <Route path="dashboard/profile/edit" element={<SignInPage />} />
-                <Route
-                    path="dashboard/profile/change-password"
-                    element={<SignInPage />}
-                />
 
+            <Route
+                path="dashboard/profile/change-password"
+                element={<SignInPage />}
+            />
+
+            <Route
+                path="dashboard/dashboard/post/add"
+                element={<SignInPage />}
+            />
 
             <Route path="authentication/login" element={<SignInPage />} />
 

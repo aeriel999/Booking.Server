@@ -5,6 +5,7 @@ import UserProfiler from "../../../assets/DashboardIcons/user-profile-03.svg";
 import AllPost from "../../../assets/DashboardIcons/image-01.svg";
 import LogOut from "../../../assets/Icons/logout-03.svg";
 import AddNewPost from "../../../assets/DashboardIcons/add-square-03.svg";
+import AddNewPostActive from "../../../assets/DashboardIcons/Active/add-square-03.svg";
 import Archive from "../../../assets/DashboardIcons/box.svg";
 import Inbox from "../../../assets/DashboardIcons/inbox-01.svg";
 import Reviews from "../../../assets/DashboardIcons/user-profile-square.svg";
@@ -44,7 +45,7 @@ const initialMenuData: IDashboardMenuItem[] = [
         name: "Add New Post",
         isActive: false,
         image: AddNewPost,
-        activeImage: AddNewPost,
+        activeImage: AddNewPostActive,
         link: "/dashboard/post/add",
     },
     {

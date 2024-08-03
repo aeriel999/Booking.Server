@@ -46,9 +46,12 @@ export default function ComboBox({
             options={options}
             value={selectedOption}
             getOptionLabel={(option) => option.name} // Display the name in the dropdown
-            sx={{ width: 400 }}
+            sx={{ minHeight: 40}}
             onChange={handleChange} // Handle change event
-            renderInput={(params) => <TextField {...params} label={label} />}
+            renderInput={(params) => <TextField {...params} label={label} 
+            sx={{ fontFamily: "Roboto, sans-serif"}}
+            />}
         />
     );
 }
+ 

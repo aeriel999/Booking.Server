@@ -35,9 +35,6 @@ const updateLoginUserState = (state: IAccountState, token: string): void => {
         ];
     const id = decodedToken["sub"];
     const headerImage = decodedToken["ProfileHeaderImage"];
-
-    console.log("headerImage", headerImage)
-
     const avatar = decodedToken["Avatar"];
 
     if (role === "realtor") {
@@ -60,7 +57,7 @@ const updateLoginUserState = (state: IAccountState, token: string): void => {
             avatar: "/images/avatars/" + avatar,
             rating: Number(rating),
             profileHeaderImage:
-                headerImage === null ? null : "/images/avatars/" + headerImage ,
+                headerImage === null ? null : "/images/avatars/" + headerImage,
         };
     } else {
         state.user = {
@@ -70,10 +67,10 @@ const updateLoginUserState = (state: IAccountState, token: string): void => {
             firstName: null,
             lastName: null,
             phoneNumber: null,
-            avatar: avatar === null ? null : "/images/avatars/" + avatar ,
+            avatar: avatar === null ? null : "/images/avatars/" + avatar,
             rating: null,
             profileHeaderImage:
-                headerImage === null ? null :  "/images/avatars/" + headerImage ,
+                headerImage === null ? null : "/images/avatars/" + headerImage,
         };
     }
     state.token = token;

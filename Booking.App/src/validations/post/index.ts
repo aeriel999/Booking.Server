@@ -1,3 +1,37 @@
+import { Resolver } from "react-hook-form";
+import { IPostCreate } from "../../interfaces/post";
+
+export const addPostResolver: Resolver<IPostCreate> = async (
+    values
+) => {
+    const errors: Record<string, any> = {};
+
+    const nameError = PostNameValidator(values.name);
+    if (nameError) {
+        errors.name = {
+            type: "validation",
+            message: nameError,
+        };
+    }
+
+    return {
+        values: Object.keys(errors).length === 0 ? values : {},
+        errors,
+    };
+};
+
+export const PostNameValidator = (value: string | number): string | undefined => {
+    const strValue = typeof value === 'number' ? value.toString() : value;
+
+    if (!strValue) return "Title must not be empty";
+    if (strValue.length < 8) return "Title must be at least 24 characters long";
+    if (strValue.length > 256) return "Title must be less than 48 characters long";
+    // if (!/^[A-Za-z0-9\s]+$/.test(value)) return 'Title must contain only letters, digits, and spaces';
+    if (/[£#“”]/.test(strValue))
+        return "Title must not contain the following characters: £ # “”";
+    return undefined; // Return undefined if validation passes
+};
+
 export const CityNameValidator = (value: string | number): string | false | undefined => {
     // Convert the value to a string if it is a number
     const strValue = typeof value === 'number' ? value.toString() : value;
@@ -24,17 +58,7 @@ export const StreetNameValidator = (value: string | number): string | undefined 
     return undefined; // Return undefined if validation passes
 };
 
-export const PostNameValidator = (value: string | number): string | undefined => {
-    const strValue = typeof value === 'number' ? value.toString() : value;
 
-    if (!strValue) return "Title must not be empty";
-    if (strValue.length < 8) return "Title must be at least 24 characters long";
-    if (strValue.length > 256) return "Title must be less than 48 characters long";
-    // if (!/^[A-Za-z0-9\s]+$/.test(value)) return 'Title must contain only letters, digits, and spaces';
-    if (/[£#“”]/.test(strValue))
-        return "Title must not contain the following characters: £ # “”";
-    return undefined; // Return undefined if validation passes
-};
 
 export const DescriptionValidator = (value: string | number): string | undefined => {
     const strValue = typeof value === 'number' ? value.toString() : value;

@@ -103,14 +103,16 @@ export default function RealtorProfilePage() {
 
     return (
         <div className="profileMainContainer">
-            <div id="errorContainer">
+            
                 {errorMessage && (
+                    <div className="errorContainer">
                     <OutlinedErrorAlert
                         message={errorMessage}
                         textColor="#000"
                     />
+                     </div>
                 )}
-            </div>
+           
             <div
                 className="header"
                 style={{
@@ -167,7 +169,7 @@ export default function RealtorProfilePage() {
                             <div className="value">{user?.phoneNumber}</div>
                         </div>
                     </div>
-                    <div id="buttons">
+                    {/* <div id="buttons">
                         <button
                             className="button colorButton"
                             onClick={() => navigate("/dashboard/profile/edit")}
@@ -184,7 +186,7 @@ export default function RealtorProfilePage() {
                             <img src={Lock} alt="Edit" />
                             <p>Change Password</p>
                         </button>
-                    </div>
+                    </div> */}
                 </div>
             </div>
         </div>

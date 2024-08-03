@@ -7,6 +7,7 @@ import {
     IResetPassword,
     IUserRegister,
 } from "../../interfaces/account";
+import { IPostCreate } from "../../interfaces/post";
 
 export const loginResolver: Resolver<ILogin> = async (values) => {
     const errors: Record<string, any> = {};
@@ -188,6 +189,8 @@ export const reconfirmemaildResolver: Resolver<IReconfirmEmail> = async (
         errors,
     };
 };
+
+
 
 export const EmailValidator = (value: string | number): string | undefined => {
     const strValue = typeof value === "number" ? value.toString() : value;

@@ -17,9 +17,10 @@ import {
 } from "../../store/post/post.actions.ts";
 import ErrorHandler from "../../components/common/ErrorHandler.ts";
 import OutlinedErrorAlert from "../../components/common/ErrorAlert.tsx";
-import { ICategory, ICity, ICountry, IPostCreate } from "../../interfaces/post";
+import { ICategory, ICity, ICountry, IListForCombobox, IPostCreate } from "../../interfaces/post";
 import InputGroup from "../../components/common/InputGroup.tsx";
 import {
+    addPostResolver,
     CityNameValidator,
     DescriptionValidator,
     PostNameValidator,
@@ -34,6 +35,9 @@ import { joinForPostListening } from "../../SignalR";
 import DefaultImg from "../../assets/images.png";
 import { maxImagesCount } from "../../constants/index.ts";
 import FileUploader from "../../components/common/FileUploader.tsx";
+import InputField from "../../components/common/InputField.tsx";
+import { useForm } from "react-hook-form";
+import "../../css/DashBoardRealtorClasses/index.scss";
 
 export function AddNewPost() {
     const dispatch = useAppDispatch();
@@ -43,6 +47,7 @@ export function AddNewPost() {
 
     const [categoryList, setCategoryList] = useState<ICategory[]>([]);
     const [category, setCategory] = useState<ICategory>();
+    const [isCategoryValid, setIsCategoryValid] = useState<boolean>(true);
     const [countryList, setCountryList] = useState<ICountry[]>([]);
     const [country, setCountry] = useState<ICountry>();
     const [cityList, setCityList] = useState<ICity[]>([]);
@@ -68,9 +73,20 @@ export function AddNewPost() {
     const navigate = useNavigate();
     const [upload, setUpload] = useState<boolean>(false);
     const [isHotel, setIsHotel] = useState<boolean>(false);
+    const [selectedOption, setSelectedOption] = useState<IListForCombobox | null>(null);
 
-    //ToDo Delete console.log
-    console.log(isFormValid);
+    const handleComboBoxChange = (newValue: IListForCombobox) => {
+        setSelectedOption(newValue);
+        console.log("Selected option:", newValue);
+    };
+ 
+
+    const {
+        register,
+        handleSubmit,
+        formState: { errors },
+        setValue,
+    } = useForm<IPostCreate>({ resolver: addPostResolver });
 
     const getCategoryList = async () => {
         try {
@@ -150,445 +166,519 @@ export function AddNewPost() {
         }
     }, [city]);
 
-    function handleChange() {
-        setIsFormValid(
-            Object.values(formValid.current).every((isValid) => isValid)
-        );
+    // function handleChange() {
+    //     setIsFormValid(
+    //         Object.values(formValid.current).every((isValid) => isValid)
+    //     );
 
-        console.log("formValid.current", formValid.current);
-        console.log(
-            "TestValid",
-            Object.values(formValid.current).every((isValid) => isValid)
-        );
-    }
+    //     console.log("formValid.current", formValid.current);
+    //     console.log(
+    //         "TestValid",
+    //         Object.values(formValid.current).every((isValid) => isValid)
+    //     );
+    // }
 
-    console.log("TestValid", formValid.current);
+    const onSubmit = async (data: IPostCreate) => {
+        console.log("category", category);
 
-    const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
-        event.preventDefault();
-
-        setUpload(true);
-
-        const data = new FormData(event.currentTarget);
-
-        const model: IPostCreate = {
-            name: data.get("name") as string,
-            categoryId: category!.id,
-            countryId: country!.id,
-            cityId: city === undefined ? null : city.id,
-            cityName: data.get("cityName") as string,
-            streetId: street === undefined ? null : street.id,
-            streetName: data.get("streetName") as string,
-
-            price: parseFloat(data.get("price") as string),
-            description: data.get("description") as string,
-            images: images,
-        };
-
-        try {
-            const response = await dispatch(createPost(model));
-            unwrapResult(response);
-
-            await joinForPostListening(response.payload.id);
-
-            navigate("/dashboard/show-all-post");
-        } catch (error) {
-            setErrorMessage(ErrorHandler(error));
-
-            console.log("Add error", error);
+        if (!category) {
+            setIsCategoryValid(false);
+            console.log("isCategoryValid", isCategoryValid);
+        }else{
+            const model: IPostCreate = {
+                ...data,
+                categoryId: category?.id!,
+            };
         }
+
+        
+        // try {
+        //     const response = await dispatch(login(data));
+        //     unwrapResult(response);
+        //     await afterLogin(response.payload);
+        // } catch (error) {
+        //     setErrorMessage(ErrorHandler(error));
+        // }
     };
+
+    // console.log("TestValid", formValid.current);
+
+    // const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
+    //     event.preventDefault();
+
+    //     setUpload(true);
+
+    //     const data = new FormData(event.currentTarget);
+
+    //     const model: IPostCreate = {
+    //         name: data.get("name") as string,
+    //         categoryId: category!.id,
+    //         countryId: country!.id,
+    //         cityId: city === undefined ? null : city.id,
+    //         cityName: data.get("cityName") as string,
+    //         streetId: street === undefined ? null : street.id,
+    //         streetName: data.get("streetName") as string,
+
+    //         price: parseFloat(data.get("price") as string),
+    //         description: data.get("description") as string,
+    //         images: images,
+    //     };
+
+    //     try {
+    //         const response = await dispatch(createPost(model));
+    //         unwrapResult(response);
+
+    //         await joinForPostListening(response.payload.id);
+
+    //         navigate("/dashboard/show-all-post");
+    //     } catch (error) {
+    //         setErrorMessage(ErrorHandler(error));
+
+    //         console.log("Add error", error);
+    //     }
+    // };
     return (
-        <>
-            <Breadcrumbs
-                aria-label="breadcrumb"
-                style={{ marginBottom: "20px" }}
-            >
-                <Link to={"/dashboard/profile"}>
-                    <Typography variant="h6" color="text.primary">
-                        Dashboard
-                    </Typography>
-                </Link>
-                <Link to={"/dashboard/show-all-post"}>
-                    <Typography variant="h6" color="text.primary">
-                        All Posts
-                    </Typography>
-                </Link>
-                <Typography variant="h6" color="text.primary">
-                    Add New Post
-                </Typography>
-            </Breadcrumbs>
-            <Divider />
-
+        <div className="addNewPostContainer">
             {errorMessage && <OutlinedErrorAlert message={errorMessage} />}
-
-            <Container component="main" maxWidth="xs">
-                <Box
-                    sx={{
-                        marginTop: 8,
-                        display: "flex",
-                        flexDirection: "column",
-                        alignItems: "center",
-                    }}
-                >
-                    <Typography component="h1" variant="h5">
-                        Add New Post
-                    </Typography>
-                    <Box
-                        component="form"
-                        onSubmit={handleSubmit}
-                        noValidate
-                        sx={{ mt: 1 }}
+            <div className="leftContainer">
+                <div id="title">Add New Post</div>
+                <div>
+                    <form
+                        onSubmit={handleSubmit(onSubmit)}
+                        className="formContainer"
                     >
-                        <Grid container spacing={2}>
-                            <Grid item xs={12}>
-                                <InputGroup
-                                    label="Enter title for your post *"
-                                    field="name"
-                                    type="text"
-                                    validator={PostNameValidator}
-                                    onChange={(isValid) =>
-                                        (formValid.current.name = isValid)
-                                    }
-                                />
-                            </Grid>
-
-                            <Grid item xs={12}>
-                                <ComboBox
-                                    options={categoryList}
-                                    onChange={setCategory}
-                                    label={"Category *"}
-                                />
-                            </Grid>
-
-                            <Grid item xs={12}>
-                                <ComboBox
-                                    options={countryList}
-                                    onChange={setCountry}
-                                    label={"Country *"}
-                                />
-                            </Grid>
-
-                            {cityList.length > 0 && (
-                                <Grid item xs={12}>
-                                    <Typography
-                                        variant="subtitle1"
-                                        color="text.primary"
-                                    >
-                                        Select City from the list or enter it in
-                                        a field. *
-                                    </Typography>
-                                    <ComboBox
-                                        options={cityList}
-                                        onChange={setCity}
-                                        label={"City*"}
-                                    />
-                                </Grid>
+                        <div className="fieldContainer">
+                            <InputField
+                                placeholder="Title"
+                                type="text"
+                                name="name"
+                                register={register}
+                                setValue={setValue}
+                                className={
+                                    errors.name ? "errorFormInput" : "field"
+                                }
+                            />
+                            {errors.name && (
+                                <div className="dashboardError">
+                                    * {errors.name.message}
+                                </div>
                             )}
+                        </div>
+  
 
-                            {city === undefined && (
-                                <Grid item xs={12}>
-                                    <InputGroup
-                                        label="City"
-                                        field="cityName"
-                                        type="text"
-                                        validator={CityNameValidator}
-                                        onChange={(isValid) =>
-                                            (formValid.current.city =
-                                                city === undefined
-                                                    ? isValid
-                                                    : true)
-                                        }
-                                    />
-                                </Grid>
+                        <div className="fieldContainer">
+                            <ComboBox
+                                options={categoryList}
+                                onChange={setCategory}
+                                label={"Category*"}
+                            />
+                            {!isCategoryValid && (
+                                <div className="dashboardError">
+                                    *This field is required
+                                </div>
                             )}
+                        </div>
 
-                            {streetList.length > 0 && (
-                                <Grid item xs={12}>
-                                    <Typography
-                                        variant="subtitle1"
-                                        color="text.primary"
-                                    >
-                                        Select Street from the list or enter it
-                                        in a field. *
-                                    </Typography>
-                                    <ComboBox
-                                        options={streetList}
-                                        onChange={setStreet}
-                                        label={"Street"}
-                                    />
-                                </Grid>
-                            )}
+                        <div className="fieldContainer">
+                            <ComboBox
+                                options={countryList}
+                                onChange={setCountry}
+                                label={"Country *"}
+                            />
+                        </div>
 
-                            {street === undefined && (
-                                <Grid item xs={12}>
-                                    <InputGroup
-                                        label="Street *"
-                                        field="streetName"
-                                        type="text"
-                                        validator={StreetNameValidator}
-                                        onChange={(isValid) =>
-                                            (formValid.current.street =
-                                                street === undefined
-                                                    ? isValid
-                                                    : true)
-                                        }
-                                    />
-                                </Grid>
-                            )}
-
-                            <Grid item xs={12}>
-                                <InputGroup
-                                    label="ZipCode *"
-                                    field="zipCode"
-                                    type="number"
-                                    validator={ZipCodeValidator}
-                                    onChange={(isValid) =>
-                                        (formValid.current.buildingNumber =
-                                            isValid)
-                                    }
-                                />
-                            </Grid>
-
-                            {!isHotel && (
-                                <Grid item xs={12}>
-                                    <InputGroup
-                                        label="Number of Guests"
-                                        field="numberOfGuests"
-                                        type="number"
-                                        //ToDo Validation
-                                        validator={ZipCodeValidator}
-                                        onChange={(isValid) =>
-                                            (formValid.current.numberOfRooms =
-                                                isValid)
-                                        }
-                                    />
-                                </Grid>
-                            )}
-
-                            <Grid item xs={12}>
-                                <InputGroup
-                                    label="Price *"
-                                    field="price"
-                                    type="number"
-                                    validator={PriceValidator}
-                                    onChange={(isValid) =>
-                                        (formValid.current.price = isValid)
-                                    }
-                                />
-                            </Grid>
-
-                            <Grid item xs={12}>
-                                <InputGroup
-                                    label="Discount"
-                                    field="discount"
-                                    type="number"
-                                    validator={PriceValidator}
-                                    onChange={(isValid) =>
-                                        (formValid.current.price = isValid)
-                                    }
-                                />
-                            </Grid>
-
-                            <Grid item xs={12}>
-                                <InputGroup
-                                    label="Description"
-                                    field="description"
-                                    type="text"
-                                    validator={DescriptionValidator}
-                                    onChange={(isValid) =>
-                                        (formValid.current.description =
-                                            isValid)
-                                    }
-                                    rowsCount={7}
-                                    isMultiline={true}
-                                />
-                            </Grid>
+                        {/* {cityList.length > 0 && (
                             <Grid item xs={12}>
                                 <Typography
                                     variant="subtitle1"
                                     color="text.primary"
                                 >
-                                    You must select at least 1 photo *
+                                    Select City from the list or enter it in a
+                                    field. *
                                 </Typography>
-                                <Typography
-                                    variant="subtitle1"
-                                    color="text.primary"
-                                >
-                                    Max count of images - 10
-                                </Typography>
-                            </Grid>
-
-                            <Grid item xs={12}>
-                                <FileUploader
-                                    images={images}
-                                    setImages={setImages}
-                                    maxImagesUpload={maxImagesCount}
-                                    validator={ImageValidator}
-                                    defaultImage={DefaultImg}
-                                    onChange={(isValid) =>
-                                        (formValid.current.images = isValid)
-                                    }
-                                    onDelete={handleChange}
+                                <ComboBox
+                                    options={cityList}
+                                    onChange={setCity}
+                                    label={"City*"}
                                 />
                             </Grid>
+                        )} */}
 
-                            {isHotel && (
-                                <>
-                                    <Typography
-                                        padding={2}
-                                        variant="h5"
-                                        color="text.primary"
-                                    >
-                                        <Divider />
-                                        Add availible rooms
-                                        <Divider />
-                                    </Typography>
-
-                                    <Grid item xs={12}>
-                                        <InputGroup
-                                            label="Number of Guests"
-                                            field="numberOfGuests"
-                                            type="number"
-                                            validator={PriceValidator}
-                                            onChange={(isValid) =>
-                                                (formValid.current.price =
-                                                    isValid)
-                                            }
-                                        />
-                                    </Grid>
-
-                                    <Grid item xs={12}>
-                                        <InputGroup
-                                            label="Number of Rooms"
-                                            field="numberOfrooms"
-                                            type="number"
-                                            validator={PriceValidator}
-                                            onChange={(isValid) =>
-                                                (formValid.current.price =
-                                                    isValid)
-                                            }
-                                        />
-                                    </Grid>
-                                    <Grid item xs={12}>
-                                        <Typography
-                                            variant="subtitle1"
-                                            color="text.primary"
-                                        >
-                                            You must select at least 1 photo *
-                                        </Typography>
-                                        <Typography
-                                            variant="subtitle1"
-                                            color="text.primary"
-                                        >
-                                            Max count of images - 10
-                                        </Typography>
-                                    </Grid>
-
-                                    <Grid item xs={12}>
-                                        <FileUploader
-                                            images={images}
-                                            setImages={setImages}
-                                            maxImagesUpload={maxImagesCount}
-                                            validator={ImageValidator}
-                                            defaultImage={DefaultImg}
-                                            onChange={(isValid) =>
-                                                (formValid.current.images =
-                                                    isValid)
-                                            }
-                                            onDelete={handleChange}
-                                        />
-                                        <Grid padding={3}>
-                                            <Divider />
-                                        </Grid>
-                                    </Grid>
-
-                                    <Grid item xs={12}>
-                                        <InputGroup
-                                            label="Number of Guests"
-                                            field="numberOfGuests"
-                                            type="number"
-                                            validator={PriceValidator}
-                                            onChange={(isValid) =>
-                                                (formValid.current.price =
-                                                    isValid)
-                                            }
-                                        />
-                                    </Grid>
-
-                                    <Grid item xs={12}>
-                                        <InputGroup
-                                            label="Number of Rooms"
-                                            field="numberOfrooms"
-                                            type="number"
-                                            validator={PriceValidator}
-                                            onChange={(isValid) =>
-                                                (formValid.current.price =
-                                                    isValid)
-                                            }
-                                        />
-                                    </Grid>
-                                    <Grid item xs={12}>
-                                        <Typography
-                                            variant="subtitle1"
-                                            color="text.primary"
-                                        >
-                                            You must select at least 1 photo *
-                                        </Typography>
-                                        <Typography
-                                            variant="subtitle1"
-                                            color="text.primary"
-                                        >
-                                            Max count of images - 10
-                                        </Typography>
-                                    </Grid>
-
-                                    <Grid item xs={12}>
-                                        <FileUploader
-                                            images={images}
-                                            setImages={setImages}
-                                            maxImagesUpload={maxImagesCount}
-                                            validator={ImageValidator}
-                                            defaultImage={DefaultImg}
-                                            onChange={(isValid) =>
-                                                (formValid.current.images =
-                                                    isValid)
-                                            }
-                                            onDelete={handleChange}
-                                        />
-                                        <Grid padding={3}>
-                                            <Divider />
-                                        </Grid>
-                                    </Grid>
-                                    <Button
-                                        type="submit"
-                                        fullWidth
-                                        variant="contained"
-                                        sx={{ mt: 3, mb: 2 }}
-                                        //   disabled={!isFormValid}
-                                    >
-                                        Add rooms
-                                    </Button>
-                                    <Grid padding={3}>
-                                        <Divider />
-                                    </Grid>
-                                </>
-                            )}
-                        </Grid>
-                        <Button
-                            type="submit"
-                            fullWidth
-                            variant="contained"
-                            sx={{ mt: 3, mb: 2 }}
-                            //   disabled={!isFormValid}
-                        >
-                            Add new post
-                        </Button>
-                    </Box>
-                </Box>
-
-                {upload && <LinearProgress />}
-            </Container>
-        </>
+                        <div>
+                            <button type="submit">Submit</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+            <div className="addImagesContainer"></div>
+        </div>
     );
 }
+
+// <Container component="main" maxWidth="xs">
+// <Box
+//     sx={{
+//         marginTop: 8,
+//         display: "flex",
+//         flexDirection: "column",
+//         alignItems: "center",
+//     }}
+// >
+//     <Typography component="h1" variant="h5">
+//         Add New Post
+//     </Typography>
+//     <Box
+//         component="form"
+//         onSubmit={handleSubmit}
+//         noValidate
+//         sx={{ mt: 1 }}
+//     >
+//         <Grid container spacing={2}>
+//             <Grid item xs={12}>
+//                 <InputGroup
+//                     label="Enter title for your post *"
+//                     field="name"
+//                     type="text"
+//                     validator={PostNameValidator}
+//                     onChange={(isValid) =>
+//                         (formValid.current.name = isValid)
+//                     }
+//                 />
+//             </Grid>
+
+//             <Grid item xs={12}>
+//                 <ComboBox
+//                     options={categoryList}
+//                     onChange={setCategory}
+//                     label={"Category *"}
+//                 />
+//             </Grid>
+
+//             <Grid item xs={12}>
+//                 <ComboBox
+//                     options={countryList}
+//                     onChange={setCountry}
+//                     label={"Country *"}
+//                 />
+//             </Grid>
+
+// {cityList.length > 0 && (
+//     <Grid item xs={12}>
+//         <Typography
+//             variant="subtitle1"
+//             color="text.primary"
+//         >
+//             Select City from the list or enter it in
+//             a field. *
+//         </Typography>
+//         <ComboBox
+//             options={cityList}
+//             onChange={setCity}
+//             label={"City*"}
+//         />
+//     </Grid>
+// )}
+
+//             {city === undefined && (
+//                 <Grid item xs={12}>
+//                     <InputGroup
+//                         label="City"
+//                         field="cityName"
+//                         type="text"
+//                         validator={CityNameValidator}
+//                         onChange={(isValid) =>
+//                             (formValid.current.city =
+//                                 city === undefined
+//                                     ? isValid
+//                                     : true)
+//                         }
+//                     />
+//                 </Grid>
+//             )}
+
+//             {streetList.length > 0 && (
+//                 <Grid item xs={12}>
+//                     <Typography
+//                         variant="subtitle1"
+//                         color="text.primary"
+//                     >
+//                         Select Street from the list or enter it
+//                         in a field. *
+//                     </Typography>
+//                     <ComboBox
+//                         options={streetList}
+//                         onChange={setStreet}
+//                         label={"Street"}
+//                     />
+//                 </Grid>
+//             )}
+
+//             {street === undefined && (
+//                 <Grid item xs={12}>
+//                     <InputGroup
+//                         label="Street *"
+//                         field="streetName"
+//                         type="text"
+//                         validator={StreetNameValidator}
+//                         onChange={(isValid) =>
+//                             (formValid.current.street =
+//                                 street === undefined
+//                                     ? isValid
+//                                     : true)
+//                         }
+//                     />
+//                 </Grid>
+//             )}
+
+//             <Grid item xs={12}>
+//                 <InputGroup
+//                     label="ZipCode *"
+//                     field="zipCode"
+//                     type="number"
+//                     validator={ZipCodeValidator}
+//                     onChange={(isValid) =>
+//                         (formValid.current.buildingNumber =
+//                             isValid)
+//                     }
+//                 />
+//             </Grid>
+
+//             {!isHotel && (
+//                 <Grid item xs={12}>
+//                     <InputGroup
+//                         label="Number of Guests"
+//                         field="numberOfGuests"
+//                         type="number"
+//                         //ToDo Validation
+//                         validator={ZipCodeValidator}
+//                         onChange={(isValid) =>
+//                             (formValid.current.numberOfRooms =
+//                                 isValid)
+//                         }
+//                     />
+//                 </Grid>
+//             )}
+
+//             <Grid item xs={12}>
+//                 <InputGroup
+//                     label="Price *"
+//                     field="price"
+//                     type="number"
+//                     validator={PriceValidator}
+//                     onChange={(isValid) =>
+//                         (formValid.current.price = isValid)
+//                     }
+//                 />
+//             </Grid>
+
+//             <Grid item xs={12}>
+//                 <InputGroup
+//                     label="Discount"
+//                     field="discount"
+//                     type="number"
+//                     validator={PriceValidator}
+//                     onChange={(isValid) =>
+//                         (formValid.current.price = isValid)
+//                     }
+//                 />
+//             </Grid>
+
+//             <Grid item xs={12}>
+//                 <InputGroup
+//                     label="Description"
+//                     field="description"
+//                     type="text"
+//                     validator={DescriptionValidator}
+//                     onChange={(isValid) =>
+//                         (formValid.current.description =
+//                             isValid)
+//                     }
+//                     rowsCount={7}
+//                     isMultiline={true}
+//                 />
+//             </Grid>
+//             <Grid item xs={12}>
+//                 <Typography
+//                     variant="subtitle1"
+//                     color="text.primary"
+//                 >
+//                     You must select at least 1 photo *
+//                 </Typography>
+//                 <Typography
+//                     variant="subtitle1"
+//                     color="text.primary"
+//                 >
+//                     Max count of images - 10
+//                 </Typography>
+//             </Grid>
+
+//             <Grid item xs={12}>
+//                 <FileUploader
+//                     images={images}
+//                     setImages={setImages}
+//                     maxImagesUpload={maxImagesCount}
+//                     validator={ImageValidator}
+//                     defaultImage={DefaultImg}
+//                     onChange={(isValid) =>
+//                         (formValid.current.images = isValid)
+//                     }
+//                     onDelete={handleChange}
+//                 />
+//             </Grid>
+
+//             {isHotel && (
+//                 <>
+//                     <Typography
+//                         padding={2}
+//                         variant="h5"
+//                         color="text.primary"
+//                     >
+//                         <Divider />
+//                         Add availible rooms
+//                         <Divider />
+//                     </Typography>
+
+//                     <Grid item xs={12}>
+//                         <InputGroup
+//                             label="Number of Guests"
+//                             field="numberOfGuests"
+//                             type="number"
+//                             validator={PriceValidator}
+//                             onChange={(isValid) =>
+//                                 (formValid.current.price =
+//                                     isValid)
+//                             }
+//                         />
+//                     </Grid>
+
+//                     <Grid item xs={12}>
+//                         <InputGroup
+//                             label="Number of Rooms"
+//                             field="numberOfrooms"
+//                             type="number"
+//                             validator={PriceValidator}
+//                             onChange={(isValid) =>
+//                                 (formValid.current.price =
+//                                     isValid)
+//                             }
+//                         />
+//                     </Grid>
+//                     <Grid item xs={12}>
+//                         <Typography
+//                             variant="subtitle1"
+//                             color="text.primary"
+//                         >
+//                             You must select at least 1 photo *
+//                         </Typography>
+//                         <Typography
+//                             variant="subtitle1"
+//                             color="text.primary"
+//                         >
+//                             Max count of images - 10
+//                         </Typography>
+//                     </Grid>
+
+//                     <Grid item xs={12}>
+//                         <FileUploader
+//                             images={images}
+//                             setImages={setImages}
+//                             maxImagesUpload={maxImagesCount}
+//                             validator={ImageValidator}
+//                             defaultImage={DefaultImg}
+//                             onChange={(isValid) =>
+//                                 (formValid.current.images =
+//                                     isValid)
+//                             }
+//                             onDelete={handleChange}
+//                         />
+//                         <Grid padding={3}>
+//                             <Divider />
+//                         </Grid>
+//                     </Grid>
+
+//                     <Grid item xs={12}>
+//                         <InputGroup
+//                             label="Number of Guests"
+//                             field="numberOfGuests"
+//                             type="number"
+//                             validator={PriceValidator}
+//                             onChange={(isValid) =>
+//                                 (formValid.current.price =
+//                                     isValid)
+//                             }
+//                         />
+//                     </Grid>
+
+//                     <Grid item xs={12}>
+//                         <InputGroup
+//                             label="Number of Rooms"
+//                             field="numberOfrooms"
+//                             type="number"
+//                             validator={PriceValidator}
+//                             onChange={(isValid) =>
+//                                 (formValid.current.price =
+//                                     isValid)
+//                             }
+//                         />
+//                     </Grid>
+//                     <Grid item xs={12}>
+//                         <Typography
+//                             variant="subtitle1"
+//                             color="text.primary"
+//                         >
+//                             You must select at least 1 photo *
+//                         </Typography>
+//                         <Typography
+//                             variant="subtitle1"
+//                             color="text.primary"
+//                         >
+//                             Max count of images - 10
+//                         </Typography>
+//                     </Grid>
+
+//                     <Grid item xs={12}>
+//                         <FileUploader
+//                             images={images}
+//                             setImages={setImages}
+//                             maxImagesUpload={maxImagesCount}
+//                             validator={ImageValidator}
+//                             defaultImage={DefaultImg}
+//                             onChange={(isValid) =>
+//                                 (formValid.current.images =
+//                                     isValid)
+//                             }
+//                             onDelete={handleChange}
+//                         />
+//                         <Grid padding={3}>
+//                             <Divider />
+//                         </Grid>
+//                     </Grid>
+//                     <Button
+//                         type="submit"
+//                         fullWidth
+//                         variant="contained"
+//                         sx={{ mt: 3, mb: 2 }}
+//                         //   disabled={!isFormValid}
+//                     >
+//                         Add rooms
+//                     </Button>
+//                     <Grid padding={3}>
+//                         <Divider />
+//                     </Grid>
+//                 </>
+//             )}
+//         </Grid>
+//         <Button
+//             type="submit"
+//             fullWidth
+//             variant="contained"
+//             sx={{ mt: 3, mb: 2 }}
+//             //   disabled={!isFormValid}
+//         >
+//             Add new post
+//         </Button>
+//     </Box>
+// </Box>
+
+// {upload && <LinearProgress />}
+// </Container>
