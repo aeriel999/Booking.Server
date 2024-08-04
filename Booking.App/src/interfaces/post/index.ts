@@ -166,7 +166,8 @@ export interface IPostCreate {
     cityName: string | null;
     streetId: string | null;
     streetName: string | null;
-
+    zipCode: number;
+    numberOfGuests: number;
     price: number;
     description: string | null;
     images: File[];

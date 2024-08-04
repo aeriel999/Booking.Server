@@ -64,21 +64,10 @@ export function AddNewPost() {
     const [isCityExist, setIsCityExist] = useState<boolean>(false);
 
     const [streetList, setStreetList] = useState<ICity[]>([]);
-    const [street, setStreet] = useState<ICity>();
-    const formValid = useRef({
-        name: false,
-        cityName: false,
-        streetName: false,
+    const [street, setStreet] = useState<ICity | null>(null);
+    const [isStreetValid, setIsStreetValid] = useState<boolean>(true);
+    const [isStreetExist, setIsStreetExist] = useState<boolean>(false);
 
-        description: false,
-        buildingNumber: false,
-        numberOfRooms: false,
-        city: false,
-        street: false,
-        area: false,
-        price: false,
-        images: false,
-    });
     const [images, setImages] = useState<File[]>([]);
     const [isFormValid, setIsFormValid] = useState<boolean>(false);
     const navigate = useNavigate();
@@ -192,19 +181,17 @@ export function AddNewPost() {
             setIsCountryValid(false);
             return;
         }
-        if (!city) {
-            console.log("isCityExist", isCityExist);
+        if (!city && !isCityExist) {
+            setIsCityValid(false);
 
-            //  setIsCityValid(false);
-
-            //  return;
+            return;
         }
-        if (isCategoryValid && isCountryValid) {
+        if (isCategoryValid && isCountryValid && (isCityValid || isCityExist)) {
             const model: IPostCreate = {
                 ...data,
                 categoryId: category?.id!,
                 countryId: category?.id!,
-               cityId: city === undefined || city === null ? null : city?.id!,
+                cityId: city === undefined || city === null ? null : city?.id!,
             };
             console.log("model", model);
         } else {
@@ -353,6 +340,120 @@ export function AddNewPost() {
                             </div>
                         )}
 
+                        {streetList.length > 0 && !isStreetExist && (
+                            <div className="fieldContainer">
+                                <div className="instructionText">
+                                    Select Street from the list or enter it in a
+                                    field. *
+                                </div>
+                                <ComboBox
+                                    options={streetList}
+                                    onChange={setStreet}
+                                    label={"Street"}
+                                    isValid={setIsCityValid}
+                                />
+                            </div>
+                        )}
+
+
+                        {(!street || !isStreetValid) && (
+                            <div className="fieldContainer">
+                                <InputField
+                                    placeholder="Street*"
+                                    type="text"
+                                    name="streetName"
+                                    register={register}
+                                    setValue={setValue}
+                                    className={
+                                        errors.name ? "errorFormInput" : "field"
+                                    }
+                                    isExist={setIsCityExist}
+                                />
+                                {errors.streetName && (
+                                    <div className="dashboardError">
+                                        * {errors.streetName.message}
+                                    </div>
+                                )}
+                            </div>
+                        )}
+                        
+                        <div className="fieldContainer">
+                        <InputField
+                            placeholder="ZipCode*"
+                            type="number"
+                            name="zipCode"
+                                    register={register}
+                                    setValue={setValue}
+                                    className={
+                                        errors.name ? "errorFormInput" : "field"
+                                    }
+                                />
+                                {errors.zipCode && (
+                                    <div className="dashboardError">
+                                        * {errors.zipCode.message}
+                                    </div>
+                                )}
+                            </div>
+
+            {!isHotel && (
+                <div className="fieldContainer">
+                <InputField
+                    placeholder="Number of Guests*"
+                    type="number"
+                    name="numberOfGuests"
+                            register={register}
+                            setValue={setValue}
+                            className={
+                                errors.name ? "errorFormInput" : "field"
+                            }
+                        />
+                        {errors.numberOfGuests && (
+                            <div className="dashboardError">
+                                * {errors.numberOfGuests.message}
+                            </div>
+                        )}
+                    </div>
+
+            )}
+
+            <Grid item xs={12}>
+                <InputGroup
+                    label="Price *"
+                    field="price"
+                    type="number"
+                    validator={PriceValidator}
+                    onChange={(isValid) =>
+                        (formValid.current.price = isValid)
+                    }
+                />
+            </Grid>
+
+            <Grid item xs={12}>
+                <InputGroup
+                    label="Discount"
+                    field="discount"
+                    type="number"
+                    validator={PriceValidator}
+                    onChange={(isValid) =>
+                        (formValid.current.price = isValid)
+                    }
+                />
+            </Grid>
+
+            <Grid item xs={12}>
+                <InputGroup
+                    label="Description"
+                    field="description"
+                    type="text"
+                    validator={DescriptionValidator}
+                    onChange={(isValid) =>
+                        (formValid.current.description =
+                            isValid)
+                    }
+                    rowsCount={7}
+                    isMultiline={true}
+                />
+            </Grid>
                         <div>
                             <button type="submit">Submit</button>
                         </div>
@@ -445,107 +546,107 @@ export function AddNewPost() {
 //                 </Grid>
 //             )}
 
-//             {streetList.length > 0 && (
-//                 <Grid item xs={12}>
-//                     <Typography
-//                         variant="subtitle1"
-//                         color="text.primary"
-//                     >
-//                         Select Street from the list or enter it
-//                         in a field. *
-//                     </Typography>
-//                     <ComboBox
-//                         options={streetList}
-//                         onChange={setStreet}
-//                         label={"Street"}
-//                     />
-//                 </Grid>
-//             )}
+// {streetList.length > 0 && (
+//     <Grid item xs={12}>
+//         <Typography
+//             variant="subtitle1"
+//             color="text.primary"
+//         >
+//             Select Street from the list or enter it
+//             in a field. *
+//         </Typography>
+//         <ComboBox
+//             options={streetList}
+//             onChange={setStreet}
+//             label={"Street"}
+//         />
+//     </Grid>
+// )}
 
-//             {street === undefined && (
-//                 <Grid item xs={12}>
-//                     <InputGroup
-//                         label="Street *"
-//                         field="streetName"
-//                         type="text"
-//                         validator={StreetNameValidator}
-//                         onChange={(isValid) =>
-//                             (formValid.current.street =
-//                                 street === undefined
-//                                     ? isValid
-//                                     : true)
-//                         }
-//                     />
-//                 </Grid>
-//             )}
+// {street === undefined && (
+//     <Grid item xs={12}>
+//         <InputGroup
+//             label="Street *"
+//             field="streetName"
+//             type="text"
+//             validator={StreetNameValidator}
+//             onChange={(isValid) =>
+//                 (formValid.current.street =
+//                     street === undefined
+//                         ? isValid
+//                         : true)
+//             }
+//         />
+//     </Grid>
+// )}
 
-//             <Grid item xs={12}>
-//                 <InputGroup
-//                     label="ZipCode *"
-//                     field="zipCode"
-//                     type="number"
-//                     validator={ZipCodeValidator}
-//                     onChange={(isValid) =>
-//                         (formValid.current.buildingNumber =
-//                             isValid)
-//                     }
-//                 />
-//             </Grid>
+            // <Grid item xs={12}>
+            //     <InputGroup
+            //         label="ZipCode *"
+            //         field="zipCode"
+            //         type="number"
+            //         validator={ZipCodeValidator}
+            //         onChange={(isValid) =>
+            //             (formValid.current.buildingNumber =
+            //                 isValid)
+            //         }
+            //     />
+            // </Grid>
 
-//             {!isHotel && (
-//                 <Grid item xs={12}>
-//                     <InputGroup
-//                         label="Number of Guests"
-//                         field="numberOfGuests"
-//                         type="number"
-//                         //ToDo Validation
-//                         validator={ZipCodeValidator}
-//                         onChange={(isValid) =>
-//                             (formValid.current.numberOfRooms =
-//                                 isValid)
-//                         }
-//                     />
-//                 </Grid>
-//             )}
+            // {!isHotel && (
+            //     <Grid item xs={12}>
+            //         <InputGroup
+            //             label="Number of Guests"
+            //             field="numberOfGuests"
+            //             type="number"
+            //             //ToDo Validation
+            //             validator={ZipCodeValidator}
+            //             onChange={(isValid) =>
+            //                 (formValid.current.numberOfRooms =
+            //                     isValid)
+            //             }
+            //         />
+            //     </Grid>
+            // )}
 
-//             <Grid item xs={12}>
-//                 <InputGroup
-//                     label="Price *"
-//                     field="price"
-//                     type="number"
-//                     validator={PriceValidator}
-//                     onChange={(isValid) =>
-//                         (formValid.current.price = isValid)
-//                     }
-//                 />
-//             </Grid>
+            // <Grid item xs={12}>
+            //     <InputGroup
+            //         label="Price *"
+            //         field="price"
+            //         type="number"
+            //         validator={PriceValidator}
+            //         onChange={(isValid) =>
+            //             (formValid.current.price = isValid)
+            //         }
+            //     />
+            // </Grid>
 
-//             <Grid item xs={12}>
-//                 <InputGroup
-//                     label="Discount"
-//                     field="discount"
-//                     type="number"
-//                     validator={PriceValidator}
-//                     onChange={(isValid) =>
-//                         (formValid.current.price = isValid)
-//                     }
-//                 />
-//             </Grid>
+            // <Grid item xs={12}>
+            //     <InputGroup
+            //         label="Discount"
+            //         field="discount"
+            //         type="number"
+            //         validator={PriceValidator}
+            //         onChange={(isValid) =>
+            //             (formValid.current.price = isValid)
+            //         }
+            //     />
+            // </Grid>
 
-//             <Grid item xs={12}>
-//                 <InputGroup
-//                     label="Description"
-//                     field="description"
-//                     type="text"
-//                     validator={DescriptionValidator}
-//                     onChange={(isValid) =>
-//                         (formValid.current.description =
-//                             isValid)
-//                     }
-//                     rowsCount={7}
-//                     isMultiline={true}
-//                 />
-//             </Grid>
+            // <Grid item xs={12}>
+            //     <InputGroup
+            //         label="Description"
+            //         field="description"
+            //         type="text"
+            //         validator={DescriptionValidator}
+            //         onChange={(isValid) =>
+            //             (formValid.current.description =
+            //                 isValid)
+            //         }
+            //         rowsCount={7}
+            //         isMultiline={true}
+            //     />
+            // </Grid>
 //             <Grid item xs={12}>
 //                 <Typography
 //                     variant="subtitle1"

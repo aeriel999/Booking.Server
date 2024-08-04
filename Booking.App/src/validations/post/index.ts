@@ -20,6 +20,30 @@ export const addPostResolver: Resolver<IPostCreate> = async (values) => {
         };
     }
 
+    const streetError = CityNameValidator(values.cityName);
+    if (streetError) {
+        errors.streetError = {
+            type: "validation",
+            message: streetError,
+        };
+    }
+
+    const zipCodeError = ZipCodeValidator(values.zipCode);
+    if (zipCodeError) {
+        errors.zipCode = {
+            type: "validation",
+            message: zipCodeError,
+        };
+    }
+
+    const numberOfGuestsError = ZipCodeValidator(values.numberOfGuests);
+    if (zipCodeError) {
+        errors.zipCode = {
+            type: "validation",
+            message: zipCodeError,
+        };
+    }
+
     return {
         values: Object.keys(errors).length === 0 ? values : {},
         errors,
@@ -41,7 +65,8 @@ export const CityNameValidator = (
     if (value === null || value === undefined || value.length === 0) {
         return false;
     } else {
-        if (value !== undefined && value.length < 3) return "City must be at least 3 characters long";
+        if (value !== undefined && value.length < 3)
+            return "City must be at least 3 characters long";
         if (value !== undefined && value.length > 50)
             return "City must be less than 50 characters long";
         if (!/^[A-Za-z\s]+$/.test(value))
@@ -53,18 +78,55 @@ export const CityNameValidator = (
 };
 
 export const StreetNameValidator = (
-    value: string | number
-): string | undefined => {
-    const strValue = typeof value === "number" ? value.toString() : value;
-    if (!strValue) return "Street must not be empty";
-    if (strValue.length < 3) return "Street must be at least 3 characters long";
-    if (strValue.length > 50)
-        return "Street must be less than 50 characters long";
-    if (!/^[A-Za-z\s]+$/.test(strValue))
-        return "Street must contain only letters and spaces";
-    if (/[£#“”]/.test(strValue))
-        return "Street must not contain the following characters: £ # “”";
-    return undefined; // Return undefined if validation passes
+    value: string | null
+): string | false | undefined => {
+    if (value === null || value === undefined || value.length === 0) {
+        return false;
+    } else {
+        if (!value) return "Street must not be empty";
+        if (value.length < 3)
+            return "Street must be at least 3 characters long";
+        if (value.length > 50)
+            return "Street must be less than 50 characters long";
+        if (!/^[A-Za-z\s]+$/.test(value))
+            return "Street must contain only letters and spaces";
+        if (/[£#“”]/.test(value))
+            return "Street must not contain the following characters: £ # “”";
+        return undefined; // Return undefined if validation passes
+    }
+};
+
+export const ZipCodeValidator = (
+    value:  number
+): string | false | undefined => {
+    const zipCode = typeof value === "string" ? parseInt(value, 10) : value;
+
+    // Ensure the value is a positive number
+    if (zipCode < 0) {
+        return "Zip code must be a positive number";
+    }
+
+    // Ensure the value is a 5-digit number
+    const zipCodeString = zipCode.toString();
+    if (zipCodeString.length !== 5) {
+        return "Zip code must be a 5-digit number";
+    }
+
+    // If all checks pass, return undefined indicating no errors
+    return undefined;
+};
+
+
+export const NumberOfGuestsValidator = (value: number): string | undefined => {
+    if (value < 0) {
+        return "Value must be a positive number";
+    }
+
+    if (value > 20) {
+        return "Value must be less than or equal to 20 ";
+    }
+
+    return undefined;
 };
 
 export const DescriptionValidator = (
@@ -81,25 +143,7 @@ export const DescriptionValidator = (
     return undefined; // Return undefined if validation passes
 };
 
-export const ZipCodeValidator = (
-    value: string | number
-): string | false | undefined => {
-    const zipCode = typeof value === "string" ? parseInt(value, 10) : value;
 
-    // Ensure the value is a positive number
-    if (zipCode <= 0) {
-        return "Zip code must be a positive number";
-    }
-
-    // Ensure the value is a 5-digit number
-    const zipCodeString = zipCode.toString();
-    if (zipCodeString.length !== 5) {
-        return "Zip code must be a 5-digit number";
-    }
-
-    // If all checks pass, return undefined indicating no errors
-    return undefined;
-};
 
 // export const NumberOfRoomsValidator = (value: string): string | undefined => {
 //     if (value.length > 5)
