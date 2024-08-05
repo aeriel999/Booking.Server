@@ -1,15 +1,15 @@
 import React, { useState } from "react";
-import OutlinedErrorAlert from "./ErrorAlert.tsx";
-import UserAvatar from "../../assets/Auth/image 20.svg";
-import "../../css/AuthenticationClasses/index.scss"
+import ImageTemplate from "../../assets/Templates/Vector.webp";
+import OutlinedErrorAlert from "../common/ErrorAlert";
+import "../../css/DashBoardRealtorClasses/index.scss";
 
-type AvatarUploadProps = {
+type ImageUploader = {
     image: File | null | undefined;
-    setImage: (file: File | null) => void;
+    setImage: (file: File) => void;
     validator: (value: File) => string | false | undefined;
 };
 
-const AvatarUploader = (props: AvatarUploadProps) => {
+const ImageUploader = (props: ImageUploader) => {
     const [error, setError] = useState<string | false | undefined>(false);
 
     const handleOnAddImage = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -26,29 +26,32 @@ const AvatarUploader = (props: AvatarUploadProps) => {
 
     const displayImage = props.image
         ? URL.createObjectURL(props.image)
-        : UserAvatar;
+        : ImageTemplate;
 
     return (
         <>
             {error && <OutlinedErrorAlert message={error} />}
-            <div id="avatarUpload">
-            <div
-                        style={{
-                            width: "220px",
-                            height: "220px",
-                            borderRadius: "50%",
-                            overflow: "hidden",
-                            background: `url(${displayImage}) center / cover no-repeat`,
-                            alignSelf: "stretch",
-                        }}
-                    />
+            <div className="mainImage">
+                <div
+                    style={{
+                        width: "394px",
+                        height: "394px",
+                        
+                        background: `url(${displayImage}) center / cover no-repeat`,
+                        alignSelf: "stretch",
+                    }}
+                />
 
-                <label htmlFor="avatar-upload">
-                    <a  id="uploadAvatarButton">
-                        {props.image ? "Change Avatar" : "Upload Avatar"}
+                <label htmlFor="image-upload">
+                  
+                <a 
+                        type="button"
+                        className="imageUploadButton"
+                    >
+                        Submit Main Image
                     </a>
                     <input
-                        id="avatar-upload"
+                        id="image-upload"
                         type="file"
                         accept="image/*,.png,.jpg,.jpeg,.gif"
                         onChange={handleOnAddImage}
@@ -60,4 +63,4 @@ const AvatarUploader = (props: AvatarUploadProps) => {
     );
 };
 
-export default AvatarUploader;
+export default ImageUploader;

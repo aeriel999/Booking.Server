@@ -36,14 +36,30 @@ export const addPostResolver: Resolver<IPostCreate> = async (values) => {
         };
     }
 
-    const numberOfGuestsError = ZipCodeValidator(values.numberOfGuests);
-    if (zipCodeError) {
-        errors.zipCode = {
+    const numberOfGuestsError = NumberOfGuestsValidator(values.numberOfGuests);
+    if (numberOfGuestsError) {
+        errors.numberOfGuests = {
             type: "validation",
-            message: zipCodeError,
+            message: numberOfGuestsError,
         };
     }
 
+    const priceError = PriceValidator(values.price);
+    if (priceError) {
+        errors.price = {
+            type: "validation",
+            message: priceError,
+        };
+    }
+
+    const discountError = DiscountValidator(values.discount);
+    if (discountError) {
+        errors.discount = {
+            type: "validation",
+            message: discountError,
+        };
+    }
+    console.log("errors", errors);
     return {
         values: Object.keys(errors).length === 0 ? values : {},
         errors,
@@ -97,8 +113,8 @@ export const StreetNameValidator = (
 };
 
 export const ZipCodeValidator = (
-    value:  number
-): string | false | undefined => {
+    value: number
+): string | boolean | undefined => {
     const zipCode = typeof value === "string" ? parseInt(value, 10) : value;
 
     // Ensure the value is a positive number
@@ -107,15 +123,16 @@ export const ZipCodeValidator = (
     }
 
     // Ensure the value is a 5-digit number
-    const zipCodeString = zipCode.toString();
-    if (zipCodeString.length !== 5) {
-        return "Zip code must be a 5-digit number";
+    if (zipCode !== undefined) {
+        const zipCodeString = zipCode.toString();
+        if (zipCodeString.length !== 5) {
+            return "Zip code must be a 5-digit number";
+        }
     }
 
     // If all checks pass, return undefined indicating no errors
     return undefined;
 };
-
 
 export const NumberOfGuestsValidator = (value: number): string | undefined => {
     if (value < 0) {
@@ -129,40 +146,40 @@ export const NumberOfGuestsValidator = (value: number): string | undefined => {
     return undefined;
 };
 
-export const DescriptionValidator = (
-    value: string | number
-): string | undefined => {
+export const PriceValidator = (value: number): string | undefined => {
     const strValue = typeof value === "number" ? value.toString() : value;
-
-    if (strValue.length < 256)
-        return "Description must be at least 240 characters long";
-    if (strValue.length > 5000)
-        return "Description must be less than 1500 characters long";
-    // if (!/^[A-Za-z0-9\s]+$/.test(value)) return 'Description must contain only letters, digits, and spaces';
-    //if (/[£#“”]/.test(value)) return 'Description must not contain the following characters: £ # “”';
-    return undefined; // Return undefined if validation passes
-};
-
-
-
-// export const NumberOfRoomsValidator = (value: string): string | undefined => {
-//     if (value.length > 5)
-//         return "Number Of Rooms must be less than 5 characters long";
-//     if (!/^\d+$/.test(value)) return "Number Of Rooms must contain only digits";
-//     return undefined; // Return undefined if validation passes
-// };
-
-// export const AreaValidator = (value: string): string | undefined => {
-//     if (value.length > 5) return "Area must be less than 5 characters long";
-//     if (!/^\d+$/.test(value)) return "Area must contain only digits";
-//     return undefined; // Return undefined if validation passes
-// };
-
-export const PriceValidator = (value: string | number): string | undefined => {
-    const strValue = typeof value === "number" ? value.toString() : value;
-
-    if (strValue.length > 10)
+    if (strValue !== undefined && strValue.length < 1)
+        return "It is an required field";
+    if (strValue !== undefined && strValue.length > 10)
         return "Price must be less than 10 characters long";
     if (!/^\d+$/.test(strValue)) return "Price must contain only digits";
     return undefined; // Return undefined if validation passes
+};
+
+export const DiscountValidator = (
+    value: number | null
+): string | undefined | boolean => {
+    if (value === null || value === undefined || value.toString() === "") {
+        return false;
+    } else {
+        if (value < 1) {
+            return "Discount must be at least 1%";
+        }
+        if (value > 75) {
+            return "Discount must be at most 75%";
+        }
+        return undefined; // Return undefined if validation passes
+    }
+};
+
+export const ImageValidator = (file: File): string | undefined => {
+    if (file === null) return "Files are required";
+
+    const maxSizeInBytes = 5 * 1024 * 1024; // 5 MB in bytes
+    const validFormats = ["image/png", "image/jpeg", "image/jpg", "image/gif"];
+
+    if (file.size > maxSizeInBytes) return "File size must not exceed 5 MB";
+    if (!validFormats.includes(file.type)) return "Invalid file format";
+
+    return undefined;
 };

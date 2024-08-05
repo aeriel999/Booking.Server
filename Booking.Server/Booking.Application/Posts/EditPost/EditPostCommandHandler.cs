@@ -120,10 +120,10 @@ public class EditPostCommandHandler(
 			post.Price = request.Price;
 		}
 
-		if (request.Description != null &&  request.Description != post.Description)
-		{
-			post.Description = request.Description;
-		}
+		//if (request.Description != null &&  request.Description != post.Description)
+		//{
+		//	post.Description = request.Description;
+		//}
 
 		post.IsActive = user.Rating >= 4.5 ? true : false;
 

@@ -22,7 +22,6 @@ import { ICategory, ICity, ICountry, IPostEdit } from "../../interfaces/post";
 import InputGroup from "../../components/common/InputGroup.tsx";
 import {
     CityNameValidator,
-    DescriptionValidator,
     PostNameValidator,
     PriceValidator,
     StreetNameValidator,

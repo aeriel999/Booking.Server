@@ -169,8 +169,13 @@ export interface IPostCreate {
     zipCode: number;
     numberOfGuests: number;
     price: number;
-    description: string | null;
-    images: File[];
+    discount: number | null;
+    images: IImage[];
+}
+
+export interface IImage{
+    id: number;
+    image: File;
 }
 
 export interface IPostInfoForRealtor {

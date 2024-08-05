@@ -23,11 +23,10 @@ const InputField: React.FC<InputFieldProps> = ({
     defaultValue,
     isExist,
 }) => {
-    const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const handleChange = (e: React.ChangeEvent<HTMLInputElement>) =>  {
         const newValue = e.target.value;
         if (newValue && isExist) {
             isExist(true);
-
             if (newValue!.length < 2) {
                 isExist(false);
             }
@@ -36,15 +35,14 @@ const InputField: React.FC<InputFieldProps> = ({
         setValue(name, newValue, { shouldValidate: true });
     };
 
-    return (
+    return  (
         <input
             {...register(name)}
             placeholder={placeholder}
             type={type}
             onChange={handleChange}
             className={className}
-            defaultValue={defaultValue ? defaultValue : undefined}
-        />
+            defaultValue={defaultValue}/>
     );
 };
 
