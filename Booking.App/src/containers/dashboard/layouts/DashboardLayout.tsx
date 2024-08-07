@@ -17,7 +17,7 @@ import { logout } from "../../../store/accounts/account.slice";
 import { endListening } from "../../../SignalR";
 import { useEffect, useState } from "react";
 import { APP_ENV } from "../../../env";
-import { changeDashboardMenuItem } from "../../../store/dashboard/dashboatd.slice";
+import { changeDashboardMenuItem } from "../../../store/settings/settings.slice";
 
 interface IDashboardMenuItem {
     name: string;
@@ -81,12 +81,16 @@ const initialMenuData: IDashboardMenuItem[] = [
 
 export default function DashboardLayout() {
     const { user } = useAppSelector((state) => state.account);
-    const { currentBreadcrumbsItem } = useAppSelector((state) => state.dashboard);
+    const { currentBreadcrumbsItem } = useAppSelector(
+        (state) => state.settings
+    );
     const dispatch = useAppDispatch();
     const [menuData, setMenuData] =
         useState<IDashboardMenuItem[]>(initialMenuData);
     const navigate = useNavigate();
-    const [currentMenuItem, setCurrentMenuItem] = useState<string>(currentBreadcrumbsItem);
+    const [currentMenuItem, setCurrentMenuItem] = useState<string>(
+        currentBreadcrumbsItem
+    );
     const [avatarUrl, setAvatarUrl] = useState<string>();
     const [isExpanded, setIsExpanded] = useState(false);
 
@@ -96,27 +100,28 @@ export default function DashboardLayout() {
         }
     }, [user]);
 
-    useEffect(() =>{
+    useEffect(() => {
         if (currentBreadcrumbsItem) {
-            const menuIndex = menuData.findIndex(item => item.name === currentBreadcrumbsItem);
+            const menuIndex = menuData.findIndex(
+                (item) => item.name === currentBreadcrumbsItem
+            );
             if (menuIndex !== -1) {
                 handleMenuClick(menuIndex);
             }
         }
-    }, [])
+    }, []);
 
     const handleMenuClick = (index: number) => {
         const updatedMenuData = menuData.map((item, i) => ({
             ...item,
             isActive: i === index,
         }));
-      
+
         setMenuData(updatedMenuData);
         navigate(menuData[index].link);
         setCurrentMenuItem(menuData[index].name);
         setIsExpanded(true);
-        dispatch( changeDashboardMenuItem(menuData[index].name))
-       
+        dispatch(changeDashboardMenuItem(menuData[index].name));
     };
 
     return (
@@ -166,15 +171,21 @@ export default function DashboardLayout() {
                                     />
                                     <p className="menuItemsText">{item.name}</p>
                                 </div>
-                                {isExpanded && currentMenuItem === item.name &&(
-                                    <div className="outIcon" onClick={(e)=>{
-                                        e.stopPropagation();
-                                        setIsExpanded(false)
-                                    }}
-                                   >
-                                        <img src={ArrowBack} alt="Collapes"   />
-                                    </div>
-                                )}
+                                {isExpanded &&
+                                    currentMenuItem === item.name && (
+                                        <div
+                                            className="outIcon"
+                                            onClick={(e) => {
+                                                e.stopPropagation();
+                                                setIsExpanded(false);
+                                            }}
+                                        >
+                                            <img
+                                                src={ArrowBack}
+                                                alt="Collapes"
+                                            />
+                                        </div>
+                                    )}
                             </div>
                         ))}
                     </div>
@@ -197,9 +208,7 @@ export default function DashboardLayout() {
                     <Outlet />
                 </div>
             </div>
-            {/* <div className="dashboardFooter">
-                <p> </p>
-            </div> */}
+           
         </div>
     );
 }

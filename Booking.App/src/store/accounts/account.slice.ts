@@ -38,8 +38,9 @@ const updateLoginUserState = (state: IAccountState, token: string): void => {
     const avatar = decodedToken["Avatar"];
 
     if (role === "realtor") {
-        const firstName = decodedToken["family_name"];
-        const lastName = decodedToken["given_name"];
+        const firstName = decodedToken["given_name"];
+        const lastName = decodedToken["family_name"];
+         
         const phoneNumber =
             decodedToken[
                 "http://schemas.xmlsoap.org/ws/2005/05/identity/claims/mobilephone"

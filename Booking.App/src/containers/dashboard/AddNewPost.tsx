@@ -277,9 +277,9 @@ export function AddNewPost() {
     //     }
     // };
     return (
-        <div className="addNewPostContainer">
-            <div className="leftContainer">
-                <div id="title">Add New Post</div>
+        <div className="twoColumnsContainer">
+            <div className="textInputsContainer">
+                <div className="title">Add New Post</div>
                 <form
                     onSubmit={handleSubmit(onSubmit)}
                     className="formContainer"

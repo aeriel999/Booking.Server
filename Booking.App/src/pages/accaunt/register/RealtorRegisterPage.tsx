@@ -1,6 +1,6 @@
 import "../../../css/AuthenticationClasses/index.scss";
 import Grid from "@mui/material/Grid";
-import { realtorRegisterResolver } from "../../../validations/account";
+import { PhoneNumberValidator, realtorRegisterResolver } from "../../../validations/account";
 import { useState } from "react";
 import { IRealtorRegister } from "../../../interfaces/account";
 import { unwrapResult } from "@reduxjs/toolkit";
@@ -19,13 +19,10 @@ export default function RealtorRegisterPage() {
     const { registerData } = useAppSelector((state) => state.account);
     const dispatch = useAppDispatch();
     const navigate = useNavigate();
-
     const [errorMessage, setErrorMessage] = useState<string | undefined>(
         undefined
     );
-
     const [isPhoneValid, setIsPhoneValid] = useState(true);
-
     const [phone, setPhone] = useState<string>("");
 
     const {
@@ -107,7 +104,7 @@ export default function RealtorRegisterPage() {
                                     </div>
                                 )}
 
-                                <Grid className="formInput">
+                                <div className="formInput">
                                     <MuiPhoneNumber
                                         defaultCountry={"ua"}
                                         onChange={(e) => {
@@ -118,7 +115,14 @@ export default function RealtorRegisterPage() {
                                         }}
                                         error={!isPhoneValid}
                                     />
-                                </Grid>
+                                   
+                                </div>
+                                {PhoneNumberValidator(phone) !== undefined && (
+                                        <div className="error">
+                                            <p>*</p>
+                                            {PhoneNumberValidator(phone)}
+                                        </div>
+                                    )}
 
                                 <InputField
                                     placeholder="Email"

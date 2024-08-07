@@ -1,31 +1,30 @@
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
-import { IDashboardState } from "../../interfaces/common";
+import { IDashboardState as ISettingsState } from "../../interfaces/common";
 import {
     addLocalStorage,
     getLocalStorage,
 } from "../../utils/storage/localStorageUtils";
 
-const initialState: IDashboardState = {
+const initialState: ISettingsState = {
     currentBreadcrumbsItem:
         getLocalStorage("currentBreadcrumbsItem") === null
             ? "Profile"
             : getLocalStorage("currentBreadcrumbsItem")!,
 };
 
-export const dashboardSlice = createSlice({
+export const settingsSlice = createSlice({
     name: "chat",
     initialState,
     reducers: {
         changeDashboardMenuItem: (
-            state: IDashboardState,
+            state: ISettingsState,
             action: PayloadAction<string>
         ) => {
             state.currentBreadcrumbsItem = action.payload;
-            console.log("currentBreadcrumbsItem", action.payload);
             addLocalStorage("currentBreadcrumbsItem", action.payload);
         },
     },
 });
 
-export const { changeDashboardMenuItem } = dashboardSlice.actions;
-export default dashboardSlice.reducer;
+export const { changeDashboardMenuItem } = settingsSlice.actions;
+export default settingsSlice.reducer;

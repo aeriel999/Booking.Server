@@ -88,7 +88,6 @@ export interface IEditRealtorInfo {
     lastName: string | null;
     phoneNumber: string | null;
     email: string | null;
-    avatar: File | undefined | null;
 }
 
 export interface IReloadAvatar {

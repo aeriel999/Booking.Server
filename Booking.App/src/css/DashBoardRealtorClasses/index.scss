@@ -564,20 +564,20 @@
 //     background-color: #f0f0f0;
 // }
 
-.addNewPostContainer {
+.twoColumnsContainer {
     display: flex;
     width: 100%;
     justify-content: space-around;
     align-items: stretch;
     margin-bottom: 30px;
 
-    .leftContainer {
+    .textInputsContainer {
         display: flex;
         flex-direction: column;
         width: 45%;
         gap: 30px;
 
-        #title {
+        .title {
             color: $default-color;
             font-size: $extra-large-font-size;
             font-style: normal;
@@ -687,10 +687,10 @@
     }
 }
 
- .blockImageContainer{
+.blockImageContainer {
     display: flex;
     flex-direction: column;
     align-items: center;
     gap: 12px;
     align-self: stretch;
- }
+}
