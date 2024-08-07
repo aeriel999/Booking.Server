@@ -97,6 +97,7 @@ export const accountsSlice = createSlice({
 
         logout: (state) => {
             deleteLocalStorage("authToken");
+            deleteLocalStorage("currentBreadcrumbsItem");
             state.user = null;
             state.token = null;
             state.isLogin = false;

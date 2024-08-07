@@ -21,6 +21,7 @@ import {
     ICategory,
     ICity,
     ICountry,
+    IImage,
     IListForCombobox,
     IPostCreate,
 } from "../../interfaces/post";
@@ -28,6 +29,7 @@ import InputGroup from "../../components/common/InputGroup.tsx";
 import {
     addPostResolver,
     CityNameValidator,
+    ImagesValidator,
     PostNameValidator,
     PriceValidator,
     StreetNameValidator,
@@ -44,8 +46,9 @@ import InputField from "../../components/common/InputField.tsx";
 import { useForm } from "react-hook-form";
 import "../../css/DashBoardRealtorClasses/index.scss";
 import { parseNumber } from "libphonenumber-js";
-import ImageUploader from "../../components/realtorDashboard/ImageUploaded.tsx";
+import ImageUploader from "../../components/realtorDashboard/ImageUploader.tsx";
 import "../../css/DashBoardAnonymousClasses/index.scss";
+import ListImageUploader from "../../components/realtorDashboard/ListImagesUploader.tsx";
 
 export function AddNewPost() {
     const dispatch = useAppDispatch();
@@ -70,7 +73,8 @@ export function AddNewPost() {
     const [isStreetValid, setIsStreetValid] = useState<boolean>(true);
     const [isStreetExist, setIsStreetExist] = useState<boolean>(false);
 
-    const [image, setImage] = useState<File>();
+    const [mainImage, setMainImage] = useState<File>();
+    const [imageList, setImageList] = useState<IImage[]>([]);
 
     const [images, setImages] = useState<File[]>([]);
     const navigate = useNavigate();
@@ -144,6 +148,10 @@ export function AddNewPost() {
                 setIsHotel(false);
             }
         }
+        // else {
+        //     setIsCategoryValid(false);
+
+        // }
     }, [category]);
 
     useEffect(() => {
@@ -154,6 +162,10 @@ export function AddNewPost() {
                 }
             });
         }
+        // else {
+        //     setIsCountryValid(false);
+
+        // }
     }, [country]);
 
     useEffect(() => {
@@ -164,19 +176,11 @@ export function AddNewPost() {
                 }
             });
         }
+        // if (!city && !isCityExist) {
+        //     setIsCityValid(false);
+
+        // }
     }, [city]);
-
-    // function handleChange() {
-    //     setIsFormValid(
-    //         Object.values(formValid.current).every((isValid) => isValid)
-    //     );
-
-    //     console.log("formValid.current", formValid.current);
-    //     console.log(
-    //         "TestValid",
-    //         Object.values(formValid.current).every((isValid) => isValid)
-    //     );
-    // }
 
     const onSubmit = async (data: IPostCreate) => {
         console.log("data", data);
@@ -194,8 +198,21 @@ export function AddNewPost() {
             return;
         }
         if (!street && !isStreetExist) {
+            setIsStreetValid(false);
             return;
         }
+
+        if (mainImage) {
+            const newMainImage: IImage = {
+                id: 1,
+                image: mainImage!,
+            };
+
+            setImageList((prevImageList) => [...prevImageList, newMainImage]);
+        } else {
+            setErrorMessage(ErrorHandler("Choose at least main image"));
+        }
+
         if (
             isCategoryValid &&
             isCountryValid &&
@@ -207,6 +224,7 @@ export function AddNewPost() {
                 categoryId: category?.id!,
                 countryId: category?.id!,
                 cityId: city === undefined || city === null ? null : city?.id!,
+                images: imageList,
             };
             console.log("model", model);
         } else {
@@ -260,8 +278,6 @@ export function AddNewPost() {
     // };
     return (
         <div className="addNewPostContainer">
-            {errorMessage && <OutlinedErrorAlert message={errorMessage} />}
-
             <div className="leftContainer">
                 <div id="title">Add New Post</div>
                 <form
@@ -477,16 +493,24 @@ export function AddNewPost() {
                 </form>
             </div>
             <div className="addImagesContainer">
+                {errorMessage && (
+                    <OutlinedErrorAlert
+                        message={errorMessage}
+                        textColor="#000"
+                    />
+                )}
+
                 <ImageUploader
-                    image={image}
-                    setImage={setImage}
+                    image={mainImage}
+                    setImage={setMainImage}
                     validator={ImageValidator}
                 />
 
-                <ImageUploader
-                    image={image}
-                    setImage={setImage}
-                    validator={ImageValidator}
+                <ListImageUploader
+                    images={images}
+                    setImages={setImages}
+                    validator={ImagesValidator}
+                    maxImagesUpload={4}
                 />
             </div>
         </div>

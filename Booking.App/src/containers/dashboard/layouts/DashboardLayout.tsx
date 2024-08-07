@@ -17,6 +17,7 @@ import { logout } from "../../../store/accounts/account.slice";
 import { endListening } from "../../../SignalR";
 import { useEffect, useState } from "react";
 import { APP_ENV } from "../../../env";
+import { changeDashboardMenuItem } from "../../../store/dashboard/dashboatd.slice";
 
 interface IDashboardMenuItem {
     name: string;
@@ -80,11 +81,12 @@ const initialMenuData: IDashboardMenuItem[] = [
 
 export default function DashboardLayout() {
     const { user } = useAppSelector((state) => state.account);
+    const { currentBreadcrumbsItem } = useAppSelector((state) => state.dashboard);
     const dispatch = useAppDispatch();
     const [menuData, setMenuData] =
         useState<IDashboardMenuItem[]>(initialMenuData);
     const navigate = useNavigate();
-    const [currentMenuItem, setCurrentMenuItem] = useState<string>("Profile");
+    const [currentMenuItem, setCurrentMenuItem] = useState<string>(currentBreadcrumbsItem);
     const [avatarUrl, setAvatarUrl] = useState<string>();
     const [isExpanded, setIsExpanded] = useState(false);
 
@@ -94,15 +96,27 @@ export default function DashboardLayout() {
         }
     }, [user]);
 
+    useEffect(() =>{
+        if (currentBreadcrumbsItem) {
+            const menuIndex = menuData.findIndex(item => item.name === currentBreadcrumbsItem);
+            if (menuIndex !== -1) {
+                handleMenuClick(menuIndex);
+            }
+        }
+    }, [])
+
     const handleMenuClick = (index: number) => {
         const updatedMenuData = menuData.map((item, i) => ({
             ...item,
             isActive: i === index,
         }));
+      
         setMenuData(updatedMenuData);
         navigate(menuData[index].link);
         setCurrentMenuItem(menuData[index].name);
         setIsExpanded(true);
+        dispatch( changeDashboardMenuItem(menuData[index].name))
+       
     };
 
     return (

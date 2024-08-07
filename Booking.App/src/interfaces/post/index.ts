@@ -225,3 +225,4 @@ export interface TablePaginationActionsProps {
         newPage: number
     ) => void;
 }
+

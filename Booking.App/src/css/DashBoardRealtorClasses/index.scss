@@ -678,12 +678,19 @@
         gap: 10px;
         border-radius: 5px;
         background: #019392;
-    color: var(--Backgrounds-Primary, #fff);
-    border: none;
-    
-    &:hover {
-        border: 1px solid $register-button-border-color;
-    }
+        color: var(--Backgrounds-Primary, #fff);
+        border: none;
 
+        &:hover {
+            border: 1px solid $register-button-border-color;
+        }
     }
 }
+
+ .blockImageContainer{
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 12px;
+    align-self: stretch;
+ }

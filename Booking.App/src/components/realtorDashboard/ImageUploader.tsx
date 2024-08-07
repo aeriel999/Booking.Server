@@ -32,7 +32,7 @@ const ImageUploader = (props: ImageUploader) => {
         <>
             {error && <OutlinedErrorAlert message={error} />}
             <div className="mainImage">
-                <div
+                <div 
                     style={{
                         width: "394px",
                         height: "394px",

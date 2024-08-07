@@ -8,6 +8,7 @@ export const deleteLocalStorage = (keyStorage: string): void => {
 
 export const getLocalStorage = (keyStorage: string): string | null => {
     const storedValue = localStorage.getItem(keyStorage);
+
     if (storedValue !== null) {
         return JSON.parse(storedValue);
     } else {
