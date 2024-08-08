@@ -2,11 +2,13 @@ import React, { useState } from "react";
 import ImageTemplate from "../../assets/Templates/Vector.webp";
 import OutlinedErrorAlert from "../common/ErrorAlert";
 import "../../css/DashBoardRealtorClasses/index.scss";
+import { IImage } from "../../interfaces/post";
 
 type ImageUploader = {
     image: File | null | undefined;
     setImage: (file: File) => void;
     validator: (value: File) => string | false | undefined;
+    setImageList: React.Dispatch<React.SetStateAction<IImage[]>>;
 };
 
 const ImageUploader = (props: ImageUploader) => {
@@ -21,6 +23,16 @@ const ImageUploader = (props: ImageUploader) => {
         setError(errorMessage);
         if (!errorMessage) {
             props.setImage(file);
+
+            const newMainImage: IImage = {
+                id: 1,
+                image: file,
+            };
+            props.setImageList([]);
+            props.setImageList((prevImageList) => [
+                ...prevImageList,
+                newMainImage,
+            ]);
         }
     };
 
@@ -32,22 +44,18 @@ const ImageUploader = (props: ImageUploader) => {
         <>
             {error && <OutlinedErrorAlert message={error} />}
             <div className="mainImage">
-                <div 
+                <div
                     style={{
                         width: "394px",
                         height: "394px",
-                        
+
                         background: `url(${displayImage}) center / cover no-repeat`,
                         alignSelf: "stretch",
                     }}
                 />
 
                 <label htmlFor="image-upload">
-                  
-                <a 
-                        type="button"
-                        className="imageUploadButton"
-                    >
+                    <a type="button" className="imageUploadButton">
                         Submit Main Image
                     </a>
                     <input

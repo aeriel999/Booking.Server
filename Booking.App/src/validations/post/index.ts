@@ -59,7 +59,6 @@ export const addPostResolver: Resolver<IPostCreate> = async (values) => {
             message: discountError,
         };
     }
-    console.log("errors", errors);
     return {
         values: Object.keys(errors).length === 0 ? values : {},
         errors,
@@ -183,7 +182,6 @@ export const ImageValidator = (file: File): string | undefined => {
 
     return undefined;
 };
-
 
 export const ImagesValidator = (files: File[]): string | undefined => {
     if (files.length === 0) return "Files are required";

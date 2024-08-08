@@ -148,10 +148,6 @@ export function AddNewPost() {
                 setIsHotel(false);
             }
         }
-        // else {
-        //     setIsCategoryValid(false);
-
-        // }
     }, [category]);
 
     useEffect(() => {
@@ -161,13 +157,12 @@ export function AddNewPost() {
                     setCityList(history?.payload.$values);
                 }
             });
+        } else {
+            setCityList([]);
+            setStreetList([]);
+            setCity(null);
+            setStreet(null);
         }
-        // else {
-        //     setIsCountryValid(false);
-
-        // }
-
-        console.log("country", country);
     }, [country]);
 
     useEffect(() => {
@@ -177,13 +172,10 @@ export function AddNewPost() {
                     setStreetList(history?.payload.$values);
                 }
             });
+        } else {
+            setStreetList([]);
+            setStreet(null);
         }
-        // if (!city && !isCityExist) {
-        //     setIsCityValid(false);
-
-        // }
-        console.log("city", city);
-
     }, [city]);
 
     const onSubmit = async (data: IPostCreate) => {
@@ -206,16 +198,10 @@ export function AddNewPost() {
             return;
         }
 
-        if (mainImage) {
-            const newMainImage: IImage = {
-                id: 1,
-                image: mainImage!,
-            };
-
-            setImageList((prevImageList) => [...prevImageList, newMainImage]);
-        } else {
+        if (imageList.length === 0) {
             setErrorMessage(ErrorHandler("Choose at least main image"));
-        }
+            return;
+        }  
 
         if (
             isCategoryValid &&
@@ -228,6 +214,16 @@ export function AddNewPost() {
                 categoryId: category?.id!,
                 countryId: category?.id!,
                 cityId: city === undefined || city === null ? null : city?.id!,
+                cityName:
+                    city === undefined || city === null ? data.cityName : null!,
+                streetId:
+                    street === undefined || street === null
+                        ? null
+                        : street?.id!,
+                streetName:
+                    street === undefined || street === null
+                        ? data.streetName
+                        : null,
                 images: imageList,
             };
             console.log("model", model);
@@ -290,6 +286,7 @@ export function AddNewPost() {
                 >
                     {/* Title */}
                     <div className="fieldContainer">
+                        <div className="filedTitle">Title </div>
                         <InputField
                             placeholder="Title*"
                             type="text"
@@ -335,7 +332,7 @@ export function AddNewPost() {
                     </div>
 
                     {/* City */}
-                    {cityList.length > 0 && !isCityExist && (
+                    {cityList.length > 0 && (
                         <div className="fieldContainer">
                             <div className="instructionText">
                                 Select City from the list or enter it in a
@@ -355,8 +352,10 @@ export function AddNewPost() {
                         </div>
                     )}
 
-                    {(!city || !isCityValid) && (
+                    {!city && (
                         <div className="fieldContainer">
+                            <div className="filedTitle">City </div>
+
                             <InputField
                                 placeholder="City*"
                                 type="text"
@@ -377,7 +376,7 @@ export function AddNewPost() {
                     )}
 
                     {/* Street */}
-                    {streetList.length > 0 && !isStreetExist && (
+                    {streetList.length > 0 && (
                         <div className="fieldContainer">
                             <div className="instructionText">
                                 Select Street from the list or enter it in a
@@ -397,8 +396,10 @@ export function AddNewPost() {
                         </div>
                     )}
 
-                    {(!street || !isStreetValid) && (
+                    {!street && (
                         <div className="fieldContainer">
+                            <div className="filedTitle">Street </div>
+
                             <InputField
                                 placeholder="Street*"
                                 type="text"
@@ -420,8 +421,10 @@ export function AddNewPost() {
 
                     {/* zipCode */}
                     <div className="fieldContainer">
+                        <div className="filedTitle">Zip Code </div>
+
                         <InputField
-                            placeholder="ZipCode*"
+                            placeholder="Zip Code*"
                             type="number"
                             name="zipCode"
                             register={register}
@@ -438,6 +441,8 @@ export function AddNewPost() {
                     {/*  Number of Guests */}
                     {!isHotel && (
                         <div className="fieldContainer">
+                            <div className="filedTitle">Number of Guests </div>
+
                             <InputField
                                 placeholder="Number of Guests*"
                                 type="number"
@@ -459,6 +464,8 @@ export function AddNewPost() {
 
                     {/* Price */}
                     <div className="fieldContainer">
+                        <div className="filedTitle">Price </div>
+
                         <InputField
                             placeholder="Price*"
                             type="number"
@@ -476,6 +483,8 @@ export function AddNewPost() {
 
                     {/* Discount */}
                     <div className="fieldContainer">
+                        <div className="filedTitle">Discount </div>
+
                         <InputField
                             placeholder="Discount"
                             type="number"
@@ -508,13 +517,7 @@ export function AddNewPost() {
                     image={mainImage}
                     setImage={setMainImage}
                     validator={ImageValidator}
-                />
-
-                <ListImageUploader
-                    images={images}
-                    setImages={setImages}
-                    validator={ImagesValidator}
-                    maxImagesUpload={4}
+                    setImageList={setImageList}
                 />
             </div>
         </div>

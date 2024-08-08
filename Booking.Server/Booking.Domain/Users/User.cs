@@ -21,5 +21,5 @@ public class User : IdentityUser<Guid>
 
 	public ICollection<PostBooking>? Bookings  { get; set; }
 
-    public string? ProfileHeaderImage { get; set; }
+   // public string? ProfileHeaderImage { get; set; }
 }

@@ -181,7 +181,7 @@ export const App: React.FC = () => {
 
 
                 <Route path="*" element={<NotFound />} />
-            </Route>
+          {/* //  </Route> */}
             <Route path="/posts" element={<AnonymousDashboardLayoutForPosts />}>
                 <Route
                     index
