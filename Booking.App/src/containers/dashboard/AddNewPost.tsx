@@ -166,6 +166,8 @@ export function AddNewPost() {
         //     setIsCountryValid(false);
 
         // }
+
+        console.log("country", country);
     }, [country]);
 
     useEffect(() => {
@@ -180,6 +182,8 @@ export function AddNewPost() {
         //     setIsCityValid(false);
 
         // }
+        console.log("city", city);
+
     }, [city]);
 
     const onSubmit = async (data: IPostCreate) => {
