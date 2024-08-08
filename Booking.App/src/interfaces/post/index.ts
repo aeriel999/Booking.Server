@@ -171,10 +171,16 @@ export interface IPostCreate {
     cityName: string | null;
     streetId: string | null;
     streetName: string | null;
-
+    zipCode: number;
+    numberOfGuests: number;
     price: number;
-    description: string | null;
-    images: File[];
+    discount: number | null;
+    images: IImage[];
+}
+
+export interface IImage{
+    id: number;
+    image: File;
 }
 
 export interface IPostInfoForRealtor {
@@ -224,3 +230,4 @@ export interface TablePaginationActionsProps {
         newPage: number
     ) => void;
 }
+

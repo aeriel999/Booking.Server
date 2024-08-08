@@ -32,7 +32,7 @@ public class ChangeEmailCommandHandler(
 		user.UserName = request.Email;
 		user.NormalizedUserName = request.Email.ToLower();
 
-		var resultOfUserUpdate = await userRepository.SaveUserAsync(user);
+		var resultOfUserUpdate = await userRepository.UpdateProfileAsync(user);
 
         return resultOfUserUpdate;
 	}

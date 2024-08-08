@@ -40,9 +40,6 @@ export const App: React.FC = () => {
     const { isLogin, user } = useAppSelector((state) => state.account);
 
     const role = () => {
-        console.log("user", user);
-        console.log("isLogin", isLogin);
-
         if (user?.role.toLowerCase().includes("realtor")) {
             return "realtor";
         } else if (user?.role.toLowerCase().includes("user")) {
@@ -54,47 +51,6 @@ export const App: React.FC = () => {
 
     return (
         <Routes>
-            <Route
-                path="authentication/user-register"
-                element={<UserRegisterPage />}
-            />
-            <Route
-                path="/authentication/realtor-register"
-                element={<RealtorRegisterPage />}
-            />
-
-            <Route
-                path="/authentication/realtor-register-add-avatar"
-                element={<RealtorRegisterAvatarPage />}
-            />
-            <Route path="authentication/login" element={<SignInPage />} />
-
-            <Route
-                path="/authentication/register-information/:email"
-                element={<RegisterInformationPage />}
-            />
-
-            <Route
-                path="authentication/forgot-password"
-                element={<ForgotPasswordPage />}
-            />
-
-            <Route
-                path="/authentication/forgot-password-information/:email"
-                element={<ForgotPasswordInformationPage />}
-            />
-
-            <Route
-                path="/authentication/reset-password/:email/:token"
-                element={<ResetPasswordPage />}
-            />
-            <Route
-                path="/authentication/reconfirm-email"
-                element={<ReConfirmEmailPage />}
-            />
-
-            <Route path="/test" element={<DashboardLayout />} />
-
             {isLogin && (
                 <>
                     <Route
@@ -198,6 +154,29 @@ export const App: React.FC = () => {
                     path="post/:postId/realtor/:realtorId"
                     element={<RealtorPage />}
                 />
+                {/* <Route path="dashboard/profile" element={<SignInPage />} />
+                <Route path="dashboard/profile/edit" element={<SignInPage />} />
+                <Route
+                    path="dashboard/profile/change-password"
+                    element={<SignInPage />}
+                /> */}
+
+                <Route path="*" element={<NotFound />} />
+            </Route>
+
+            <Route path="dashboard/profile" element={<SignInPage />} />
+
+            <Route path="dashboard/profile/edit" element={<SignInPage />} />
+
+            <Route
+                path="dashboard/profile/change-password"
+                element={<SignInPage />}
+            />
+
+            <Route
+                path="dashboard/dashboard/post/add"
+                element={<SignInPage />}
+            />
 
 
 
@@ -257,6 +236,8 @@ export const App: React.FC = () => {
 
 
 
+            <Route path="authentication/login" element={<SignInPage />} />
+
             <Route
                 path="/authentication/user-register"
                 element={<UserRegisterPage />}
@@ -267,7 +248,6 @@ export const App: React.FC = () => {
                 element={<ConfirmEmailPage />}
             />
 
-            <Route path="/authentication/login" element={<SignInPage />} />
             <Route
                 path="authentication/forgot-password"
                 element={<ForgotPasswordPage />}
@@ -282,13 +262,15 @@ export const App: React.FC = () => {
                 path="authentication/register-information/:email"
                 element={<RegisterInformationPage />}
             />
-            <Route
-                path="authentication/confirm-email/:userId/:token"
-                element={<ConfirmEmailPage />}
-            />
+
             <Route
                 path="authentication/realtor-register"
                 element={<RealtorRegisterPage />}
+            />
+
+            <Route
+                path="/authentication/realtor-register-add-avatar"
+                element={<RealtorRegisterAvatarPage />}
             />
 
             <Route
@@ -299,10 +281,7 @@ export const App: React.FC = () => {
                 path="authentication/reset-password/:email/:token"
                 element={<ResetPasswordPage />}
             />
-            <Route
-                path="authentication/change-email/:userId/:email/:token"
-                element={<ChangeEmailPage />}
-            />
+
             <Route
                 path="authentication/reconfirm-email"
                 element={<ReConfirmEmailPage />}

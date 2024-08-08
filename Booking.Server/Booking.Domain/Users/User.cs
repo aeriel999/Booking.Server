@@ -11,6 +11,8 @@ public class User : IdentityUser<Guid>
 
 	public string? Avatar { get; set; }
 
+	public string? ProfileHeaderImage { get; set; }
+
 	public float? Rating { get; set; }
 
 	public ICollection<Post>? Posts { get; set; }

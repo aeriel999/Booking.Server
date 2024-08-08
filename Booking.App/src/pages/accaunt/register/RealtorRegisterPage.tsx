@@ -1,6 +1,6 @@
 import "../../../css/AuthenticationClasses/index.scss";
 import Grid from "@mui/material/Grid";
-import { realtorRegisterResolver } from "../../../validations/account";
+import { PhoneNumberValidator, realtorRegisterResolver } from "../../../validations/account";
 import { useState } from "react";
 import { IRealtorRegister } from "../../../interfaces/account";
 import { unwrapResult } from "@reduxjs/toolkit";
@@ -19,13 +19,10 @@ export default function RealtorRegisterPage() {
     const { registerData } = useAppSelector((state) => state.account);
     const dispatch = useAppDispatch();
     const navigate = useNavigate();
-
     const [errorMessage, setErrorMessage] = useState<string | undefined>(
         undefined
     );
-
     const [isPhoneValid, setIsPhoneValid] = useState(true);
-
     const [phone, setPhone] = useState<string>("");
 
     const {
@@ -81,10 +78,10 @@ export default function RealtorRegisterPage() {
                                     defaultValue={registerData?.firstName}
                                 />
                                 {errors.firstName && (
-                                    <p className="error">
+                                    <div className="error">
                                         <p>*</p>
                                         {errors.firstName.message}
-                                    </p>
+                                    </div>
                                 )}
 
                                 <InputField
@@ -101,13 +98,13 @@ export default function RealtorRegisterPage() {
                                     defaultValue={registerData?.lastName}
                                 />
                                 {errors.lastName && (
-                                    <p className="error">
+                                    <div className="error">
                                         <p>*</p>
                                         {errors.lastName.message}
-                                    </p>
+                                    </div>
                                 )}
 
-                                <Grid className="formInput">
+                                <div className="formInput">
                                     <MuiPhoneNumber
                                         defaultCountry={"ua"}
                                         onChange={(e) => {
@@ -118,7 +115,14 @@ export default function RealtorRegisterPage() {
                                         }}
                                         error={!isPhoneValid}
                                     />
-                                </Grid>
+                                   
+                                </div>
+                                {PhoneNumberValidator(phone) !== undefined && (
+                                        <div className="error">
+                                            <p>*</p>
+                                            {PhoneNumberValidator(phone)}
+                                        </div>
+                                    )}
 
                                 <InputField
                                     placeholder="Email"
@@ -134,10 +138,10 @@ export default function RealtorRegisterPage() {
                                     defaultValue={registerData?.email}
                                 />
                                 {errors.email && (
-                                    <p className="error">
+                                    <div className="error">
                                         <p>*</p>
                                         {errors.email.message}
-                                    </p>
+                                    </div>
                                 )}
 
                                 <InputField
@@ -153,10 +157,10 @@ export default function RealtorRegisterPage() {
                                     }
                                 />
                                 {errors.password && (
-                                    <p className="error">
+                                    <div className="error">
                                         <p>*</p>
                                         {errors.password.message}
-                                    </p>
+                                    </div>
                                 )}
 
                                 <InputField
@@ -172,11 +176,11 @@ export default function RealtorRegisterPage() {
                                     }
                                 />
                                 {errors.password && (
-                                    <p className="error">
+                                    <div className="error">
                                         {errors.confirmPassword && <p>*</p>}
 
                                         {errors.confirmPassword?.message}
-                                    </p>
+                                    </div>
                                 )}
                             </div>
 

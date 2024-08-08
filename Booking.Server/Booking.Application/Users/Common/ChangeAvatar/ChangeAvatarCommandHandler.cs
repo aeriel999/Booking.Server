@@ -27,6 +27,11 @@ public class ChangeAvatarCommandHandler(
 
 		user.Avatar = avatar;
 
+		var updateUserResult = await userRepository.UpdateProfileAsync(user);
+
+		if(updateUserResult.IsError)
+			return updateUserResult.Errors;
+
 		//Set Role
 		var role = await userRepository.GetRoleByUserAsync(user);
 

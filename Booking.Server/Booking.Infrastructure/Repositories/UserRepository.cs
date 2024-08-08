@@ -48,7 +48,7 @@ public class UserRepository(UserManager<User> userManager)
 		return user;
 	}
 
-	public async Task<ErrorOr<User>> SaveUserAsync(User user)
+	public async Task<ErrorOr<User>> UpdateProfileAsync(User user)
 	{
 		var saveResult = await userManager.UpdateAsync(user);
 
@@ -88,7 +88,7 @@ public class UserRepository(UserManager<User> userManager)
 
         user.UserName = email;
 
-        await SaveUserAsync(user);
+        await UpdateProfileAsync(user);
 
         return Result.Updated;
     }
@@ -137,7 +137,7 @@ public class UserRepository(UserManager<User> userManager)
             user.Rating = (user.Rating + rating) / 2;
 
 
-        await SaveUserAsync(user);
+        await UpdateProfileAsync(user);
 
         return user;
         
@@ -170,12 +170,7 @@ public class UserRepository(UserManager<User> userManager)
 	{
 		return await userManager.AddLoginAsync(user, userLoginInfo);
 	}
-
-	public Task<ErrorOr<User>> UpdateProfileAsync(User user)
-	{
-		throw new NotImplementedException();
-	}
-
+ 
 	public Task<ErrorOr<User>> GetUserAsync(string userId)
 	{
 		throw new NotImplementedException();

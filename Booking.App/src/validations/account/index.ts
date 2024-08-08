@@ -1,5 +1,6 @@
 import { Resolver } from "react-hook-form";
 import {
+    IEditRealtorInfo,
     IForgotPassword,
     ILogin,
     IRealtorRegister,
@@ -7,6 +8,8 @@ import {
     IResetPassword,
     IUserRegister,
 } from "../../interfaces/account";
+import { IChangePassword } from "../../interfaces/user";
+import { isValidPhoneNumber } from "libphonenumber-js";
 
 export const loginResolver: Resolver<ILogin> = async (values) => {
     const errors: Record<string, any> = {};
@@ -189,101 +192,181 @@ export const reconfirmemaildResolver: Resolver<IReconfirmEmail> = async (
     };
 };
 
-export const EmailValidator = (value: string | number): string | undefined => {
-    const strValue = typeof value === "number" ? value.toString() : value;
+export const realtorEditProfileResolver: Resolver<IEditRealtorInfo> = async (
+    values
+) => {
+    const errors: Record<string, any> = {};
 
-    if (!strValue) return "Email must not be empty";
-    if (/[а-яА-Я]/.test(strValue))
+    if (values.firstName !== null) {
+        const firstNameError = FirstNameValidator(values.firstName);
+        if (firstNameError) {
+            errors.firstName = {
+                type: "validation",
+                message: firstNameError,
+            };
+        }
+    }
+
+    if (values.lastName !== null) {
+        const lastNameError = LastNameValidator(values.lastName);
+        if (lastNameError) {
+            errors.lastName = {
+                type: "validation",
+                message: lastNameError,
+            };
+        }
+    }
+
+    if (values.email !== null) {
+        const emailError = EmailValidator(values.email);
+        if (emailError) {
+            errors.email = {
+                type: "validation",
+                message: emailError,
+            };
+        }
+    }
+
+    return {
+        values: Object.keys(errors).length === 0 ? values : {},
+        errors,
+    };
+};
+
+export const changePasswordResolver: Resolver<IChangePassword> = async (
+    values
+) => {
+    const errors: Record<string, any> = {};
+
+    const currentPasswordError = PasswordValidator(values.currentPassword);
+    if (currentPasswordError) {
+        errors.currentPassword = {
+            type: "validation",
+            message: currentPasswordError,
+        };
+    }
+
+    const passwordError = PasswordValidator(values.newPassword);
+    if (passwordError) {
+        errors.newPassword = {
+            type: "validation",
+            message: passwordError,
+        };
+    }
+
+    const confirmNewPasswordError = ConfirmPasswordValidator(
+        values.newPassword,
+        values.confirmNewPassword
+    );
+    if (confirmNewPasswordError) {
+        errors.confirmNewPassword = {
+            type: "validation",
+            message: confirmNewPasswordError,
+        };
+    }
+
+    return {
+        values: Object.keys(errors).length === 0 ? values : {},
+        errors,
+    };
+};
+
+export const EmailValidator = (value: string): string | undefined => {
+    if (!value) return "Email must not be empty";
+    if (/[а-яА-Я]/.test(value))
         return "Value must not contain Cyrillic characters";
-    if (strValue.length < 5) return "Email must be at least 5 characters long";
-    if (strValue.length > 254)
+    if (value.length < 5) return "Email must be at least 5 characters long";
+    if (value.length > 254)
         return "Email must be less than 254 characters long";
-    if (!/^[a-zA-Z0-9._:$!%-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]+$/.test(strValue)) {
+    if (!/^[a-zA-Z0-9._:$!%-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]+$/.test(value)) {
         return "Invalid email address format";
     }
     return undefined; // Return undefined if validation passes
 };
 
-export const PasswordValidator = (
-    value: string | number
-): string | undefined => {
-    const strValue = typeof value === "number" ? value.toString() : value;
-
-    if (!strValue) return "Password must not be empty";
-    if (strValue.length < 8)
-        return "Password must be at least 8 characters long";
-    if (strValue.length > 24)
+export const PasswordValidator = (value: string): string | undefined => {
+    if (!value) return "Password must not be empty";
+    if (value.length < 8) return "Password must be at least 8 characters long";
+    if (value.length > 24)
         return "Password must be less than 24 characters long";
-    if (!/[A-Z]/.test(strValue))
+    if (!/[A-Z]/.test(value))
         return "Password must contain at least one uppercase letter";
-    if (!/[a-z]/.test(strValue))
+    if (!/[a-z]/.test(value))
         return "Password must contain at least one lowercase letter";
-    if (!/\d/.test(strValue)) return "Password must contain at least one digit";
-    if (!/[!"#$%&'()*+,\-./:;<=>?@[\\\]^_`{|}~]/.test(strValue))
+    if (!/\d/.test(value)) return "Password must contain at least one digit";
+    if (!/[!"#$%&'()*+,\-./:;<=>?@[\\\]^_`{|}~]/.test(value))
         return "Password must contain at least one special character";
-    if (/[£# “”]/.test(strValue))
+    if (/[£# “”]/.test(value))
         return "Password must not contain the following characters: £ # “”";
-    if (/[а-яА-Я]/.test(strValue))
+    if (/[а-яА-Я]/.test(value))
         return "Value must not contain Cyrillic characters";
     return undefined; // Return undefined if validation passes
 };
 
 export const ConfirmPasswordValidator = (
-    password: string | number,
-    confirmPassword: string | number
+    password: string,
+    confirmPassword: string
 ): string | undefined => {
-    const strPassword =
-        typeof password === "number" ? password.toString() : password;
-    const strConfirmPassword =
-        typeof confirmPassword === "number"
-            ? confirmPassword.toString()
-            : confirmPassword;
-
-    if (!strConfirmPassword) return "Confirm Password must not be empty";
-    if (strConfirmPassword !== strPassword) return "Passwords do not match";
+    if (!confirmPassword) return "Confirm Password must not be empty";
+    if (confirmPassword !== password) return "Passwords do not match";
     return undefined; // Return undefined if validation passes
 };
 
-export const FirstNameValidator = (
-    value: string | number
-): string | undefined => {
-    const strValue = typeof value === "number" ? value.toString() : value;
-
-    if (!strValue) return "First Name must not be empty";
-    if (strValue.length < 3)
+export const FirstNameValidator = (value: string): string | undefined => {
+    if (!value) return "First Name must not be empty";
+    if (value.length < 3)
         return "First Name must be at least 3 characters long";
-    if (strValue.length > 50)
+    if (value.length > 50)
         return "First Name must be less than 50 characters long";
-    if (!/^[A-Za-z\s]+$/.test(strValue))
+    if (!/^[A-Za-z\s]+$/.test(value))
         return "First Name must contain only letters and spaces";
-    if (/[£# “”]/.test(strValue))
+    if (/[£# “”]/.test(value))
         return "First Name must not contain the following characters: £ # “”";
     return undefined; // Return undefined if validation passes
 };
 
-export const LastNameValidator = (
-    value: string | number
-): string | undefined => {
-    const strValue = typeof value === "number" ? value.toString() : value;
-
-    if (!strValue) return "Last Name must not be empty";
-    if (strValue.length < 3)
-        return "Last Name must be at least 3 characters long";
-    if (strValue.length > 50)
+export const LastNameValidator = (value: string): string | undefined => {
+    if (!value) return "Last Name must not be empty";
+    if (value.length < 3) return "Last Name must be at least 3 characters long";
+    if (value.length > 50)
         return "Last Name must be less than 50 characters long";
-    if (!/^[A-Za-z\s]+$/.test(strValue))
+    if (!/^[A-Za-z\s]+$/.test(value))
         return "Last Name must contain only letters and spaces";
-    if (/[£# “”]/.test(strValue))
+    if (/[£# “”]/.test(value))
         return "Last Name must not contain the following characters: £ # “”";
     return undefined; // Return undefined if validation passes
 };
 
-export const AvatarValidator = (files: File[]): string | undefined => {
+export const ImageValidator = (files: File[]): string | undefined => {
     if (files.length === 0) return "Files are required";
 
     const maxSizeInBytes = 5 * 1024 * 1024; // 5 MB in bytes
+    const validFormats = ["image/png", "image/jpeg", "image/jpg", "image/gif"];
+
     for (const file of files) {
         if (file.size > maxSizeInBytes) return "File size must not exceed 5 MB";
+        if (!validFormats.includes(file.type)) return "Invalid file format";
     }
+
+    return undefined;
+};
+
+export const AvatarValidator = (file: File): string | undefined => {
+    if (file === null) return "Files are required";
+
+    const maxSizeInBytes = 5 * 1024 * 1024; // 5 MB in bytes
+    const validFormats = ["image/png", "image/jpeg", "image/jpg", "image/gif"];
+
+    if (file.size > maxSizeInBytes) return "File size must not exceed 5 MB";
+    if (!validFormats.includes(file.type)) return "Invalid file format";
+
+    return undefined;
+};
+
+export const PhoneNumberValidator = (value: string): string | undefined => {
+    if (!value || !isValidPhoneNumber(value)) {
+        return "Invalid phone number";
+    }
+
     return undefined;
 };

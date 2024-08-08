@@ -1,34 +1,41 @@
-import {APP_ENV} from "../env";
-import {getLocalStorage} from "../utils/storage/localStorageUtils.ts";
+import { APP_ENV } from "../env";
+import { getLocalStorage } from "../utils/storage/localStorageUtils.ts";
 
 import * as signalR from "@microsoft/signalr";
 
-export interface IJoinChatRoom{
-    roomId: string,
-    setIsActive: (setIsActive: boolean) => void,
+export interface IJoinChatRoom {
+    roomId: string;
+    setIsActive: (setIsActive: boolean) => void;
 }
 
 //const access_token = getLocalStorage('authToken') as string;
 
 const connection = new signalR.HubConnectionBuilder()
-            .withUrl( APP_ENV.BASE_URL +  "/chat",
-                { accessTokenFactory: () => (getLocalStorage('authToken') as string) } )
+    .withUrl(APP_ENV.BASE_URL + "/chat", {
+        accessTokenFactory: () => getLocalStorage("authToken") as string,
+    })
     .build();
 
-export const startListening = () =>connection.start()
-.then(() => {console.log("Conected")});
-    // .then(() => {
-    //     connection.on('send_notify', joinNewChatRoom)
-    //     connection.on('send_message', logMessage)
-    // });
+export const startListening = () =>
+    connection.start().then(() => {
+        console.log("Conected");
+    });
+// .then(() => {
+//     connection.on('send_notify', joinNewChatRoom)
+//     connection.on('send_message', logMessage)
+// });
 
-export const endListening = () =>connection.stop()
-.then(() => {console.log("Disconnected")});
+export const endListening = () =>
+    connection.stop().then(() => {
+        console.log("Disconnected");
+    });
 
 export const joinForPostListening = (roomId: string) =>
- 
-    connection.invoke('JoinPostChanelForNotifyByRealtor', {roomId})
-    .then(() => {console.log("joinForPostListening")});
+    connection
+        .invoke("JoinPostChanelForNotifyByRealtor", { roomId })
+        .then(() => {
+            console.log("joinForPostListening");
+        });
 
 // export const send = (message: string, roomId : string) =>
 //     connection.send('SendMessage', {message, roomId})
@@ -71,20 +78,17 @@ export const joinForPostListening = (roomId: string) =>
 //         return connection.stop()
 //     })
 
-
-
 // export const start = (setState: (value: (((prevState: (IActive | undefined)) =>
 //     (IActive | undefined)) | IActive | undefined)) => void) =>
 //     connection.on('send_message', () => setState(true));
 
-
-
-
-
-
-export  const  joinPostListening = (roomId: string) =>  connection.start()
-    .then(() =>  connection.invoke('JoinRoom', {roomId}))
-    .then(() => {console.log("joinPostListening")});
+export const joinPostListening = (roomId: string) =>
+    connection
+        .start()
+        .then(() => connection.invoke("JoinRoom", { roomId }))
+        .then(() => {
+            console.log("joinPostListening");
+        });
 // export const joinChatRoom = async ({userName, chatRoom}) => {
 //
 //
@@ -125,5 +129,3 @@ export  const  joinPostListening = (roomId: string) =>  connection.start()
 //     await  connection.start();
 //     await connection.invoke("JoinRoom", {room});
 // }
-
-

@@ -11,4 +11,7 @@ public interface IImageStorageService
 
 
 	Task DeleteImageAsync(string imageName, string path);
+
+
+	Task<string> AddProfileHeaderImageAsync(User user, byte[] file);
 }

@@ -111,10 +111,10 @@ export default function SignInPage() {
                                     }
                                 />
                                 {errors.email && (
-                                    <p className="error">
+                                    <div className="error">
                                         <p>*</p>
                                         {errors.email.message}
-                                    </p>
+                                    </div>
                                 )}
 
                                 <InputField
@@ -130,10 +130,10 @@ export default function SignInPage() {
                                     }
                                 />
                                 {errors.password && (
-                                    <p className="error">
+                                    <div className="error">
                                         <p>*</p>
                                         {errors.password.message}
-                                    </p>
+                                    </div>
                                 )}
                             </div>
 

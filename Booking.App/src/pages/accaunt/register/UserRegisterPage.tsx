@@ -90,10 +90,10 @@ export default function UserRegisterPage() {
                                     }
                                 />
                                 {errors.email && (
-                                    <p className="error">
+                                    <div className="error">
                                         <p>*</p>
                                         {errors.email.message}
-                                    </p>
+                                    </div>
                                 )}
 
                                 <InputField
@@ -109,10 +109,10 @@ export default function UserRegisterPage() {
                                     }
                                 />
                                 {errors.password && (
-                                    <p className="error">
+                                    <div className="error">
                                         <p>*</p>
                                         {errors.password.message}
-                                    </p>
+                                    </div>
                                 )}
 
                                 <InputField
@@ -128,11 +128,11 @@ export default function UserRegisterPage() {
                                     }
                                 />
                                 {errors.password && (
-                                    <p className="error">
+                                    <div className="error">
                                         {errors.confirmPassword && <p>*</p>}
 
                                         {errors.confirmPassword?.message}
-                                    </p>
+                                    </div>
                                 )}
                             </div>
 

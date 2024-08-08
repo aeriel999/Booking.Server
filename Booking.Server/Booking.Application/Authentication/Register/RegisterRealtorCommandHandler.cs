@@ -48,7 +48,7 @@ public class RegisterRealtorCommandHandler(
 		//Add Avatar to table
 		user.Avatar = imageName;
 
-		var resultOfAvatarSaving = await userRepository.SaveUserAsync(user);
+		var resultOfAvatarSaving = await userRepository.UpdateProfileAsync(user);
 
 		if (resultOfAvatarSaving.IsError) 
 			return resultOfAvatarSaving;

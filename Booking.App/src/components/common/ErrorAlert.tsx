@@ -5,13 +5,16 @@ import { SxProps, Theme } from "@mui/system";
 
 type OutlinedAlertsProps = {
     message: string;
+    textColor?: string;
 };
 
-const OutlinedErrorAlert: React.FC<OutlinedAlertsProps> = ({ message }) => {
+const OutlinedErrorAlert: React.FC<OutlinedAlertsProps> = ({ message, textColor = "#ffff" }) => {
+
+
     const alertStyle: SxProps<Theme> = {
         backgroundColor: "rgba(255, 255, 255, 0.33)", // Replace with your desired background color
         borderColor: "#f5c2c7", // Optionally, you can also change the border color
-        color: "#ffff", // And the text color
+        color: textColor, // And the text color
         borderRadius: "5px",
         border: "1px solid #DADADA",
         fontFamily: "Roboto", // Font family
