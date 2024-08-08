@@ -58,9 +58,13 @@ export interface IPageOfPosts {
 }
 
 export interface IPost {
-    id: number;
+    id: string;
     name: string;
     category: string;
+    city: string;
+    country: string;
+    rating: number;
+    countOfRating: number;
     user: string;
     price: number;
     imagePost: string;
@@ -119,11 +123,12 @@ export interface IPostState {
     cities: ICity[] | null;
     streets: IStreet[] | null;
     typesOfRest: ITypeOfRest[] | null;
-    searchPost: INamesOfPosts | null;
+    searchPost: string[] | null;
     postInfoList: IPageOfPostsForRealtor | null;
     postsByRealtorId: IPostByRealtorId[] | null;
     postMostRating: IPostRatingAndDiscount[] | null;
     postMostDiscount: IPostRatingAndDiscount[] | null;
+    filter: IFilter;
 }
 
 interface IPostRatingAndDiscount {

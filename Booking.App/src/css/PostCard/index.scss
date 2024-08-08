@@ -1,0 +1,106 @@
+@import '../variables.scss';
+
+.post-card {
+    width: 30%;
+    height: 32.1%;
+    display: flex;
+    flex-direction: column;
+    border-radius: 10px;
+    border: 1px solid #a2a2a2;
+    box-sizing: border-box;
+
+    .post-card-image {
+        width: 100%;
+        height: 43%;
+
+        img {
+            width: 100%;
+            height: 100%;
+            border-radius: 10px 10px 0px 0px;
+            object-fit: cover;
+        }
+    }
+
+    .post-card-information {
+        width: 100%;
+        height: 55%;
+        padding: 16px;
+        box-sizing: border-box;
+
+        .post-card-name {
+            width: 100%;
+            height: 30px;
+            overflow: hidden;
+            text-overflow: ellipsis;
+
+            p {
+
+                margin: 0;
+                color: $default-color;
+                font-family: $baloo-font-family;
+                font-size: $large-font-size;
+                font-style: $normal-font-weight;
+                font-weight: $big-font-size;
+                line-height: normal;
+            }
+        }
+
+        .post-card-location {
+            width: 100%;
+
+            p {
+                margin: 0;
+                color: rgba(0, 0, 0, 0.70);
+                font-size: $small-font-size;
+                font-style: $primary-font-normal-style;
+                font-weight: $medium-font-weight;
+                line-height: normal;
+
+            }
+        }
+
+        .post-card-price {
+            width: 100%;
+            margin-top: 14px;
+
+            p {
+                margin: 0;
+                color: $default-color;
+                font-size: $average-font-size;
+                font-style: $primary-font-normal-style;
+                font-weight: $normal-font-weight;
+                line-height: normal;
+            }
+        }
+
+        .post-card-details {
+            width: 100%;
+            margin-top: 5px;
+
+            div {
+                width: 100%;
+                height: 20px;
+                font-size: $small-font-size;
+                font-style: $primary-font-normal-style;
+                font-weight: $medium-font-weight;
+                line-height: normal;
+                margin-top: 5px;
+                overflow: hidden;
+                text-overflow: ellipsis;
+
+                p {
+                    display: inline;
+                    margin: 0;
+
+                    &:first-of-type {
+                        color: rgba(0, 0, 0, 0.50);
+                    }
+
+                    &:last-of-type {
+                        color: var(--darker-blue, #23A1A0);
+                    }
+                }
+            }
+        }
+    }
+}

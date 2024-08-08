@@ -1,0 +1,46 @@
+@import "../variables.scss";
+
+.filter-panel-item {
+    width: 100%;
+    height: auto;
+    display: flex;
+    flex-direction: column;
+    font-size: $medium-font-size;
+    font-style: $primary-font-normal-style;
+    font-weight: $medium-font-weight;
+    line-height: normal;
+    border-top: 1px solid #A2A2A2;
+    box-sizing: border-box;
+    padding: 9px 16px;
+
+    .filter-panel-item-name {
+        width: 100%;
+        display: flex;
+        align-items: center;
+
+        img {
+            margin-left: auto;
+        }
+    }
+
+    form {
+        display: flex;
+        flex-direction: column;
+        row-gap: 5px;
+        max-height: 240px;
+
+        div.item {
+            label {
+                height: 30px;
+                box-sizing: border-box;
+                display: flex;
+                column-gap: 13px;
+                align-items: center;
+
+                p {
+                    margin: 0;
+                }
+            }
+        }
+    }
+}

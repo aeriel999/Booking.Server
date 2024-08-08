@@ -111,7 +111,7 @@ public class CreatePostCommandHandler(
 			StreetId = street.Id,
 			ZipCode = request.ZipCode,
 			NumberOfGuests = request.NumberOfGuests,
-			Description = request.Description,
+			//Description = request.Description,
 			Price = request.Price,
 			Discount = request.Discount,
 			Rate = 0,
