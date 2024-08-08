@@ -109,7 +109,7 @@ export default function DashboardLayout() {
                 handleMenuClick(menuIndex);
             }
         }
-    }, []);
+    }, [currentBreadcrumbsItem]);
 
     const handleMenuClick = (index: number) => {
         const updatedMenuData = menuData.map((item, i) => ({
@@ -208,7 +208,6 @@ export default function DashboardLayout() {
                     <Outlet />
                 </div>
             </div>
-           
         </div>
     );
 }

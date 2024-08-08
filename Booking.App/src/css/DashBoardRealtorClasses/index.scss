@@ -362,6 +362,7 @@
         width: 91%;
         min-width: 800px;
         display: flex;
+        flex-direction: column;
     }
 }
 
@@ -550,19 +551,7 @@
         }
     }
 }
-
-// .subMenu {
-//     padding-left: 20px;
-// }
-
-// .subMenuItem {
-//     padding: 10px;
-//     cursor: pointer;
-// }
-
-// .subMenuItem.active {
-//     background-color: #f0f0f0;
-// }
+ 
 
 .twoColumnsContainer {
     display: flex;
@@ -587,14 +576,23 @@
 
         .formContainer {
             display: flex;
-            gap: 30px;
+            gap: 20px;
             flex-direction: column;
 
             .fieldContainer {
                 display: flex;
-                gap: 20px;
+                gap: 5px;
                 flex-direction: column;
                 justify-self: stretch;
+
+                .filedTitle{
+                    align-self: stretch;
+                    color: #000;
+                    font-size: 16px;
+                    font-style: normal;
+                    font-weight: 500;
+                    line-height: normal;
+                }
 
                 .field {
                     display: flex;
@@ -620,6 +618,13 @@
                 }
             }
         }
+    }
+
+    .errorContainer{
+        display: flex;
+        justify-content: center;
+        align-items: center;
+       // margin-bottom: 20px;
     }
 
     .addImagesContainer {
