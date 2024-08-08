@@ -9,7 +9,8 @@ export default function AnonymousDashboardLayout() {
     const navigate = useNavigate();
 
     return (
-        <div className="mainDashboard">
+        <div id="mainDashboard">
+
             <header>
                 <div className="shapka">
                     <div className="auth">

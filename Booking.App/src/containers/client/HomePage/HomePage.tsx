@@ -4,14 +4,16 @@ import point from '../../../assets/Icons/ph_map-pin.svg';
 import gsap from 'gsap';
 import { ScrollTrigger } from 'gsap/ScrollTrigger';
 import { points } from './pointsAnimation';
-import { PostCard } from '../../../components/common/PostCard/PostCard';
+import { PostCardForHomePage } from '../../../components/common/PostCardForHomePage/PostCardForHomePage';
 import { useDispatch, useSelector } from 'react-redux';
 import { AppDispatch, RootState } from '../../../store';
 import { getPostsWithMostDiscount, getPostsWithMostRating, getTypesOfRest } from '../../../store/post/post.actions';
 import { APP_ENV } from '../../../env';
+import { useNavigate } from 'react-router-dom';
 
 export const HomePage = () => {
 
+    const navigate = useNavigate();
     const typesOfRest = useSelector((state: RootState) => state.post.typesOfRest);
     const mostRating = useSelector((state: RootState) => state.post.postMostRating);
     const mostDiscount = useSelector((state: RootState) => state.post.postMostDiscount);
@@ -85,7 +87,7 @@ export const HomePage = () => {
                 <div className='find-dwelling'>
                     <div>
                         <p>Find a home for your new journey!</p>
-                        <button>View properties</button>
+                        <button onClick={() => navigate("/posts")}>View properties</button>
                     </div>
                     <div>
                         <svg className='svg' xmlns="http://www.w3.org/2000/svg" width="100%" height="100%" viewBox="0 0 562 282" fill="0, 0, 0, 0.50">
@@ -111,7 +113,7 @@ export const HomePage = () => {
                     </div>
                     <div className='posts'>
                         {mostRating != null ? mostRating.map((item) => (
-                            <PostCard post={item.name} rating={item.rating} city={item.city} country={item.country} image={item.image}></PostCard>
+                            <PostCardForHomePage post={item.name} rating={item.rating} city={item.city} country={item.country} image={item.image}></PostCardForHomePage>
                         )) : ""}
 
 
@@ -145,7 +147,7 @@ export const HomePage = () => {
                     </div>
                     <div className='posts'>
                         {mostDiscount != null ? mostDiscount.map((item) => (
-                            <PostCard post={item.name} rating={item.rating} city={item.city} country={item.country} discount={item.discount} image={item.image}></PostCard>
+                            <PostCardForHomePage post={item.name} rating={item.rating} city={item.city} country={item.country} discount={item.discount} image={item.image}></PostCardForHomePage>
                         )) : ""}
 
 

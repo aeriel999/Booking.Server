@@ -13,7 +13,7 @@ public class GetFilteredListQueryValidation:AbstractValidator<GetFilteredListQue
 
         RuleFor(x => x.SizeOfPage)
             .NotEmpty().WithMessage("{PropertyName} must not be empty")
-            .Must(x => x.Equals(4)).WithMessage("{PropertyName} should be 4");
+            .Must(x => x.Equals(9)).WithMessage("{PropertyName} should be 9");
     }
 }
 

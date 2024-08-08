@@ -2,7 +2,6 @@ import { AnyAction, createSlice, PayloadAction } from "@reduxjs/toolkit";
 import { RejectedAction } from "../../utils/types";
 import { Status } from "../../utils/enum";
 import {
-    INamesOfPosts,
     IPageOfPosts,
     IPostInformation,
     IPostState,
@@ -47,13 +46,32 @@ const initialState: IPostState = {
     postInfoList: null,
     postsByRealtorId: null,
     postMostRating: null,
-    postMostDiscount: null
+    postMostDiscount: null,
+    filter: {
+        category: null,
+        country: null,
+        city: null,
+        realtor: null
+    }
 };
 
 export const postSlice = createSlice({
     name: "post",
     initialState,
-    reducers: {},
+    reducers: {
+        setCategoryToFilter: (state, action: PayloadAction<string | null>) => {
+            state.filter.category = action.payload;
+        },
+        setCountryToFilter: (state, action: PayloadAction<string | null>) => {
+            state.filter.country = action.payload;
+        },
+        setCityToFilter: (state, action: PayloadAction<string | null>) => {
+            state.filter.city = action.payload;
+        },
+        setRealtorToFilter: (state, action: PayloadAction<string | null>) => {
+            state.filter.realtor = action.payload;
+        }
+    },
     extraReducers: (builder) => {
         builder
 
@@ -79,7 +97,7 @@ export const postSlice = createSlice({
             })
             .addCase(
                 getListOfPostsName.fulfilled,
-                (state, action: PayloadAction<INamesOfPosts>) => {
+                (state, action: PayloadAction<string[]>) => {
                     state.searchPost = action.payload;
                     state.status = Status.SUCCESS;
                 }
@@ -211,5 +229,7 @@ export const postSlice = createSlice({
             });
     },
 });
+
+export const { setCategoryToFilter, setCountryToFilter, setCityToFilter, setRealtorToFilter } = postSlice.actions;
 
 export default postSlice.reducer;

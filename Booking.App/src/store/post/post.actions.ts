@@ -73,7 +73,7 @@ export const getListOfPostsName = createAsyncThunk(
             const response = await apiClient.get(
                 `/api/Post/get-name-of-post?category=${payload.filter?.category}&country=${payload.filter?.country}&city=${payload.filter?.city}&realtor=${payload.filter?.realtor}&name=${payload.name}`
             );
-            return response.data;
+            return response.data.$values;
         } catch (error) {
             return rejectWithValue(handleAxiosError(error, "Network error"));
         }
@@ -131,7 +131,7 @@ export const getListOfCountries = createAsyncThunk(
 
 export const getListOfCitiesByCountryId = createAsyncThunk(
     "Post/get-cities-list",
-    async (countryId: string, { rejectWithValue }) => {
+    async (countryId: string | null, { rejectWithValue }) => {
         try {
             const response = await apiClient.get(
                 `/api/Post/get-cities-list?countryId=${countryId}`
