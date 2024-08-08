@@ -1,0 +1,159 @@
+@import "../variables.scss";
+
+#mainDashboardForPosts {
+    width: 100%;
+    height: 100%;
+    min-width: 1652px;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+
+
+    header {
+        width: 100%;
+        height: 9.4%;
+        min-height: 226.78px;
+        background: var(--light-blue, $primary-style-color);
+        padding: $default-padding;
+        box-sizing: border-box;
+
+        div.auth {
+            width: 100%;
+            height: 35%;
+            display: flex;
+            column-gap: 2.5%;
+
+            img {
+                size: 14.5% 100%;
+                margin-right: auto;
+            }
+
+            button {
+                height: auto;
+                background-color: $primary-font-color;
+                border-radius: 7px;
+                font-size: $normal-font-size;
+                outline: none;
+                padding: 10px 15px;
+                color: $default-color;
+                align-self: center;
+                border: 1px solid transparent;
+
+                &:hover {
+                    border-color: $primary-font-color;
+                }
+            }
+
+        }
+
+        //width 1543
+        div.searching {
+            width: 73.6%;
+            height: 36.8%;
+            border-radius: 10px;
+            padding: 15px;
+            box-sizing: border-box;
+            margin-top: 29px;
+            background-color: $primary-font-color;
+
+            form {
+                width: 100%;
+                height: 100%;
+                display: flex;
+                column-gap: 0.8%;
+                align-items: center;
+
+
+                button {
+                    width: 10.7%;
+                    min-width: 100px;
+                    height: 100%;
+                    display: flex;
+                    column-gap: 10px;
+                    align-items: center;
+                    padding: 18.8px;
+                    border-radius: 5px;
+                    background: #00C2C1;
+                    color: var(--Backgrounds-Primary, $primary-font-color);
+                    outline: none;
+                    border: 1px solid transparent;
+                    font-size: $medium-font-size;
+                    font-family: $primary-font-family;
+                    font-weight: $medium-font-weight;
+
+                    &:hover {
+                        border-color: #363838;
+                    }
+
+                    &::before {
+                        content: '';
+                        display: inline-block;
+                        width: 20px;
+                        height: 20px;
+                        background-image: url('../../assets/Icons/tabler_search.svg');
+                        background-size: cover;
+                        background-repeat: no-repeat;
+                    }
+                }
+            }
+        }
+    }
+
+    footer {
+        width: 100%;
+        height: 26.2%;
+        min-height: 631.94px;
+        background: linear-gradient(0deg, rgba(0, 0, 0, 0.35) 0%, rgba(0, 0, 0, 0.35) 100%), url('../../assets/Background/footer.png') rgba(23, 35, 77, 0.77) 50% / cover no-repeat;
+        padding: $default-padding;
+        box-sizing: border-box;
+
+        img {
+            size: 14.5% 100%;
+        }
+
+        div.information {
+            width: 100%;
+            height: 39.3%;
+            display: grid;
+            grid-template-columns: auto auto auto auto;
+            column-gap: 14.6%;
+            margin-left: 15px;
+
+            div {
+                display: flex;
+                flex-direction: column;
+
+                color: $primary-font-color;
+                font-style: $primary-font-normal-style;
+                line-height: normal;
+
+                h6 {
+                    font-size: $large-font-size;
+                    font-weight: $normal-font-weight;
+                    margin: 5px;
+                }
+
+                a {
+                    cursor: pointer;
+                    font-size: $normal-font-size;
+                    font-weight: $medium-font-weight;
+                    margin: 5px 0px 0px 7px;
+                }
+            }
+        }
+
+        div.social-networks {
+            width: 100%;
+            height: auto;
+            display: flex;
+            color: $primary-font-color;
+            justify-content: end;
+            column-gap: 24px;
+            margin-top: 200px;
+
+            img {
+                cursor: pointer;
+            }
+        }
+    }
+}

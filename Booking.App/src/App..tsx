@@ -17,7 +17,7 @@ import ResetPasswordPage from "./pages/accaunt/reset-password/ResetPasswordPage.
 import ReConfirmEmailPage from "./pages/reconfirm-email/ReConfirmEmailPage.tsx";
 import ClientDashboardLayout from "./containers/client/layouts/_ClientDashboardLayout.tsx";
 import { AddNewPost } from "./containers/dashboard/AddNewPost.tsx";
-import ListOfPostPage from "./containers/client/ListOfPostPage.tsx";
+import ListOfPostPage from "./containers/client/ListOfPostsPage/ListOfPostsPage.tsx";
 import AnonymousDashboardLayout from "./containers/anonymous/layouts/AnonymousDashboardLayout.tsx";
 import ChatRoom from "./components/chat/ChatRoom.tsx";
 import AllPostList from "./containers/dashboard/AllPostList.tsx";
@@ -33,6 +33,8 @@ import { HomePage } from "./containers/client/HomePage/HomePage.tsx";
 import SignInPage from "./pages/accaunt/login/SignIn.tsx";
 import RealtorRegisterAvatarPage from "./pages/accaunt/register/RealtotRegisterAvatarPage.tsx";
 import DashboardLayout from "./containers/dashboard/layouts/DashboardLayout.tsx";
+import { AnonymousDashboardLayoutForPosts } from "./containers/anonymous/layouts/AnonymousDashboardLayoutForPosts.tsx";
+import ListOfPostsPage from "./containers/client/ListOfPostsPage/ListOfPostsPage.tsx";
 
 export const App: React.FC = () => {
     const { isLogin, user } = useAppSelector((state) => state.account);
@@ -146,6 +148,7 @@ export const App: React.FC = () => {
                         <HomePage />
                     }
                 />
+
                 <Route path="post/:postId" element={<PostPage />} />
                 <Route
                     path="post/:postId/realtor/:realtorId"
@@ -174,6 +177,64 @@ export const App: React.FC = () => {
                 path="dashboard/dashboard/post/add"
                 element={<SignInPage />}
             />
+
+
+
+                <Route path="*" element={<NotFound />} />
+            </Route>
+            <Route path="/posts" element={<AnonymousDashboardLayoutForPosts />}>
+                <Route
+                    index
+                    element={
+                        <ListOfPostsPage />
+                    }
+                />
+                <Route path="*" element={<NotFound />} />
+            </Route>
+            <Route path="/dashboard" element={<SignInPage />}>
+                <Route
+                    path="profile"
+                    element={<SignInPage />}
+                />
+                <Route
+                    path="profile/edit"
+                    element={<SignInPage />}
+                />
+                <Route
+                    path="profile/change-password"
+                    element={<SignInPage />}
+                />
+                <Route
+                    path="post/add"
+                    element={<SignInPage />}
+                />
+                <Route
+                    path="show-all-post"
+                    element={<SignInPage />}
+                />
+                <Route
+                    path="edit-post/:postId"
+                    element={<SignInPage />}
+                />
+                <Route
+                    path="chat-room/:roomId"
+                    element={<SignInPage />}
+                />
+
+                <Route
+                    path="archive"
+                    element={<SignInPage />}
+                />
+
+                <Route
+                    path="reviews"
+                    element={<SignInPage />}
+                />
+            </Route>
+
+
+
+
 
             <Route path="authentication/login" element={<SignInPage />} />
 
