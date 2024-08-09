@@ -10,6 +10,7 @@ export default function AnonymousDashboardLayout() {
 
     return (
         <div id="mainDashboard">
+
             <header>
                 <div className="shapka">
                     <div className="auth">

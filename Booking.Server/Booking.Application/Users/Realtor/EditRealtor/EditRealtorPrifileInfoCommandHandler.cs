@@ -52,7 +52,7 @@ public class EditRealtorPrifileInfoCommandHandler(
         }
 
         //Save User
-        var userSavingResult = await userRepository.SaveUserAsync(user);
+        var userSavingResult = await userRepository.UpdateProfileAsync(user);
 
         if (userSavingResult.IsError)
             return userSavingResult.Errors;

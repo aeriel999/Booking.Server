@@ -42,7 +42,9 @@
 	</ItemGroup>
 
 	<ItemGroup>
-	  <Folder Include="images\posts\" />
+	  <Folder Include="images\avatars" />
+	 <Folder Include="images\posts" />
+
 	</ItemGroup>
 
 </Project>

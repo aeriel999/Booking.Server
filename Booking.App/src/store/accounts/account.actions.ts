@@ -10,6 +10,8 @@ import {
     ILogin,
     IRealtorRegister,
     IReconfirmEmail,
+    IReloadAvatar,
+    IReloadImage,
     IResetPassword,
     IUserRegister,
 } from "../../interfaces/account";
@@ -165,6 +167,36 @@ export const reconfirmEmail = createAsyncThunk(
                 payload
             );
             return response.status;
+        } catch (error) {
+            return rejectWithValue(handleAxiosError(error, "Network error"));
+        }
+    }
+);
+
+export const reloadAvatar = createAsyncThunk(
+    "User/reupload-avatar",
+    async (payload: IReloadAvatar, { rejectWithValue }) => {
+        try {
+            const response = await apiMediaClient.post(
+                "/api/User/reupload-avatar",
+                payload
+            );
+            return response.data;
+        } catch (error) {
+            return rejectWithValue(handleAxiosError(error, "Network error"));
+        }
+    }
+);
+
+export const reloadProfileHeaderImage = createAsyncThunk(
+    "User/upload-header",
+    async (payload: IReloadImage, { rejectWithValue }) => {
+        try {
+            const response = await apiMediaClient.post(
+                "/api/User/upload-header",
+                payload
+            );
+            return response.data;
         } catch (error) {
             return rejectWithValue(handleAxiosError(error, "Network error"));
         }

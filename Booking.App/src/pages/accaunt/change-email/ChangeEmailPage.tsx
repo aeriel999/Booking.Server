@@ -6,7 +6,7 @@ import { changeEmail } from "../../../store/accounts/account.actions.ts";
 import { unwrapResult } from "@reduxjs/toolkit";
 import ErrorHandler from "../../../components/common/ErrorHandler.ts";
 import OutlinedErrorAlert from "../../../components/common/ErrorAlert.tsx";
-import { Box, Button, Container, TextField } from "@mui/material";
+import {   Container } from "@mui/material";
 
 export default function ChangeEmailPage() {
     const { userId, email, token } = useParams();

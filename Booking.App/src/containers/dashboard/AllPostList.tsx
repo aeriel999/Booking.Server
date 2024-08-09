@@ -67,6 +67,8 @@ export default function AllPostList() {
         newPage: number
     ) => {
         setPage(newPage);
+        console.log(event)
+        //ToDo Delete console.log
     };
 
     const handleChangeRowsPerPage = (

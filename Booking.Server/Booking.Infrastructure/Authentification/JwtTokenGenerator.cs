@@ -14,7 +14,6 @@ public class JwtTokenGenerator(IOptions<JwtSettings> jwtOptions, IDateTimeProvid
 {
 	public readonly JwtSettings _jwtSettings = jwtOptions.Value;
 
-	//ToDo async method without await
 	public async Task<string> GenerateJwtTokenAsync(User user, string role)
 	{
 		var signingCredentials = new SigningCredentials(
@@ -31,6 +30,7 @@ public class JwtTokenGenerator(IOptions<JwtSettings> jwtOptions, IDateTimeProvid
 			new Claim("EmailConfirm", user.EmailConfirmed.ToString()),
 			new Claim(ClaimTypes.MobilePhone, user.PhoneNumber ?? ""),
 			new Claim("Avatar", user.Avatar ?? ""),
+			new Claim("ProfileHeaderImage", user.ProfileHeaderImage ?? ""),
 			new Claim(ClaimTypes.Role, role),
 			new Claim("Rating", user.Rating.ToString()!),
 		};
@@ -42,6 +42,6 @@ public class JwtTokenGenerator(IOptions<JwtSettings> jwtOptions, IDateTimeProvid
 			claims: claims,
 			signingCredentials: signingCredentials);
 
-		return new JwtSecurityTokenHandler().WriteToken(securityToken);
+		return await Task.FromResult(new JwtSecurityTokenHandler().WriteToken(securityToken));
 	}
 }

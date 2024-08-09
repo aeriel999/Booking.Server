@@ -3,7 +3,7 @@ import { useAppDispatch } from "../../hooks/redux";
 import { useNavigate } from "react-router-dom";
 import { IReconfirmEmail } from "../../interfaces/account";
 import {
-    forgotPassword,
+     
     reconfirmEmail,
 } from "../../store/accounts/account.actions.ts";
 import { unwrapResult } from "@reduxjs/toolkit";
@@ -71,10 +71,10 @@ export default function ReConfirmEmailPage() {
                                 }
                             />
                             {errors.email && (
-                                <p className="error">
+                                <div className="error">
                                     <p>*</p>
                                     {errors.email.message}
-                                </p>
+                                </div>
                             )}
                         </div>
 

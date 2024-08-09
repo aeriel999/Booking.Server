@@ -18,6 +18,8 @@ using Booking.Api.Contracts.Users.Common.ChangeAvatar;
 using Booking.Application.Users.Client.EditUser;
 using Booking.Application.Users.Common.ChangeAvatar;
 using Booking.Application.Users.Client.DeleteUser;
+using Booking.Api.Contracts.Users.Common.ChangeProfileHeader;
+using Booking.Application.Users.Common.ChangeProfileHeader;
 
 namespace Booking.Api.Controllers;
 
@@ -93,6 +95,23 @@ public class UserController(ISender mediatr, IMapper mapper, IConfiguration conf
 		   errors => Problem(errors));
 	}
 
+	[HttpPost("upload-header")]
+	public async Task<IActionResult> ChangeProfileHeaderAsync(ChangeProfileHeaderRequest request)
+	{
+		string userId = User.Claims.First(u => u.Type == ClaimTypes.NameIdentifier).Value;
+
+		using MemoryStream memoryStream = new MemoryStream();
+
+		await request.ProfileHeaderImage.CopyToAsync(memoryStream);
+
+		var image = memoryStream.ToArray();
+
+		var changProfileHeaderResult = await mediatr.Send(new ChangeProfileHeaderCommand(image, Guid.Parse(userId)));
+
+		return changProfileHeaderResult.Match(
+		   changProfileHeaderResult => Ok(changProfileHeaderResult),
+		   errors => Problem(errors));
+	}
 
 	[HttpPost("change-password")]
     public async Task<IActionResult> ChangePasswordAsync([FromBody] ChangePasswordRequest request)

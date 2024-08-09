@@ -1,49 +1,33 @@
 import { useAppDispatch, useAppSelector } from "../../hooks/redux";
-import { useEffect, useRef, useState } from "react";
-import { APP_ENV } from "../../env";
-import Box from "@mui/material/Box";
-import Grid from "@mui/material/Grid";
-import InputGroup from "../../components/common/InputGroup.tsx";
+import { useState } from "react";
 import {
-    AvatarValidator,
-    EmailValidator,
-    FirstNameValidator,
-    LastNameValidator,
+    realtorEditProfileResolver,
+    changePasswordResolver,
 } from "../../validations/account";
 import MuiPhoneNumber from "mui-phone-number";
 import { isValidPhoneNumber } from "libphonenumber-js";
-import FileEditUploader from "../../components/common/FileEditUploader.tsx";
-import Button from "@mui/material/Button";
-import * as React from "react";
 import { IEditRealtorInfo } from "../../interfaces/account";
 import { editProfile } from "../../store/accounts/account.actions.ts";
 import { unwrapResult } from "@reduxjs/toolkit";
 import ErrorHandler from "../../components/common/ErrorHandler.ts";
-import { Link, useNavigate } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import OutlinedErrorAlert from "../../components/common/ErrorAlert.tsx";
-import { Breadcrumbs } from "@mui/material";
-import Typography from "@mui/material/Typography";
 import CustomizedDialogs from "../../components/common/Dialog.tsx";
-import Divider from "@mui/material/Divider";
-import IMG from "../../assets/Auth/image 20.svg";
+import "../../css/DashBoardAnonymousClasses/index.scss";
+import { useForm } from "react-hook-form";
+import InputField from "../../components/common/InputField.tsx";
+import { IChangePassword } from "../../interfaces/user/index.ts";
+import { changePassword } from "../../store/users/user.action.ts";
+import { logout } from "../../store/accounts/account.slice.ts";
+import { changeDashboardMenuItem } from "../../store/settings/settings.slice.ts";
 
 export default function RealtorProfileEditPage() {
     const { user } = useAppSelector((state) => state.account);
     const dispatch = useAppDispatch();
-    const [avatarUrl, setAvatarUrl] = useState<string>();
     const [errorMessage, setErrorMessage] = useState<string | undefined>(
         undefined
     );
-    const [isFormValid, setIsFormValid] = useState(false);
-    const formValid = useRef({
-        email: true,
-        firstName: true,
-        lastName: true,
-        avatar: true,
-        phoneNumber: true,
-    });
     const [isPhoneValid, setIsPhoneValid] = useState(true);
-    const [images, setImages] = useState<File[]>([]);
     const [phone, setPhone] = useState<string>(user?.phoneNumber ?? "");
     const [open, setOpen] = useState<boolean>(false);
     const message =
@@ -51,180 +35,255 @@ export default function RealtorProfileEditPage() {
         "We'll send a confirmation link to your new email address shortly. Thank you for your patience.";
     const navigate = useNavigate();
 
-    useEffect(() => {
-        if (user) {
-            setAvatarUrl(APP_ENV.BASE_URL + user?.avatar);
+    const {
+        register: registerProfile,
+        handleSubmit: handleSubmitProfile,
+        formState: { errors: errorsProfile },
+        setValue: setValueProfile,
+    } = useForm<IEditRealtorInfo>({ resolver: realtorEditProfileResolver });
+
+    const {
+        register: registerPassword,
+        handleSubmit: handleSubmitPassword,
+        formState: { errors: errorsPassword },
+        setValue: setValuePassword,
+    } = useForm<IChangePassword>({ resolver: changePasswordResolver });
+
+    const onProfileDataSubmit = async (data: IEditRealtorInfo) => {
+        if (!isPhoneValid) {
+            return;
         }
-    }, [user]);
 
-    function handleChange() {
-        setIsFormValid(
-            Object.values(formValid.current).every((isValid) => isValid)
-        );
-    }
+        const model: IEditRealtorInfo = {
+            ...data,
+            phoneNumber: phone,
+        };
 
-    const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
-        event.preventDefault();
-        const data = new FormData(event.currentTarget);
+        try {
+            const response = await dispatch(editProfile(model));
+            unwrapResult(response);
 
-        if (Object.values(formValid.current).every((isValid) => isValid)) {
-            const model: IEditRealtorInfo = {
-                email: data.get("email") as string,
-                firstName: data.get("firstName") as string,
-                lastName: data.get("lastName") as string,
-                phoneNumber: phone,
-                avatar: images[0],
-            };
-            try {
-                const response = await dispatch(editProfile(model));
-                unwrapResult(response);
+            const { isEmailChanged } = response.payload;
 
-                const { isEmailChanged } = response.payload;
-
-                if (isEmailChanged) {
-                    setOpen(isEmailChanged);
-                } else {
-                    navigate("/dashboard/profile");
-                }
-            } catch (error) {
-                setErrorMessage(ErrorHandler(error));
+            if (isEmailChanged) {
+                setOpen(isEmailChanged);
+            } else {
+                dispatch(changeDashboardMenuItem("Profile"));
+                navigate("/dashboard/profile");
             }
+        } catch (error) {
+            setErrorMessage(ErrorHandler(error));
+        }
+    };
+
+    const onPasswordChangeSubmit = async (data: IChangePassword) => {
+        try {
+            const response = await dispatch(changePassword(data));
+            unwrapResult(response);
+
+            dispatch(logout());
+
+            navigate(`/authentication/login`);
+        } catch (error) {
+            setErrorMessage(ErrorHandler(error));
         }
     };
 
     return (
         <>
-            <CustomizedDialogs
-                message={message}
-                isOpen={open}
-                setOpen={setOpen}
-                navigate={"/dashboard/profile"}
-            />
+                {errorMessage && 
+                     <div className="errorContainer">
+                    <OutlinedErrorAlert
+                        message={errorMessage}
+                        textColor="#000"
+                    /></div>}
+           
+            <div className="twoColumnsContainer">
+                {open && (
+                    <CustomizedDialogs
+                        message={message}
+                        isOpen={open}
+                        setOpen={setOpen}
+                        navigate={"/dashboard/profile"}
+                    />
+                )}
 
-            <Breadcrumbs
-                aria-label="breadcrumb"
-                style={{ marginBottom: "20px" }}
-            >
-                <Link to={"/dashboard/profile"}>
-                    <Typography variant="h6" color="text.primary">
-                        Dashboard
-                    </Typography>
-                </Link>
-                <Link to={"/dashboard/profile"}>
-                    <Typography variant="h6" color="text.primary">
-                        Profile
-                    </Typography>
-                </Link>
-                <Typography variant="h6" color="text.primary">
-                    Edit
-                </Typography>
-            </Breadcrumbs>
-            <Divider />
-            {errorMessage && <OutlinedErrorAlert message={errorMessage} />}
-            <Box
-                component="form"
-                noValidate
-                onSubmit={handleSubmit}
-                sx={{ mt: 3 }}
-                onChange={handleChange}
-            >
-                <Grid container spacing={2}>
-                    <Grid container spacing={2} item xs={6}>
-                        <Grid item xs={5}>
-                            <FileEditUploader
-                                images={images}
-                                setImages={setImages}
-                                maxImagesUpload={1}
-                                defaultImage={avatarUrl ?? IMG}
-                                validator={AvatarValidator}
-                                onChange={(isValid) =>
-                                    (formValid.current.avatar = isValid)
+                <div className="textInputsContainer">
+                    <div className="title">Edit Profile</div>
+
+                    <form
+                        onSubmit={handleSubmitProfile(onProfileDataSubmit)}
+                        className="formContainer"
+                    >
+                        <div className="fieldContainer">
+                            <div className="filedTitle">Last name</div>
+
+                            <InputField
+                                placeholder="Last name"
+                                type="text"
+                                name="lastName"
+                                register={registerProfile}
+                                setValue={setValueProfile}
+                                className={
+                                    errorsProfile.lastName
+                                        ? "errorFormInput"
+                                        : "field"
                                 }
-                                onDelete={handleChange}
-                            ></FileEditUploader>
-                        </Grid>
-                    </Grid>
-                    <Grid item container spacing={4} xs={6}>
-                        <Grid item xs={12}>
-                            <InputGroup
-                                label="First name"
-                                field="firstName"
-                                validator={FirstNameValidator}
-                                onChange={(isValid) =>
-                                    (formValid.current.firstName = isValid)
+                                defaultValue={user?.lastName!}
+                            />
+                            {errorsProfile.lastName && (
+                                <div className="error">
+                                    <p>*</p>
+                                    {errorsProfile.lastName.message}
+                                </div>
+                            )}
+                        </div>
+                        <div className="fieldContainer">
+                            <div className="filedTitle">First name</div>
+                            <InputField
+                                placeholder="First name"
+                                type="text"
+                                name="firstName"
+                                register={registerProfile}
+                                setValue={setValueProfile}
+                                className={
+                                    errorsProfile.firstName
+                                        ? "errorFormInput"
+                                        : "field"
                                 }
-                                defaultValue={user?.firstName}
+                                defaultValue={user?.firstName!}
                             />
-                        </Grid>
-                        <Grid item xs={12}>
-                            <InputGroup
-                                label="Last name"
-                                field="lastName"
-                                validator={LastNameValidator}
-                                onChange={(isValid) =>
-                                    (formValid.current.lastName = isValid)
-                                }
-                                defaultValue={user?.lastName}
-                            />
-                        </Grid>
-                        <Grid item xs={12}>
-                            <MuiPhoneNumber
-                                defaultCountry={"ua"}
-                                value={phone}
-                                onChange={(e) => {
-                                    formValid.current.phoneNumber =
-                                        isValidPhoneNumber(e as string);
-                                    setIsPhoneValid(
-                                        isValidPhoneNumber(e as string)
-                                    );
-                                    setPhone(e as string);
-                                    handleChange();
-                                }}
-                                error={!isPhoneValid}
-                            />
-                        </Grid>
-                        <Grid item xs={12}>
-                            <InputGroup
-                                label="Email"
-                                field="email"
+                            {errorsProfile.firstName && (
+                                <div className="error">
+                                    <p>*</p>
+                                    {errorsProfile.firstName.message}
+                                </div>
+                            )}
+                        </div>
+                        <div className="fieldContainer">
+                            <div className="filedTitle">Phone number</div>
+                            <div className="field">
+                                <MuiPhoneNumber
+                                    defaultCountry={"ua"}
+                                    onChange={(e) => {
+                                        setIsPhoneValid(
+                                            isValidPhoneNumber(e as string)
+                                        );
+                                        setPhone(e as string);
+                                    }}
+                                    error={!isPhoneValid}
+                                />
+                            </div>
+                        </div>
+                        <div className="fieldContainer">
+                            <div className="filedTitle">Email</div>
+                            <InputField
+                                placeholder="Email"
                                 type="email"
-                                validator={EmailValidator}
-                                onChange={(isValid) =>
-                                    (formValid.current.email = isValid)
+                                name="email"
+                                register={registerProfile}
+                                setValue={setValueProfile}
+                                className={
+                                    errorsProfile.email
+                                        ? "errorFormInput"
+                                        : "field"
                                 }
                                 defaultValue={user?.email}
                             />
-                        </Grid>
-                    </Grid>
-                </Grid>
+                            {errorsProfile.email && (
+                                <div className="error">
+                                    <p>*</p>
+                                    {errorsProfile.email.message}
+                                </div>
+                            )}
+                        </div>
+                        <button type="submit" className="button">
+                            Update
+                        </button>
+                    </form>
+                </div>
 
-                <Grid container spacing={1} sx={{ mt: 5 }}>
-                    <Grid item xs={6}>
-                        <Button
-                            type="submit"
-                            fullWidth
-                            variant="contained"
-                            sx={{ mt: 3, mb: 2 }}
-                            disabled={!isFormValid}
-                        >
-                            Save
-                        </Button>
-                    </Grid>
-                    <Grid item xs={6}>
-                        <Link to={"/dashboard/profile"}>
-                            <Button
-                                type="button"
-                                fullWidth
-                                variant="contained"
-                                sx={{ mt: 3, mb: 2 }}
-                                color="error"
-                            >
-                                Cancel
-                            </Button>
-                        </Link>
-                    </Grid>
-                </Grid>
-            </Box>
+                <div className="textInputsContainer">
+                    <div className="title">Change Password</div>
+
+                    <form
+                        onSubmit={handleSubmitPassword(onPasswordChangeSubmit)}
+                        className="formContainer"
+                    >
+                        <div className="fieldContainer">
+                            <div className="filedTitle">New password</div>
+                            <InputField
+                                placeholder="New Password"
+                                type="password"
+                                name="newPassword"
+                                register={registerPassword}
+                                setValue={setValuePassword}
+                                className={
+                                    errorsPassword.newPassword
+                                        ? "errorFormInput"
+                                        : "field"
+                                }
+                            />
+                            {errorsPassword.newPassword && (
+                                <div className="error">
+                                    <p>*</p>
+                                    {errorsPassword.newPassword.message}
+                                </div>
+                            )}
+                        </div>
+                        <div className="fieldContainer">
+                            <div className="filedTitle">
+                                Confirm new password
+                            </div>
+                            <InputField
+                                placeholder="Confirm Password"
+                                type="password"
+                                name="confirmPassword"
+                                register={registerPassword}
+                                setValue={setValuePassword}
+                                className={
+                                    errorsPassword.confirmNewPassword
+                                        ? "errorFormInput"
+                                        : "field"
+                                }
+                            />
+                            {errorsPassword.confirmNewPassword && (
+                                <div className="error">
+                                    {errorsPassword.confirmNewPassword && (
+                                        <p>*</p>
+                                    )}
+
+                                    {errorsPassword.confirmNewPassword?.message}
+                                </div>
+                            )}
+                        </div>
+                        <div className="fieldContainer">
+                            <div className="filedTitle">Current password</div>
+                            <InputField
+                                placeholder="Current Password"
+                                type="password"
+                                name="currentPassword"
+                                register={registerPassword}
+                                setValue={setValuePassword}
+                                className={
+                                    errorsPassword.currentPassword
+                                        ? "errorFormInput"
+                                        : "field"
+                                }
+                            />
+                            {errorsPassword.currentPassword && (
+                                <div className="error">
+                                    <p>*</p>
+                                    {errorsPassword.currentPassword.message}
+                                </div>
+                            )}
+                        </div>
+                        <button type="submit" className="button">
+                            Change
+                        </button>
+                    </form>
+                </div>
+            </div>
         </>
     );
 }

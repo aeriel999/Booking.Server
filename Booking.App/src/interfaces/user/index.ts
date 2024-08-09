@@ -1,9 +1,9 @@
 import { Status } from "../../utils/enum";
 
 export interface IChangePassword {
-    currentPassword: string | undefined,
-    newPassword: string | undefined,
-    confirmNewPassword: string | undefined,
+    currentPassword: string
+    newPassword: string,
+    confirmNewPassword: string,
 }
 
 export interface IUserState {
@@ -42,10 +42,12 @@ export interface IFeedbackView {
     sizeOfPage: number;
     totalCount: number;
 }
+
 export interface IPage {
     page: number,
     sizeOfPage: number
 }
+
 export interface IGetFeedbacks {
     id: string,
     pages: IPage

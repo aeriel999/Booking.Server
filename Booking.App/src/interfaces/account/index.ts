@@ -28,6 +28,7 @@ export interface IUser {
     phoneNumber: string | null;
     avatar: string | null;
     rating: number | null;
+    profileHeaderImage: string | null;
 }
 
 export interface IErrorResponse {
@@ -87,7 +88,14 @@ export interface IEditRealtorInfo {
     lastName: string | null;
     phoneNumber: string | null;
     email: string | null;
-    avatar: File | undefined | null;
+}
+
+export interface IReloadAvatar {
+    avatar: File;
+}
+
+export interface IReloadImage {
+    profileHeaderImage: File;
 }
 
 export interface IChangeEmail {

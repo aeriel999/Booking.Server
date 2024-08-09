@@ -14,6 +14,8 @@ import {
     login,
     realtorRegister,
     reconfirmEmail,
+    reloadAvatar,
+    reloadProfileHeaderImage,
     resetPassword,
     userRegister,
 } from "./account.actions.ts";
@@ -32,15 +34,18 @@ const updateLoginUserState = (state: IAccountState, token: string): void => {
             "http://schemas.microsoft.com/ws/2008/06/identity/claims/role"
         ];
     const id = decodedToken["sub"];
+    const headerImage = decodedToken["ProfileHeaderImage"];
+    const avatar = decodedToken["Avatar"];
 
     if (role === "realtor") {
-        const firstName = decodedToken["family_name"];
-        const lastName = decodedToken["given_name"];
+        const firstName = decodedToken["given_name"];
+        const lastName = decodedToken["family_name"];
+         
         const phoneNumber =
             decodedToken[
                 "http://schemas.xmlsoap.org/ws/2005/05/identity/claims/mobilephone"
             ];
-        const avatar = decodedToken["Avatar"];
+
         const rating = decodedToken["Rating"];
 
         state.user = {
@@ -52,6 +57,8 @@ const updateLoginUserState = (state: IAccountState, token: string): void => {
             phoneNumber: phoneNumber,
             avatar: "/images/avatars/" + avatar,
             rating: Number(rating),
+            profileHeaderImage:
+                headerImage === null ? null : "/images/avatars/" + headerImage,
         };
     } else {
         state.user = {
@@ -61,8 +68,10 @@ const updateLoginUserState = (state: IAccountState, token: string): void => {
             firstName: null,
             lastName: null,
             phoneNumber: null,
-            avatar: null,
+            avatar: avatar === null ? null : "/images/avatars/" + avatar,
             rating: null,
+            profileHeaderImage:
+                headerImage === null ? null : "/images/avatars/" + headerImage,
         };
     }
     state.token = token;
@@ -89,6 +98,7 @@ export const accountsSlice = createSlice({
 
         logout: (state) => {
             deleteLocalStorage("authToken");
+            deleteLocalStorage("currentBreadcrumbsItem");
             state.user = null;
             state.token = null;
             state.isLogin = false;
@@ -124,7 +134,6 @@ export const accountsSlice = createSlice({
                 state.status = Status.LOADING;
             })
             .addCase(confirmEmail.fulfilled, (state, action) => {
-                console.log("action.payload", action.payload);
                 updateLoginUserState(state, action.payload);
                 state.status = Status.SUCCESS;
             })
@@ -155,6 +164,20 @@ export const accountsSlice = createSlice({
                 state.status = Status.SUCCESS;
             })
             .addCase(editProfile.pending, (state) => {
+                state.status = Status.LOADING;
+            })
+            .addCase(reloadAvatar.fulfilled, (state, action) => {
+                updateLoginUserState(state, action.payload);
+                state.status = Status.SUCCESS;
+            })
+            .addCase(reloadAvatar.pending, (state) => {
+                state.status = Status.LOADING;
+            })
+            .addCase(reloadProfileHeaderImage.fulfilled, (state, action) => {
+                updateLoginUserState(state, action.payload);
+                state.status = Status.SUCCESS;
+            })
+            .addCase(reloadProfileHeaderImage.pending, (state) => {
                 state.status = Status.LOADING;
             })
             .addCase(changeEmail.fulfilled, (state) => {

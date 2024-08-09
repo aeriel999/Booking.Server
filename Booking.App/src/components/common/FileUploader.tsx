@@ -12,8 +12,8 @@ type FileUploadProps = {
     maxImagesUpload: number;
     defaultImage?: string | undefined; // New prop for default image
     validator: (value: File[]) => string | false | undefined,
-    //onChange: (isValid: boolean) => void,
-  //  onDelete: () => void
+    onChange: (isValid: boolean) => void,
+   onDelete: () => void
 }
 
 const FileUploader = (props: FileUploadProps) => {

@@ -73,10 +73,10 @@ export default function ForgotPasswordPage() {
                                 }
                             />
                             {errors.email && (
-                                <p className="error">
+                                <div className="error">
                                     <p>*</p>
                                     {errors.email.message}
-                                </p>
+                                </div>
                             )}
                         </div>
 

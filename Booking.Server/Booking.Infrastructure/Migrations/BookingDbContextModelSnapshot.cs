@@ -117,9 +117,6 @@ namespace Booking.Infrastructure.Migrations
                     b.Property<Guid>("CategoryId")
                         .HasColumnType("uuid");
 
-                    b.Property<string>("Description")
-                        .HasColumnType("text");
-
                     b.Property<int?>("Discount")
                         .HasColumnType("integer");
 
@@ -428,6 +425,9 @@ namespace Booking.Infrastructure.Migrations
 
                     b.Property<bool>("PhoneNumberConfirmed")
                         .HasColumnType("boolean");
+
+                    b.Property<string>("ProfileHeaderImage")
+                        .HasColumnType("text");
 
                     b.Property<float?>("Rating")
                         .HasColumnType("real");
