@@ -8,6 +8,7 @@ import {
     getListOfCitiesByCountryId,
     getListOfCountries,
     getListOfStreetsByCityId,
+    getListOfTypesOrRest,
 } from "../../store/post/post.actions.ts";
 import ErrorHandler from "../../components/common/ErrorHandler.ts";
 import OutlinedErrorAlert from "../../components/common/ErrorAlert.tsx";
@@ -17,6 +18,7 @@ import {
     ICountry,
     IImage,
     IPostCreate,
+    ITypeOfRest,
 } from "../../interfaces/post";
 import { addPostResolver, ImagesValidator } from "../../validations/post";
 import { ImageValidator } from "../../validations/post";
@@ -52,8 +54,12 @@ export function AddNewPost() {
 
     const [mainImage, setMainImage] = useState<File>();
     const [imageList, setImageList] = useState<IImage[]>([]);
-
     const [images, setImages] = useState<File[]>([]);
+
+   const[typeOfRestList, setTypeOfRestList] = useState<ITypeOfRest[]>([]);
+  const[typeOfRest, setTypeOfRest] = useState<ITypeOfRest | null>(null);
+
+
     const navigate = useNavigate();
     //const [upload, setUpload] = useState<boolean>(false);
     const [isHotel, setIsHotel] = useState<boolean>(false);
@@ -107,6 +113,16 @@ export function AddNewPost() {
         }
     };
 
+    const getTypeofRestList = async () => {
+        try {
+            const response = await dispatch(getListOfTypesOrRest());
+            unwrapResult(response);
+            return response;
+        } catch (error) {
+            setErrorMessage(ErrorHandler(error));
+        }
+    };
+
     useEffect(() => {
         getCategoryList().then((history) => {
             setCategoryList(history?.payload.$values);
@@ -115,6 +131,10 @@ export function AddNewPost() {
         getCountryList().then((history) => {
             setCountryList(history?.payload.$values);
         });
+
+        getTypeofRestList().then((history) => {
+            setTypeOfRestList(history?.payload.$values);
+        })
     }, []);
 
     useEffect(() => {
@@ -285,6 +305,7 @@ export function AddNewPost() {
                         </div>
                         {/* Category */}
                         <div className="fieldContainer">
+                            {!category && (<div className="filedTitle">Category </div>)}
                             <ComboBox
                                 options={categoryList}
                                 onChange={setCategory}
@@ -300,6 +321,8 @@ export function AddNewPost() {
 
                         {/* Country */}
                         <div className="fieldContainer">
+                        {!country && (<div className="filedTitle">Country </div>)}
+
                             <ComboBox
                                 options={countryList}
                                 onChange={setCountry}
@@ -490,6 +513,29 @@ export function AddNewPost() {
                             {errors.discount && (
                                 <div className="dashboardError">
                                     * {errors.discount.message}
+                                </div>
+                            )}
+                        </div>
+                        <div className="fieldContainer">
+                        {!typeOfRest && (<div className="filedTitle">Type of Rest </div>)}
+                            <ComboBox
+                                options={typeOfRestList}
+                                onChange={setTypeOfRest}
+                                label={"Type of Rest*"}
+                                isValid={setIsCountryValid}
+                            />
+                         
+                        </div>
+                        <div className="fieldContainer">
+                            <ComboBox
+                                options={countryList}
+                                onChange={setCountry}
+                                label={"Country*"}
+                                isValid={setIsCountryValid}
+                            />
+                            {!isCountryValid && (
+                                <div className="dashboardError">
+                                    *This field is required
                                 </div>
                             )}
                         </div>

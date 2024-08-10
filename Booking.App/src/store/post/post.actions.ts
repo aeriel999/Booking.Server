@@ -129,6 +129,20 @@ export const getListOfCountries = createAsyncThunk(
     }
 );
 
+export const getListOfTypesOrRest = createAsyncThunk(
+    "Post/get-post-types-of-rest-list",
+    async (_, { rejectWithValue }) => {
+        try {
+            const response = await apiClient.get(
+                "/api/Post/get-post-types-of-rest-list"
+            );
+            return response.data;
+        } catch (error) {
+            return rejectWithValue(handleAxiosError(error, "Network error"));
+        }
+    }
+);
+
 export const getListOfCitiesByCountryId = createAsyncThunk(
     "Post/get-cities-list",
     async (countryId: string | null, { rejectWithValue }) => {
@@ -298,3 +312,4 @@ export const getPostsWithMostDiscount = createAsyncThunk(
         }
     }
 )
+

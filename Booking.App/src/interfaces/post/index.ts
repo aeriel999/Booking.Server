@@ -141,10 +141,10 @@ interface IPostRatingAndDiscount {
     discount: number | null;
 }
 
-interface ITypeOfRest {
-    id: number;
+export interface ITypeOfRest {
+    id: string;
     name: string;
-    image: string;
+    image?: string;
 }
 
 export interface INamesOfPosts {
@@ -176,12 +176,15 @@ export interface IPostCreate {
     price: number;
     discount: number | null;
     images: IImage[];
+    postOfReas: ITypeOfRest[] | null;
 }
 
 export interface IImage{
     id: number;
     image: File;
 }
+
+
 
 export interface IPostInfoForRealtor {
     id: string;

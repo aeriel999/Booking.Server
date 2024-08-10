@@ -20,6 +20,7 @@ import {
     getListOfPostsByName,
     getListOfPostsName,
     getListOfStreetsByCityId,
+    getListOfTypesOrRest,
     getListPostsForRealtor,
     getPostById,
     getPostListByRealtorId,
@@ -51,8 +52,8 @@ const initialState: IPostState = {
         category: null,
         country: null,
         city: null,
-        realtor: null
-    }
+        realtor: null,
+    },
 };
 
 export const postSlice = createSlice({
@@ -70,7 +71,7 @@ export const postSlice = createSlice({
         },
         setRealtorToFilter: (state, action: PayloadAction<string | null>) => {
             state.filter.realtor = action.payload;
-        }
+        },
     },
     extraReducers: (builder) => {
         builder
@@ -210,6 +211,13 @@ export const postSlice = createSlice({
             .addCase(getTypesOfRest.pending, (state) => {
                 state.status = Status.LOADING;
             })
+            .addCase(getListOfTypesOrRest.fulfilled, (state, action) => {
+                state.status = Status.SUCCESS;
+                state.typesOfRest = action.payload;
+            })
+            .addCase(getListOfTypesOrRest.pending, (state) => {
+                state.status = Status.LOADING;
+            })
             .addCase(getPostsWithMostRating.fulfilled, (state, action) => {
                 state.postMostRating = action.payload;
                 state.status = Status.SUCCESS;
@@ -230,6 +238,11 @@ export const postSlice = createSlice({
     },
 });
 
-export const { setCategoryToFilter, setCountryToFilter, setCityToFilter, setRealtorToFilter } = postSlice.actions;
+export const {
+    setCategoryToFilter,
+    setCountryToFilter,
+    setCityToFilter,
+    setRealtorToFilter,
+} = postSlice.actions;
 
 export default postSlice.reducer;

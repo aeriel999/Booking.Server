@@ -8,7 +8,7 @@ interface ComboBoxProps {
     onChange: (newValue: IListForCombobox | null) => void;
     label: string;
     defaultValue?: string;
-    isValid: (isValid: boolean) => void;
+    isValid?: (isValid: boolean) => void;
 }
 
 export default function ComboBox({
@@ -33,9 +33,10 @@ export default function ComboBox({
         _event: React.SyntheticEvent,
         newValue: IListForCombobox | null
     ) => {
-        if (newValue === null) {
+        if (isValid && newValue === null) {
             isValid(false);
-        } else {
+        } else{
+          if(isValid)
             isValid(true);
         }
         setSelectedOption(newValue);
