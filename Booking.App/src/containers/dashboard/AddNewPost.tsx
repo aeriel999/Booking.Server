@@ -519,6 +519,13 @@ export function AddNewPost() {
                     validator={ImageValidator}
                     setImageList={setImageList}
                 />
+
+            <ListImageUploader
+                    images={images}
+                    setImages={setImages}
+                    validator={ImagesValidator}
+                    setImageList={setImageList}
+                />
             </div>
         </div>
     );

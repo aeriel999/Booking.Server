@@ -551,7 +551,6 @@
         }
     }
 }
- 
 
 .twoColumnsContainer {
     display: flex;
@@ -585,7 +584,7 @@
                 flex-direction: column;
                 justify-self: stretch;
 
-                .filedTitle{
+                .filedTitle {
                     align-self: stretch;
                     color: #000;
                     font-size: 16px;
@@ -620,20 +619,18 @@
         }
     }
 
-    .errorContainer{
+    .errorContainer {
         display: flex;
         justify-content: center;
         align-items: center;
-       // margin-bottom: 20px;
     }
 
     .addImagesContainer {
         display: flex;
-        gap: 30px;
+        gap: 50px;
         flex-direction: column;
         justify-content: start;
         align-items: center;
-        gap: 100px;
         width: 45%;
     }
 }
@@ -672,23 +669,23 @@
     flex-direction: column;
     align-items: center;
     gap: 20px;
+}
 
-    .imageUploadButton {
-        display: flex;
-        width: 262px;
-        height: 44px;
-        padding: 10px;
-        justify-content: center;
-        align-items: center;
-        gap: 10px;
-        border-radius: 5px;
-        background: #019392;
-        color: var(--Backgrounds-Primary, #fff);
-        border: none;
+.imageUploadButton {
+    display: flex;
+    width: 262px;
+    height: 44px;
+    padding: 10px;
+    justify-content: center;
+    align-items: center;
+    gap: 10px;
+    border-radius: 5px;
+    background: #019392;
+    color: var(--Backgrounds-Primary, #fff);
+    border: none;
 
-        &:hover {
-            border: 1px solid $register-button-border-color;
-        }
+    &:hover {
+        border: 1px solid $register-button-border-color;
     }
 }
 
@@ -698,4 +695,40 @@
     align-items: center;
     gap: 12px;
     align-self: stretch;
+}
+
+.blockImagesContainer {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 12px;
+    align-self: stretch;
+
+    .imagesContainer {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        align-content: center;
+        gap: 10px;
+        align-self: stretch;
+        flex-wrap: wrap;
+
+        background: #efefef;
+
+        .image {
+            width: 230px;
+            height: 230px;
+            align-self: center;
+            justify-self: center;
+            margin: 0 auto;
+        }
+    }
+
+    .buttonContainer {
+        display: flex;
+        width: 266px;
+        flex-direction: column;
+        align-items: center;
+        gap: 6px;
+    }
 }

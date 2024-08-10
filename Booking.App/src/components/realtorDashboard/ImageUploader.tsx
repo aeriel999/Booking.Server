@@ -46,8 +46,8 @@ const ImageUploader = (props: ImageUploader) => {
             <div className="mainImage">
                 <div
                     style={{
-                        width: "394px",
-                        height: "394px",
+                        width: "400px",
+                        height: "400px",
 
                         background: `url(${displayImage}) center / cover no-repeat`,
                         alignSelf: "stretch",
