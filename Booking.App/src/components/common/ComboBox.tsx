@@ -55,7 +55,13 @@ export default function ComboBox({
                 <TextField
                     {...params}
                     label={label}
-                    sx={{ fontFamily: "Roboto, sans-serif" }}
+                    sx={{ fontFamily: "Roboto, sans-serif",
+                        "& .MuiInputLabel-shrink": {
+                         color: "#black",  
+                         fontSize: "1rem",
+                         fontWeight:900  
+                },
+                     }}
                 />
             )}
         />

@@ -15,37 +15,11 @@ type ListImageUploaderProps = {
 };
 
 const ListImageUploader = (props: ListImageUploaderProps) => {
-    const maxImagesUpload = 4;
-    let numberOfBlocks = 1;
+    const numberOfImagesUpload = 4;
+    const [numberOfBlocks, setNumberOfBlocks] = useState<number>(1);
     const [inputId, setInputId] = useState<number>(2);
     const defaultIMG = props.defaultImage ?? ImageTemplate;
     const [error, setError] = useState<string | false | undefined>(false);
-
-    // const handleOnAddImage = async (e: React.ChangeEvent<HTMLInputElement>) => {
-    //     if (!e.target.files) return
-    //     const files: File[] = [];
-
-    //     for (const file of e.target.files) {
-    //         files.push(file);
-    //     }
-
-    //     const errorMessage = props.validator(files);
-
-    //     setError(errorMessage);
-    //   //  props.onChange(!errorMessage);
-
-    //   const newMainImage: IImage = {
-    //         id: 1,
-    //         image: files[],
-    //     };
-    //     props.setImageList((prevImageList) => [
-    //         ...prevImageList,
-    //         newMainImage,
-    //     ]);
-
-    //     props.setImages([...props.images, ...files])
-    //     e.target.value = ''
-    // }
 
     const handleOnAddImage = async (e: React.ChangeEvent<HTMLInputElement>) => {
         if (!e.target.files) return;
@@ -71,6 +45,14 @@ const ListImageUploader = (props: ListImageUploaderProps) => {
             ]);
         }
         e.target.value = "";
+
+        if (
+            (props.images.length + 1) /
+                (numberOfImagesUpload * numberOfBlocks) ===
+            1
+        ) {
+            setNumberOfBlocks(numberOfBlocks + 1);
+        }
     };
 
     const handleOnRemoveImage = (index: number) => {
@@ -94,39 +76,39 @@ const ListImageUploader = (props: ListImageUploaderProps) => {
             {error && <OutlinedErrorAlert message={error} />}
 
             <div className="imagesContainer">
-                {Array.from({ length: maxImagesUpload * numberOfBlocks }).map(
-                    (_, i) => (
-                        <div
-                            key={i}
-                            className="image"
-                            style={{
-                                background: `url(${
-                                    props.images[i]
-                                        ? URL.createObjectURL(props.images[i])
-                                        : defaultIMG
-                                }) center / cover no-repeat`,
-                                position: "relative",
-                            }}
-                        >
-                            {props.images[i] && (
-                                <IconButton
-                                    aria-label="delete image"
-                                    style={{
-                                        position: "absolute",
-                                        top: 10,
-                                        right: 10,
-                                        color: "#fff",
-                                        backgroundColor: "#00000080",
-                                        borderRadius: "50%",
-                                    }}
-                                    onClick={() => handleOnRemoveImage(i)}
-                                >
-                                    <CancelIcon />
-                                </IconButton>
-                            )}
-                        </div>
-                    )
-                )}
+                {Array.from({
+                    length: numberOfImagesUpload * numberOfBlocks,
+                }).map((_, i) => (
+                    <div
+                        key={i}
+                        className="image"
+                        style={{
+                            background: `url(${
+                                props.images[i]
+                                    ? URL.createObjectURL(props.images[i])
+                                    : defaultIMG
+                            }) center / cover no-repeat`,
+                            position: "relative",
+                        }}
+                    >
+                        {props.images[i] && (
+                            <IconButton
+                                aria-label="delete image"
+                                style={{
+                                    position: "absolute",
+                                    top: 10,
+                                    right: 10,
+                                    color: "#fff",
+                                    backgroundColor: "#00000080",
+                                    borderRadius: "50%",
+                                }}
+                                onClick={() => handleOnRemoveImage(i)}
+                            >
+                                <CancelIcon />
+                            </IconButton>
+                        )}
+                    </div>
+                ))}
             </div>
 
             <div className="buttonContainer">
