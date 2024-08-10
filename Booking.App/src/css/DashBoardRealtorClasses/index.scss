@@ -87,158 +87,7 @@
     display: flex;
     width: 80%;
     gap: 20px;
-    height: 100%;
-
-    // .sideMenu {
-    //     width: 5%;
-    //     min-width: 65px;
-    //     flex-shrink: 0;
-    //     border-radius: 10px;
-    //     border: 1px solid $menu-border-color;
-    //     background: $menu-background;
-    //     display: flex;
-    //     flex-direction: column;
-    //     justify-content: space-between;
-    //     gap: 30px;
-
-    //     #items {
-    //         display: flex;
-    //         flex-direction: column;
-    //         justify-content: space-between;
-
-    //         .menuItem {
-    //             height: 72px;
-    //             flex-shrink: 0;
-    //             border-radius: 9px 9px 9px 9px;
-    //             display: flex;
-    //             align-items: center;
-
-    //             .text {
-    //                 display: flex;
-    //                 width: 233px;
-    //                 align-items: flex-start;
-    //                 gap: 15px;
-    //                 margin-left: 24px;
-
-    //                 p {
-    //                     margin: 0;
-    //                     padding: 0;
-    //                     font-size: 20px;
-    //                     font-style: normal;
-    //                     font-weight: 400;
-    //                     line-height: normal;
-    //                     align-self: flex-end;
-    //                 }
-    //             }
-
-    //             &.active,
-    //             &:hover {
-    //                 background-color: $header-menu-background;
-    //                 color: $primary-font-color;
-    //             }
-    //         }
-    //     }
-
-    // }
-
-    // .sideMenu {
-    //     width: 4%;
-    //     min-width: 65px;
-    //     flex-shrink: 0;
-    //     border-radius: 10px;
-    //     border: 1px solid $menu-border-color;
-    //     background: $menu-background;
-    //     display: flex;
-    //     flex-direction: column;
-    //     justify-content: space-between;
-    //     gap: 30px;
-    //     transition: width 0.3s;
-
-    //     #items {
-    //         display: flex;
-    //         flex-direction: column;
-    //         justify-content: space-between;
-
-    //         .menuItem {
-    //             height: 72px;
-    //             flex-shrink: 0;
-    //             border-radius: 9px;
-    //             display: flex;
-    //             align-items: center;
-    //            // padding-left: 10px;
-
-    //             .text {
-    //                 display: flex;
-    //                 align-items: center;
-    //                 gap: 15px;
-    //                 margin-left: 24px;
-    //                 transition: opacity 0.3s;
-
-    //                 .menuItemsText {
-    //                     margin: 0;
-    //                     padding: 0;
-    //                     font-size: 20px;
-    //                     font-style: normal;
-    //                     font-weight: 400;
-    //                     line-height: normal;
-    //                     align-self: center;
-    //                     opacity: 0;
-    //                 }
-    //             }
-
-    //             &.active,
-    //             &:hover {
-    //                 background-color: $header-menu-background;
-    //                 color: $primary-font-color;
-    //             }
-    //         }
-    //     }
-
-    //     #footer {
-    //         display: flex;
-    //         flex-direction: column;
-    //         justify-content: space-around;
-    //         height: 60px;
-    //         margin: 0;
-    //         padding: 0;
-
-    //         #line {
-    //             height: 1px;
-    //             background-color: $menu-border-color;
-    //         }
-
-    //         #button {
-    //             display: flex;
-    //             align-items: center;
-    //             gap: 20px;
-    //             margin-left: 20px;
-    //             color: $default-color;
-
-    //             p {
-    //                 margin: 0;
-    //                 padding: 0;
-    //                 align-self: center;
-    //                 opacity: 0;
-    //             }
-    //         }
-
-    //         &:hover #button p {
-    //             opacity: 1;
-    //         }
-    //     }
-
-    //     &.expanded {
-    //         width: 250px;
-    //         opacity: 1;
-
-    //     }
-
-    //     &:hover {
-    //         width: 250px;
-    //         opacity: 1;
-
-    //     }
-    // }
+    // height: 100%;
 
     .sideMenu {
         width: 4%;
@@ -503,52 +352,24 @@
                     }
                 }
             }
-
-            // #buttons {
-            //     display: flex;
-            //     align-items: center;
-            //     gap: 22px;
-            //     align-self: stretch;
-
-            //     .button {
-            //         display: flex;
-            //         width: 272px;
-            //         height: 52px;
-            //         padding: 14px 26px;
-            //         align-items: center;
-            //         justify-content: center;
-            //         gap: 15px;
-            //         border-radius: 5px;
-            //         font-size: $normal-font-size;
-            //         font-style: normal;
-            //         font-weight: $normal-font-weight;
-            //         line-height: normal;
-
-            //         p {
-            //             margin: 0;
-            //             padding: 0;
-            //         }
-            //     }
-
-            //     .colorButton {
-            //         background: $header-menu-background;
-            //         color: $primary-font-color;
-
-            //         &:hover {
-            //             background: $menu-border-color;
-            //         }
-            //     }
-
-            //     .witeButton {
-            //         border: 1px solid $menu-border-color;
-            //         color: $default-color;
-
-            //         &:hover {
-            //             background: $header-menu-background;
-            //         }
-            //     }
-            // }
         }
+    }
+}
+
+.mainContainerForForm {
+    display: flex;
+    flex-direction: column;
+    gap: 50px;
+    margin-bottom: 30px;
+    justify-content: center;
+    align-items: center;
+
+    .title {
+        color: $default-color;
+        font-size: $extra-large-font-size;
+        font-style: normal;
+        font-weight: $normal-font-weight;
+        line-height: normal;
     }
 }
 
@@ -557,7 +378,6 @@
     width: 100%;
     justify-content: space-around;
     align-items: stretch;
-    margin-bottom: 30px;
 
     .textInputsContainer {
         display: flex;
@@ -565,17 +385,9 @@
         width: 45%;
         gap: 30px;
 
-        .title {
-            color: $default-color;
-            font-size: $extra-large-font-size;
-            font-style: normal;
-            font-weight: $normal-font-weight;
-            line-height: normal;
-        }
-
         .formContainer {
             display: flex;
-            gap: 20px;
+            gap: 30px;
             flex-direction: column;
 
             .fieldContainer {
@@ -674,7 +486,7 @@
 .imageUploadButton {
     display: flex;
     width: 262px;
-    height: 44px;
+    height: 30px;
     padding: 10px;
     justify-content: center;
     align-items: center;
@@ -713,11 +525,9 @@
         align-self: stretch;
         flex-wrap: wrap;
 
-        background: #efefef;
-
         .image {
-            width: 230px;
-            height: 230px;
+            width: 25vh;
+            height: 25vh;
             align-self: center;
             justify-self: center;
             margin: 0 auto;

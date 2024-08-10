@@ -44,19 +44,20 @@ const ImageUploader = (props: ImageUploader) => {
         <>
             {error && <OutlinedErrorAlert message={error} />}
             <div className="mainImage">
+            <label htmlFor="image-upload">
                 <div
                     style={{
-                        width: "400px",
-                        height: "400px",
+                        width: "40vh",
+                        height: "40vh",
 
                         background: `url(${displayImage}) center / cover no-repeat`,
                         alignSelf: "stretch",
                     }}
                 />
-
+</label>
                 <label htmlFor="image-upload">
                     <a type="button" className="imageUploadButton">
-                        Submit Main Image
+                        Upload Main Image
                     </a>
                     <input
                         id="image-upload"

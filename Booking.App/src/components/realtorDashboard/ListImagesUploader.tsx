@@ -9,7 +9,6 @@ import { IImage } from "../../interfaces/post";
 type ListImageUploaderProps = {
     images: File[];
     setImages: (arg: File[]) => void;
-    defaultImage?: string | undefined; // New prop for default image
     validator: (value: File[]) => string | false | undefined;
     setImageList: React.Dispatch<React.SetStateAction<IImage[]>>;
 };
@@ -18,7 +17,6 @@ const ListImageUploader = (props: ListImageUploaderProps) => {
     const numberOfImagesUpload = 4;
     const [numberOfBlocks, setNumberOfBlocks] = useState<number>(1);
     const [inputId, setInputId] = useState<number>(2);
-    const defaultIMG = props.defaultImage ?? ImageTemplate;
     const [error, setError] = useState<string | false | undefined>(false);
 
     const handleOnAddImage = async (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -56,13 +54,10 @@ const ListImageUploader = (props: ListImageUploaderProps) => {
     };
 
     const handleOnRemoveImage = (index: number) => {
-        // Remove the image from the images array
         const newImages = [...props.images];
         newImages.splice(index, 1);
         props.setImages(newImages);
 
-        // Remove the corresponding image from the imageList array
-        console.log(index);
         props.setImageList((prevImageList) =>
             prevImageList.filter((_, i) => i !== index + 1)
         );
@@ -79,120 +74,57 @@ const ListImageUploader = (props: ListImageUploaderProps) => {
                 {Array.from({
                     length: numberOfImagesUpload * numberOfBlocks,
                 }).map((_, i) => (
-                    <div
-                        key={i}
-                        className="image"
-                        style={{
-                            background: `url(${
-                                props.images[i]
-                                    ? URL.createObjectURL(props.images[i])
-                                    : defaultIMG
-                            }) center / cover no-repeat`,
-                            position: "relative",
-                        }}
-                    >
-                        {props.images[i] && (
-                            <IconButton
-                                aria-label="delete image"
-                                style={{
-                                    position: "absolute",
-                                    top: 10,
-                                    right: 10,
-                                    color: "#fff",
-                                    backgroundColor: "#00000080",
-                                    borderRadius: "50%",
-                                }}
-                                onClick={() => handleOnRemoveImage(i)}
-                            >
-                                <CancelIcon />
-                            </IconButton>
-                        )}
-                    </div>
+                    <label htmlFor="images-upload" key={i} className="image">
+                        <div
+                            style={{
+                                background: `url(${
+                                    props.images[i]
+                                        ? URL.createObjectURL(props.images[i])
+                                        : ImageTemplate
+                                }) center / cover no-repeat`,
+                                position: "relative",
+                                width: "100%",
+                                height: "100%",
+                            }}
+                        >
+                            {props.images[i] && (
+                                <IconButton
+                                    aria-label="delete image"
+                                    style={{
+                                        position: "absolute",
+                                        top: 10,
+                                        right: 10,
+                                        color: "#fff",
+                                        backgroundColor: "#00000080",
+                                        borderRadius: "50%",
+                                    }}
+                                    onClick={(e) => {
+                                        e.preventDefault();
+                                        handleOnRemoveImage(i);
+                                    }}
+                                >
+                                    <CancelIcon />
+                                </IconButton>
+                            )}
+                        </div>
+                    </label>
                 ))}
             </div>
 
             <div className="buttonContainer">
                 <label htmlFor="images-upload">
                     <a type="button" className="imageUploadButton">
-                        Upload Images
+                        Add Image
                     </a>
-                    <input
-                        id="images-upload"
-                        type="file"
-                        accept="image/*,.png,.jpg,.jpeg,.gif"
-                        onChange={handleOnAddImage}
-                        style={{ display: "none" }}
-                    />
                 </label>
-            </div>
-
-            {/* <Grid container spacing={{ xs: 2, md: 3 }} columns={{ xs: 8, sm: 12, md: 12 }}>
-                {props.images.map((image, i) => (
-                    <Grid
-                        item
-                        xs={4}
-                        sm={4}
-                        md={4}
-                        key={i}
-                        sx={{
-                            display: 'flex',
-                            justifyContent: 'start',
-                            alignItems: 'center',
-                            position: 'relative'
-                        }}
-                    >
-                        <IconButton
-                            aria-label='delete image'
-                            style={{
-                                position: 'absolute',
-                                top: 10,
-                                right: 0,
-                                color: '#aaa'
-                            }}
-                            onClick={() => handleOnRemoveImage(i)}
-                        >
-                             <CancelIcon />
-                        </IconButton>
-                        <img
-                            src={URL.createObjectURL(image)}
-                            style={{
-                                width: '100%',
-                                height: '100%',
-                                objectFit: 'contain',
-                                aspectRatio: '1 / 1'
-                            }}
-                            alt=''
-                        />
-                    </Grid>
-                ))}
-            </Grid>
-            {props.images.length === 0 && ( // Display default image if no images are uploaded
-                <img
-                    src={defaultIMG}
-                    alt='Default'
-                    style={{
-                        width: '100%',
-                        height: "200px",
-                        objectFit: 'contain',
-                        aspectRatio: '1 / 1'
-                    }}
-
-                />
-            )}
-            <label htmlFor={inputId}>
-                <Button variant='contained' disabled={props.images.length >= maxImagesUpload} component='span' sx={{ mt: 4 }}>
-                    Upload Files
-                </Button>
                 <input
-                    id={inputId}
-                    type='file'
-                    multiple
-                    accept='image/*,.png,.jpg,.jpeg,.gif'
-                    onChange={(e: React.ChangeEvent<HTMLInputElement>) => handleOnAddImage(e)}
-                    style={{ display: 'none' }}
-
+                    id="images-upload"
+                    type="file"
+                    accept="image/*,.png,.jpg,.jpeg,.gif"
+                    onChange={handleOnAddImage}
+                    style={{ display: "none" }}
                 />
-            </label> */}
+            </div>
         </div>
     );
 };
