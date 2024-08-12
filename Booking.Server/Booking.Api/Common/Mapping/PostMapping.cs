@@ -30,6 +30,7 @@ using Booking.Application.Posts.SendFeedback;
 using Booking.Api.Contracts.Post.SentFeedback;
 using Booking.Api.Contracts.Post.Feedback;
 using Booking.Api.Contracts.Post.GetRealtorByUserFeedback;
+using Booking.Api.Contracts.Post.GetServicesList;
 
 namespace Booking.Api.Common.Mapping;
 
@@ -61,10 +62,12 @@ public class PostMapping : IRegister
             .Map(desp => desp.TypesOfRest, src => src.PostPostTypesOfRest!.Select(p => p.PostTypeOfRest!.Name))
             .Map(desp => desp.Services, src => src.PostServices!.Select(p => p.Service!.Name));
 
+
         config.NewConfig<Post, GetPostListByRealtorIdResponse>()
             .Map(desp => desp.Id, src => src.Id)
             .Map(src => src.Name, src => src.Name)
             .Map(desp => desp.ImagePost, src => src.ImagesPost!.FirstOrDefault(img => img.Priority == 1)!.Name);
+
 
         config.NewConfig<Post, GetListOfPostResponse>()
             .Map(desp => desp.Category, src => src.Category!.Name)
@@ -97,6 +100,7 @@ public class PostMapping : IRegister
 			.Map(dest => dest.Page, src => src.page)
             .Map(dest => dest.SizeOfPage, src => src.sizeOfPage);
 
+
 		config.NewConfig<Post, GetPostWithMostRatingResponse>()
 			.Map(desp => desp.Id, src => src.Id)
 			.Map(desp => desp.Name, src => src.Name)
@@ -104,6 +108,7 @@ public class PostMapping : IRegister
 			.Map(desp => desp.Image, src => src.ImagesPost!.FirstOrDefault(img => img.Priority == 1)!.Name)
 			.Map(desp => desp.Country, src => src.Street!.City!.Country!.Name)
 			.Map(desp => desp.City, src => src.Street!.City!.Name);
+
 
         config.NewConfig<Post, GetPostWithMostDiscountResponse>()
             .Map(desp => desp.Id, src => src.Id)
@@ -114,11 +119,13 @@ public class PostMapping : IRegister
             .Map(desp => desp.City, src => src.Street!.City!.Name)
             .Map(desp => desp.Discount, src => src.Discount);
 
+
         config.NewConfig<(SendFeedbackRequest request, string id), SendFeedbackCommand>()
             .Map(dest => dest.Text, src => src.request.Text)
             .Map(dest => dest.Rating, src => src.request.Rating)
             .Map(dest => dest.PostId, src => src.request.PostId)
             .Map(dest => dest.ClientId, src => Guid.Parse(src.id));
+
 
         config.NewConfig<Feedback, GetFeedbackResponse>()
             .Map(desp => desp.Text, src => src.Text)
@@ -127,18 +134,22 @@ public class PostMapping : IRegister
             .Map(desp => desp.Client, src => src.Client!.Email)
             .Map(desp => desp.FeedbackAt, src => src.FeedbackAt);
 
+
         config.NewConfig<PagedList<GetFeedbackResponse>, PagedList<Feedback>>()
             .Map(desp => desp.items, src => src.items.Adapt<List<GetFeedbackResponse>>());      
+
 
         config.NewConfig<Post, GetPostByUserFeedbackResponse>()
             .Map(desp => desp.Id, src => src.Id)
             .Map(desp => desp.Post, src => src.Name)
             .Map(desp => desp.Image, src => src.ImagesPost!.FirstOrDefault(img => img.Priority == 1)!.Name);
 
+
         config.NewConfig<PostTypeOfRest, GetTypeOfRestResponse>()
 			.Map(desp => desp.Id, src => src.Id)
 			.Map(desp => desp.Name, src => src.Name)
 			.Map(desp => desp.Image, src => src.PostPostTypesOfRest!.FirstOrDefault()!.Post!.ImagesPost!.FirstOrDefault(img => img.Priority == 1)!.Name);
+
 
         config.NewConfig<(GetFilteredListRequest request,string name, int page, int sizeOfPage),
 			GetPostByNameQuery>()
@@ -229,10 +240,14 @@ public class PostMapping : IRegister
 			.Map(desp => desp.DateOfEdit, src => src.EditAt)
 			.Map(desp => desp.IsActive, src => src.IsActive);
 
+
 		config.NewConfig<PagedList<Post>, PagedList<GetArchivedPostListForRealtorResponse>>();
 
 
 		config.NewConfig<PostTypeOfRest, GetPostTypesOfRestResponse>();
 		config.NewConfig<List<PostTypeOfRest>, List<GetPostTypesOfRestResponse>>();
+
+		config.NewConfig<Service, GetServicesListResponse>();
+		config.NewConfig<List<Service>, List<GetServicesListResponse>>();
 	}
 }

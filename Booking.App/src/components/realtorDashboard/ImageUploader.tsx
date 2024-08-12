@@ -49,7 +49,8 @@ const ImageUploader = (props: ImageUploader) => {
                     style={{
                         width: "40vh",
                         height: "40vh",
-
+                        minHeight: "250px",
+                        minWidth:"250px",
                         background: `url(${displayImage}) center / cover no-repeat`,
                         alignSelf: "stretch",
                     }}

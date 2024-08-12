@@ -90,8 +90,9 @@ public static class DependencyInjection
 		services.AddScoped<IPostPostTypeOfRestRepository,PostPostTypeOfRestRepository>();
         services.AddScoped<IPostServiceRepository, PostServiceRepository>();
         services.AddScoped<IPostTypeOfRestRepository, PostTypeOfRestRepository>();
+		services.AddScoped<IPostTypeOfRestRepository, PostTypeOfRestRepository>();
 
-        return services;
+		return services;
 	}
 
 	private static IServiceCollection AddInfrastructureServices(this IServiceCollection services)

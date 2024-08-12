@@ -204,6 +204,7 @@ export default function DashboardLayout() {
                         </div>
                     </div>
                 </div>
+                
                 <div className="outlet">
                     <Outlet />
                 </div>

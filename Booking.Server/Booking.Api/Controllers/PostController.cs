@@ -9,7 +9,6 @@ using Booking.Api.Contracts.Post.GetPost;
 using Booking.Api.Contracts.Post.GetPostListByRealtorId;
 using Booking.Api.Contracts.Post.GetPostListForRealtor;
 using Booking.Api.Contracts.Post.GetStreets;
-using Booking.Api.Contracts.Post.GetTypeOfPost;
 using Booking.Api.Infrastructure;
 using Booking.Application.Common.Behaviors;
 using Booking.Application.Posts.ArchivePost;
@@ -28,7 +27,6 @@ using Booking.Application.Posts.GetPostByName;
 using Booking.Application.Posts.GetPostListByRealtorId;
 using Booking.Application.Posts.GetPostListForRealtor;
 using Booking.Application.Posts.GetStreets;
- 
 using Booking.Application.Posts.RepostPost;
 using MapsterMapper;
 using MediatR;
@@ -37,13 +35,11 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using System.Security.Claims;
 using Booking.Application.Posts.GetTypesOfRest;
-using Mapster;
 using Booking.Api.Contracts.Post.GetTypeOfRest;
 using Booking.Application.Posts.GetPostsWithMostRating;
 using Booking.Api.Contracts.Post.GetPostWithMostRating;
 using Booking.Application.Posts.GetPostsWithMostDiscount;
 using Booking.Api.Contracts.Post.GetPostWithMostDiscount;
- 
 using Booking.Api.Contracts.Post.GetPostPostTypesOfRest;
 using Booking.Api.Contracts.Post.EditPost;
 using Booking.Application.Posts.SendFeedback;
@@ -53,6 +49,8 @@ using Booking.Api.Contracts.Post.SentFeedback;
 using Booking.Api.Contracts.Post.Feedback;
 using Booking.Api.Contracts.Post.GetRealtorByUserFeedback;
 using Booking.Application.Posts.GetPostTypesOfRestList;
+using Booking.Application.Posts.GetServicesList;
+using Booking.Api.Contracts.Post.GetServicesList;
 
 namespace Booking.Api.Controllers;
 
@@ -184,6 +182,7 @@ public class PostController(ISender mediatr, IMapper mapper) : ApiController
 
 		return Ok(response);
 	}
+
 
     [AllowAnonymous]
     [HttpGet("get-street-list")]
@@ -333,7 +332,6 @@ public class PostController(ISender mediatr, IMapper mapper) : ApiController
 
     [AllowAnonymous]
     [HttpGet("get-posts-with-most-discount")]
-
     public async Task<IActionResult> GetPostsWithMostDiscountAsync()
     {
         var postsWithMostDiscount = await mediatr.Send(new GetPostsWithMostDiscountQuery());
@@ -354,6 +352,7 @@ public class PostController(ISender mediatr, IMapper mapper) : ApiController
 			errors => Problem(errors));
 	}
 
+
     [HttpPost("send-feedback")]
     public async Task<IActionResult> SendFeedbackAsync([FromBody] SendFeedbackRequest request)
     {
@@ -365,6 +364,8 @@ public class PostController(ISender mediatr, IMapper mapper) : ApiController
             sendFeedbackResult => Ok(sendFeedbackResult),
             errors => Problem(errors));
     }
+
+
     [AllowAnonymous]
     [HttpGet("get-feedbacks-{id}")]
     public async Task<IActionResult> GetFeedbacksAsync([FromRoute] Guid id, [FromQuery] int page, int sizeOfPage)
@@ -388,4 +389,14 @@ public class PostController(ISender mediatr, IMapper mapper) : ApiController
             getPostsResult => Ok(mapper.Map<List<GetPostByUserFeedbackResponse>>(getPostsResult)),
             errors => Problem(errors));
     }
+
+	[HttpGet("get-services-list")]
+	public async Task<IActionResult> GetServicesListAsync()
+	{
+		var getServicesListResult = await mediatr.Send(new GetServicesListQuery());
+
+		return getServicesListResult.Match(
+			getServicesListResult => Ok(mapper.Map<List<GetServicesListResponse>>(getServicesListResult)),
+			errors => Problem(errors));
+	}
 }
