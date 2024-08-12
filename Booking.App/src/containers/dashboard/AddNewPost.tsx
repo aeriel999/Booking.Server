@@ -7,8 +7,9 @@ import {
     getListOfCategories,
     getListOfCitiesByCountryId,
     getListOfCountries,
+    getListOfServices,
     getListOfStreetsByCityId,
-    getListOfTypesOrRest,
+    getListOfTypesOfRest,
 } from "../../store/post/post.actions.ts";
 import ErrorHandler from "../../components/common/ErrorHandler.ts";
 import OutlinedErrorAlert from "../../components/common/ErrorAlert.tsx";
@@ -18,6 +19,7 @@ import {
     ICountry,
     IImage,
     IPostCreate,
+    IService,
     ITypeOfRest,
 } from "../../interfaces/post";
 import { addPostResolver, ImagesValidator } from "../../validations/post";
@@ -57,9 +59,11 @@ export function AddNewPost() {
     const [imageList, setImageList] = useState<IImage[]>([]);
     const [images, setImages] = useState<File[]>([]);
 
-   const[typeOfRestList, setTypeOfRestList] = useState<ITypeOfRest[]>([]);
-  const[typeOfRest, setTypeOfRest] = useState<string[] | null>([]);
+    const [typeOfRestList, setTypeOfRestList] = useState<ITypeOfRest[]>([]);
+    const [typeOfRest, setTypeOfRest] = useState<string[] | null>([]);
 
+    const [servicesList, setServicesList] = useState<IService[]>([]);
+    const [service, setService] = useState<string[] | null>([]);
 
     const navigate = useNavigate();
     //const [upload, setUpload] = useState<boolean>(false);
@@ -116,7 +120,17 @@ export function AddNewPost() {
 
     const getTypeofRestList = async () => {
         try {
-            const response = await dispatch(getListOfTypesOrRest());
+            const response = await dispatch(getListOfTypesOfRest());
+            unwrapResult(response);
+            return response;
+        } catch (error) {
+            setErrorMessage(ErrorHandler(error));
+        }
+    };
+
+    const getServicesList = async () => {
+        try {
+            const response = await dispatch(getListOfServices());
             unwrapResult(response);
             return response;
         } catch (error) {
@@ -135,7 +149,11 @@ export function AddNewPost() {
 
         getTypeofRestList().then((history) => {
             setTypeOfRestList(history?.payload.$values);
-        })
+        });
+
+        getServicesList().then((history) => {
+            setServicesList(history?.payload.$values);
+        });
     }, []);
 
     useEffect(() => {
@@ -306,7 +324,9 @@ export function AddNewPost() {
                         </div>
                         {/* Category */}
                         <div className="fieldContainer">
-                            {!category && (<div className="filedTitle">Category </div>)}
+                            {!category && (
+                                <div className="filedTitle">Category </div>
+                            )}
                             <ComboBox
                                 options={categoryList}
                                 onChange={setCategory}
@@ -322,7 +342,9 @@ export function AddNewPost() {
 
                         {/* Country */}
                         <div className="fieldContainer">
-                        {!country && (<div className="filedTitle">Country </div>)}
+                            {!country && (
+                                <div className="filedTitle">Country </div>
+                            )}
 
                             <ComboBox
                                 options={countryList}
@@ -518,24 +540,20 @@ export function AddNewPost() {
                             )}
                         </div>
                         <div className="checkBoxListContainer">
-                        <div className="filedTitle">Types of Rest </div>
+                            <div className="filedTitle">Types of Rest </div>
                             <CheckboxList
                                 options={typeOfRestList}
                                 selectedOptions={typeOfRest}
                                 onChange={setTypeOfRest}
-                                
                             />
-                         
                         </div>
                         <div className="checkBoxListContainer">
-                        <div className="filedTitle">Services </div>
+                            <div className="filedTitle">Services </div>
                             <CheckboxList
-                                options={typeOfRestList}
-                                selectedOptions={typeOfRest}
-                                onChange={setTypeOfRest}
-                                
+                                options={servicesList}
+                                selectedOptions={service}
+                                onChange={setService}
                             />
-                         
                         </div>
                     </form>
                 </div>

@@ -10,7 +10,7 @@ public class GetServicesListQueryHandler(IServiceRepository serviceRepository)
 {
 	public async Task<ErrorOr<List<Service>>> Handle(GetServicesListQuery request, CancellationToken cancellationToken)
 	{
-		var getServicesResult = await serviceRepository.GetListOfServisesAsync()
+		var getServicesResult = await serviceRepository.GetListOfServisesAsync();
 
 		if (getServicesResult == null)
 			return Error.NotFound("Error in loading services list");

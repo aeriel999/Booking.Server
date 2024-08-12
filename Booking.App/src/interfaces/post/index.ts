@@ -123,6 +123,7 @@ export interface IPostState {
     cities: ICity[] | null;
     streets: IStreet[] | null;
     typesOfRest: ITypeOfRest[] | null;
+    services: IService[] | null;
     searchPost: string[] | null;
     postInfoList: IPageOfPostsForRealtor | null;
     postsByRealtorId: IPostByRealtorId[] | null;
@@ -145,6 +146,11 @@ export interface ITypeOfRest {
     id: string;
     name: string;
     image?: string;
+}
+
+export interface IService {
+    id: string;
+    name: string;
 }
 
 export interface INamesOfPosts {
@@ -179,12 +185,10 @@ export interface IPostCreate {
     postOfReas: ITypeOfRest[] | null;
 }
 
-export interface IImage{
+export interface IImage {
     id: number;
     image: File;
 }
-
-
 
 export interface IPostInfoForRealtor {
     id: string;
@@ -233,4 +237,3 @@ export interface TablePaginationActionsProps {
         newPage: number
     ) => void;
 }
-

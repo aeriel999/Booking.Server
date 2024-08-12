@@ -129,12 +129,26 @@ export const getListOfCountries = createAsyncThunk(
     }
 );
 
-export const getListOfTypesOrRest = createAsyncThunk(
+export const getListOfTypesOfRest = createAsyncThunk(
     "Post/get-post-types-of-rest-list",
     async (_, { rejectWithValue }) => {
         try {
             const response = await apiClient.get(
                 "/api/Post/get-post-types-of-rest-list"
+            );
+            return response.data;
+        } catch (error) {
+            return rejectWithValue(handleAxiosError(error, "Network error"));
+        }
+    }
+);
+
+export const getListOfServices = createAsyncThunk(
+    "Post/get-services-list",
+    async (_, { rejectWithValue }) => {
+        try {
+            const response = await apiClient.get(
+                "/api/Post/get-services-list"
             );
             return response.data;
         } catch (error) {
@@ -275,15 +289,13 @@ export const getTypesOfRest = createAsyncThunk(
     "Post/get-types-of-rest",
     async (_, { rejectWithValue }) => {
         try {
-            const response = await apiClient.get(
-                `api/Post/get-types-of-rest`
-            );
+            const response = await apiClient.get(`api/Post/get-types-of-rest`);
             return response.data.$values;
         } catch (error) {
             return rejectWithValue(handleAxiosError(error, "Network error"));
         }
     }
-)
+);
 
 export const getPostsWithMostRating = createAsyncThunk(
     "Post/get-posts-with-most-rating",
@@ -297,7 +309,7 @@ export const getPostsWithMostRating = createAsyncThunk(
             return rejectWithValue(handleAxiosError(error, "Network error"));
         }
     }
-)
+);
 
 export const getPostsWithMostDiscount = createAsyncThunk(
     "Post/get-posts-with-most-discount",
@@ -311,5 +323,4 @@ export const getPostsWithMostDiscount = createAsyncThunk(
             return rejectWithValue(handleAxiosError(error, "Network error"));
         }
     }
-)
-
+);
