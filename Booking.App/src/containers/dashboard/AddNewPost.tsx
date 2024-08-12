@@ -28,6 +28,7 @@ import "../../css/DashBoardRealtorClasses/index.scss";
 import ImageUploader from "../../components/realtorDashboard/ImageUploader.tsx";
 import "../../css/DashBoardAnonymousClasses/index.scss";
 import ListImageUploader from "../../components/realtorDashboard/ListImagesUploader.tsx";
+import CheckboxList from "../../components/realtorDashboard/CheckBoxList.tsx";
 
 export function AddNewPost() {
     const dispatch = useAppDispatch();
@@ -57,7 +58,7 @@ export function AddNewPost() {
     const [images, setImages] = useState<File[]>([]);
 
    const[typeOfRestList, setTypeOfRestList] = useState<ITypeOfRest[]>([]);
-  const[typeOfRest, setTypeOfRest] = useState<ITypeOfRest | null>(null);
+  const[typeOfRest, setTypeOfRest] = useState<string[] | null>([]);
 
 
     const navigate = useNavigate();
@@ -516,28 +517,25 @@ export function AddNewPost() {
                                 </div>
                             )}
                         </div>
-                        <div className="fieldContainer">
-                        {!typeOfRest && (<div className="filedTitle">Type of Rest </div>)}
-                            <ComboBox
+                        <div className="checkBoxListContainer">
+                        <div className="filedTitle">Types of Rest </div>
+                            <CheckboxList
                                 options={typeOfRestList}
+                                selectedOptions={typeOfRest}
                                 onChange={setTypeOfRest}
-                                label={"Type of Rest*"}
-                                isValid={setIsCountryValid}
+                                
                             />
                          
                         </div>
-                        <div className="fieldContainer">
-                            <ComboBox
-                                options={countryList}
-                                onChange={setCountry}
-                                label={"Country*"}
-                                isValid={setIsCountryValid}
+                        <div className="checkBoxListContainer">
+                        <div className="filedTitle">Services </div>
+                            <CheckboxList
+                                options={typeOfRestList}
+                                selectedOptions={typeOfRest}
+                                onChange={setTypeOfRest}
+                                
                             />
-                            {!isCountryValid && (
-                                <div className="dashboardError">
-                                    *This field is required
-                                </div>
-                            )}
+                         
                         </div>
                     </form>
                 </div>

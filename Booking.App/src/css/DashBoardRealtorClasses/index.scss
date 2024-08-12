@@ -396,15 +396,6 @@
                 flex-direction: column;
                 justify-self: stretch;
 
-                .filedTitle {
-                    align-self: stretch;
-                    color: #000;
-                    font-size: 16px;
-                    font-style: normal;
-                    font-weight: 500;
-                    line-height: normal;
-                }
-
                 .field {
                     display: flex;
                     height: 6vh;
@@ -541,4 +532,36 @@
         align-items: center;
         gap: 6px;
     }
+}
+
+.checkBoxListContainer {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 20px;
+
+    .checkboxList {
+        display: flex;
+        flex-wrap: wrap;
+        justify-items: start;
+        gap: 10px;
+
+        .checkboxLabel {
+            color: #000;
+            font-size: 16px;
+            font-style: normal;
+            font-weight: 400;
+            line-height: normal;
+            width: 45%;
+        }
+    }
+}
+
+.filedTitle {
+    align-self: stretch;
+    color: #000;
+    font-size: 16px;
+    font-style: normal;
+    font-weight: 500;
+    line-height: normal;
 }
