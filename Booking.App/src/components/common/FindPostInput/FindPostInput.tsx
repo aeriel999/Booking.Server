@@ -11,6 +11,7 @@ interface IFindPostInput {
 export const FindPostInput = (info: IFindPostInput) => {
 
     const [selectedText, setSelectedText] = useState<string>("");
+    const [isBlur, setIsBlur] = useState<boolean>(true);
 
     const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
         setSelectedText(e.target.value);
@@ -28,15 +29,22 @@ export const FindPostInput = (info: IFindPostInput) => {
     }
     return (
         <div
-            onFocus={() => info.onFocus()}
-            onBlur={() => info.onBlur()}
+            onFocus={() => {
+                setIsBlur(false);
+                info.onFocus()
+            }}
+            onBlur={() => {
+                setIsBlur(true);
+                info.onBlur()
+            }
+            }
             className="find-post-input">
             <input
                 placeholder="Name of category"
                 type="text"
                 onChange={handleChange}
                 value={selectedText} />
-            {info.postsName ? info.postsName.map((item) => (
+            {info.postsName && !isBlur ? info.postsName.map((item) => (
                 <div
                     key={item}
                     className="input-item-name"

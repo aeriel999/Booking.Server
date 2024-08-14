@@ -3,5 +3,5 @@ using MediatR;
 
 namespace Booking.Application.Posts.GetCities;
 
-public record GetCitiesListByCountryIdQuery(Guid ContryId) : IRequest<List<PostCity>?>;
+public record GetCitiesListByCountryIdQuery(Guid Country) : IRequest<List<PostCity>?>;
  

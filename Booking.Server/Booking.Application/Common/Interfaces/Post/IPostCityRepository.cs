@@ -17,4 +17,6 @@ public interface IPostCityRepository
 
 
 	Task<PostCity?> GetCityByIdAsync(Guid? cityId);
+
+    Task<List<PostCity>?> GetCitiesFilteredListAsync(Guid? Category, Guid? Country, Guid? Realtor);
 }

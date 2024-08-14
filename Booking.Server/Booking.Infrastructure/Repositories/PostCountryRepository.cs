@@ -11,9 +11,28 @@ public class PostCountryRepository(BookingDbContext context) : IPostCountryRepos
 {
 	private readonly DbSet<PostCountry> _dbSet = context.Set<PostCountry>();
 
-	public async Task<List<PostCountry>?> GetCountriesListAsync()
+    public async Task<List<PostCountry>?> GetCountriesListAsync()
     {
         return await _dbSet.ToListAsync();
+    }
+
+    public async Task<List<PostCountry>?> GetCountriesFilteredListAsync(Guid? Category, Guid? Realtor)
+    {
+        return await _dbSet
+            .Include(c=>c.Cities)
+            .ThenInclude(s => s.Streets)
+            .ThenInclude(p=> p.Posts)
+            .Where(c => (Category == null? true : 
+            c.Cities!.Any(city => 
+              city.Streets!.Any(street => 
+                   street.Posts!.Any(post => 
+                          post.CategoryId==Category))))
+            && (Realtor == null ? true : 
+            c.Cities!.Any(city =>  
+              city.Streets!.Any(street => 
+                   street.Posts!.Any(post => 
+                         post.UserId == Realtor)))))
+            .ToListAsync();
     }
 
 	public async Task<PostCountry?> GetPostCountryByIdAsync(Guid countryId)

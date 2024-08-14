@@ -162,26 +162,27 @@ export const App: React.FC = () => {
                 /> */}
 
                 <Route path="*" element={<NotFound />} />
+                <Route path="dashboard/profile" element={<SignInPage />} />
+
+                <Route path="dashboard/profile/edit" element={<SignInPage />} />
+
+                <Route
+                    path="dashboard/profile/change-password"
+                    element={<SignInPage />}
+                />
+
+                <Route
+                    path="dashboard/dashboard/post/add"
+                    element={<SignInPage />}
+                />
+
+
+
+
             </Route>
 
-            <Route path="dashboard/profile" element={<SignInPage />} />
-
-            <Route path="dashboard/profile/edit" element={<SignInPage />} />
-
-            <Route
-                path="dashboard/profile/change-password"
-                element={<SignInPage />}
-            />
-
-            <Route
-                path="dashboard/dashboard/post/add"
-                element={<SignInPage />}
-            />
 
 
-
-                <Route path="*" element={<NotFound />} />
-            </Route>
             <Route path="/posts" element={<AnonymousDashboardLayoutForPosts />}>
                 <Route
                     index

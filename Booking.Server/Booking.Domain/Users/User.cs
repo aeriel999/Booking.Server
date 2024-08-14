@@ -20,6 +20,4 @@ public class User : IdentityUser<Guid>
     public ICollection<Feedback>? SentFeedbacks { get; set; }
 
 	public ICollection<PostBooking>? Bookings  { get; set; }
-
-    public string? ProfileHeaderImage { get; set; }
 }

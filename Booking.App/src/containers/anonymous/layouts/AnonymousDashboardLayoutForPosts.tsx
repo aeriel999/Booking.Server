@@ -11,6 +11,8 @@ import { IFetchDataByName, IFilter, IFilteredRequest, IFilteredRequestName } fro
 import { useDispatch, useSelector } from "react-redux";
 import { AppDispatch, RootState } from "../../../store";
 import { getFilteredListByType, getListOfPostsByName, getListOfPostsName } from "../../../store/post/post.actions";
+import { setTextForSearching } from "../../../store/post/post.slice";
+import { changeLoaderIsLoading, changePaginationPage } from "../../../store/settings/settings.slice";
 
 export const AnonymousDashboardLayoutForPosts = () => {
 
@@ -19,37 +21,41 @@ export const AnonymousDashboardLayoutForPosts = () => {
     const dispatch = useDispatch<AppDispatch>();
     const [searchingText, setSearchingText] = useState<string | null>(null);
     const listOfPostsName = useSelector((state: RootState) => state.post.searchPost);
+    //const [isBlur, setIsBlur] = useState<boolean>(true);
 
     const changeText = async (text: string | null) => {
         const currentFilter: IFilter = {
-            category: filter.category ? filter.category : "",
-            country: filter.country ? filter.country : "",
-            city: filter.city ? filter.city : "",
-            realtor: filter.realtor ? filter.realtor : "",
+            category: filter.category,
+            country: filter.country,
+            city: filter.city,
+            realtor: filter.realtor
         };
         const payload: IFilteredRequestName = {
             filter: currentFilter,
-            name: text != null ? text : ""
+            name: text
         }
 
         await dispatch(getListOfPostsName(payload));
-        console.log(listOfPostsName);
     }
     const onBlur = () => {
         changeText(null);
+
     }
+
+
     const onFocus = async () => {
         changeText(searchingText);
     }
 
     const findPost = async (event: React.FormEvent<HTMLFormElement>) => {
         event.preventDefault();
+        dispatch(changeLoaderIsLoading(true));
         if (searchingText == null || searchingText == "") {
             const currentFilter: IFilter = {
-                category: filter.category == null ? "" : filter.category,
-                country: filter.country == null ? "" : filter.country,
-                city: filter.city == null ? "" : filter.city,
-                realtor: filter.realtor == null ? "" : filter.realtor,
+                category: filter.category,
+                country: filter.country,
+                city: filter.city,
+                realtor: filter.realtor
             };
             const payload: IFilteredRequest = {
                 filter: currentFilter,
@@ -62,10 +68,10 @@ export const AnonymousDashboardLayoutForPosts = () => {
         }
         else {
             const currentFilter: IFilter = {
-                category: filter.category == null ? "" : filter.category,
-                country: filter.country == null ? "" : filter.country,
-                city: filter.city == null ? "" : filter.city,
-                realtor: filter.realtor == null ? "" : filter.realtor,
+                category: filter.category,
+                country: filter.country,
+                city: filter.city,
+                realtor: filter.realtor
             };
             const payload: IFetchDataByName = {
                 filter: currentFilter,
@@ -76,6 +82,7 @@ export const AnonymousDashboardLayoutForPosts = () => {
                 }
             }
             await dispatch(getListOfPostsByName(payload));
+            dispatch(changePaginationPage(1))
         }
     }
 
@@ -85,6 +92,7 @@ export const AnonymousDashboardLayoutForPosts = () => {
 
     useEffect(() => {
         changeText(searchingText);
+        dispatch(setTextForSearching(searchingText));
     }, [searchingText])
     return (
         <div id="mainDashboardForPosts">
