@@ -15,14 +15,31 @@ export interface ICategory {
     name: string;
 }
 
+export interface IFilteredListOfCategoriesRequest {
+    country: string | null;
+    city: string | null;
+    realtor: string | null;
+}
+
 export interface ICountry {
     id: string;
     name: string;
 }
 
+export interface IFilteredListOfCountriesRequest {
+    category: string | null;
+    realtor: string | null;
+}
+
 export interface ICity {
     id: string;
     name: string;
+}
+
+export interface IFilteredListOfCitiesRequest {
+    category: string | null;
+    country: string;
+    realtor: string | null;
 }
 
 export interface IStreet {
@@ -130,6 +147,11 @@ export interface IPostState {
     postMostRating: IPostRatingAndDiscount[] | null;
     postMostDiscount: IPostRatingAndDiscount[] | null;
     filter: IFilter;
+    filteredCategories: ICategory[] | null;
+    filteredCountries: ICountry[] | null;
+    filteredCities: ICity[] | null;
+    textForSearching: string | null;
+
 }
 
 interface IPostRatingAndDiscount {

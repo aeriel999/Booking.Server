@@ -2,6 +2,7 @@
 using Booking.Domain.Posts;
 using MediatR;
 
+
 namespace Booking.Application.Posts.GetCities;
 
 public class GetCitiesListByCountryIdQueryHandler(IPostCityRepository postCityRepository)
@@ -9,7 +10,7 @@ public class GetCitiesListByCountryIdQueryHandler(IPostCityRepository postCityRe
 {
 	public async Task<List<PostCity>?> Handle(
 		GetCitiesListByCountryIdQuery request, CancellationToken cancellationToken)
-	{
-		return await postCityRepository.GetCitiesListByCountryIdAsync(request.ContryId);
+    {
+		return await postCityRepository.GetCitiesListByCountryIdAsync(request.Country);
 	}
 }

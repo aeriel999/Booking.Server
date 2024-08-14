@@ -1,7 +1,7 @@
 import { createAsyncThunk } from "@reduxjs/toolkit";
 import { apiClient } from "../../utils/api/apiClient.ts";
 import { handleAxiosError } from "../../utils/errors";
-import { IChangePassword, IGetFeedbacks, ISendFeedback } from "../../interfaces/user";
+import { IChangePassword, IFilteredListOfRealtorsRequest, IGetFeedbacks, ISendFeedback } from "../../interfaces/user";
 
 export const changePassword = createAsyncThunk(
     'User/change-password',
@@ -20,6 +20,25 @@ export const getListOfRealtors = createAsyncThunk(
     async (_, { rejectWithValue }) => {
         try {
             const response = await apiClient.get('/api/User/get-realtors-list');
+            return response.data;
+        } catch (error) {
+            return rejectWithValue(handleAxiosError(error, "Network error"));
+        }
+    },
+);
+
+export const getFilteredListOfRealtors = createAsyncThunk(
+    'User/get-realtors-filtered-list',
+    async (payload: IFilteredListOfRealtorsRequest, { rejectWithValue }) => {
+        try {
+            const response = await apiClient.get(
+                `/api/User/get-realtors-filtered-list`, {
+                params: {
+                    category: payload.category,
+                    country: payload.country,
+                    city: payload.city
+                }
+            });
             return response.data;
         } catch (error) {
             return rejectWithValue(handleAxiosError(error, "Network error"));

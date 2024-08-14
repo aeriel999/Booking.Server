@@ -49,6 +49,9 @@ using Booking.Api.Contracts.Post.SentFeedback;
 using Booking.Api.Contracts.Post.Feedback;
 using Booking.Api.Contracts.Post.GetRealtorByUserFeedback;
 using Booking.Application.Posts.GetPostTypesOfRestList;
+using Booking.Application.Posts.GetCategoriesFilteredList;
+using Booking.Application.Posts.GetCountriesFilteredList;
+using Booking.Application.Posts.GetCitiesFilteredList;
 using Booking.Application.Posts.GetServicesList;
 using Booking.Api.Contracts.Post.GetServicesList;
 
@@ -168,9 +171,19 @@ public class PostController(ISender mediatr, IMapper mapper) : ApiController
 			getCategoriesListResult => Ok(mapper.Map<List<GetCategoryResponse>>(getCategoriesListResult)),
 			errors => Problem(errors));
 	}
+    [AllowAnonymous]
+    [HttpGet("get-categories-filtered-list")]
+    public async Task<IActionResult> GetCategoriesFilteredListAsync([FromQuery] Guid? Country, Guid? City, Guid? Realtor)
+    {
+        var getCategoriesListResult = await mediatr.Send(new GetCategoriesFilteredListQuery(Country, City, Realtor));
+
+        return getCategoriesListResult.Match(
+            getCategoriesListResult => Ok(mapper.Map<List<GetCategoryResponse>>(getCategoriesListResult)),
+            errors => Problem(errors));
+    }
 
 
-	[AllowAnonymous]
+    [AllowAnonymous]
 	[HttpGet("get-countries-list")]
 	public async Task<IActionResult> GetCountriesListAsync()
 	{
@@ -180,6 +193,17 @@ public class PostController(ISender mediatr, IMapper mapper) : ApiController
 			getCountriesListResult => Ok(mapper.Map <List<GetCountryResponse>> (getCountriesListResult)),
 			errors => Problem(errors));
 	}
+
+    [AllowAnonymous]
+    [HttpGet("get-countries-filtered-list")]
+    public async Task<IActionResult> GetCountriesFilteredListAsync([FromQuery] Guid? Category, Guid? Realtor)
+    {
+        var getCountriesListResult = await mediatr.Send(new GetCountriesFilteredListQuery(Category, Realtor));
+
+        return getCountriesListResult.Match(
+            getCountriesListResult => Ok(mapper.Map<List<GetCountryResponse>>(getCountriesListResult)),
+            errors => Problem(errors));
+    }
 
 
     [AllowAnonymous]
@@ -195,6 +219,18 @@ public class PostController(ISender mediatr, IMapper mapper) : ApiController
 		return Ok(response);
 	}
 
+
+    [AllowAnonymous]
+    [HttpGet("get-cities-filtered-list")]
+    public async Task<IActionResult> GetCitiesFilteredListAsync([FromQuery] Guid? Category,Guid Country ,Guid? Realtor)
+    {
+        var getCitiesListResult = await mediatr.Send(new GetCitiesFilteredListQuery(Category, Country, Realtor));
+
+        var response = getCitiesListResult == null ? null
+            : mapper.Map<List<GetCityResponse>>(getCitiesListResult);
+
+        return Ok(response);
+    }
 
     [AllowAnonymous]
     [HttpGet("get-street-list")]

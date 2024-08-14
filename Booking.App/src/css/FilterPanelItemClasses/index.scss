@@ -26,12 +26,11 @@
     form {
         display: flex;
         flex-direction: column;
-        row-gap: 5px;
         max-height: 240px;
 
         div.item {
             label {
-                height: 30px;
+                height: 50px;
                 box-sizing: border-box;
                 display: flex;
                 column-gap: 13px;

@@ -10,6 +10,11 @@ const initialState: ISettingsState = {
         getLocalStorage("currentBreadcrumbsItem") === null
             ? "Profile"
             : getLocalStorage("currentBreadcrumbsItem")!,
+    currentPaginationPage:
+        getLocalStorage("currentPaginationPage") === null
+            ? 1
+            : parseInt(getLocalStorage("currentPaginationPage")!),
+    loaderIsLoading: true
 };
 
 export const settingsSlice = createSlice({
@@ -23,8 +28,21 @@ export const settingsSlice = createSlice({
             state.currentBreadcrumbsItem = action.payload;
             addLocalStorage("currentBreadcrumbsItem", action.payload);
         },
+        changePaginationPage: (
+            state,
+            action: PayloadAction<number>
+        ) => {
+            state.currentPaginationPage = action.payload
+            addLocalStorage("currentPaginationPage", action.payload.toString())
+        },
+        changeLoaderIsLoading: (
+            state,
+            action: PayloadAction<boolean>
+        ) => {
+            state.loaderIsLoading = action.payload
+        }
     },
 });
 
-export const { changeDashboardMenuItem } = settingsSlice.actions;
+export const { changeDashboardMenuItem, changePaginationPage, changeLoaderIsLoading } = settingsSlice.actions;
 export default settingsSlice.reducer;

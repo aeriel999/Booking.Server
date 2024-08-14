@@ -20,6 +20,7 @@ using Booking.Application.Users.Common.ChangeAvatar;
 using Booking.Application.Users.Client.DeleteUser;
 using Booking.Api.Contracts.Users.Common.ChangeProfileHeader;
 using Booking.Application.Users.Common.ChangeProfileHeader;
+using Booking.Application.Users.Realtor.GetRealtorsFilteredList;
 
 namespace Booking.Api.Controllers;
 
@@ -33,6 +34,17 @@ public class UserController(ISender mediatr, IMapper mapper, IConfiguration conf
     public async Task<IActionResult> GetRealtorsListAsync()
     {
         var getRealtorsListResult = await mediatr.Send(new GetRealtorsListQuery());
+
+        return getRealtorsListResult.Match(
+            getRealtorsListResult => Ok(mapper.Map<List<GetRealtorResponse>>(getRealtorsListResult)),
+            errors => Problem(errors));
+    }
+
+    [AllowAnonymous]
+    [HttpGet("get-realtors-filtered-list")]
+    public async Task<IActionResult> GetRealtorsFilteredListAsync([FromQuery] Guid? Category, Guid? Country, Guid? City)
+    {
+        var getRealtorsListResult = await mediatr.Send(new GetRealtorsFilteredListQuery(Category, Country, City));
 
         return getRealtorsListResult.Match(
             getRealtorsListResult => Ok(mapper.Map<List<GetRealtorResponse>>(getRealtorsListResult)),

@@ -11,13 +11,21 @@ export interface IUserState {
     realtors: IRealtor[] | null,
     realtor: IRealtorInformation | null,
     feedbacks: IFeedbackView | null,
-    realtorsByUserFeedbacks: IRealtorsForUser | null
+    realtorsByUserFeedbacks: IRealtorsForUser | null,
+    filteredRealtors: IRealtor[] | null
 }
 
 export interface IRealtor {
     id: string,
     name: string
 }
+
+export interface IFilteredListOfRealtorsRequest {
+    category: string | null;
+    country: string | null;
+    city: string | null;
+}
+
 export interface IRealtorInformation {
     id: string,
     name: string,

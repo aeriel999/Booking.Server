@@ -7,7 +7,7 @@ public class GetCitiesListByCountryIdQueryValidation : AbstractValidator<GetCiti
 {
     public GetCitiesListByCountryIdQueryValidation()
     {
-        RuleFor(x => x.ContryId.ToString())
+        RuleFor(x => x.Country.ToString())
          .NotEmpty().WithMessage("{PropertyName} must not be empty")
          .IsGuid();
     }

@@ -21,7 +21,6 @@ export const FilterPanelItem = (info: IFilterPanelItem) => {
     }, [])
 
     useEffect(() => {
-        console.log(`${info.name} - ${selectedButton}`)
         info.selectedItem(selectedButton);
     }, [selectedButton])
     return (

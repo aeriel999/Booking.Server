@@ -3,54 +3,62 @@ import "../../../css/ListOfPostsClasses/index.scss"
 import { FilterPanelItem } from "../../../components/common/FilterPanelItem/FilterPanelItem";
 import { useDispatch, useSelector } from "react-redux";
 import { AppDispatch, RootState } from "../../../store";
-import { getListOfCategories, getListOfCitiesByCountryId, getListOfCountries, getListOfPosts } from "../../../store/post/post.actions";
+import { getFilteredListByType, getFilteredListOfCategories, getFilteredListOfCities, getFilteredListOfCountries, getListOfCitiesByCountryId, getListOfPosts, getListOfPostsByName } from "../../../store/post/post.actions";
 import { useEffect, useState } from "react";
-import { getListOfRealtors } from "../../../store/users/user.action";
+import { getFilteredListOfRealtors } from "../../../store/users/user.action";
 import { setCategoryToFilter, setCityToFilter, setCountryToFilter, setRealtorToFilter } from "../../../store/post/post.slice";
 import { PostCard } from "../../../components/common/PostCard/PostCard";
 import { Pagination } from "../../../components/common/Pagination/Pagination";
-import { IFetchData } from "../../../interfaces/post";
+import { IFetchData, IFetchDataByName, IFilter, IFilteredRequest } from "../../../interfaces/post";
+import { Loading } from "../../../components/common/Loading/Loading";
+import { changeLoaderIsLoading } from "../../../store/settings/settings.slice";
+import emptyPage from "../../../assets/Icons/empty_state.png";
 
-const firstPage: IFetchData = {
-    page: 1,
-    sizeOfPage: 9
-}
+
 
 export default function ListOfPostsPage() {
     const navigate = useNavigate();
     const dispatch = useDispatch<AppDispatch>();
     const listOfPosts = useSelector((state: RootState) => state.post.posts);
-    const listOfCategories = useSelector((state: RootState) => state.post.categories);
-    const listOfCountries = useSelector((state: RootState) => state.post.countries);
-    const listOfCities = useSelector((state: RootState) => state.post.cities);
-    const listOfRealtors = useSelector((state: RootState) => state.user.realtors);
+    const listOfCategories = useSelector((state: RootState) => state.post.filteredCategories);
+    const listOfCountries = useSelector((state: RootState) => state.post.filteredCountries);
+    const listOfCities = useSelector((state: RootState) => state.post.filteredCities);
+    const listOfRealtors = useSelector((state: RootState) => state.user.filteredRealtors);
     const filter = useSelector((state: RootState) => state.post.filter);
+    const searchingText = useSelector((state: RootState) => state.post.textForSearching);
+    const currentPage = useSelector((state: RootState) => state.settings.currentPaginationPage);
+    const isLoading = useSelector((state: RootState) => state.settings.loaderIsLoading);
 
 
-    const [currentPage, setCurrentPage] = useState(1);
     const [categorySelect, setCategorySelect] = useState<string | null>(null)
     const [countrySelect, setCountrySelect] = useState<string | null>(null)
     const [citySelect, setCitySelect] = useState<string | null>(null)
     const [realtorSelect, setRealtorSelect] = useState<string | null>(null)
+    const [firstLoading, setFirstLoading] = useState<boolean>(false);
 
 
     const getPosts = async () => {
+        const firstPage: IFetchData = {
+            page: currentPage,
+            sizeOfPage: 9
+        }
         await dispatch(getListOfPosts(firstPage));
+        setFirstLoading(true);
     }
     const getCategories = async () => {
-        await dispatch(getListOfCategories());
+        await dispatch(getFilteredListOfCategories({ country: filter.country, city: filter.city, realtor: filter.realtor }));
     }
     const getCountries = async () => {
-        await dispatch(getListOfCountries());
+        await dispatch(getFilteredListOfCountries({ category: filter.category, realtor: filter.realtor }))
     }
     const getCities = async () => {
         await dispatch(getListOfCitiesByCountryId(countrySelect))
     }
     const getRealtors = async () => {
-        await dispatch(getListOfRealtors())
+        await dispatch(getFilteredListOfRealtors({ category: filter.category, country: filter.country, city: filter.city }))
     }
     const changePage = async () => {
-        console.log("Current page - ", currentPage)
+        dispatch(changeLoaderIsLoading(true));
         const nextPage: IFetchData = {
             page: currentPage,
             sizeOfPage: 9
@@ -58,40 +66,150 @@ export default function ListOfPostsPage() {
 
         await dispatch(getListOfPosts(nextPage));
     }
+
+    const findPost = async () => {
+
+        if (searchingText == null || searchingText == "") {
+            const currentFilter: IFilter = {
+                category: filter.category,
+                country: filter.country,
+                city: filter.city,
+                realtor: filter.realtor,
+            };
+            const payload: IFilteredRequest = {
+                filter: currentFilter,
+                pages: {
+                    page: 1,
+                    sizeOfPage: 9
+                }
+            }
+            await dispatch(getFilteredListByType(payload));
+        }
+        else {
+            const currentFilter: IFilter = {
+                category: filter.category,
+                country: filter.country,
+                city: filter.city,
+                realtor: filter.realtor,
+            };
+            const payload: IFetchDataByName = {
+                filter: currentFilter,
+                name: searchingText,
+                pages: {
+                    page: 1,
+                    sizeOfPage: 9
+                }
+            }
+            await dispatch(getListOfPostsByName(payload));
+        }
+
+
+
+    }
+    const skip = () => {
+        dispatch(setCategoryToFilter(null));
+        dispatch(setCountryToFilter(null));
+        dispatch(setCityToFilter(null));
+        dispatch(setRealtorToFilter(null));
+    }
+
     useEffect(() => {
+        console.log("Loader - ", isLoading);
         getPosts();
         getCategories();
         getCountries();
         getRealtors();
     }, []);
-    useEffect(() => {
-        if (listOfPosts?.page == 1) setCurrentPage(1);
-    }, [listOfPosts])
+
     useEffect(() => {
         dispatch(setCategoryToFilter(categorySelect))
     }, [categorySelect])
+    useEffect(() => {
+        if (firstLoading) {
+            dispatch(changeLoaderIsLoading(true));
+            const getFilteredCategories = async () => {
+                await dispatch(getFilteredListOfCountries({ category: filter.category, realtor: filter.realtor }))
+                if (filter.country != null) await dispatch(getFilteredListOfCities({ category: filter.category, country: filter.country!, realtor: filter.realtor }))
+                await dispatch(getFilteredListOfRealtors({ category: filter.category, country: filter.country, city: filter.city }))
+                findPost();
+            }
+            getFilteredCategories();
+        }
+    }, [filter.category])
+
     useEffect(() => {
         if (countrySelect) getCities();
         setCitySelect(null);
         dispatch(setCountryToFilter(countrySelect))
     }, [countrySelect])
+
+    useEffect(() => {
+        if (firstLoading) {
+            dispatch(changeLoaderIsLoading(true));
+            const getFilteredCountries = async () => {
+                await dispatch(getFilteredListOfCategories({ country: filter.country, city: filter.city, realtor: filter.realtor }))
+                await dispatch(getFilteredListOfCities({ category: filter.category, country: filter.country!, realtor: filter.realtor }))
+                await dispatch(getFilteredListOfRealtors({ category: filter.category, country: filter.country, city: filter.city }))
+                findPost();
+            }
+            getFilteredCountries();
+        }
+
+    }, [filter.country])
+
     useEffect(() => {
         dispatch(setCityToFilter(citySelect))
     }, [citySelect])
+
+    useEffect(() => {
+        if (firstLoading) {
+            dispatch(changeLoaderIsLoading(true));
+            const getFilteredCities = async () => {
+                await dispatch(getFilteredListOfCategories({ country: filter.country, city: filter.city, realtor: filter.realtor }))
+                await dispatch(getFilteredListOfRealtors({ category: filter.category, country: filter.country, city: filter.city }))
+                findPost();
+            }
+            getFilteredCities();
+        }
+
+    }, [filter.city])
+
     useEffect(() => {
         dispatch(setRealtorToFilter(realtorSelect))
     }, [realtorSelect])
+
+    useEffect(() => {
+        if (firstLoading) {
+            dispatch(changeLoaderIsLoading(true));
+            const getFilteredRealtors = async () => {
+                await dispatch(getFilteredListOfCategories({ country: filter.country, city: filter.city, realtor: filter.realtor }))
+                if (filter.country != null) await dispatch(getFilteredListOfCountries({ category: filter.category, realtor: filter.realtor }))
+                await dispatch(getFilteredListOfCities({ category: filter.category, country: filter.country!, realtor: filter.realtor }))
+                findPost();
+
+            }
+
+            getFilteredRealtors();
+        }
+
+    }, [filter.realtor])
+
     useEffect(() => {
         changePage();
     }, [currentPage])
 
-    return (
-        <div id="list-of-posts-container">
-            <div className="navigation">
-                <a onClick={() => navigate("/")}>Home Page / </a>
-                <p>View Accommodation</p>
-            </div>
-            <div className="post-list">
+    useEffect(() => {
+        dispatch(changeLoaderIsLoading(false));
+        console.log(listOfPosts);
+    }, [listOfPosts])
+
+    return (<div id="list-of-posts-container">
+        <div className="navigation">
+            <a onClick={() => navigate("/")}>Home Page / </a>
+            <p>View Accommodation</p>
+        </div>
+        <div className="post-list">
+            <div className="filtering">
                 <div className="filter-panel">
                     <div className="text">Filter by the following criteria : </div>
                     <FilterPanelItem
@@ -120,42 +238,57 @@ export default function ListOfPostsPage() {
                         selectedItem={setRealtorSelect}
                         defaultValue={filter.realtor}
                     ></FilterPanelItem>
-                </div>
 
-                <div className="posts">
-                    <div className="posts-cards">
-                        {listOfPosts ? listOfPosts.items.$values.map((item) => (
-                            <PostCard
-                                key={item.id}
-                                id={item.id}
-                                name={item.name}
-                                city={item.city}
-                                country={item.country}
-                                rating={item.rating}
-                                image={item.imagePost}
-                                countOfRating={item.countOfRating}
-                                price={item.price}
-                                category={item.category}
-                                typeOfRest={item.typesOfRest.join(", ")}
-                                realtor={item.user}
-                            ></PostCard>
-
-                        )) : ""}
-                    </div>
-
-                    {listOfPosts ?
-                        <Pagination page={listOfPosts.page} sizeOfPage={listOfPosts.sizeOfPage} countOfPosts={listOfPosts.totalCount} changePage={setCurrentPage}></Pagination>
-                        : ""}
 
                 </div>
+                <button className="skipButton" onClick={() => skip()}>Skip</button>
+            </div>
+
+            <div className="posts">
+                {
+                    isLoading == true ? (
+                        <Loading />)
+                        :
+                        ("")
+                }
+                <div className="posts-cards">
+                    {listOfPosts && listOfPosts.items.$values.length > 0 ? listOfPosts.items.$values.map((item) => (
+                        <PostCard
+                            key={item.id}
+                            id={item.id}
+                            name={item.name}
+                            city={item.city}
+                            country={item.country}
+                            rating={item.rating}
+                            image={item.imagePost}
+                            countOfRating={item.countOfRating}
+                            price={item.price}
+                            category={item.category}
+                            typeOfRest={item.typesOfRest.join(", ")}
+                            realtor={item.user}
+                        ></PostCard>
+
+                    )) : <img id="empty-page" src={emptyPage} alt="Empty Page" />}
+                </div>
+
+                {listOfPosts ?
+                    <Pagination page={listOfPosts.page} sizeOfPage={listOfPosts.sizeOfPage} countOfPosts={listOfPosts.totalCount}></Pagination>
+                    : ""}
+
             </div>
         </div>
+    </div>
     )
 
 }
 
 
 /*
+
+
+ 
+
+ <Pagination page={currentPage} sizeOfPage={9} countOfPosts={180}></Pagination>
 
 <PostCard
                         id="123456789"

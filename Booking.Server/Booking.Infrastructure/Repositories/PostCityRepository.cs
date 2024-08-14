@@ -29,7 +29,25 @@ public class PostCityRepository(BookingDbContext context) : IPostCityRepository
 			.ToListAsync();
 	}
 
-	public async Task<PostCity?> GetCityByIdAsync(Guid? cityId)
+    public async Task<List<PostCity>?> GetCitiesFilteredListAsync(Guid? Category,Guid? Country, Guid? Realtor)
+    {
+        if (Country == null) return new();
+
+        return await _dbSet
+            .Include(s => s.Streets)
+            .ThenInclude(p => p.Posts)
+            .Where(c => (c.CountryId == Country) && (Category == null ? true :
+              c.Streets!.Any(street =>
+                   street.Posts!.Any(post =>
+                          post.CategoryId == Category)))
+            && (Realtor == null ? true :
+              c.Streets!.Any(street =>
+                   street.Posts!.Any(post =>
+                         post.UserId == Realtor))))
+            .ToListAsync();
+    }
+
+    public async Task<PostCity?> GetCityByIdAsync(Guid? cityId)
 	{
 		return await _dbSet.FindAsync(cityId);
 	}

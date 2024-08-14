@@ -13,6 +13,9 @@ import {
     editPost,
     getArchivedPostList,
     getFilteredListByType,
+    getFilteredListOfCategories,
+    getFilteredListOfCities,
+    getFilteredListOfCountries,
     getListOfCategories,
     getListOfCitiesByCountryId,
     getListOfCountries,
@@ -54,8 +57,12 @@ const initialState: IPostState = {
         category: null,
         country: null,
         city: null,
-        realtor: null,
+        realtor: null
     },
+    filteredCategories: null,
+    filteredCountries: null,
+    filteredCities: null,
+    textForSearching: null
 };
 
 export const postSlice = createSlice({
@@ -74,6 +81,9 @@ export const postSlice = createSlice({
         setRealtorToFilter: (state, action: PayloadAction<string | null>) => {
             state.filter.realtor = action.payload;
         },
+        setTextForSearching: (state, action: PayloadAction<string | null>) => {
+            state.textForSearching = action.payload;
+        }
     },
     extraReducers: (builder) => {
         builder
@@ -135,6 +145,13 @@ export const postSlice = createSlice({
             .addCase(getListOfCategories.pending, (state) => {
                 state.status = Status.LOADING;
             })
+            .addCase(getFilteredListOfCategories.fulfilled, (state, action) => {
+                state.filteredCategories = action.payload.$values;
+                state.status = Status.SUCCESS;
+            })
+            .addCase(getFilteredListOfCategories.pending, (state) => {
+                state.status = Status.LOADING;
+            })
             .addCase(getPostListByRealtorId.fulfilled, (state, action) => {
                 state.postsByRealtorId = action.payload.$values;
                 state.status = Status.SUCCESS;
@@ -149,11 +166,25 @@ export const postSlice = createSlice({
             .addCase(getListOfCountries.pending, (state) => {
                 state.status = Status.LOADING;
             })
+            .addCase(getFilteredListOfCountries.fulfilled, (state, action) => {
+                state.filteredCountries = action.payload.$values;
+                state.status = Status.SUCCESS;
+            })
+            .addCase(getFilteredListOfCountries.pending, (state) => {
+                state.status = Status.LOADING;
+            })
             .addCase(getListOfCitiesByCountryId.fulfilled, (state, action) => {
                 state.cities = action.payload.$values;
                 state.status = Status.SUCCESS;
             })
             .addCase(getListOfCitiesByCountryId.pending, (state) => {
+                state.status = Status.LOADING;
+            })
+            .addCase(getFilteredListOfCities.fulfilled, (state, action) => {
+                state.filteredCities = action.payload.$values;
+                state.status = Status.SUCCESS;
+            })
+            .addCase(getFilteredListOfCities.pending, (state) => {
                 state.status = Status.LOADING;
             })
             .addCase(getListOfStreetsByCityId.fulfilled, (state, action) => {
@@ -247,11 +278,6 @@ export const postSlice = createSlice({
     },
 });
 
-export const {
-    setCategoryToFilter,
-    setCountryToFilter,
-    setCityToFilter,
-    setRealtorToFilter,
-} = postSlice.actions;
+export const { setCategoryToFilter, setCountryToFilter, setCityToFilter, setRealtorToFilter, setTextForSearching } = postSlice.actions;
 
 export default postSlice.reducer;
