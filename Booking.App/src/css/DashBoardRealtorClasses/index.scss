@@ -568,3 +568,26 @@
     font-weight: 500;
     line-height: normal;
 }
+
+.roomsContainer {
+    display: flex;
+    align-self: stretch ;
+    flex-direction: column;
+    gap: 30px;
+
+    .roomContainer{
+        display: flex;
+        flex-direction: column;
+        gap: 20px;
+    }
+}
+
+.roomButton{
+    width: 200px;
+    background-color: #8cbd90;
+
+        &:disabled{
+             background-color: #86a6bd;
+
+        }
+}

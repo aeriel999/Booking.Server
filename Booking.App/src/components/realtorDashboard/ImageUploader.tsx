@@ -7,6 +7,7 @@ type ImageUploader = {
     image: File | null | undefined;
     setImage: (file: File) => void;
     validator: (value: File) => string | false | undefined;
+    label: string;
 };
 
 const ImageUploader = (props: ImageUploader) => {
@@ -32,7 +33,7 @@ const ImageUploader = (props: ImageUploader) => {
         <>
             {error && <OutlinedErrorAlert message={error} />}
             <div className="mainImage">
-                <label htmlFor="image-upload">
+                <label htmlFor={props.label}>
                     <div
                         style={{
                             width: "40vh",
@@ -44,12 +45,12 @@ const ImageUploader = (props: ImageUploader) => {
                         }}
                     />
                 </label>
-                <label htmlFor="image-upload">
+                <label htmlFor={props.label}>
                     <a type="button" className="imageUploadButton">
                         Upload Main Image
                     </a>
                     <input
-                        id="image-upload"
+                        id={props.label}
                         type="file"
                         accept="image/*,.png,.jpg,.jpeg,.gif"
                         onChange={handleOnAddImage}

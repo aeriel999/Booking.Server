@@ -185,8 +185,16 @@ export interface IPostCreate {
     images: File[];
     postTypesOfRest: string[] | null;
     postServices: string[] | null;
+    roomsList: IRoom[] | null;
 }
 
+export interface IRoom{
+    numberOfGuests: number;
+    numberOfRooms: number;
+    discount: number | null;
+    price: number;
+    mainImage: File;
+}
 
 export interface IPostInfoForRealtor {
     id: string;

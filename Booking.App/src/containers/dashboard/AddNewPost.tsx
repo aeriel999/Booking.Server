@@ -19,6 +19,7 @@ import {
     ICity,
     ICountry,
     IPostCreate,
+    IRoom,
     IService,
     ITypeOfRest,
 } from "../../interfaces/post";
@@ -32,6 +33,7 @@ import "../../css/DashBoardAnonymousClasses/index.scss";
 import ListImageUploader from "../../components/realtorDashboard/ListImagesUploader.tsx";
 import CheckboxList from "../../components/realtorDashboard/CheckBoxList.tsx";
 import { changeDashboardMenuItem } from "../../store/settings/settings.slice.ts";
+import Room from "../../components/realtorDashboard/Room.tsx";
 
 export function AddNewPost() {
     const dispatch = useAppDispatch();
@@ -64,6 +66,9 @@ export function AddNewPost() {
 
     const [servicesList, setServicesList] = useState<IService[]>([]);
     const [service, setService] = useState<string[] | null>([]);
+
+    const [rooms, setRooms] = useState<IRoom[] | null>([]);
+    const [numberOfRooms, setNumberOfRooms] = useState<number>(1);
 
     const navigate = useNavigate();
     //const [upload, setUpload] = useState<boolean>(false);
@@ -264,11 +269,8 @@ export function AddNewPost() {
     return (
         <div className="mainContainerForForm">
             {errorMessage && (
-                        <OutlinedErrorAlert
-                            message={errorMessage}
-                            textColor="#000"
-                        />
-                    )}
+                <OutlinedErrorAlert message={errorMessage} textColor="#000" />
+            )}
 
             <div className="title">Add New Post</div>
 
@@ -438,7 +440,7 @@ export function AddNewPost() {
                                 register={register}
                                 setValue={setValue}
                                 className={
-                                    errors.name ? "errorFormInput" : "field"
+                                    errors.zipCode ? "errorFormInput" : "field"
                                 }
                             />
                             {errors.zipCode && (
@@ -450,71 +452,80 @@ export function AddNewPost() {
 
                         {/*  Number of Guests */}
                         {!isHotel && (
-                            <div className="fieldContainer">
-                                <div className="filedTitle">
-                                    Number of Guests{" "}
-                                </div>
-
-                                <InputField
-                                    placeholder="Number of Guests*"
-                                    type="number"
-                                    name="numberOfGuests"
-                                    register={register}
-                                    setValue={setValue}
-                                    defaultValue={1}
-                                    className={
-                                        errors.name ? "errorFormInput" : "field"
-                                    }
-                                />
-                                {errors.numberOfGuests && (
-                                    <div className="dashboardError">
-                                        * {errors.numberOfGuests.message}
+                            <>
+                                {" "}
+                                <div className="fieldContainer">
+                                    <div className="filedTitle">
+                                        Number of Guests{" "}
                                     </div>
-                                )}
-                            </div>
+
+                                    <InputField
+                                        placeholder="Number of Guests*"
+                                        type="number"
+                                        name="numberOfGuests"
+                                        register={register}
+                                        setValue={setValue}
+                                        defaultValue={1}
+                                        className={
+                                            errors.numberOfGuests
+                                                ? "errorFormInput"
+                                                : "field"
+                                        }
+                                    />
+                                    {errors.numberOfGuests && (
+                                        <div className="dashboardError">
+                                            * {errors.numberOfGuests.message}
+                                        </div>
+                                    )}
+                                </div>
+                                {/* Price */}
+                                <div className="fieldContainer">
+                                    <div className="filedTitle">Price </div>
+
+                                    <InputField
+                                        placeholder="Price*"
+                                        type="number"
+                                        name="price"
+                                        register={register}
+                                        setValue={setValue}
+                                        className={
+                                            errors.price
+                                                ? "errorFormInput"
+                                                : "field"
+                                        }
+                                    />
+                                    {errors.price && (
+                                        <div className="dashboardError">
+                                            * {errors.price.message}
+                                        </div>
+                                    )}
+                                </div>
+                                {/* Discount */}
+                                <div className="fieldContainer">
+                                    <div className="filedTitle">Discount </div>
+
+                                    <InputField
+                                        placeholder="Discount"
+                                        type="number"
+                                        name="discount"
+                                        register={register}
+                                        setValue={setValue}
+                                        className={
+                                            errors.discount
+                                                ? "errorFormInput"
+                                                : "field"
+                                        }
+                                    />
+                                    {errors.discount && (
+                                        <div className="dashboardError">
+                                            * {errors.discount.message}
+                                        </div>
+                                    )}
+                                </div>
+                            </>
                         )}
 
-                        {/* Price */}
-                        <div className="fieldContainer">
-                            <div className="filedTitle">Price </div>
-
-                            <InputField
-                                placeholder="Price*"
-                                type="number"
-                                name="price"
-                                register={register}
-                                setValue={setValue}
-                                className={
-                                    errors.name ? "errorFormInput" : "field"
-                                }
-                            />
-                            {errors.price && (
-                                <div className="dashboardError">
-                                    * {errors.price.message}
-                                </div>
-                            )}
-                        </div>
-
-                        {/* Discount */}
-                        <div className="fieldContainer">
-                            <div className="filedTitle">Discount </div>
-
-                            <InputField
-                                placeholder="Discount"
-                                type="number"
-                                name="discount"
-                                register={register}
-                                setValue={setValue}
-                                className={
-                                    errors.name ? "errorFormInput" : "field"
-                                }
-                            />
-                            {errors.discount && (
-                                <div className="dashboardError">
-                                    * {errors.discount.message}
-                                </div>
-                            )}
-                        </div>
+                        {/* Types of Rest */}
                         <div className="checkBoxListContainer">
                             <div className="filedTitle">Types of Rest </div>
                             <CheckboxList
@@ -523,6 +534,8 @@ export function AddNewPost() {
                                 onChange={setTypeOfRest}
                             />
                         </div>
+                        {/* Services */}
+
                         <div className="checkBoxListContainer">
                             <div className="filedTitle">Services </div>
                             <CheckboxList
@@ -531,25 +544,40 @@ export function AddNewPost() {
                                 onChange={setService}
                             />
                         </div>
+
+                       
                     </form>
                 </div>
                 <div className="addImagesContainer">
-                    
                     <ImageUploader
                         image={mainImage}
                         setImage={setMainImage}
                         validator={ImageValidator}
-                         
+                        label="image-upload"
                     />
 
                     <ListImageUploader
                         images={images}
                         setImages={setImages}
                         validator={ImagesValidator}
-                        
                     />
                 </div>
             </div>
+
+            {isHotel && (
+                <div className="roomsContainer">
+                        <div className="title">Add New Post</div>
+                            {Array.from({
+                             length: numberOfRooms,
+                                }).map((_, i) =>(
+                                          <Room
+                                            rooms={rooms}
+                                            setRooms={setRooms}
+                                        />
+                                 ) )}
+                 <button onClick={() =>{setNumberOfRooms(numberOfRooms + 1)}}>Add Room</button>
+                 </div>)}
+                        
             <button type="submit" className="button" form="addNewPostForm">
                 Submit
             </button>

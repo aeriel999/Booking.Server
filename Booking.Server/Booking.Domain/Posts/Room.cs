@@ -8,13 +8,16 @@ public class Room
 
 	public Guid HotelId { get; set; }
 
-
 	[ForeignKey(nameof(HotelId))]
 	public Post? Hotel { get; set; }
 
-	public int? NumberOfGuests { get; set; }
+	public int NumberOfGuests { get; set; }
 
 	public int NumberOfRooms { get; set;}
 
+	public int? Discount { get; set; }
+
 	public decimal Price { get; set; }
+
+	public required string MainImage { get; set; }
 }
