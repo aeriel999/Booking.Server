@@ -4,6 +4,7 @@ using Booking.Application.Common.Interfaces.Users;
 using Booking.Domain.Posts;
 using ErrorOr;
 using MediatR;
+using static System.Net.Mime.MediaTypeNames;
 
 namespace Booking.Application.Posts.CreatePost;
 
@@ -16,7 +17,8 @@ public class CreatePostCommandHandler(
 	IPostCountryRepository postCountryRepository,
 	IPostCityRepository postCityRepository,
 	IUserRepository userRepository,
-	IPostPostTypeOfRestRepository postPostTypeOfRestRepository)
+	IPostPostTypeOfRestRepository postPostTypeOfRestRepository,
+	IPostServiceRepository postServiceRepository)
 	: IRequestHandler<CreatePostCommand, ErrorOr<Post>>
 {
 	public async Task<ErrorOr<Post>> Handle(
@@ -102,7 +104,8 @@ public class CreatePostCommandHandler(
 				return Error.NotFound("Street is not found");
 		}
 
-		//Create and save new post
+
+		//CreatePostPostTypeOfRestAsync and save new post
 		var post = new Post
 		{
 			UserId = request.UserId,
@@ -111,7 +114,6 @@ public class CreatePostCommandHandler(
 			StreetId = street.Id,
 			ZipCode = request.ZipCode,
 			NumberOfGuests = request.NumberOfGuests,
-			//Description = request.Description,
 			Price = request.Price,
 			Discount = request.Discount,
 			Rate = 0,
@@ -124,10 +126,60 @@ public class CreatePostCommandHandler(
 
 		await postRepository.SavePostAsync();
 
+
+		//Add Types of Rest
+		if (request.PostTypesOfRest != null)
+		{
+			foreach (var type in request.PostTypesOfRest)
+			{
+				var postTypeOfRent = new PostPostTypeOfRest
+				{
+					PostId = post.Id,
+					PostTypeOfRestId = type
+				};
+
+				await postPostTypeOfRestRepository.CreatePostPostTypeOfRestAsync(postTypeOfRent);
+			}
+		}
+
+		//Add services
+		if (request.PostServices != null)
+		{
+			foreach (var service in request.PostServices)
+			{
+				var postService = new PostService
+				{
+					PostId = post.Id,
+					ServiceId = service
+				};
+
+				await postServiceRepository.CreatePostServiceAsync(postService);
+			}
+		}
+
 		//Save image in local storage and create and save image in DB
+		if ( request.MainImage != null)
+		{
+			var imageName = await imageStorageService.SavePostImageInStorageAsync(request.MainImage);
+
+			if (imageName == null)
+				return Error.Validation("Image not save");
+
+			var postImage = new PostImage
+			{
+				Name = imageName,
+				Priority = 1,
+				PostId = post.Id
+			};
+
+			await postImageRepository.CraetePostImageAsync(postImage);
+			await postImageRepository.SavePostImageAsync();
+		}
+
+
 		if (request.Images.Count > 0 && request.Images != null)
 		{
-			int priority = 1;
+			int priority = 2;
 
 			foreach (var image in request.Images)
 			{
@@ -147,23 +199,6 @@ public class CreatePostCommandHandler(
 				await postImageRepository.SavePostImageAsync();
 			}
 		}
-
-		//Save type of rest
-
-		if (request.PostPostTypesOfRest != null)
-		{
-			foreach(var type in request.PostPostTypesOfRest)
-			{
-				var typeOfRest = new PostPostTypeOfRest
-				{
-					PostTypeOfRestId = type,
-					PostId = post.Id,
-				};
-
-				await postPostTypeOfRestRepository.Create(typeOfRest);
-			}
-		}
-		
 
 		return post;
 	}

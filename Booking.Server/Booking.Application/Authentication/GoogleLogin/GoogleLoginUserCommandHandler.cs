@@ -36,7 +36,7 @@ public class GoogleLoginUserCommandHandler(
 
 		var isRegister = true;
 
-		//Create user
+		//CreatePostPostTypeOfRestAsync user
 		if (googleUser == null && errorOrUser.IsError)
 		{
 			googleUser = new User

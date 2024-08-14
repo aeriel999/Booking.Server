@@ -147,9 +147,7 @@ export const getListOfServices = createAsyncThunk(
     "Post/get-services-list",
     async (_, { rejectWithValue }) => {
         try {
-            const response = await apiClient.get(
-                "/api/Post/get-services-list"
-            );
+            const response = await apiClient.get("/api/Post/get-services-list");
             return response.data;
         } catch (error) {
             return rejectWithValue(handleAxiosError(error, "Network error"));
@@ -189,6 +187,7 @@ export const createPost = createAsyncThunk(
     "Post/create-post",
     async (payload: IPostCreate, { rejectWithValue }) => {
         try {
+          
             const response = await apiMediaClient.post(
                 "/api/Post/create-post",
                 payload

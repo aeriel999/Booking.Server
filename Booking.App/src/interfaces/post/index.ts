@@ -171,8 +171,8 @@ export interface IFetchDataByName {
 
 export interface IPostCreate {
     name: string;
-    categoryId: string | null;
-    countryId: string | null;
+    categoryId: string;
+    countryId: string;
     cityId: string | null;
     cityName: string | null;
     streetId: string | null;
@@ -181,14 +181,12 @@ export interface IPostCreate {
     numberOfGuests: number;
     price: number;
     discount: number | null;
-    images: IImage[];
-    postOfReas: ITypeOfRest[] | null;
+    mainImage: File;
+    images: File[];
+    postTypesOfRest: string[] | null;
+    postServices: string[] | null;
 }
 
-export interface IImage {
-    id: number;
-    image: File;
-}
 
 export interface IPostInfoForRealtor {
     id: string;

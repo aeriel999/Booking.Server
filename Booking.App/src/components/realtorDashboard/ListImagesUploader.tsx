@@ -4,19 +4,16 @@ import OutlinedErrorAlert from "../common/ErrorAlert";
 import "../../css/DashBoardRealtorClasses/index.scss";
 import { IconButton } from "@mui/material";
 import CancelIcon from "@mui/icons-material/Cancel";
-import { IImage } from "../../interfaces/post";
 
 type ListImageUploaderProps = {
     images: File[];
     setImages: (arg: File[]) => void;
     validator: (value: File[]) => string | false | undefined;
-    setImageList: React.Dispatch<React.SetStateAction<IImage[]>>;
 };
 
 const ListImageUploader = (props: ListImageUploaderProps) => {
     const numberOfImagesUpload = 4;
     const [numberOfBlocks, setNumberOfBlocks] = useState<number>(1);
-    const [inputId, setInputId] = useState<number>(2);
     const [error, setError] = useState<string | false | undefined>(false);
 
     const handleOnAddImage = async (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -29,18 +26,6 @@ const ListImageUploader = (props: ListImageUploaderProps) => {
         if (!errorMessage) {
             const newImages = [...props.images, ...files];
             props.setImages(newImages);
-
-            const newImageEntries: IImage[] = files.map((file) => ({
-                id: inputId, // Unique ID based on current length
-                image: file,
-            }));
-
-            setInputId(inputId + 1);
-
-            props.setImageList((prevImageList) => [
-                ...prevImageList,
-                ...newImageEntries,
-            ]);
         }
         e.target.value = "";
 
@@ -57,11 +42,6 @@ const ListImageUploader = (props: ListImageUploaderProps) => {
         const newImages = [...props.images];
         newImages.splice(index, 1);
         props.setImages(newImages);
-
-        props.setImageList((prevImageList) =>
-            prevImageList.filter((_, i) => i !== index + 1)
-        );
-
         const errorMessage = props.validator(newImages);
         setError(errorMessage);
     };

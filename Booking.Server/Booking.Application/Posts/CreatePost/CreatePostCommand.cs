@@ -15,10 +15,10 @@ public record CreatePostCommand(
 	string? StreetName,
 	int ZipCode,
 	int? NumberOfGuests,
-	string? Description,
 	decimal Price,
 	int? Discount,
-	List<Guid>? PostPostTypesOfRest,
+	List<Guid>? PostTypesOfRest,
 	List<Guid>? PostServices,
-	List<byte[]> Images) : IRequest<ErrorOr<Post>>;
+	List<byte[]> Images,
+	byte[] MainImage) : IRequest<ErrorOr<Post>>;
  

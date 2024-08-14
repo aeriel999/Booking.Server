@@ -3,6 +3,6 @@
 namespace Booking.Application.Common.Interfaces.Post;
 public interface IPostServiceRepository
 {
-    Task Create(PostService postService);
+    Task CreatePostServiceAsync(PostService postService);
 }
 

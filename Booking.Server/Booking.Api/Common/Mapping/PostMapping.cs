@@ -39,9 +39,10 @@ public class PostMapping : IRegister
 	public void Register(TypeAdapterConfig config)
 	{
 		config.NewConfig<(
-			CreatePostRequest createPostRequest, Guid UserId, List<byte[]> Images), CreatePostCommand>()
+			CreatePostRequest createPostRequest, Guid UserId, List<byte[]> Images, byte[] MainImage), CreatePostCommand>()
 		.Map(dest => dest.UserId, src => src.UserId)
 		.Map(dest => dest.Images, src => src.Images)
+		.Map(dest => dest.MainImage, src => src.MainImage)
 		.Map(dest => dest, src => src.createPostRequest);
 
 

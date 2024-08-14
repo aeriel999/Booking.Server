@@ -4,6 +4,7 @@ import { useEffect, useState } from "react";
 import { useAppDispatch } from "../../hooks/redux";
 import { unwrapResult } from "@reduxjs/toolkit";
 import {
+    createPost,
     getListOfCategories,
     getListOfCitiesByCountryId,
     getListOfCountries,
@@ -17,7 +18,6 @@ import {
     ICategory,
     ICity,
     ICountry,
-    IImage,
     IPostCreate,
     IService,
     ITypeOfRest,
@@ -31,6 +31,7 @@ import ImageUploader from "../../components/realtorDashboard/ImageUploader.tsx";
 import "../../css/DashBoardAnonymousClasses/index.scss";
 import ListImageUploader from "../../components/realtorDashboard/ListImagesUploader.tsx";
 import CheckboxList from "../../components/realtorDashboard/CheckBoxList.tsx";
+import { changeDashboardMenuItem } from "../../store/settings/settings.slice.ts";
 
 export function AddNewPost() {
     const dispatch = useAppDispatch();
@@ -56,7 +57,6 @@ export function AddNewPost() {
     const [isStreetExist, setIsStreetExist] = useState<boolean>(false);
 
     const [mainImage, setMainImage] = useState<File>();
-    const [imageList, setImageList] = useState<IImage[]>([]);
     const [images, setImages] = useState<File[]>([]);
 
     const [typeOfRestList, setTypeOfRestList] = useState<ITypeOfRest[]>([]);
@@ -195,26 +195,27 @@ export function AddNewPost() {
     }, [city]);
 
     const onSubmit = async (data: IPostCreate) => {
-        console.log("data", data);
-
         if (!category) {
             setIsCategoryValid(false);
             return;
         }
+
         if (!country) {
             setIsCountryValid(false);
             return;
         }
+
         if (!city && !isCityExist) {
             setIsCityValid(false);
             return;
         }
+
         if (!street && !isStreetExist) {
             setIsStreetValid(false);
             return;
         }
 
-        if (imageList.length === 0) {
+        if (images.length === 0) {
             setErrorMessage(ErrorHandler("Choose at least main image"));
             return;
         }
@@ -228,7 +229,7 @@ export function AddNewPost() {
             const model: IPostCreate = {
                 ...data,
                 categoryId: category?.id!,
-                countryId: category?.id!,
+                countryId: country?.id!,
                 cityId: city === undefined || city === null ? null : city?.id!,
                 cityName:
                     city === undefined || city === null ? data.cityName : null!,
@@ -240,60 +241,35 @@ export function AddNewPost() {
                     street === undefined || street === null
                         ? data.streetName
                         : null,
-                images: imageList,
+                mainImage: mainImage!,
+                images: images,
+                postTypesOfRest: typeOfRest,
+                postServices: service,
             };
-            console.log("model", model);
-        } else {
-            console.log("HELLO");
+
+            try {
+                setErrorMessage(undefined);
+
+                const response = await dispatch(createPost(model));
+                unwrapResult(response);
+
+                // await joinForPostListening(response.payload.id);
+                dispatch(changeDashboardMenuItem("All Posts"));
+                navigate("/dashboard/show-all-post");
+            } catch (error) {
+                setErrorMessage(ErrorHandler(error));
+            }
         }
-
-        // try {
-        //     const response = await dispatch(login(data));
-        //     unwrapResult(response);
-        //     await afterLogin(response.payload);
-        // } catch (error) {
-        //     setErrorMessage(ErrorHandler(error));
-        // }
     };
-
-    // console.log("TestValid", formValid.current);
-
-    // const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
-    //     event.preventDefault();
-
-    //     setUpload(true);
-
-    //     const data = new FormData(event.currentTarget);
-
-    //     const model: IPostCreate = {
-    //         name: data.get("name") as string,
-    //         categoryId: category!.id,
-    //         countryId: country!.id,
-    //         cityId: city === undefined ? null : city.id,
-    //         cityName: data.get("cityName") as string,
-    //         streetId: street === undefined ? null : street.id,
-    //         streetName: data.get("streetName") as string,
-
-    //         price: parseFloat(data.get("price") as string),
-    //         description: data.get("description") as string,
-    //         images: images,
-    //     };
-
-    //     try {
-    //         const response = await dispatch(createPost(model));
-    //         unwrapResult(response);
-
-    //         await joinForPostListening(response.payload.id);
-
-    //         navigate("/dashboard/show-all-post");
-    //     } catch (error) {
-    //         setErrorMessage(ErrorHandler(error));
-
-    //         console.log("Add error", error);
-    //     }
-    // };
     return (
         <div className="mainContainerForForm">
+            {errorMessage && (
+                        <OutlinedErrorAlert
+                            message={errorMessage}
+                            textColor="#000"
+                        />
+                    )}
+
             <div className="title">Add New Post</div>
 
             <div className="twoColumnsContainer">
@@ -558,25 +534,19 @@ export function AddNewPost() {
                     </form>
                 </div>
                 <div className="addImagesContainer">
-                    {errorMessage && (
-                        <OutlinedErrorAlert
-                            message={errorMessage}
-                            textColor="#000"
-                        />
-                    )}
-
+                    
                     <ImageUploader
                         image={mainImage}
                         setImage={setMainImage}
                         validator={ImageValidator}
-                        setImageList={setImageList}
+                         
                     />
 
                     <ListImageUploader
                         images={images}
                         setImages={setImages}
                         validator={ImagesValidator}
-                        setImageList={setImageList}
+                        
                     />
                 </div>
             </div>

@@ -60,7 +60,7 @@ namespace Booking.Api.Controllers;
 public class PostController(ISender mediatr, IMapper mapper) : ApiController
 {
 	[HttpPost("create-post")]
-	public async Task<IActionResult> CreatePostAsync(CreatePostRequest request)
+	public async Task<IActionResult> CreatePostAsync([FromForm]CreatePostRequest request)
 	{
 		string userId = User.Claims.First(u => u.Type == ClaimTypes.NameIdentifier).Value;
 
@@ -76,8 +76,20 @@ public class PostController(ISender mediatr, IMapper mapper) : ApiController
 			}
 		}
 
+		var mainImage = new byte[byte.MaxValue];
+
+		if (request.MainImage != null && request.MainImage.Length != 0)
+		{
+			using (MemoryStream memoryStream = new MemoryStream())
+			{
+				await request.MainImage.CopyToAsync(memoryStream);
+
+				mainImage = memoryStream.ToArray();
+			}
+		}
+
 		var createPostResult = await mediatr.Send(mapper.Map<CreatePostCommand>(
-			(request, Guid.Parse(userId), images)));
+			(request, Guid.Parse(userId), images, mainImage)));
 
 		return createPostResult.Match(
 			createPostResult => Ok(createPostResult),

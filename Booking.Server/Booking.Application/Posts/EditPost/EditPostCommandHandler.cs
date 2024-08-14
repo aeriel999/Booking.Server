@@ -58,7 +58,7 @@ public class EditPostCommandHandler(
 		{
 			Guid cityId = request.CityId ?? Guid.Empty;
 
-			//Create new city
+			//CreatePostPostTypeOfRestAsync new city
 			if (request.CityId == null && request.CityName != null)
 			{
 				var city = await postCityRepository.FindCityByNameAndCountryIdAsync(
@@ -79,7 +79,7 @@ public class EditPostCommandHandler(
 				cityId = city.Id;
 			}
 
-			//Create new street
+			//CreatePostPostTypeOfRestAsync new street
 			if (request.StreetId == null && request.StreetName != null)
 			{
 				var street = await postStreetRepository.FindStreetByNameAndCityIdAsync(

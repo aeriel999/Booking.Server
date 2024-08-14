@@ -39,6 +39,7 @@ public record CreatePostRequest
 	[Range(1, 20)]
 	public int? NumberOfGuests { get; init; }
 
+
 	public string? Description { get; init; }
 
 
@@ -49,12 +50,17 @@ public record CreatePostRequest
 
 	public int? Discount { get; init; }
 
-	public List<Guid>? PostTypesOfRest { get; set; }
+
+	public List<Guid>? PostTypesOfRest { get; init; }
 
 
-	public List<Guid>? PostServices { get; set; }
+	public List<Guid>? PostServices { get; init; }
 
+
+	public  required IFormFile MainImage { get; init; }
 
 	[BindProperty(Name = "images[]")]
 	public required List<IFormFile> Images { get; init; }
 }
+
+ 

@@ -2,13 +2,11 @@ import React, { useState } from "react";
 import ImageTemplate from "../../assets/Templates/Vector.webp";
 import OutlinedErrorAlert from "../common/ErrorAlert";
 import "../../css/DashBoardRealtorClasses/index.scss";
-import { IImage } from "../../interfaces/post";
 
 type ImageUploader = {
     image: File | null | undefined;
     setImage: (file: File) => void;
     validator: (value: File) => string | false | undefined;
-    setImageList: React.Dispatch<React.SetStateAction<IImage[]>>;
 };
 
 const ImageUploader = (props: ImageUploader) => {
@@ -23,16 +21,6 @@ const ImageUploader = (props: ImageUploader) => {
         setError(errorMessage);
         if (!errorMessage) {
             props.setImage(file);
-
-            const newMainImage: IImage = {
-                id: 1,
-                image: file,
-            };
-            props.setImageList([]);
-            props.setImageList((prevImageList) => [
-                ...prevImageList,
-                newMainImage,
-            ]);
         }
     };
 
@@ -44,18 +32,18 @@ const ImageUploader = (props: ImageUploader) => {
         <>
             {error && <OutlinedErrorAlert message={error} />}
             <div className="mainImage">
-            <label htmlFor="image-upload">
-                <div
-                    style={{
-                        width: "40vh",
-                        height: "40vh",
-                        minHeight: "250px",
-                        minWidth:"250px",
-                        background: `url(${displayImage}) center / cover no-repeat`,
-                        alignSelf: "stretch",
-                    }}
-                />
-</label>
+                <label htmlFor="image-upload">
+                    <div
+                        style={{
+                            width: "40vh",
+                            height: "40vh",
+                            minHeight: "250px",
+                            minWidth: "250px",
+                            background: `url(${displayImage}) center / cover no-repeat`,
+                            alignSelf: "stretch",
+                        }}
+                    />
+                </label>
                 <label htmlFor="image-upload">
                     <a type="button" className="imageUploadButton">
                         Upload Main Image
