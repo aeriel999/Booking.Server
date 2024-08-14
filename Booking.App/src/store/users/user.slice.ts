@@ -2,7 +2,7 @@ import { AnyAction, createSlice } from '@reduxjs/toolkit';
 import { RejectedAction } from "../../utils/types";
 import { Status } from "../../utils/enum";
 import { IUserState } from "../../interfaces/user";
-import { changePassword, deleteUserAccount, editUserProfile, getFeedbacksByRealtor, getListOfRealtors, getRealtorById, getRealtorsByUserFeedbacks, sendFeedback } from "./user.action.ts";
+import { changePassword, deleteUserAccount, editUserProfile, getFeedbacksByRealtor, getFilteredListOfRealtors, getListOfRealtors, getRealtorById, getRealtorsByUserFeedbacks, sendFeedback } from "./user.action.ts";
 
 function isRejectedAction(action: AnyAction): action is RejectedAction {
     return action.type.endsWith('/rejected');
@@ -13,7 +13,8 @@ const initialState: IUserState = {
     realtors: null,
     realtor: null,
     feedbacks: null,
-    realtorsByUserFeedbacks: null
+    realtorsByUserFeedbacks: null,
+    filteredRealtors: null
 };
 
 export const userSlice = createSlice({
@@ -35,6 +36,13 @@ export const userSlice = createSlice({
                 state.status = Status.SUCCESS;
             })
             .addCase(getListOfRealtors.pending, (state) => {
+                state.status = Status.LOADING;
+            })
+            .addCase(getFilteredListOfRealtors.fulfilled, (state, action) => {
+                state.filteredRealtors = action.payload.$values;
+                state.status = Status.SUCCESS;
+            })
+            .addCase(getFilteredListOfRealtors.pending, (state) => {
                 state.status = Status.LOADING;
             })
             .addCase(getRealtorById.fulfilled, (state, action) => {

@@ -6,6 +6,7 @@ public interface IPostCountryRepository
 {
     Task<List<PostCountry>?> GetCountriesListAsync();
 
+    Task<List<PostCountry>?> GetCountriesFilteredListAsync(Guid? Category, Guid? Realtor);
 
     Task<PostCountry?> GetPostCountryByIdAsync(Guid id);
 }

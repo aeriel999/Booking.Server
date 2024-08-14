@@ -3,6 +3,7 @@ using Booking.Domain.Constants;
 using Booking.Domain.Users;
 using ErrorOr;
 using Microsoft.AspNetCore.Identity;
+using Microsoft.EntityFrameworkCore;
 using Org.BouncyCastle.Asn1.Ocsp;
 //using static System.Runtime.InteropServices.JavaScript.JSType;
 
@@ -11,12 +12,29 @@ namespace Booking.Infrastructure.Repositories;
 public class UserRepository(UserManager<User> userManager) 
     : IUserRepository
 {
-    public async Task<List<User>> GetRealtorsAsync()
+    public async Task<List<User>> GetRealtorsFilteredListAsync(Guid? Category,Guid? Country, Guid? City)
 	{
-		IList<User> list = await userManager.GetUsersInRoleAsync(Roles.Realtor);
+        var realtors = await userManager.GetUsersInRoleAsync(Roles.Realtor);
+        
+        return userManager.Users
+            .Include(user => user.Posts)
+            .ThenInclude(post => post.Street!.City!.Country)
+            .AsEnumerable()
+            .Where(r =>  (realtors.Any(realtor => realtor.Id == r.Id )) 
+                             && (Category == null ? true : r.Posts!.Any(post => post.CategoryId == Category))
+                             && (City == null ? true : r.Posts!.Any(post => post.Street!.CityId == City))
+                             && (Country == null ? true : r.Posts!.Any(post => post.Street!.City!.CountryId == Country)))
+                .ToList();
 
-        return list.ToList();
+
 	}
+
+    public async Task<List<User>> GetRealtorsListAsync()
+    {
+        var realtors = await userManager.GetUsersInRoleAsync(Roles.Realtor);  
+        
+        return realtors.ToList();
+    }
 
     public async Task<ErrorOr<User>> CreateUserAsync(User user, string password, string role)
     {

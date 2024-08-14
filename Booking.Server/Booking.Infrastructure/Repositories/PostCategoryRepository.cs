@@ -14,8 +14,20 @@ public class PostCategoryRepository(BookingDbContext context) : IPostCategoryRep
 		return await _dbSet.FindAsync(postCategoryId);
 	}
 
-	public async Task<List<PostCategory>?> GetListOfCategoriesAsync()
+    public async Task<List<PostCategory>?> GetListOfCategoriesAsync()
+    {
+        return await _dbSet.ToListAsync();
+    }
+
+    public async Task<List<PostCategory>?> GetFilteredListOfCategoriesAsync(Guid? Country, Guid? City, Guid? Realtor)
 	{
-		return await _dbSet.ToListAsync();
+		return await _dbSet.
+			Include(c => c.Posts)
+			.ThenInclude(post => post.Street!.City!.Country)
+			.Where(category => 
+			(Country==null ? true : category.Posts!.Any(post => post.Street!.City!.CountryId == Country))
+			&& (City == null ? true : category.Posts!.Any(post => post.Street!.CityId == City))
+            && (Realtor == null ? true : category.Posts!.Any(p => p.UserId == Realtor))).
+			ToListAsync();
 	}
 }
