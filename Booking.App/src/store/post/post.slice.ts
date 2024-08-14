@@ -22,9 +22,13 @@ import {
     getListOfPosts,
     getListOfPostsByName,
     getListOfPostsName,
+    
     getListOfServices,
+    
     getListOfStreetsByCityId,
+  
     getListOfTypesOfRest,
+  
     getListPostsForRealtor,
     getPostById,
     getPostListByRealtorId,
