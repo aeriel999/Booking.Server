@@ -16,7 +16,7 @@ public class GetChatRoomsListQueryHandler(
 	public async Task<ErrorOr<GetChatRoomsListQueryResult>> Handle(
 		GetChatRoomsListQuery request, CancellationToken cancellationToken)
 	{
-		//Create 
+		//CreatePostPostTypeOfRestAsync 
 		List<ChatsForPostListInfo> chatsForPosts  = new();
 
 		var hasNewMsg = false;

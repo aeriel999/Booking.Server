@@ -1,11 +1,6 @@
-import Container from "@mui/material/Container";
-import Box from "@mui/material/Box";
-import Typography from "@mui/material/Typography";
-import { Breadcrumbs, Grid, LinearProgress } from "@mui/material";
-import { Link, useNavigate } from "react-router-dom";
-import Divider from "@mui/material/Divider";
+import { useNavigate } from "react-router-dom";
 import ComboBox from "../../components/common/ComboBox.tsx";
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useState } from "react";
 import { useAppDispatch } from "../../hooks/redux";
 import { unwrapResult } from "@reduxjs/toolkit";
 import {
@@ -13,7 +8,9 @@ import {
     getListOfCategories,
     getListOfCitiesByCountryId,
     getListOfCountries,
+    getListOfServices,
     getListOfStreetsByCityId,
+    getListOfTypesOfRest,
 } from "../../store/post/post.actions.ts";
 import ErrorHandler from "../../components/common/ErrorHandler.ts";
 import OutlinedErrorAlert from "../../components/common/ErrorAlert.tsx";
@@ -21,34 +18,22 @@ import {
     ICategory,
     ICity,
     ICountry,
-    IImage,
-    IListForCombobox,
     IPostCreate,
+    IRoom,
+    IService,
+    ITypeOfRest,
 } from "../../interfaces/post";
-import InputGroup from "../../components/common/InputGroup.tsx";
-import {
-    addPostResolver,
-    CityNameValidator,
-    ImagesValidator,
-    PostNameValidator,
-    PriceValidator,
-    StreetNameValidator,
-    ZipCodeValidator,
-} from "../../validations/post";
+import { addPostResolver, ImagesValidator } from "../../validations/post";
 import { ImageValidator } from "../../validations/post";
-import Button from "@mui/material/Button";
-import * as React from "react";
-import { joinForPostListening } from "../../SignalR";
-import DefaultImg from "../../assets/images.png";
-import { maxImagesCount } from "../../constants/index.ts";
-import FileUploader from "../../components/common/FileUploader.tsx";
 import InputField from "../../components/common/InputField.tsx";
 import { useForm } from "react-hook-form";
 import "../../css/DashBoardRealtorClasses/index.scss";
-import { parseNumber } from "libphonenumber-js";
 import ImageUploader from "../../components/realtorDashboard/ImageUploader.tsx";
 import "../../css/DashBoardAnonymousClasses/index.scss";
 import ListImageUploader from "../../components/realtorDashboard/ListImagesUploader.tsx";
+import CheckboxList from "../../components/realtorDashboard/CheckBoxList.tsx";
+import { changeDashboardMenuItem } from "../../store/settings/settings.slice.ts";
+import Room from "../../components/realtorDashboard/Room.tsx";
 
 export function AddNewPost() {
     const dispatch = useAppDispatch();
@@ -74,11 +59,19 @@ export function AddNewPost() {
     const [isStreetExist, setIsStreetExist] = useState<boolean>(false);
 
     const [mainImage, setMainImage] = useState<File>();
-    const [imageList, setImageList] = useState<IImage[]>([]);
-
     const [images, setImages] = useState<File[]>([]);
+
+    const [typeOfRestList, setTypeOfRestList] = useState<ITypeOfRest[]>([]);
+    const [typeOfRest, setTypeOfRest] = useState<string[] | null>([]);
+
+    const [servicesList, setServicesList] = useState<IService[]>([]);
+    const [service, setService] = useState<string[] | null>([]);
+
+    const [rooms, setRooms] = useState<IRoom[] | null>([]);
+    const [numberOfRooms, setNumberOfRooms] = useState<number>(1);
+
     const navigate = useNavigate();
-    const [upload, setUpload] = useState<boolean>(false);
+    //const [upload, setUpload] = useState<boolean>(false);
     const [isHotel, setIsHotel] = useState<boolean>(false);
 
     const {
@@ -130,6 +123,26 @@ export function AddNewPost() {
         }
     };
 
+    const getTypeofRestList = async () => {
+        try {
+            const response = await dispatch(getListOfTypesOfRest());
+            unwrapResult(response);
+            return response;
+        } catch (error) {
+            setErrorMessage(ErrorHandler(error));
+        }
+    };
+
+    const getServicesList = async () => {
+        try {
+            const response = await dispatch(getListOfServices());
+            unwrapResult(response);
+            return response;
+        } catch (error) {
+            setErrorMessage(ErrorHandler(error));
+        }
+    };
+
     useEffect(() => {
         getCategoryList().then((history) => {
             setCategoryList(history?.payload.$values);
@@ -137,6 +150,14 @@ export function AddNewPost() {
 
         getCountryList().then((history) => {
             setCountryList(history?.payload.$values);
+        });
+
+        getTypeofRestList().then((history) => {
+            setTypeOfRestList(history?.payload.$values);
+        });
+
+        getServicesList().then((history) => {
+            setServicesList(history?.payload.$values);
         });
     }, []);
 
@@ -148,10 +169,6 @@ export function AddNewPost() {
                 setIsHotel(false);
             }
         }
-        // else {
-        //     setIsCategoryValid(false);
-
-        // }
     }, [category]);
 
     useEffect(() => {
@@ -161,13 +178,12 @@ export function AddNewPost() {
                     setCityList(history?.payload.$values);
                 }
             });
+        } else {
+            setCityList([]);
+            setStreetList([]);
+            setCity(null);
+            setStreet(null);
         }
-        // else {
-        //     setIsCountryValid(false);
-
-        // }
-
-        console.log("country", country);
     }, [country]);
 
     useEffect(() => {
@@ -177,44 +193,36 @@ export function AddNewPost() {
                     setStreetList(history?.payload.$values);
                 }
             });
+        } else {
+            setStreetList([]);
+            setStreet(null);
         }
-        // if (!city && !isCityExist) {
-        //     setIsCityValid(false);
-
-        // }
-        console.log("city", city);
-
     }, [city]);
 
     const onSubmit = async (data: IPostCreate) => {
-        console.log("data", data);
-
         if (!category) {
             setIsCategoryValid(false);
             return;
         }
+
         if (!country) {
             setIsCountryValid(false);
             return;
         }
+
         if (!city && !isCityExist) {
             setIsCityValid(false);
             return;
         }
+
         if (!street && !isStreetExist) {
             setIsStreetValid(false);
             return;
         }
 
-        if (mainImage) {
-            const newMainImage: IImage = {
-                id: 1,
-                image: mainImage!,
-            };
-
-            setImageList((prevImageList) => [...prevImageList, newMainImage]);
-        } else {
+        if (images.length === 0) {
             setErrorMessage(ErrorHandler("Choose at least main image"));
+            return;
         }
 
         if (
@@ -226,665 +234,353 @@ export function AddNewPost() {
             const model: IPostCreate = {
                 ...data,
                 categoryId: category?.id!,
-                countryId: category?.id!,
+                countryId: country?.id!,
                 cityId: city === undefined || city === null ? null : city?.id!,
-                images: imageList,
+                cityName:
+                    city === undefined || city === null ? data.cityName : null!,
+                streetId:
+                    street === undefined || street === null
+                        ? null
+                        : street?.id!,
+                streetName:
+                    street === undefined || street === null
+                        ? data.streetName
+                        : null,
+                mainImage: mainImage!,
+                images: images,
+                postTypesOfRest: typeOfRest,
+                postServices: service,
             };
-            console.log("model", model);
-        } else {
-            console.log("HELLO");
+
+            try {
+                setErrorMessage(undefined);
+
+                const response = await dispatch(createPost(model));
+                unwrapResult(response);
+
+                // await joinForPostListening(response.payload.id);
+                dispatch(changeDashboardMenuItem("All Posts"));
+                navigate("/dashboard/show-all-post");
+            } catch (error) {
+                setErrorMessage(ErrorHandler(error));
+            }
         }
-
-        // try {
-        //     const response = await dispatch(login(data));
-        //     unwrapResult(response);
-        //     await afterLogin(response.payload);
-        // } catch (error) {
-        //     setErrorMessage(ErrorHandler(error));
-        // }
     };
-
-    // console.log("TestValid", formValid.current);
-
-    // const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
-    //     event.preventDefault();
-
-    //     setUpload(true);
-
-    //     const data = new FormData(event.currentTarget);
-
-    //     const model: IPostCreate = {
-    //         name: data.get("name") as string,
-    //         categoryId: category!.id,
-    //         countryId: country!.id,
-    //         cityId: city === undefined ? null : city.id,
-    //         cityName: data.get("cityName") as string,
-    //         streetId: street === undefined ? null : street.id,
-    //         streetName: data.get("streetName") as string,
-
-    //         price: parseFloat(data.get("price") as string),
-    //         description: data.get("description") as string,
-    //         images: images,
-    //     };
-
-    //     try {
-    //         const response = await dispatch(createPost(model));
-    //         unwrapResult(response);
-
-    //         await joinForPostListening(response.payload.id);
-
-    //         navigate("/dashboard/show-all-post");
-    //     } catch (error) {
-    //         setErrorMessage(ErrorHandler(error));
-
-    //         console.log("Add error", error);
-    //     }
-    // };
     return (
-        <div className="twoColumnsContainer">
-            <div className="textInputsContainer">
-                <div className="title">Add New Post</div>
-                <form
-                    onSubmit={handleSubmit(onSubmit)}
-                    className="formContainer"
-                >
-                    {/* Title */}
-                    <div className="fieldContainer">
-                        <InputField
-                            placeholder="Title*"
-                            type="text"
-                            name="name"
-                            register={register}
-                            setValue={setValue}
-                            className={errors.name ? "errorFormInput" : "field"}
-                        />
-                        {errors.name && (
-                            <div className="dashboardError">
-                                * {errors.name.message}
-                            </div>
-                        )}
-                    </div>
-                    {/* Category */}
-                    <div className="fieldContainer">
-                        <ComboBox
-                            options={categoryList}
-                            onChange={setCategory}
-                            label={"Category*"}
-                            isValid={setIsCategoryValid}
-                        />
-                        {!isCategoryValid && (
-                            <div className="dashboardError">
-                                *This field is required
-                            </div>
-                        )}
-                    </div>
+        <div className="mainContainerForForm">
+            {errorMessage && (
+                <OutlinedErrorAlert message={errorMessage} textColor="#000" />
+            )}
 
-                    {/* Country */}
-                    <div className="fieldContainer">
-                        <ComboBox
-                            options={countryList}
-                            onChange={setCountry}
-                            label={"Country*"}
-                            isValid={setIsCountryValid}
-                        />
-                        {!isCountryValid && (
-                            <div className="dashboardError">
-                                *This field is required
-                            </div>
-                        )}
-                    </div>
+            <div className="title">Add New Post</div>
 
-                    {/* City */}
-                    {cityList.length > 0 && !isCityExist && (
+            <div className="twoColumnsContainer">
+                <div className="textInputsContainer">
+                    <form
+                        onSubmit={handleSubmit(onSubmit)}
+                        className="formContainer"
+                        id="addNewPostForm"
+                    >
+                        {/* Title */}
                         <div className="fieldContainer">
-                            <div className="instructionText">
-                                Select City from the list or enter it in a
-                                field.*
-                            </div>
-                            <ComboBox
-                                options={cityList}
-                                onChange={setCity}
-                                label={"City"}
-                                isValid={setIsCityValid}
-                            />
-                            {!isCityValid && (
-                                <div className="dashboardError">
-                                    *This field is required
-                                </div>
-                            )}
-                        </div>
-                    )}
-
-                    {(!city || !isCityValid) && (
-                        <div className="fieldContainer">
+                            <div className="filedTitle">Title </div>
                             <InputField
-                                placeholder="City*"
+                                placeholder="Title*"
                                 type="text"
-                                name="cityName"
+                                name="name"
                                 register={register}
                                 setValue={setValue}
                                 className={
                                     errors.name ? "errorFormInput" : "field"
                                 }
-                                isExist={setIsCityExist}
                             />
-                            {errors.cityName && (
+                            {errors.name && (
                                 <div className="dashboardError">
-                                    * {errors.cityName.message}
+                                    * {errors.name.message}
                                 </div>
                             )}
                         </div>
-                    )}
-
-                    {/* Street */}
-                    {streetList.length > 0 && !isStreetExist && (
+                        {/* Category */}
                         <div className="fieldContainer">
-                            <div className="instructionText">
-                                Select Street from the list or enter it in a
-                                field. *
-                            </div>
+                            {!category && (
+                                <div className="filedTitle">Category </div>
+                            )}
                             <ComboBox
-                                options={streetList}
-                                onChange={setStreet}
-                                label={"Street"}
-                                isValid={setIsStreetValid}
+                                options={categoryList}
+                                onChange={setCategory}
+                                label={"Category*"}
+                                isValid={setIsCategoryValid}
                             />
-                            {!isStreetValid && (
+                            {!isCategoryValid && (
                                 <div className="dashboardError">
                                     *This field is required
                                 </div>
                             )}
                         </div>
-                    )}
 
-                    {(!street || !isStreetValid) && (
+                        {/* Country */}
                         <div className="fieldContainer">
-                            <InputField
-                                placeholder="Street*"
-                                type="text"
-                                name="streetName"
-                                register={register}
-                                setValue={setValue}
-                                className={
-                                    errors.name ? "errorFormInput" : "field"
-                                }
-                                isExist={setIsStreetExist}
+                            {!country && (
+                                <div className="filedTitle">Country </div>
+                            )}
+
+                            <ComboBox
+                                options={countryList}
+                                onChange={setCountry}
+                                label={"Country*"}
+                                isValid={setIsCountryValid}
                             />
-                            {errors.streetName && (
+                            {!isCountryValid && (
                                 <div className="dashboardError">
-                                    * {errors.streetName.message}
+                                    *This field is required
                                 </div>
                             )}
                         </div>
-                    )}
 
-                    {/* zipCode */}
-                    <div className="fieldContainer">
-                        <InputField
-                            placeholder="ZipCode*"
-                            type="number"
-                            name="zipCode"
-                            register={register}
-                            setValue={setValue}
-                            className={errors.name ? "errorFormInput" : "field"}
-                        />
-                        {errors.zipCode && (
-                            <div className="dashboardError">
-                                * {errors.zipCode.message}
+                        {/* City */}
+                        {cityList.length > 0 && (
+                            <div className="fieldContainer">
+                                {!city && (
+                                    <div className="instructionText">
+                                        Select City from the list or enter it in
+                                        a field.*
+                                    </div>
+                                )}
+                                <ComboBox
+                                    options={cityList}
+                                    onChange={setCity}
+                                    label={"City"}
+                                    isValid={setIsCityValid}
+                                />
+                                {!isCityValid && (
+                                    <div className="dashboardError">
+                                        *This field is required
+                                    </div>
+                                )}
                             </div>
                         )}
-                    </div>
 
-                    {/*  Number of Guests */}
-                    {!isHotel && (
+                        {!city && (
+                            <div className="fieldContainer">
+                                <div className="filedTitle">City </div>
+
+                                <InputField
+                                    placeholder="City*"
+                                    type="text"
+                                    name="cityName"
+                                    register={register}
+                                    setValue={setValue}
+                                    className={
+                                        errors.name ? "errorFormInput" : "field"
+                                    }
+                                    isExist={setIsCityExist}
+                                />
+                                {errors.cityName && (
+                                    <div className="dashboardError">
+                                        * {errors.cityName.message}
+                                    </div>
+                                )}
+                            </div>
+                        )}
+
+                        {/* Street */}
+                        {streetList.length > 0 && (
+                            <div className="fieldContainer">
+                                {!street && (
+                                    <div className="instructionText">
+                                        Select Street from the list or enter it
+                                        in a field. *
+                                    </div>
+                                )}
+                                <ComboBox
+                                    options={streetList}
+                                    onChange={setStreet}
+                                    label={"Street"}
+                                    isValid={setIsStreetValid}
+                                />
+                                {!isStreetValid && (
+                                    <div className="dashboardError">
+                                        *This field is required
+                                    </div>
+                                )}
+                            </div>
+                        )}
+
+                        {!street && (
+                            <div className="fieldContainer">
+                                <div className="filedTitle">Street </div>
+
+                                <InputField
+                                    placeholder="Street*"
+                                    type="text"
+                                    name="streetName"
+                                    register={register}
+                                    setValue={setValue}
+                                    className={
+                                        errors.name ? "errorFormInput" : "field"
+                                    }
+                                    isExist={setIsStreetExist}
+                                />
+                                {errors.streetName && (
+                                    <div className="dashboardError">
+                                        * {errors.streetName.message}
+                                    </div>
+                                )}
+                            </div>
+                        )}
+
+                        {/* zipCode */}
                         <div className="fieldContainer">
+                            <div className="filedTitle">Zip Code </div>
+
                             <InputField
-                                placeholder="Number of Guests*"
+                                placeholder="Zip Code*"
                                 type="number"
-                                name="numberOfGuests"
+                                name="zipCode"
                                 register={register}
                                 setValue={setValue}
-                                defaultValue={1}
                                 className={
-                                    errors.name ? "errorFormInput" : "field"
+                                    errors.zipCode ? "errorFormInput" : "field"
                                 }
                             />
-                            {errors.numberOfGuests && (
+                            {errors.zipCode && (
                                 <div className="dashboardError">
-                                    * {errors.numberOfGuests.message}
+                                    * {errors.zipCode.message}
                                 </div>
                             )}
                         </div>
-                    )}
 
-                    {/* Price */}
-                    <div className="fieldContainer">
-                        <InputField
-                            placeholder="Price*"
-                            type="number"
-                            name="price"
-                            register={register}
-                            setValue={setValue}
-                            className={errors.name ? "errorFormInput" : "field"}
-                        />
-                        {errors.price && (
-                            <div className="dashboardError">
-                                * {errors.price.message}
-                            </div>
+                        {/*  Number of Guests */}
+                        {!isHotel && (
+                            <>
+                                {" "}
+                                <div className="fieldContainer">
+                                    <div className="filedTitle">
+                                        Number of Guests{" "}
+                                    </div>
+
+                                    <InputField
+                                        placeholder="Number of Guests*"
+                                        type="number"
+                                        name="numberOfGuests"
+                                        register={register}
+                                        setValue={setValue}
+                                        defaultValue={1}
+                                        className={
+                                            errors.numberOfGuests
+                                                ? "errorFormInput"
+                                                : "field"
+                                        }
+                                    />
+                                    {errors.numberOfGuests && (
+                                        <div className="dashboardError">
+                                            * {errors.numberOfGuests.message}
+                                        </div>
+                                    )}
+                                </div>
+                                {/* Price */}
+                                <div className="fieldContainer">
+                                    <div className="filedTitle">Price </div>
+
+                                    <InputField
+                                        placeholder="Price*"
+                                        type="number"
+                                        name="price"
+                                        register={register}
+                                        setValue={setValue}
+                                        className={
+                                            errors.price
+                                                ? "errorFormInput"
+                                                : "field"
+                                        }
+                                    />
+                                    {errors.price && (
+                                        <div className="dashboardError">
+                                            * {errors.price.message}
+                                        </div>
+                                    )}
+                                </div>
+                                {/* Discount */}
+                                <div className="fieldContainer">
+                                    <div className="filedTitle">Discount </div>
+
+                                    <InputField
+                                        placeholder="Discount"
+                                        type="number"
+                                        name="discount"
+                                        register={register}
+                                        setValue={setValue}
+                                        className={
+                                            errors.discount
+                                                ? "errorFormInput"
+                                                : "field"
+                                        }
+                                    />
+                                    {errors.discount && (
+                                        <div className="dashboardError">
+                                            * {errors.discount.message}
+                                        </div>
+                                    )}
+                                </div>
+                            </>
                         )}
-                    </div>
 
-                    {/* Discount */}
-                    <div className="fieldContainer">
-                        <InputField
-                            placeholder="Discount"
-                            type="number"
-                            name="discount"
-                            register={register}
-                            setValue={setValue}
-                            className={errors.name ? "errorFormInput" : "field"}
-                        />
-                        {errors.discount && (
-                            <div className="dashboardError">
-                                * {errors.discount.message}
-                            </div>
-                        )}
-                    </div>
+                        {/* Types of Rest */}
+                        <div className="checkBoxListContainer">
+                            <div className="filedTitle">Types of Rest </div>
+                            <CheckboxList
+                                options={typeOfRestList}
+                                selectedOptions={typeOfRest}
+                                onChange={setTypeOfRest}
+                            />
+                        </div>
+                        {/* Services */}
 
-                    <button type="submit" className="button">
-                        Submit
-                    </button>
-                </form>
-            </div>
-            <div className="addImagesContainer">
-                {errorMessage && (
-                    <OutlinedErrorAlert
-                        message={errorMessage}
-                        textColor="#000"
+                        <div className="checkBoxListContainer">
+                            <div className="filedTitle">Services </div>
+                            <CheckboxList
+                                options={servicesList}
+                                selectedOptions={service}
+                                onChange={setService}
+                            />
+                        </div>
+
+                       
+                    </form>
+                </div>
+                <div className="addImagesContainer">
+                    <ImageUploader
+                        image={mainImage}
+                        setImage={setMainImage}
+                        validator={ImageValidator}
+                        label="image-upload"
                     />
-                )}
 
-                <ImageUploader
-                    image={mainImage}
-                    setImage={setMainImage}
-                    validator={ImageValidator}
-                />
-
-                <ListImageUploader
-                    images={images}
-                    setImages={setImages}
-                    validator={ImagesValidator}
-                    maxImagesUpload={4}
-                />
+                    <ListImageUploader
+                        images={images}
+                        setImages={setImages}
+                        validator={ImagesValidator}
+                    />
+                </div>
             </div>
+
+            {isHotel && (
+                <div className="roomsContainer">
+                        <div className="title">Add New Post</div>
+                            {Array.from({
+                             length: numberOfRooms,
+                                }).map((_, i) =>(
+                                          <Room
+                                            rooms={rooms}
+                                            setRooms={setRooms}
+                                        />
+                                 ) )}
+                 <button onClick={() =>{setNumberOfRooms(numberOfRooms + 1)}}>Add Room</button>
+                 </div>)}
+                        
+            <button type="submit" className="button" form="addNewPostForm">
+                Submit
+            </button>
         </div>
     );
 }
-
-// <Container component="main" maxWidth="xs">
-// <Box
-//     sx={{
-//         marginTop: 8,
-//         display: "flex",
-//         flexDirection: "column",
-//         alignItems: "center",
-//     }}
-// >
-//     <Typography component="h1" variant="h5">
-//         Add New Post
-//     </Typography>
-//     <Box
-//         component="form"
-//         onSubmit={handleSubmit}
-//         noValidate
-//         sx={{ mt: 1 }}
-//     >
-//         <Grid container spacing={2}>
-//             <Grid item xs={12}>
-//                 <InputGroup
-//                     label="Enter title for your post *"
-//                     field="name"
-//                     type="text"
-//                     validator={PostNameValidator}
-//                     onChange={(isValid) =>
-//                         (formValid.current.name = isValid)
-//                     }
-//                 />
-//             </Grid>
-
-//             <Grid item xs={12}>
-//                 <ComboBox
-//                     options={categoryList}
-//                     onChange={setCategory}
-//                     label={"Category *"}
-//                 />
-//             </Grid>
-
-//             <Grid item xs={12}>
-//                 <ComboBox
-//                     options={countryList}
-//                     onChange={setCountry}
-//                     label={"Country *"}
-//                 />
-//             </Grid>
-
-// {cityList.length > 0 && (
-//     <Grid item xs={12}>
-//         <Typography
-//             variant="subtitle1"
-//             color="text.primary"
-//         >
-//             Select City from the list or enter it in
-//             a field. *
-//         </Typography>
-//         <ComboBox
-//             options={cityList}
-//             onChange={setCity}
-//             label={"City*"}
-//         />
-//     </Grid>
-// )}
-
-//             {city === undefined && (
-//                 <Grid item xs={12}>
-//                     <InputGroup
-//                         label="City"
-//                         field="cityName"
-//                         type="text"
-//                         validator={CityNameValidator}
-//                         onChange={(isValid) =>
-//                             (formValid.current.city =
-//                                 city === undefined
-//                                     ? isValid
-//                                     : true)
-//                         }
-//                     />
-//                 </Grid>
-//             )}
-
-// {streetList.length > 0 && (
-//     <Grid item xs={12}>
-//         <Typography
-//             variant="subtitle1"
-//             color="text.primary"
-//         >
-//             Select Street from the list or enter it
-//             in a field. *
-//         </Typography>
-//         <ComboBox
-//             options={streetList}
-//             onChange={setStreet}
-//             label={"Street"}
-//         />
-//     </Grid>
-// )}
-
-// {street === undefined && (
-//     <Grid item xs={12}>
-//         <InputGroup
-//             label="Street *"
-//             field="streetName"
-//             type="text"
-//             validator={StreetNameValidator}
-//             onChange={(isValid) =>
-//                 (formValid.current.street =
-//                     street === undefined
-//                         ? isValid
-//                         : true)
-//             }
-//         />
-//     </Grid>
-// )}
-
-// <Grid item xs={12}>
-//     <InputGroup
-//         label="ZipCode *"
-//         field="zipCode"
-//         type="number"
-//         validator={ZipCodeValidator}
-//         onChange={(isValid) =>
-//             (formValid.current.buildingNumber =
-//                 isValid)
-//         }
-//     />
-// </Grid>
-
-// {!isHotel && (
-//     <Grid item xs={12}>
-//         <InputGroup
-//             label="Number of Guests"
-//             field="numberOfGuests"
-//             type="number"
-//             //ToDo Validation
-//             validator={ZipCodeValidator}
-//             onChange={(isValid) =>
-//                 (formValid.current.numberOfRooms =
-//                     isValid)
-//             }
-//         />
-//     </Grid>
-// )}
-
-// <Grid item xs={12}>
-//     <InputGroup
-//         label="Price *"
-//         field="price"
-//         type="number"
-//         validator={PriceValidator}
-//         onChange={(isValid) =>
-//             (formValid.current.price = isValid)
-//         }
-//     />
-// </Grid>
-
-// <Grid item xs={12}>
-//     <InputGroup
-//         label="Discount"
-//         field="discount"
-//         type="number"
-//         validator={PriceValidator}
-//         onChange={(isValid) =>
-//             (formValid.current.price = isValid)
-//         }
-//     />
-// </Grid>
-
-// <Grid item xs={12}>
-//     <InputGroup
-//         label="Description"
-//         field="description"
-//         type="text"
-//         validator={DescriptionValidator}
-//         onChange={(isValid) =>
-//             (formValid.current.description =
-//                 isValid)
-//         }
-//         rowsCount={7}
-//         isMultiline={true}
-//     />
-// </Grid>
-//             <Grid item xs={12}>
-//                 <Typography
-//                     variant="subtitle1"
-//                     color="text.primary"
-//                 >
-//                     You must select at least 1 photo *
-//                 </Typography>
-//                 <Typography
-//                     variant="subtitle1"
-//                     color="text.primary"
-//                 >
-//                     Max count of images - 10
-//                 </Typography>
-//             </Grid>
-
-//             <Grid item xs={12}>
-// <FileUploader
-//     images={images}
-//     setImages={setImages}
-//     maxImagesUpload={maxImagesCount}
-//     validator={ImageValidator}
-//     defaultImage={DefaultImg}
-//     onChange={(isValid) =>
-//         (formValid.current.images = isValid)
-//     }
-//     onDelete={handleChange}
-// />
-//             </Grid>
-
-//             {isHotel && (
-//                 <>
-//                     <Typography
-//                         padding={2}
-//                         variant="h5"
-//                         color="text.primary"
-//                     >
-//                         <Divider />
-//                         Add availible rooms
-//                         <Divider />
-//                     </Typography>
-
-//                     <Grid item xs={12}>
-//                         <InputGroup
-//                             label="Number of Guests"
-//                             field="numberOfGuests"
-//                             type="number"
-//                             validator={PriceValidator}
-//                             onChange={(isValid) =>
-//                                 (formValid.current.price =
-//                                     isValid)
-//                             }
-//                         />
-//                     </Grid>
-
-//                     <Grid item xs={12}>
-//                         <InputGroup
-//                             label="Number of Rooms"
-//                             field="numberOfrooms"
-//                             type="number"
-//                             validator={PriceValidator}
-//                             onChange={(isValid) =>
-//                                 (formValid.current.price =
-//                                     isValid)
-//                             }
-//                         />
-//                     </Grid>
-//                     <Grid item xs={12}>
-//                         <Typography
-//                             variant="subtitle1"
-//                             color="text.primary"
-//                         >
-//                             You must select at least 1 photo *
-//                         </Typography>
-//                         <Typography
-//                             variant="subtitle1"
-//                             color="text.primary"
-//                         >
-//                             Max count of images - 10
-//                         </Typography>
-//                     </Grid>
-
-//                     <Grid item xs={12}>
-//                         <FileUploader
-//                             images={images}
-//                             setImages={setImages}
-//                             maxImagesUpload={maxImagesCount}
-//                             validator={ImageValidator}
-//                             defaultImage={DefaultImg}
-//                             onChange={(isValid) =>
-//                                 (formValid.current.images =
-//                                     isValid)
-//                             }
-//                             onDelete={handleChange}
-//                         />
-//                         <Grid padding={3}>
-//                             <Divider />
-//                         </Grid>
-//                     </Grid>
-
-//                     <Grid item xs={12}>
-//                         <InputGroup
-//                             label="Number of Guests"
-//                             field="numberOfGuests"
-//                             type="number"
-//                             validator={PriceValidator}
-//                             onChange={(isValid) =>
-//                                 (formValid.current.price =
-//                                     isValid)
-//                             }
-//                         />
-//                     </Grid>
-
-//                     <Grid item xs={12}>
-//                         <InputGroup
-//                             label="Number of Rooms"
-//                             field="numberOfrooms"
-//                             type="number"
-//                             validator={PriceValidator}
-//                             onChange={(isValid) =>
-//                                 (formValid.current.price =
-//                                     isValid)
-//                             }
-//                         />
-//                     </Grid>
-//                     <Grid item xs={12}>
-//                         <Typography
-//                             variant="subtitle1"
-//                             color="text.primary"
-//                         >
-//                             You must select at least 1 photo *
-//                         </Typography>
-//                         <Typography
-//                             variant="subtitle1"
-//                             color="text.primary"
-//                         >
-//                             Max count of images - 10
-//                         </Typography>
-//                     </Grid>
-
-//                     <Grid item xs={12}>
-//                         <FileUploader
-//                             images={images}
-//                             setImages={setImages}
-//                             maxImagesUpload={maxImagesCount}
-//                             validator={ImageValidator}
-//                             defaultImage={DefaultImg}
-//                             onChange={(isValid) =>
-//                                 (formValid.current.images =
-//                                     isValid)
-//                             }
-//                             onDelete={handleChange}
-//                         />
-//                         <Grid padding={3}>
-//                             <Divider />
-//                         </Grid>
-//                     </Grid>
-//                     <Button
-//                         type="submit"
-//                         fullWidth
-//                         variant="contained"
-//                         sx={{ mt: 3, mb: 2 }}
-//                         //   disabled={!isFormValid}
-//                     >
-//                         Add rooms
-//                     </Button>
-//                     <Grid padding={3}>
-//                         <Divider />
-//                     </Grid>
-//                 </>
-//             )}
-//         </Grid>
-//         <Button
-//             type="submit"
-//             fullWidth
-//             variant="contained"
-//             sx={{ mt: 3, mb: 2 }}
-//             //   disabled={!isFormValid}
-//         >
-//             Add new post
-//         </Button>
-//     </Box>
-// </Box>
-
-// {upload && <LinearProgress />}
-// </Container>

@@ -8,7 +8,7 @@ public class PostPostTypeOfRestRepository(BookingDbContext context) : IPostPostT
 {
     private readonly DbSet<PostPostTypeOfRest> _dbSet = context.Set<PostPostTypeOfRest>();
 
-    public async Task Create(PostPostTypeOfRest postPostTypeOfRest)
+    public async Task CreatePostPostTypeOfRestAsync(PostPostTypeOfRest postPostTypeOfRest)
     {
         await _dbSet.AddAsync(postPostTypeOfRest);
 

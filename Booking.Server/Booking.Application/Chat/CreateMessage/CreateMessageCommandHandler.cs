@@ -29,7 +29,7 @@ public class CreateMessageCommandHandler(
 		var room = await chatRoomRepository.GetChatRoomByIdAsync(request.RoomId);
 
 		//ToDo UpdateChatRoom
-		//Create and save new message
+		//CreatePostPostTypeOfRestAsync and save new message
 		var userMessage = new UserMessage
 		{
 			Id = Guid.NewGuid(),

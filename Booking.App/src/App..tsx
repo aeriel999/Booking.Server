@@ -178,11 +178,8 @@ export const App: React.FC = () => {
 
 
 
-
-            </Route>
-
-
-
+                <Route path="*" element={<NotFound />} />
+           </Route>
             <Route path="/posts" element={<AnonymousDashboardLayoutForPosts />}>
                 <Route
                     index
@@ -232,10 +229,6 @@ export const App: React.FC = () => {
                     element={<SignInPage />}
                 />
             </Route>
-
-
-
-
 
             <Route path="authentication/login" element={<SignInPage />} />
 

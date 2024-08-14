@@ -15,6 +15,7 @@ import { CredentialResponse, GoogleLogin } from "@react-oauth/google";
 import { startListening } from "../../../SignalR";
 import { getListOfChatRooms } from "../../../store/chat/chat.action.ts";
 import Header from "../../../components/authentification/Header.tsx";
+import { changeDashboardMenuItem } from "../../../store/settings/settings.slice.ts";
 
 export default function SignInPage() {
     const dispatch = useAppDispatch();
@@ -65,6 +66,7 @@ export default function SignInPage() {
             ];
 
         if (role.toLowerCase().includes("realtor")) {
+            dispatch(changeDashboardMenuItem("Profile"));
             navigate("/dashboard/profile");
         } else if (role.toLowerCase().includes("user")) {
             navigate("/dashboard/profile");

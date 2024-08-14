@@ -9,7 +9,6 @@ using Booking.Api.Contracts.Post.GetPost;
 using Booking.Api.Contracts.Post.GetPostListByRealtorId;
 using Booking.Api.Contracts.Post.GetPostListForRealtor;
 using Booking.Api.Contracts.Post.GetStreets;
-using Booking.Api.Contracts.Post.GetTypeOfPost;
 using Booking.Api.Infrastructure;
 using Booking.Application.Common.Behaviors;
 using Booking.Application.Posts.ArchivePost;
@@ -28,7 +27,6 @@ using Booking.Application.Posts.GetPostByName;
 using Booking.Application.Posts.GetPostListByRealtorId;
 using Booking.Application.Posts.GetPostListForRealtor;
 using Booking.Application.Posts.GetStreets;
- 
 using Booking.Application.Posts.RepostPost;
 using MapsterMapper;
 using MediatR;
@@ -37,13 +35,11 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using System.Security.Claims;
 using Booking.Application.Posts.GetTypesOfRest;
-using Mapster;
 using Booking.Api.Contracts.Post.GetTypeOfRest;
 using Booking.Application.Posts.GetPostsWithMostRating;
 using Booking.Api.Contracts.Post.GetPostWithMostRating;
 using Booking.Application.Posts.GetPostsWithMostDiscount;
 using Booking.Api.Contracts.Post.GetPostWithMostDiscount;
- 
 using Booking.Api.Contracts.Post.GetPostPostTypesOfRest;
 using Booking.Api.Contracts.Post.EditPost;
 using Booking.Application.Posts.SendFeedback;
@@ -56,6 +52,8 @@ using Booking.Application.Posts.GetPostTypesOfRestList;
 using Booking.Application.Posts.GetCategoriesFilteredList;
 using Booking.Application.Posts.GetCountriesFilteredList;
 using Booking.Application.Posts.GetCitiesFilteredList;
+using Booking.Application.Posts.GetServicesList;
+using Booking.Api.Contracts.Post.GetServicesList;
 
 namespace Booking.Api.Controllers;
 
@@ -65,7 +63,7 @@ namespace Booking.Api.Controllers;
 public class PostController(ISender mediatr, IMapper mapper) : ApiController
 {
 	[HttpPost("create-post")]
-	public async Task<IActionResult> CreatePostAsync(CreatePostRequest request)
+	public async Task<IActionResult> CreatePostAsync([FromForm]CreatePostRequest request)
 	{
 		string userId = User.Claims.First(u => u.Type == ClaimTypes.NameIdentifier).Value;
 
@@ -81,8 +79,20 @@ public class PostController(ISender mediatr, IMapper mapper) : ApiController
 			}
 		}
 
+		var mainImage = new byte[byte.MaxValue];
+
+		if (request.MainImage != null && request.MainImage.Length != 0)
+		{
+			using (MemoryStream memoryStream = new MemoryStream())
+			{
+				await request.MainImage.CopyToAsync(memoryStream);
+
+				mainImage = memoryStream.ToArray();
+			}
+		}
+
 		var createPostResult = await mediatr.Send(mapper.Map<CreatePostCommand>(
-			(request, Guid.Parse(userId), images)));
+			(request, Guid.Parse(userId), images, mainImage)));
 
 		return createPostResult.Match(
 			createPostResult => Ok(createPostResult),
@@ -208,6 +218,7 @@ public class PostController(ISender mediatr, IMapper mapper) : ApiController
 
 		return Ok(response);
 	}
+
 
     [AllowAnonymous]
     [HttpGet("get-cities-filtered-list")]
@@ -369,7 +380,6 @@ public class PostController(ISender mediatr, IMapper mapper) : ApiController
 
     [AllowAnonymous]
     [HttpGet("get-posts-with-most-discount")]
-
     public async Task<IActionResult> GetPostsWithMostDiscountAsync()
     {
         var postsWithMostDiscount = await mediatr.Send(new GetPostsWithMostDiscountQuery());
@@ -390,6 +400,7 @@ public class PostController(ISender mediatr, IMapper mapper) : ApiController
 			errors => Problem(errors));
 	}
 
+
     [HttpPost("send-feedback")]
     public async Task<IActionResult> SendFeedbackAsync([FromBody] SendFeedbackRequest request)
     {
@@ -401,6 +412,8 @@ public class PostController(ISender mediatr, IMapper mapper) : ApiController
             sendFeedbackResult => Ok(sendFeedbackResult),
             errors => Problem(errors));
     }
+
+
     [AllowAnonymous]
     [HttpGet("get-feedbacks-{id}")]
     public async Task<IActionResult> GetFeedbacksAsync([FromRoute] Guid id, [FromQuery] int page, int sizeOfPage)
@@ -424,4 +437,14 @@ public class PostController(ISender mediatr, IMapper mapper) : ApiController
             getPostsResult => Ok(mapper.Map<List<GetPostByUserFeedbackResponse>>(getPostsResult)),
             errors => Problem(errors));
     }
+
+	[HttpGet("get-services-list")]
+	public async Task<IActionResult> GetServicesListAsync()
+	{
+		var getServicesListResult = await mediatr.Send(new GetServicesListQuery());
+
+		return getServicesListResult.Match(
+			getServicesListResult => Ok(mapper.Map<List<GetServicesListResponse>>(getServicesListResult)),
+			errors => Problem(errors));
+	}
 }

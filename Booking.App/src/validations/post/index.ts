@@ -1,5 +1,5 @@
 import { Resolver } from "react-hook-form";
-import { IPostCreate } from "../../interfaces/post";
+import { IPostCreate, IRoom } from "../../interfaces/post";
 
 export const addPostResolver: Resolver<IPostCreate> = async (values) => {
     const errors: Record<string, any> = {};
@@ -59,7 +59,54 @@ export const addPostResolver: Resolver<IPostCreate> = async (values) => {
             message: discountError,
         };
     }
-    console.log("errors", errors);
+    return {
+        values: Object.keys(errors).length === 0 ? values : {},
+        errors,
+    };
+};
+
+export const addRoomResolver: Resolver<IRoom> = async (values) => {
+    const errors: Record<string, any> = {};
+
+    const numberOfGuestsError = NumberOfGuestsValidator(values.numberOfGuests);
+    if (numberOfGuestsError) {
+        errors.numberOfGuests = {
+            type: "validation",
+            message: numberOfGuestsError,
+        };
+    }
+
+    const numberOfRomsError = NumberOfRoomsValidator(values.numberOfRooms);
+    if (numberOfGuestsError) {
+        errors.numberOfRooms = {
+            type: "validation",
+            message: numberOfRomsError,
+        };
+    }
+
+    const priceError = PriceValidator(values.price);
+    if (priceError) {
+        errors.price = {
+            type: "validation",
+            message: priceError,
+        };
+    }
+
+    const discountError = DiscountValidator(values.discount);
+    if (discountError) {
+        errors.discount = {
+            type: "validation",
+            message: discountError,
+        };
+    }
+
+    const mainImageError = ImageValidator(values.mainImage);
+    if (mainImageError) {
+        errors.mainImage = {
+            type: "validation",
+            message: mainImageError,
+        };
+    }
     return {
         values: Object.keys(errors).length === 0 ? values : {},
         errors,
@@ -145,6 +192,17 @@ export const NumberOfGuestsValidator = (value: number): string | undefined => {
 
     return undefined;
 };
+export const NumberOfRoomsValidator = (value: number): string | undefined => {
+    if (value < 0) {
+        return "Value must be a positive number";
+    }
+
+    if (value > 1000) {
+        return "Value must be less than or equal to 1000 ";
+    }
+
+    return undefined;
+};
 
 export const PriceValidator = (value: number): string | undefined => {
     const strValue = typeof value === "number" ? value.toString() : value;
@@ -183,7 +241,6 @@ export const ImageValidator = (file: File): string | undefined => {
 
     return undefined;
 };
-
 
 export const ImagesValidator = (files: File[]): string | undefined => {
     if (files.length === 0) return "Files are required";

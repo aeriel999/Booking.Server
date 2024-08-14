@@ -22,7 +22,13 @@ import {
     getListOfPosts,
     getListOfPostsByName,
     getListOfPostsName,
+    
+    getListOfServices,
+    
     getListOfStreetsByCityId,
+  
+    getListOfTypesOfRest,
+  
     getListPostsForRealtor,
     getPostById,
     getPostListByRealtorId,
@@ -45,6 +51,7 @@ const initialState: IPostState = {
     cities: null,
     streets: null,
     typesOfRest: null,
+    services: null,
     searchPost: null,
     postInfoList: null,
     postsByRealtorId: null,
@@ -239,6 +246,20 @@ export const postSlice = createSlice({
                 state.typesOfRest = action.payload;
             })
             .addCase(getTypesOfRest.pending, (state) => {
+                state.status = Status.LOADING;
+            })
+            .addCase(getListOfServices.fulfilled, (state, action) => {
+                state.status = Status.SUCCESS;
+                state.services = action.payload;
+            })
+            .addCase(getListOfServices.pending, (state) => {
+                state.status = Status.LOADING;
+            })
+            .addCase(getListOfTypesOfRest.fulfilled, (state, action) => {
+                state.status = Status.SUCCESS;
+                state.typesOfRest = action.payload;
+            })
+            .addCase(getListOfTypesOfRest.pending, (state) => {
                 state.status = Status.LOADING;
             })
             .addCase(getPostsWithMostRating.fulfilled, (state, action) => {

@@ -29,7 +29,7 @@ public class CreateChatCommandHandler(
 		if (post == null)
 			return Error.NotFound("Post is not found");
 
-		//Create chatRoom
+		//CreatePostPostTypeOfRestAsync chatRoom
 		var chatRoom = new ChatRoom
 		{
 			ChatRoomId = Guid.NewGuid(),

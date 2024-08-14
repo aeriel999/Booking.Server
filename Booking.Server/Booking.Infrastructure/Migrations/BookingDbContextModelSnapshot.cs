@@ -340,10 +340,17 @@ namespace Booking.Infrastructure.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("uuid");
 
+                    b.Property<int?>("Discount")
+                        .HasColumnType("integer");
+
                     b.Property<Guid>("HotelId")
                         .HasColumnType("uuid");
 
-                    b.Property<int?>("NumberOfGuests")
+                    b.Property<string>("MainImage")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.Property<int>("NumberOfGuests")
                         .HasColumnType("integer");
 
                     b.Property<int>("NumberOfRooms")

@@ -140,6 +140,7 @@ export interface IPostState {
     cities: ICity[] | null;
     streets: IStreet[] | null;
     typesOfRest: ITypeOfRest[] | null;
+    services: IService[] | null;
     searchPost: string[] | null;
     postInfoList: IPageOfPostsForRealtor | null;
     postsByRealtorId: IPostByRealtorId[] | null;
@@ -163,10 +164,15 @@ interface IPostRatingAndDiscount {
     discount: number | null;
 }
 
-interface ITypeOfRest {
-    id: number;
+export interface ITypeOfRest {
+    id: string;
     name: string;
-    image: string;
+    image?: string;
+}
+
+export interface IService {
+    id: string;
+    name: string;
 }
 
 export interface INamesOfPosts {
@@ -187,8 +193,8 @@ export interface IFetchDataByName {
 
 export interface IPostCreate {
     name: string;
-    categoryId: string | null;
-    countryId: string | null;
+    categoryId: string;
+    countryId: string;
     cityId: string | null;
     cityName: string | null;
     streetId: string | null;
@@ -197,12 +203,19 @@ export interface IPostCreate {
     numberOfGuests: number;
     price: number;
     discount: number | null;
-    images: IImage[];
+    mainImage: File;
+    images: File[];
+    postTypesOfRest: string[] | null;
+    postServices: string[] | null;
+    roomsList: IRoom[] | null;
 }
 
-export interface IImage {
-    id: number;
-    image: File;
+export interface IRoom{
+    numberOfGuests: number;
+    numberOfRooms: number;
+    discount: number | null;
+    price: number;
+    mainImage: File;
 }
 
 export interface IPostInfoForRealtor {
@@ -252,4 +265,3 @@ export interface TablePaginationActionsProps {
         newPage: number
     ) => void;
 }
-

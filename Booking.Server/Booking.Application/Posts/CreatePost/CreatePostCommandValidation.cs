@@ -48,29 +48,28 @@ public class CreatePostCommandValidation : AbstractValidator<CreatePostCommand>
 		When(r => r.Discount.HasValue, () =>
 		{
 			RuleFor(r => r.Discount)
-				.GreaterThanOrEqualTo(5).WithMessage("Number of guests must be at least 1.")
+				.GreaterThanOrEqualTo(1).WithMessage("{PropertyName} must be at least 1.")
 				.LessThanOrEqualTo(75);
 		});
 
 		RuleFor(r => r.Price).NotEmpty().WithMessage("Field must not be empty");
 
-		When(r => !string.IsNullOrEmpty(r.Description), () =>
+		When(r => r.Images != null, () =>
 		{
-			RuleFor(r => r.Description)
-						   .MinimumLength(256)
-						   .MaximumLength(5000);
+			RuleFor(r => r.Images)
+		  .Must(images => images.Count <= 30)
+		  .WithMessage("You can upload up to 30 images.")
+		  .ForEach(imageRule =>
+		  {
+			  imageRule.Must(image => image.Length <= 5 * 1024 * 1024)
+				  .WithMessage("Each image must be less than or equal to 5MB.");
+		  });
 		});
 
-		RuleFor(r => r.Images)
-		 .NotEmpty()
-		 .WithMessage("Images must not be empty")
-		  .Must(images => images.Count <= 10)
-		  .WithMessage("You can upload up to 10 images.")
-		  .ForEach(imageRule =>
-	   {
-		   imageRule.Must(image => image.Length <= 5 * 1024 * 1024)  
-			   .WithMessage("Each image must be less than or equal to 5MB.");
-	   });
-
+		RuleFor(r => r.MainImage)
+			.NotEmpty()
+			.WithMessage("The main image must not be empty.")
+			.Must(image => image.Length <= 5 * 1024 * 1024)
+			.WithMessage("The main image must be less than or equal to 5MB.");
 	}
 }
