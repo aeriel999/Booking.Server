@@ -20,6 +20,7 @@ const ImageUploader = (props: ImageUploader) => {
         const errorMessage = props.validator(file);
 
         setError(errorMessage);
+
         if (!errorMessage) {
             props.setImage(file);
         }
@@ -31,7 +32,7 @@ const ImageUploader = (props: ImageUploader) => {
 
     return (
         <>
-            {error && <OutlinedErrorAlert message={error} />}
+            {error && <OutlinedErrorAlert message={error} textColor="#000"/>}
             <div className="mainImage">
                 <label htmlFor={props.label}>
                     <div

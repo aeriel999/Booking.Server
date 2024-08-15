@@ -29,9 +29,12 @@ export default function Room(props: RoomsProps){
 
     const onSubmit = async (data: IRoom) => {
         if(!mainImage){
-            setErrorMessage("This field is required")
+            setErrorMessage("Upload images")
+
             return;
         }
+
+        setErrorMessage(undefined);
         
         const model : IRoom = {
             ...data,
@@ -39,7 +42,7 @@ export default function Room(props: RoomsProps){
         }
 
         props.setRooms([...(props.rooms || []), model]);
-        
+
         setIsSubmit(true);
     }
 
@@ -67,7 +70,7 @@ export default function Room(props: RoomsProps){
                                             name="numberOfGuests"
                                             register={register}
                                             setValue={setValue}
-                                            defaultValue={1}
+                                            
                                             className={
                                                 errors.numberOfGuests
                                                     ? "errorFormInput"
@@ -91,7 +94,7 @@ export default function Room(props: RoomsProps){
                                             name="numberOfRooms"
                                             register={register}
                                             setValue={setValue}
-                                            defaultValue={1}
+                                             
                                             className={
                                                 errors.numberOfRooms
                                                     ? "errorFormInput"

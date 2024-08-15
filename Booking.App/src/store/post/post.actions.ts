@@ -31,13 +31,16 @@ export const getFilteredListOfCategories = createAsyncThunk(
     "Post/get-categories-filtered-list",
     async (payload: IFilteredListOfCategoriesRequest, { rejectWithValue }) => {
         try {
-            const response = await apiClient.get(`/api/Post/get-categories-filtered-list`, {
-                params: {
-                    country: payload.country,
-                    city: payload.city,
-                    realtor: payload.realtor
+            const response = await apiClient.get(
+                `/api/Post/get-categories-filtered-list`,
+                {
+                    params: {
+                        country: payload.country,
+                        city: payload.city,
+                        realtor: payload.realtor,
+                    },
                 }
-            })
+            );
 
             return response.data;
         } catch (error) {
@@ -68,16 +71,18 @@ export const getFilteredListByType = createAsyncThunk(
                 `/api/Post/get-filtered-list-by-type?category=${payload.filter?.category}&country=${payload.filter?.country}&city=${payload.filter?.city}&realtor=${payload.filter?.realtor}&page=${payload.pages.page}&sizeOfPage=${payload.pages.sizeOfPage}`
             );*/
             const response = await apiClient.get(
-                `/api/Post/get-filtered-list-by-type`, {
-                params: {
-                    category: payload.filter!.category,
-                    country: payload.filter!.country,
-                    city: payload.filter!.city,
-                    realtor: payload.filter!.realtor,
-                    page: payload.pages.page,
-                    sizeOfPage: payload.pages.sizeOfPage,
+                `/api/Post/get-filtered-list-by-type`,
+                {
+                    params: {
+                        category: payload.filter!.category,
+                        country: payload.filter!.country,
+                        city: payload.filter!.city,
+                        realtor: payload.filter!.realtor,
+                        page: payload.pages.page,
+                        sizeOfPage: payload.pages.sizeOfPage,
+                    },
                 }
-            });
+            );
             console.log("Data - ", response.data);
             return response.data;
         } catch (error) {
@@ -104,18 +109,15 @@ export const getListOfPostsName = createAsyncThunk(
     "Post/get-list-of-posts-name",
     async (payload: IFilteredRequestName, { rejectWithValue }) => {
         try {
-            const response = await apiClient.get(
-                `/api/Post/get-name-of-post`,
-                {
-                    params: {
-                        category: payload.filter?.category,
-                        country: payload.filter?.country,
-                        city: payload.filter?.city,
-                        realtor: payload.filter?.realtor,
-                        name: payload.name
-                    }
-                }
-            );
+            const response = await apiClient.get(`/api/Post/get-name-of-post`, {
+                params: {
+                    category: payload.filter?.category,
+                    country: payload.filter?.country,
+                    city: payload.filter?.city,
+                    realtor: payload.filter?.realtor,
+                    name: payload.name,
+                },
+            });
             return response.data.$values;
         } catch (error) {
             return rejectWithValue(handleAxiosError(error, "Network error"));
@@ -177,12 +179,13 @@ export const getFilteredListOfCountries = createAsyncThunk(
     async (payload: IFilteredListOfCountriesRequest, { rejectWithValue }) => {
         try {
             const response = await apiClient.get(
-                `/api/Post/get-countries-filtered-list`, {
-                params: {
-                    category: payload.category,
-                    realtor: payload.realtor
+                `/api/Post/get-countries-filtered-list`,
+                {
+                    params: {
+                        category: payload.category,
+                        realtor: payload.realtor,
+                    },
                 }
-            }
             );
             return response.data;
         } catch (error) {
@@ -209,13 +212,16 @@ export const getFilteredListOfCities = createAsyncThunk(
     "Post/get-cities-filtered-list",
     async (payload: IFilteredListOfCitiesRequest, { rejectWithValue }) => {
         try {
-            const response = await apiClient.get(`/api/Post/get-cities-filtered-list`, {
-                params: {
-                    category: payload.category,
-                    country: payload.country,
-                    realtor: payload.realtor
+            const response = await apiClient.get(
+                `/api/Post/get-cities-filtered-list`,
+                {
+                    params: {
+                        category: payload.category,
+                        country: payload.country,
+                        realtor: payload.realtor,
+                    },
                 }
-            });
+            );
             return response.data;
         } catch (error) {
             return rejectWithValue(handleAxiosError(error, "Network error"));
@@ -241,7 +247,6 @@ export const createPost = createAsyncThunk(
     "Post/create-post",
     async (payload: IPostCreate, { rejectWithValue }) => {
         try {
-          
             const response = await apiMediaClient.post(
                 "/api/Post/create-post",
                 payload
@@ -378,13 +383,13 @@ export const getPostsWithMostDiscount = createAsyncThunk(
     }
 );
 
-
-
 export const getListOfTypesOfRest = createAsyncThunk(
     "Post/get-post-types-of-rest-list",
     async (_, { rejectWithValue }) => {
         try {
-            const response = await apiClient.get(`api/Post/get-post-types-of-rest-list`);
+            const response = await apiClient.get(
+                `api/Post/get-post-types-of-rest-list`
+            );
             return response.data;
         } catch (error) {
             return rejectWithValue(handleAxiosError(error, "Network error"));

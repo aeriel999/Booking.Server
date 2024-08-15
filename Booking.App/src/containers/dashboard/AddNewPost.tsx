@@ -571,6 +571,7 @@ export function AddNewPost() {
                              length: numberOfRooms,
                                 }).map((_, i) =>(
                                           <Room
+                                            key={i}
                                             rooms={rooms}
                                             setRooms={setRooms}
                                         />
