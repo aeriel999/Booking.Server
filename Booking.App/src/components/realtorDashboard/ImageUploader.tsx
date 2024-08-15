@@ -14,6 +14,7 @@ const ImageUploader = (props: ImageUploader) => {
     const [error, setError] = useState<string | false | undefined>(false);
 
     const handleOnAddImage = (e: React.ChangeEvent<HTMLInputElement>) => {
+        console.log("label", props.label)
         if (!e.target.files) return;
 
         const file = e.target.files[0];

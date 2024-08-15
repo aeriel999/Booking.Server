@@ -11,6 +11,7 @@ import {
     IFilteredRequestName,
     IPostCreate,
     IPostEdit,
+    IRoom,
 } from "../../interfaces/post";
 
 export const getListOfCategories = createAsyncThunk(
@@ -396,11 +397,27 @@ export const getListOfTypesOfRest = createAsyncThunk(
         }
     }
 );
+
 export const getListOfServices = createAsyncThunk(
     "Post/get-services-list",
     async (_, { rejectWithValue }) => {
         try {
             const response = await apiClient.get(`api/Post/get-services-list`);
+            return response.data;
+        } catch (error) {
+            return rejectWithValue(handleAxiosError(error, "Network error"));
+        }
+    }
+);
+
+export const createRoom = createAsyncThunk(
+    "Post/create-room",
+    async (payload: IRoom, { rejectWithValue }) => {
+        try {
+            const response = await apiMediaClient.post(
+                "/api/Post/create-room",
+                payload
+            );
             return response.data;
         } catch (error) {
             return rejectWithValue(handleAxiosError(error, "Network error"));

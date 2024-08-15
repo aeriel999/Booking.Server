@@ -10,7 +10,7 @@ public class ArchivePostCommandHandler(IPostRepository postRepository)
 	public async Task<ErrorOr<Success>> Handle(ArchivePostCommand request, CancellationToken cancellationToken)
 	{
 		//Get Post
-		var post = await postRepository.GetPostById(request.PostId);
+		var post = await postRepository.GetPostByIdAsync(request.PostId);
 
 		if (post == null)
 			return Error.NotFound("Post was not found");

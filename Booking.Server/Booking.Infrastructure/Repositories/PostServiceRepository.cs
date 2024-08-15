@@ -11,6 +11,8 @@ public class PostServiceRepository(BookingDbContext context) : IPostServiceRepos
     public async Task CreatePostServiceAsync(PostService postService)
     {
         await _dbSet.AddAsync(postService);
-    }
+
+		await context.SaveChangesAsync();
+	}
 }
 

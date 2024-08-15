@@ -151,7 +151,6 @@ export interface IPostState {
     filteredCountries: ICountry[] | null;
     filteredCities: ICity[] | null;
     textForSearching: string | null;
-
 }
 
 interface IPostRatingAndDiscount {
@@ -207,10 +206,10 @@ export interface IPostCreate {
     images: File[];
     postTypesOfRest: string[] | null;
     postServices: string[] | null;
-    roomsList: IRoom[] | null;
 }
 
-export interface IRoom{
+export interface IRoom {
+    postId: string;
     numberOfGuests: number;
     numberOfRooms: number;
     discount: number | null;

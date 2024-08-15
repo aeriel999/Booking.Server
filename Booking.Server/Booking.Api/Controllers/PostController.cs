@@ -54,6 +54,7 @@ using Booking.Application.Posts.GetCountriesFilteredList;
 using Booking.Application.Posts.GetCitiesFilteredList;
 using Booking.Application.Posts.GetServicesList;
 using Booking.Api.Contracts.Post.GetServicesList;
+using Booking.Application.Posts.CreateRoom;
 
 namespace Booking.Api.Controllers;
 
@@ -99,6 +100,31 @@ public class PostController(ISender mediatr, IMapper mapper) : ApiController
 			errors => Problem(errors));
 	}
 
+
+	[HttpPost("create-room")]
+	public async Task<IActionResult> CreateRoomAsync([FromForm] CreateRoomRequest request)
+	{ 
+		string userId = User.Claims.First(u => u.Type == ClaimTypes.NameIdentifier).Value;
+
+		var mainImage = new byte[byte.MaxValue];
+
+		if (request.MainImage != null && request.MainImage.Length != 0)
+		{
+			using (MemoryStream memoryStream = new MemoryStream())
+			{
+				await request.MainImage.CopyToAsync(memoryStream);
+
+				mainImage = memoryStream.ToArray();
+			}
+		}
+
+		var createRoomResult = await mediatr.Send(mapper.Map<CreateRoomCommand>(
+			(request, Guid.Parse(userId), mainImage)));
+
+		return createRoomResult.Match(
+			createRoomResult => Ok(createRoomResult),
+			errors => Problem(errors));
+	}
 
 	[AllowAnonymous]
 	[HttpGet("get-list-of-post")]

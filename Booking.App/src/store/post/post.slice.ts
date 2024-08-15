@@ -9,6 +9,7 @@ import {
 import {
     archivePost,
     createPost,
+    createRoom,
     deletePost,
     editPost,
     getArchivedPostList,
@@ -274,6 +275,12 @@ export const postSlice = createSlice({
                 state.status = Status.SUCCESS;
             })
             .addCase(getPostsWithMostDiscount.pending, (state) => {
+                state.status = Status.LOADING;
+            })
+            .addCase(createRoom.fulfilled, (state) => {
+                state.status = Status.SUCCESS;
+            })
+            .addCase(createRoom.pending, (state) => {
                 state.status = Status.LOADING;
             })
             .addMatcher(isRejectedAction, (state) => {
