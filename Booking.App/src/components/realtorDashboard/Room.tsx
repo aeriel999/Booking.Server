@@ -11,6 +11,7 @@ type RoomsProps = {
     rooms: IRoom[] | null;
     setRooms: (rooms: IRoom[]) => void;
     label: string;
+    formName: string;
 };
 
 export default function Room(props: RoomsProps) {
@@ -57,7 +58,7 @@ export default function Room(props: RoomsProps) {
                     <form
                         onSubmit={handleSubmit(onSubmit)}
                         className="formContainer"
-                        id="addNewRoomForm"
+                        id={props.formName}
                     >
                         <div className="fieldContainer">
                             <div className="filedTitle">Number of Guests </div>
@@ -153,10 +154,10 @@ export default function Room(props: RoomsProps) {
             <button
                 type="submit"
                 className="roomButton"
-                form="addNewRoomForm"
+                form={props.formName}
                 disabled={isSubmit}
             >
-                Submit
+                Save
             </button>
         </div>
     );

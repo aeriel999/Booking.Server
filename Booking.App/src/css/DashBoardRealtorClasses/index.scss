@@ -571,23 +571,83 @@
 
 .roomsContainer {
     display: flex;
-    align-self: stretch ;
+    align-self: stretch;
     flex-direction: column;
     gap: 30px;
 
-    .roomContainer{
+    .roomContainer {
         display: flex;
         flex-direction: column;
         gap: 20px;
     }
 }
 
-.roomButton{
-    width: 200px;
-    background-color: #8cbd90;
+.roomButton {
+    display: flex;
+    width: 262px;
+    height: 44px;
+    padding: 10px;
+    justify-content: center;
+    align-items: center;
+    gap: 10px;
+    border-radius: 5px;
+    background: #00c2c1;
+    border: none;
+    color: var(--Backgrounds-Primary, #fff);
+    font-family: Roboto;
+    font-size: 20px;
+    font-style: normal;
+    font-weight: 400;
+    line-height: normal;
 
-        &:disabled{
-             background-color: #86a6bd;
+    &:disabled {
+        background: #d9d9d9;
+    }
+}
 
-        }
+.linkButton {
+    display: flex;
+    padding: 10px;
+    justify-content: start;
+    align-items: center;
+    gap: 10px;
+    border-radius: 5px;
+    width: fit-content;
+
+    .text {
+        color: #019392;
+        font-size: 20px;
+        font-style: normal;
+        font-weight: 400;
+        line-height: normal;
+    }
+
+    .icon {
+        width: 24px;
+        height: 24px;
+    }
+
+    &:hover {
+        border: 1px solid $register-button-border-color;
+    }
+}
+
+.postAddButton {
+    display: flex;
+    width: 50%;
+    height: 44px;
+    padding: 10px;
+    justify-content: center;
+    align-items: center;
+    gap: 10px;
+    flex-shrink: 0;
+    border-radius: 5px;
+    background: #00c2c1;
+    border: none;
+    color: var(--Backgrounds-Primary, #fff);
+    font-family: Roboto;
+    font-size: 20px;
+    font-style: normal;
+    font-weight: 400;
+    line-height: normal;
 }
