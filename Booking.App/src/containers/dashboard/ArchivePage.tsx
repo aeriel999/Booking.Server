@@ -24,6 +24,7 @@ import ErrorHandler from "../../components/common/ErrorHandler";
 import CustomizedDialogs from "../../components/common/Dialog";
 import { TablePaginationActions } from "../../components/realtorDashboard/TablePagination";
 import { StyledTableCell, StyledTableRow } from "../../utils/styles";
+import { changeDashboardMenuItem } from "../../store/settings/settings.slice";
 
 export default function ArchivePage() {
     const [page, setPage] = React.useState(0); // 0-based index for MUI TablePagination
@@ -92,6 +93,7 @@ export default function ArchivePage() {
                     }}
                     navigate={"/dashboard/show-all-post"}
                     lable="Deleting post"
+                    menuItem="All Posts"
                 />
             )}
 
@@ -163,6 +165,7 @@ export default function ArchivePage() {
                                                 await dispatch(
                                                     repostPost(row.id)
                                                 );
+                                                dispatch(changeDashboardMenuItem("All Posts"));
                                                 navigate(
                                                     "/dashboard/show-all-post"
                                                 );
@@ -174,7 +177,6 @@ export default function ArchivePage() {
                                     <StyledTableCell >
                                         <Button
                                             onClick={() => {
-                                                console.log("delete");
                                                 setPostName(row.name);
                                                 setPostId(row.id);
                                                 setIsDialogOpen(true);
