@@ -11,4 +11,13 @@ export interface CustomizedDialogsProps {
     navigate: string;
     action?: () => Promise<void>;
     lable: string;
+    menuItem?: string;
+}
+
+export interface IDashboardMenuItem {
+    name: string;
+    isActive: boolean;
+    image: string;
+    activeImage: string;
+    link: string;
 }

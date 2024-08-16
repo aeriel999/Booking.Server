@@ -12,7 +12,7 @@ import { Button } from "@mui/material";
 import OutlinedErrorAlert from "../../components/common/ErrorAlert";
 import { useNavigate } from "react-router-dom";
 import { useState, useEffect } from "react";
-import { useAppDispatch } from "../../hooks/redux";
+import { useAppDispatch, useAppSelector } from "../../hooks/redux";
 import { unwrapResult } from "@reduxjs/toolkit";
 import { IFetchData, IPostInfoForRealtor } from "../../interfaces/post";
 import {
@@ -33,7 +33,6 @@ export default function AllPostList() {
         undefined
     );
     const dispatch = useAppDispatch();
-
     const navigate = useNavigate();
     const [isDialogOpen, setIsDialogOpen] = useState(false);
     const [postName, setPostName] = useState<string>();
@@ -90,6 +89,7 @@ export default function AllPostList() {
                     }}
                     navigate={"/dashboard/archive"}
                     lable="Archived action"
+                    menuItem="Archive"
                 />
             )}
 
@@ -128,11 +128,14 @@ export default function AllPostList() {
                                     </StyledTableCell>
 
                                     <StyledTableCell>
-                                        {"$" + row.price}
+                                        {row.category === "Hotel"
+                                            ? "-"
+                                            : "$" + row.price}
                                     </StyledTableCell>
-
                                     <StyledTableCell>
-                                        {row.discount}
+                                        {row.discount
+                                            ? row.discount + "%"
+                                            : "-"}
                                     </StyledTableCell>
 
                                     <StyledTableCell>
@@ -162,6 +165,7 @@ export default function AllPostList() {
                                                 setPostId(row.id);
                                                 setIsDialogOpen(true);
                                             }}
+                                            disabled={row.isArhive}
                                         >
                                             Archive
                                         </Button>

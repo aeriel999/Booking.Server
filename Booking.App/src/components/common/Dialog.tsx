@@ -9,9 +9,12 @@ import Typography from "@mui/material/Typography";
 import { useNavigate } from "react-router-dom";
 import { CustomizedDialogsProps } from "../../interfaces/common";
 import { BootstrapDialog } from "../../utils/styles";
+import { useAppDispatch } from "../../hooks/redux";
+import { changeDashboardMenuItem } from "../../store/settings/settings.slice";
 
 export default function CustomizedDialogs(props: CustomizedDialogsProps) {
     const navigate = useNavigate();
+    const dispatch = useAppDispatch();
 
     const handleClick = async () => {
         if (props.action) {
@@ -19,6 +22,10 @@ export default function CustomizedDialogs(props: CustomizedDialogsProps) {
         }
 
         props.setOpen(false);
+
+        if(props.menuItem){
+            dispatch(changeDashboardMenuItem(props.menuItem));
+        }
 
         navigate(props.navigate);
     };

@@ -1,15 +1,6 @@
 import "../../../css/DashBoardRealtorClasses/index.scss";
 import Logo from "../../../assets/Logo/tripbook 1.svg";
-import ActiveUserProfiler from "../../../assets/DashboardIcons/Active/user-profile-03.svg";
-import UserProfiler from "../../../assets/DashboardIcons/user-profile-03.svg";
-import AllPost from "../../../assets/DashboardIcons/image-01.svg";
 import LogOut from "../../../assets/Icons/logout-03.svg";
-import AddNewPost from "../../../assets/DashboardIcons/add-square-03.svg";
-import AddNewPostActive from "../../../assets/DashboardIcons/Active/add-square-03.svg";
-import Archive from "../../../assets/DashboardIcons/box.svg";
-import Inbox from "../../../assets/DashboardIcons/inbox-01.svg";
-import Reviews from "../../../assets/DashboardIcons/user-profile-square.svg";
-import Settings from "../../../assets/DashboardIcons/gear.svg";
 import ArrowBack from "../../../assets/DashboardIcons/chevron-left.svg";
 import { Outlet, useNavigate } from "react-router-dom";
 import { useAppDispatch, useAppSelector } from "../../../hooks/redux";
@@ -18,66 +9,8 @@ import { endListening } from "../../../SignalR";
 import { useEffect, useState } from "react";
 import { APP_ENV } from "../../../env";
 import { changeDashboardMenuItem } from "../../../store/settings/settings.slice";
-
-interface IDashboardMenuItem {
-    name: string;
-    isActive: boolean;
-    image: string;
-    activeImage: string;
-    link: string;
-}
-
-const initialMenuData: IDashboardMenuItem[] = [
-    {
-        name: "Profile",
-        isActive: true,
-        image: UserProfiler,
-        activeImage: ActiveUserProfiler,
-        link: "/dashboard/profile",
-    },
-    {
-        name: "All Posts",
-        isActive: false,
-        image: AllPost,
-        activeImage: AllPost,
-        link: "/dashboard/show-all-post",
-    },
-    {
-        name: "Add New Post",
-        isActive: false,
-        image: AddNewPost,
-        activeImage: AddNewPostActive,
-        link: "/dashboard/post/add",
-    },
-    {
-        name: "Archive",
-        isActive: false,
-        image: Archive,
-        activeImage: Archive,
-        link: "/dashboard/archive",
-    },
-    {
-        name: "Inbox",
-        isActive: false,
-        image: Inbox,
-        activeImage: Inbox,
-        link: "/dashboard/show-all-post",
-    },
-    {
-        name: "Reviews",
-        isActive: false,
-        image: Reviews,
-        activeImage: Reviews,
-        link: "/dashboard/show-all-post",
-    },
-    {
-        name: "Settings",
-        isActive: false,
-        image: Settings,
-        activeImage: Settings,
-        link: "/dashboard/profile/edit",
-    },
-];
+import { IDashboardMenuItem } from "../../../interfaces/common";
+import { initialMenuData } from "../../../utils/data";
 
 export default function DashboardLayout() {
     const { user } = useAppSelector((state) => state.account);
@@ -204,7 +137,7 @@ export default function DashboardLayout() {
                         </div>
                     </div>
                 </div>
-                
+
                 <div className="outlet">
                     <Outlet />
                 </div>
