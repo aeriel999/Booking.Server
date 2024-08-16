@@ -78,7 +78,6 @@ export const getFilteredListByType = createAsyncThunk(
                     sizeOfPage: payload.pages.sizeOfPage,
                 }
             });
-            console.log("Data - ", response.data);
             return response.data;
         } catch (error) {
             return rejectWithValue(handleAxiosError(error, "Network error"));
@@ -241,7 +240,7 @@ export const createPost = createAsyncThunk(
     "Post/create-post",
     async (payload: IPostCreate, { rejectWithValue }) => {
         try {
-          
+
             const response = await apiMediaClient.post(
                 "/api/Post/create-post",
                 payload

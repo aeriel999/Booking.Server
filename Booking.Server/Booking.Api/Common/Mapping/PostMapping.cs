@@ -172,7 +172,7 @@ public class PostMapping : IRegister
 
 
 		config.NewConfig<GetCitiesListByCountryIdRequest, GetCitiesListByCountryIdQuery>()
-            .Map(dest => dest.Country, src => src.Country);
+            .Map(dest => dest.CountryId, src => src.CountryId);
 
 
 		config.NewConfig<PostCity, GetCityResponse>();

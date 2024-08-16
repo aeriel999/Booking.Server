@@ -11,6 +11,6 @@ public class GetCitiesListByCountryIdQueryHandler(IPostCityRepository postCityRe
 	public async Task<List<PostCity>?> Handle(
 		GetCitiesListByCountryIdQuery request, CancellationToken cancellationToken)
     {
-		return await postCityRepository.GetCitiesListByCountryIdAsync(request.Country);
+		return await postCityRepository.GetCitiesListByCountryIdAsync(request.CountryId);
 	}
 }

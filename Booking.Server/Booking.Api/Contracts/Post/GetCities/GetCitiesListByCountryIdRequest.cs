@@ -2,6 +2,6 @@
 
 public record GetCitiesListByCountryIdRequest
 {
-    public Guid Country { get; init; }
+    public Guid CountryId { get; init; }
 }
  
