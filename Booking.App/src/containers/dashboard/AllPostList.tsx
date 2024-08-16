@@ -1,8 +1,7 @@
 import * as React from "react";
-import { styled } from "@mui/material/styles";
 import Table from "@mui/material/Table";
 import TableBody from "@mui/material/TableBody";
-import TableCell, { tableCellClasses } from "@mui/material/TableCell";
+import TableCell from "@mui/material/TableCell";
 import TableContainer from "@mui/material/TableContainer";
 import TableFooter from "@mui/material/TableFooter";
 import TableHead from "@mui/material/TableHead";
@@ -23,34 +22,7 @@ import {
 import ErrorHandler from "../../components/common/ErrorHandler";
 import CustomizedDialogs from "../../components/common/Dialog";
 import { TablePaginationActions } from "../../components/realtorDashboard/TablePagination";
-
-const StyledTableCell = styled(TableCell)(({ theme }) => ({
-    [`&.${tableCellClasses.head}`]: {
-        backgroundColor: "#23A1A0",
-        color: theme.palette.common.white,
-        fontSize: 18,
-        fontStyle: "normal",
-        fontWeight: 400,
-        lineHeight: "normal",
-        whiteSpace: "nowrap",
-    },
-    [`&.${tableCellClasses.body}`]: {
-        fontSize: 16,
-        fontStyle: "normal",
-        fontWeight: 400,
-        lineHeight: "normal",
-    },
-}));
-
-const StyledTableRow = styled(TableRow)(({ theme }) => ({
-    "&:nth-of-type(odd)": {
-        backgroundColor: theme.palette.action.hover,
-    },
-    // hide last border
-    "&:last-child td, &:last-child th": {
-        border: 0,
-    },
-}));
+import { StyledTableCell, StyledTableRow } from "../../utils/styles";
 
 export default function AllPostList() {
     const [page, setPage] = React.useState(0); // 0-based index for MUI TablePagination
@@ -75,7 +47,6 @@ export default function AllPostList() {
         newPage: number
     ) => {
         setPage(newPage);
-        
     };
 
     const handleChangeRowsPerPage = (
@@ -118,10 +89,13 @@ export default function AllPostList() {
                         await dispatch(archivePost(postId!));
                     }}
                     navigate={"/dashboard/archive"}
+                    lable="Archived action"
                 />
             )}
 
-            {errorMessage && <OutlinedErrorAlert message={errorMessage} />}
+            {errorMessage && (
+                <OutlinedErrorAlert message={errorMessage} textColor="#000" />
+            )}
 
             <TableContainer component={Paper}>
                 <Table
@@ -145,7 +119,7 @@ export default function AllPostList() {
                         {rows?.map((row) => {
                             return (
                                 <StyledTableRow key={row.id}>
-                                    <StyledTableCell >
+                                    <StyledTableCell>
                                         {row.category}
                                     </StyledTableCell>
 
