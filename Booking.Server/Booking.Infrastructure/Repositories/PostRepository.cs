@@ -126,7 +126,7 @@ public class PostRepository(BookingDbContext context) : IPostRepository
 			.Where(c => c.UserId == realtorId)
 			.Include(post => post.Category)
 			.Include(post => post.Street!.City!.Country)
-			.Include(post => post.Rooms)
+			//.Include(post => post.Rooms)
 			.OrderByDescending(post => post.PostAt)
 			.ToListAsync();
 	}
@@ -170,7 +170,7 @@ public class PostRepository(BookingDbContext context) : IPostRepository
 		//await context.SaveChangesAsync();
 	}
 
-	public async Task<Post?> GetPostById(Guid postId)
+	public async Task<Post?> GetPostByIdAsync(Guid postId)
 	{
 		return await _dbSet.Where(p => p.Id == postId).FirstOrDefaultAsync();
 	}
@@ -191,7 +191,7 @@ public class PostRepository(BookingDbContext context) : IPostRepository
 
     public async Task<ErrorOr<Post>> ChangeRatingForPostAsync(Guid id, float rating)
     {
-        var post = await GetPostById(id);
+        var post = await GetPostByIdAsync(id);
 
         if (post == null)
             return Error.NotFound("Post is not found");

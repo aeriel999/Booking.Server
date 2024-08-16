@@ -1,6 +1,8 @@
 ﻿using Booking.Domain.Posts;
 using ErrorOr;
 using MediatR;
+using Microsoft.AspNetCore.Http;
+using System.ComponentModel.DataAnnotations;
 
 namespace Booking.Application.Posts.CreatePost;
 
@@ -21,4 +23,3 @@ public record CreatePostCommand(
 	List<Guid>? PostServices,
 	List<byte[]> Images,
 	byte[] MainImage) : IRequest<ErrorOr<Post>>;
- 

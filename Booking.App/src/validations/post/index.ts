@@ -76,11 +76,11 @@ export const addRoomResolver: Resolver<IRoom> = async (values) => {
         };
     }
 
-    const numberOfRomsError = NumberOfRoomsValidator(values.numberOfRooms);
-    if (numberOfGuestsError) {
+    const numberOfRoomsError = NumberOfRoomsValidator(values.numberOfRooms);
+    if (numberOfRoomsError) {
         errors.numberOfRooms = {
             type: "validation",
-            message: numberOfRomsError,
+            message: numberOfRoomsError,
         };
     }
 
@@ -99,14 +99,7 @@ export const addRoomResolver: Resolver<IRoom> = async (values) => {
             message: discountError,
         };
     }
-
-    const mainImageError = ImageValidator(values.mainImage);
-    if (mainImageError) {
-        errors.mainImage = {
-            type: "validation",
-            message: mainImageError,
-        };
-    }
+ 
     return {
         values: Object.keys(errors).length === 0 ? values : {},
         errors,
@@ -182,6 +175,11 @@ export const ZipCodeValidator = (
 };
 
 export const NumberOfGuestsValidator = (value: number): string | undefined => {
+    if(value === null || value === undefined || value.toString() === ""){
+        return "It is a required field";
+    }
+       
+
     if (value < 0) {
         return "Value must be a positive number";
     }
@@ -193,6 +191,10 @@ export const NumberOfGuestsValidator = (value: number): string | undefined => {
     return undefined;
 };
 export const NumberOfRoomsValidator = (value: number): string | undefined => {
+    if(value === null || value === undefined || value.toString() === ""){
+        return "It is a required field";
+    }
+        
     if (value < 0) {
         return "Value must be a positive number";
     }
@@ -231,7 +233,7 @@ export const DiscountValidator = (
 };
 
 export const ImageValidator = (file: File): string | undefined => {
-    if (file === null) return "Files are required";
+    if (file === null || file === undefined) return "Files are required";
 
     const maxSizeInBytes = 5 * 1024 * 1024; // 5 MB in bytes
     const validFormats = ["image/png", "image/jpeg", "image/jpg", "image/gif"];

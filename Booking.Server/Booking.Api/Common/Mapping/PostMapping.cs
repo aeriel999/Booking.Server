@@ -31,6 +31,7 @@ using Booking.Api.Contracts.Post.SentFeedback;
 using Booking.Api.Contracts.Post.Feedback;
 using Booking.Api.Contracts.Post.GetRealtorByUserFeedback;
 using Booking.Api.Contracts.Post.GetServicesList;
+using Booking.Application.Posts.CreateRoom;
 
 namespace Booking.Api.Common.Mapping;
 
@@ -45,6 +46,11 @@ public class PostMapping : IRegister
 		.Map(dest => dest.MainImage, src => src.MainImage)
 		.Map(dest => dest, src => src.createPostRequest);
 
+		config.NewConfig<(
+			CreateRoomRequest createPostRequest, Guid UserId, byte[] MainImage), CreateRoomCommand>()
+		.Map(dest => dest.UserId, src => src.UserId)
+		.Map(dest => dest.MainImage, src => src.MainImage)
+		.Map(dest => dest, src => src.createPostRequest);
 
 		config.NewConfig<Post, GetPostResponse>()
 			.Map(desp => desp.Category, src => src.Category!.Name)
@@ -198,11 +204,8 @@ public class PostMapping : IRegister
 			src => src.Street!.City!.Country!.Name + " " + src.Street.City.Name + " " + src.Street.Name)
 			.Map(desp => desp.Name, src => src.Name)
 			.Map(desp => desp.Price, src => src.Price)
-			.Map(desp => desp.DateOfPost, src => src.PostAt)
-			.Map(desp => desp.DateOfEdit, src => src.EditAt)
 			.Map(desp => desp.IsActive, src => src.IsActive)
 			.Map(desp => desp.IsArhive, src => src.IsArhive)
-			.Map(desp => desp.Rate, src => src.Rate)
 			.Map(desp => desp.Discount, src => src.Discount);
 
 		config.NewConfig<PagedList<Post>, PagedList<GetPostListForRealtorResponse>>();

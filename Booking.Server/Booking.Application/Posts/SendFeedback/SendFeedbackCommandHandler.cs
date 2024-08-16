@@ -25,7 +25,7 @@ public class SendFeedbackCommandHandler(IPostFeedbackRepository repository, IUse
 
         
 
-        var post = await postRepository.GetPostById(request.PostId);
+        var post = await postRepository.GetPostByIdAsync(request.PostId);
 
         if (post == null) return Error.NotFound("Post is not found");
 

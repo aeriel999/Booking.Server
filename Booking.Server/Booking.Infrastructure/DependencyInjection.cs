@@ -91,6 +91,7 @@ public static class DependencyInjection
         services.AddScoped<IPostServiceRepository, PostServiceRepository>();
         services.AddScoped<IPostTypeOfRestRepository, PostTypeOfRestRepository>();
 		services.AddScoped<IServiceRepository, ServiceRepository>();
+		services.AddScoped<IRoomRepository, RoomRepository>();
 
 		return services;
 	}

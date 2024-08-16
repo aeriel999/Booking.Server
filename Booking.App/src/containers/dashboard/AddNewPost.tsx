@@ -5,6 +5,7 @@ import { useAppDispatch } from "../../hooks/redux";
 import { unwrapResult } from "@reduxjs/toolkit";
 import {
     createPost,
+    createRoom,
     getListOfCategories,
     getListOfCitiesByCountryId,
     getListOfCountries,
@@ -34,6 +35,7 @@ import ListImageUploader from "../../components/realtorDashboard/ListImagesUploa
 import CheckboxList from "../../components/realtorDashboard/CheckBoxList.tsx";
 import { changeDashboardMenuItem } from "../../store/settings/settings.slice.ts";
 import Room from "../../components/realtorDashboard/Room.tsx";
+import Plus from "../../assets/DashboardIcons/iconamoon_sign-plus-fill.svg";
 
 export function AddNewPost() {
     const dispatch = useAppDispatch();
@@ -173,6 +175,8 @@ export function AddNewPost() {
 
     useEffect(() => {
         if (country) {
+            console.log("country", country.id);
+
             getCityList(country.id).then((history) => {
                 if (history?.payload.$values != null) {
                     setCityList(history?.payload.$values);
@@ -200,6 +204,7 @@ export function AddNewPost() {
     }, [city]);
 
     const onSubmit = async (data: IPostCreate) => {
+        console.log("onSubmit", data);
         if (!category) {
             setIsCategoryValid(false);
             return;
@@ -257,6 +262,21 @@ export function AddNewPost() {
 
                 const response = await dispatch(createPost(model));
                 unwrapResult(response);
+
+                if (rooms) {
+                    for (const room of rooms) {
+                        try {
+                            const newRoom: IRoom = {
+                                ...room,
+                                postId: response.payload.id,
+                            };
+
+                            await dispatch(createRoom(newRoom));
+                        } catch (error) {
+                            setErrorMessage(ErrorHandler(error));
+                        }
+                    }
+                }
 
                 // await joinForPostListening(response.payload.id);
                 dispatch(changeDashboardMenuItem("All Posts"));
@@ -450,10 +470,9 @@ export function AddNewPost() {
                             )}
                         </div>
 
-                        {/*  Number of Guests */}
                         {!isHotel && (
                             <>
-                                {" "}
+                                {/*  Number of Guests */}
                                 <div className="fieldContainer">
                                     <div className="filedTitle">
                                         Number of Guests{" "}
@@ -488,6 +507,7 @@ export function AddNewPost() {
                                         name="price"
                                         register={register}
                                         setValue={setValue}
+                                        defaultValue={100}
                                         className={
                                             errors.price
                                                 ? "errorFormInput"
@@ -544,8 +564,6 @@ export function AddNewPost() {
                                 onChange={setService}
                             />
                         </div>
-
-                       
                     </form>
                 </div>
                 <div className="addImagesContainer">
@@ -566,19 +584,35 @@ export function AddNewPost() {
 
             {isHotel && (
                 <div className="roomsContainer">
-                        <div className="title">Add New Post</div>
-                            {Array.from({
-                             length: numberOfRooms,
-                                }).map((_, i) =>(
-                                          <Room
-                                            rooms={rooms}
-                                            setRooms={setRooms}
-                                        />
-                                 ) )}
-                 <button onClick={() =>{setNumberOfRooms(numberOfRooms + 1)}}>Add Room</button>
-                 </div>)}
-                        
-            <button type="submit" className="button" form="addNewPostForm">
+                    <div className="title">Add New Post</div>
+                    {Array.from({
+                        length: numberOfRooms,
+                    }).map((_, i) => (
+                        <Room
+                            key={i}
+                            rooms={rooms}
+                            setRooms={setRooms}
+                            label={"room" + i}
+                            formName={"form" + i}
+                        />
+                    ))}
+                    <div
+                        className="linkButton"
+                        onClick={() => {
+                            setNumberOfRooms(numberOfRooms + 1);
+                        }}
+                    >
+                        <div className="text">Add Room</div>
+                        <img className="icon" src={Plus}></img>
+                    </div>
+                </div>
+            )}
+
+            <button
+                type="submit"
+                className="postAddButton"
+                form="addNewPostForm"
+            >
                 Submit
             </button>
         </div>

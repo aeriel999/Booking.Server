@@ -9,9 +9,9 @@ import TableHead from "@mui/material/TableHead";
 import TablePagination from "@mui/material/TablePagination";
 import TableRow from "@mui/material/TableRow";
 import Paper from "@mui/material/Paper";
-import { Breadcrumbs, Button, Divider, Typography } from "@mui/material";
+import { Button } from "@mui/material";
 import OutlinedErrorAlert from "../../components/common/ErrorAlert";
-import { Link, useNavigate } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import { useState, useEffect } from "react";
 import { useAppDispatch } from "../../hooks/redux";
 import { unwrapResult } from "@reduxjs/toolkit";
@@ -22,15 +22,23 @@ import {
 } from "../../store/post/post.actions";
 import ErrorHandler from "../../components/common/ErrorHandler";
 import CustomizedDialogs from "../../components/common/Dialog";
-import { TablePaginationActions } from "../../components/common/TablePagination";
+import { TablePaginationActions } from "../../components/realtorDashboard/TablePagination";
 
 const StyledTableCell = styled(TableCell)(({ theme }) => ({
     [`&.${tableCellClasses.head}`]: {
-        backgroundColor: theme.palette.common.black,
+        backgroundColor: "#23A1A0",
         color: theme.palette.common.white,
+        fontSize: 18,
+        fontStyle: "normal",
+        fontWeight: 400,
+        lineHeight: "normal",
+        whiteSpace: "nowrap",
     },
     [`&.${tableCellClasses.body}`]: {
-        fontSize: 14,
+        fontSize: 16,
+        fontStyle: "normal",
+        fontWeight: 400,
+        lineHeight: "normal",
     },
 }));
 
@@ -53,7 +61,7 @@ export default function AllPostList() {
         undefined
     );
     const dispatch = useAppDispatch();
-    
+
     const navigate = useNavigate();
     const [isDialogOpen, setIsDialogOpen] = useState(false);
     const [postName, setPostName] = useState<string>();
@@ -63,12 +71,11 @@ export default function AllPostList() {
         page > 0 ? Math.max(0, (1 + page) * rowsPerPage - totalCount) : 0;
 
     const handleChangePage = (
-        event: React.MouseEvent<HTMLButtonElement> | null,
+        _event: React.MouseEvent<HTMLButtonElement> | null,
         newPage: number
     ) => {
         setPage(newPage);
-        console.log(event)
-        //ToDo Delete console.log
+        
     };
 
     const handleChangeRowsPerPage = (
@@ -95,20 +102,10 @@ export default function AllPostList() {
         };
 
         getDataForPage(model).then((history) => {
-            console.log("history", history?.payload);
             setRows(history?.payload.items.$values);
             setTotalCount(history?.payload.totalCount);
         });
     }, [page, rowsPerPage, isDialogOpen]);
-
-    const formatTimestamp = (timestamp: string) => {
-        const date = new Date(timestamp);
-        const hours = String(date.getUTCHours()).padStart(2, "0");
-        const minutes = String(date.getUTCMinutes()).padStart(2, "0");
-        const formattedTime = `${hours}:${minutes}`;
-        const formattedDate = date.toISOString().split("T")[0];
-        return `${formattedTime} / ${formattedDate}`;
-    };
 
     return (
         <>
@@ -124,20 +121,6 @@ export default function AllPostList() {
                 />
             )}
 
-            <Breadcrumbs
-                aria-label="breadcrumb"
-                style={{ marginBottom: "20px" }}
-            >
-                <Link to={"/dashboard/profile"}>
-                    <Typography variant="h6" color="text.primary">
-                        Dashboard
-                    </Typography>
-                </Link>
-                <Typography variant="h6" color="text.primary">
-                    All Posts
-                </Typography>
-            </Breadcrumbs>
-            <Divider />
             {errorMessage && <OutlinedErrorAlert message={errorMessage} />}
 
             <TableContainer component={Paper}>
@@ -149,30 +132,12 @@ export default function AllPostList() {
                         <TableRow>
                             <StyledTableCell>Category</StyledTableCell>
                             <StyledTableCell>Adress</StyledTableCell>
-                            
                             <StyledTableCell>Price</StyledTableCell>
-                       
                             <StyledTableCell>Discount</StyledTableCell>
-
-                            <StyledTableCell>Date of post</StyledTableCell>
-
-
-                            <StyledTableCell>Is Booking</StyledTableCell>
-
-                            <StyledTableCell >
-                                Is Active
-                            </StyledTableCell>
-                            <StyledTableCell>
-                                Is Archived
-                            </StyledTableCell>
-                            <StyledTableCell>More info</StyledTableCell>
-
-                            <StyledTableCell align="center">
-                                Edit
-                            </StyledTableCell>
-                            <StyledTableCell align="right">
-                                Archive
-                            </StyledTableCell>
+                            <StyledTableCell>Is Active</StyledTableCell>
+                            <StyledTableCell>Is Archived</StyledTableCell>
+                            <StyledTableCell>Edit </StyledTableCell>
+                            <StyledTableCell> Archive</StyledTableCell>
                         </TableRow>
                     </TableHead>
 
@@ -180,34 +145,31 @@ export default function AllPostList() {
                         {rows?.map((row) => {
                             return (
                                 <StyledTableRow key={row.id}>
-                                    <StyledTableCell component="th" scope="row">
+                                    <StyledTableCell >
                                         {row.category}
                                     </StyledTableCell>
-                                    
-                                    <StyledTableCell align="right">
+
+                                    <StyledTableCell>
                                         {row.adress}
                                     </StyledTableCell>
-                                    <StyledTableCell align="right">
-                                        {row.name}
-                                    </StyledTableCell>
-                                    <StyledTableCell align="right">
+
+                                    <StyledTableCell>
                                         {"$" + row.price}
                                     </StyledTableCell>
-                                    <StyledTableCell align="right">
-                                        {formatTimestamp(row.dateOfPost)}
+
+                                    <StyledTableCell>
+                                        {row.discount}
                                     </StyledTableCell>
-                                    <StyledTableCell align="right">
-                                        {row.dateOfEdit === null
-                                            ? "-"
-                                            : formatTimestamp(row.dateOfEdit)}
-                                    </StyledTableCell>
-                                    <StyledTableCell align="right">
+
+                                    <StyledTableCell>
                                         {row.isActive ? "Yes" : "No"}
                                     </StyledTableCell>
-                                    <StyledTableCell align="right">
+
+                                    <StyledTableCell>
                                         {row.isArhive ? "Yes" : "No"}
                                     </StyledTableCell>
-                                    <StyledTableCell align="right">
+
+                                    <StyledTableCell>
                                         <Button
                                             onClick={() => {
                                                 navigate(
@@ -218,7 +180,8 @@ export default function AllPostList() {
                                             Edit
                                         </Button>
                                     </StyledTableCell>
-                                    <StyledTableCell align="right">
+
+                                    <StyledTableCell>
                                         <Button
                                             onClick={() => {
                                                 setPostName(row.name);
@@ -242,10 +205,7 @@ export default function AllPostList() {
                     <TableFooter>
                         <TableRow>
                             <TablePagination
-                                rowsPerPageOptions={[
-                                    5, 10, 25,
-                                    // { label: "All", value: -1 },
-                                ]}
+                                rowsPerPageOptions={[5, 10, 25]}
                                 colSpan={6}
                                 count={totalCount}
                                 rowsPerPage={rowsPerPage}

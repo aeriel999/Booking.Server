@@ -14,12 +14,14 @@ const ImageUploader = (props: ImageUploader) => {
     const [error, setError] = useState<string | false | undefined>(false);
 
     const handleOnAddImage = (e: React.ChangeEvent<HTMLInputElement>) => {
+        console.log("label", props.label)
         if (!e.target.files) return;
 
         const file = e.target.files[0];
         const errorMessage = props.validator(file);
 
         setError(errorMessage);
+
         if (!errorMessage) {
             props.setImage(file);
         }
@@ -31,7 +33,7 @@ const ImageUploader = (props: ImageUploader) => {
 
     return (
         <>
-            {error && <OutlinedErrorAlert message={error} />}
+            {error && <OutlinedErrorAlert message={error} textColor="#000"/>}
             <div className="mainImage">
                 <label htmlFor={props.label}>
                     <div

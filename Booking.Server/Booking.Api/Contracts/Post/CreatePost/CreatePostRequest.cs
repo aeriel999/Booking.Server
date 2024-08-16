@@ -37,7 +37,7 @@ public record CreatePostRequest
 
 	[Required(ErrorMessage = "{PropertyName} must not be empty")]
 	[Range(1, 20)]
-	public int? NumberOfGuests { get; init; }
+	public int NumberOfGuests { get; init; }
 
 
 	public string? Description { get; init; }
@@ -57,8 +57,11 @@ public record CreatePostRequest
 	public List<Guid>? PostServices { get; init; }
 
 
+	[Required(ErrorMessage = "{PropertyName} must not be empty")]
 	public  required IFormFile MainImage { get; init; }
 
+
+	[Required(ErrorMessage = "{PropertyName} must not be empty")]
 	[BindProperty(Name = "images[]")]
 	public required List<IFormFile> Images { get; init; }
 }

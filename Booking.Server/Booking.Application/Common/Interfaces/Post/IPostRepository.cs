@@ -18,7 +18,7 @@ public interface IPostRepository
 	Task DeletePostAsync(Post post);
 
 
-	Task<Post?> GetPostById(Guid postId);
+	Task<Post?> GetPostByIdAsync(Guid postId);
 
 
 	Task<List<Post>> GetPostListWithIncludesByRealtorIdAsync(Guid realtorId);
