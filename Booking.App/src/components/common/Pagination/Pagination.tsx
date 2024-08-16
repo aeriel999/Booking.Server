@@ -23,6 +23,7 @@ export const Pagination = (info: IPagination) => {
 
 
     useEffect(() => {
+
         let pages = Math.ceil(info.countOfPosts / info.sizeOfPage);
         let arrPages = [];
 

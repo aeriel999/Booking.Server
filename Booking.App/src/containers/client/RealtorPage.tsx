@@ -11,12 +11,12 @@ import Box from "@mui/material/Box";
 import Stack from "@mui/material/Stack";
 import { getPostListByRealtorId } from "../../store/post/post.actions.ts";
 import React from "react";
-import { IGetFeedbacks, IPage, ISendFeedback } from "../../interfaces/user/index.ts";
+import { IGetFeedbacks, IPageForFeedbacks, ISendFeedback } from "../../interfaces/user/index.ts";
 import CustomizedDialogs from "../../components/common/Dialog.tsx";
 import { unwrapResult } from "@reduxjs/toolkit";
 import ErrorHandler from "../../components/common/ErrorHandler.ts";
 
-const firstPage: IPage = {
+const firstPage: IPageForFeedbacks = {
     page: 1,
     sizeOfPage: 10
 }
@@ -71,7 +71,7 @@ export default function RealtorPage() {
 
     const changePage = async ({ }, value: number) => {
         setPage(value);
-        const nextPage: IPage = {
+        const nextPage: IPageForFeedbacks = {
             page: value,
             sizeOfPage: 4
         }

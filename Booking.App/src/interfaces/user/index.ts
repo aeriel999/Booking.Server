@@ -51,14 +51,14 @@ export interface IFeedbackView {
     totalCount: number;
 }
 
-export interface IPage {
+export interface IPageForFeedbacks {
     page: number,
     sizeOfPage: number
 }
 
 export interface IGetFeedbacks {
     id: string,
-    pages: IPage
+    pages: IPageForFeedbacks
 }
 export interface ISendFeedback {
     text: string,

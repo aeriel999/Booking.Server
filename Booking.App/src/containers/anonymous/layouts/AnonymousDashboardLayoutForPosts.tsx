@@ -178,23 +178,3 @@ export const AnonymousDashboardLayoutForPosts = () => {
         </div>
     )
 }
-/*
-<form>
-                        <img src={dot} />
-                        <input placeholder="Place of travel?" />
-                        <img src={calendar} />
-                        <input
-                            type="text"
-                            placeholder="Date of arrival - departure"
-                            onFocus={(event) => {
-                                event.target.type = "date";
-                            }}
-                            onBlur={(event) => {
-                                event.target.type = "text";
-                            }}
-                        />
-                        <img src={human} />
-                        <input placeholder="Count of people - number" />
-                        <button>Find</button>
-                    </form>
-*/
