@@ -71,12 +71,11 @@ export default function AllPostList() {
         page > 0 ? Math.max(0, (1 + page) * rowsPerPage - totalCount) : 0;
 
     const handleChangePage = (
-        event: React.MouseEvent<HTMLButtonElement> | null,
+        _event: React.MouseEvent<HTMLButtonElement> | null,
         newPage: number
     ) => {
         setPage(newPage);
-        console.log(event);
-        //ToDo Delete console.log
+        
     };
 
     const handleChangeRowsPerPage = (
@@ -103,14 +102,13 @@ export default function AllPostList() {
         };
 
         getDataForPage(model).then((history) => {
-            console.log("history", history?.payload);
             setRows(history?.payload.items.$values);
             setTotalCount(history?.payload.totalCount);
         });
     }, [page, rowsPerPage, isDialogOpen]);
 
     return (
-        <div className="test">
+        <>
             {isDialogOpen && postName && postId && (
                 <CustomizedDialogs
                     message={`You want to archive post ${postName}. Are you sure?`}
@@ -147,7 +145,7 @@ export default function AllPostList() {
                         {rows?.map((row) => {
                             return (
                                 <StyledTableRow key={row.id}>
-                                    <StyledTableCell component="th" scope="row">
+                                    <StyledTableCell >
                                         {row.category}
                                     </StyledTableCell>
 
@@ -228,6 +226,6 @@ export default function AllPostList() {
                     </TableFooter>
                 </Table>
             </TableContainer>
-        </div>
+        </>
     );
 }
