@@ -117,20 +117,6 @@ export interface IPostByRealtorId {
     imagePost: string;
 }
 
-export interface IFilteredRequest {
-    filter: IFilter | null;
-    pages: IFetchData;
-}
-export interface IFilter {
-    category: string | null;
-    country: string | null;
-    city: string | null;
-    realtor: string | null;
-}
-export interface IFilteredRequestName {
-    filter: IFilter | null;
-    name: string | null;
-}
 export interface IPostState {
     status: Status;
     post: IPostInformation | null;
@@ -174,15 +160,6 @@ export interface IService {
     name: string;
 }
 
-export interface INamesOfPosts {
-    $id: string;
-    $values: string[];
-}
-
-export interface IFetchData {
-    page: number;
-    sizeOfPage: number;
-}
 
 export interface IFetchDataByName {
     filter: IFilter;

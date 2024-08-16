@@ -22,8 +22,7 @@ export default function PostPage() {
         }
         getPost();
     }, []);
-    //sx={{ height: 300, width: "100%" }}
-    //<ImagesPage isOpen={isOpen}></ImagesPage>
+
     useEffect(() => {
         console.log(post);
     }, [post]);

@@ -83,8 +83,7 @@ export const getFilteredListByType = createAsyncThunk(
                         sizeOfPage: payload.pages.sizeOfPage,
                     },
                 }
-            );
-            console.log("Data - ", response.data);
+            });
             return response.data;
         } catch (error) {
             return rejectWithValue(handleAxiosError(error, "Network error"));
