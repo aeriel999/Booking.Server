@@ -7,7 +7,7 @@ import UserRegisterPage from "./pages/accaunt/register/UserRegisterPage.tsx";
 import InformationAfterConfirmationEmail from "./pages/accaunt/instruction/InformationAfterConfirmationEmail.tsx";
 import RealtorProfilePage from "./containers/dashboard/RealtorProfilePage.tsx";
 import RealtorProfileEditPage from "./containers/dashboard/RealtorProfileEditPage.tsx";
-import ChangePasswordPage from "./containers/dashboard/ChangePasswordPage.tsx";
+//import ChangePasswordPage from "./containers/dashboard/ChangePasswordPage.tsx";
 import UserProfilePage from "./containers/client/UserProfilePage.tsx";
 import RegisterInformationPage from "./pages/accaunt/register/RegisterInformationPage.tsx";
 import ConfirmEmailPage from "./pages/accaunt/confirmation/ConfirmEmailPage.tsx";
@@ -70,10 +70,6 @@ export const App: React.FC = () => {
                                 element={<RealtorProfileEditPage />}
                             />
                             <Route
-                                path="/dashboard/profile/change-password"
-                                element={<ChangePasswordPage />}
-                            />
-                            <Route
                                 path="/dashboard/post/add"
                                 element={<AddNewPost />}
                             />
@@ -130,10 +126,7 @@ export const App: React.FC = () => {
                                 path="/dashboard/profile/edit"
                                 element={<EditUserEpailPage />}
                             />
-                            <Route
-                                path="/dashboard/profile/change-password"
-                                element={<ChangePasswordPage />}
-                            />
+                           
                             <Route path="*" element={<NotFound />} />
                         </Route>
                     )}
@@ -176,58 +169,27 @@ export const App: React.FC = () => {
                     element={<SignInPage />}
                 />
 
-
-
                 <Route path="*" element={<NotFound />} />
-           </Route>
+            </Route>
             <Route path="/posts" element={<AnonymousDashboardLayoutForPosts />}>
-                <Route
-                    index
-                    element={
-                        <ListOfPostsPage />
-                    }
-                />
+                <Route index element={<ListOfPostsPage />} />
                 <Route path="*" element={<NotFound />} />
             </Route>
             <Route path="/dashboard" element={<SignInPage />}>
-                <Route
-                    path="profile"
-                    element={<SignInPage />}
-                />
-                <Route
-                    path="profile/edit"
-                    element={<SignInPage />}
-                />
+                <Route path="profile" element={<SignInPage />} />
+                <Route path="profile/edit" element={<SignInPage />} />
                 <Route
                     path="profile/change-password"
                     element={<SignInPage />}
                 />
-                <Route
-                    path="post/add"
-                    element={<SignInPage />}
-                />
-                <Route
-                    path="show-all-post"
-                    element={<SignInPage />}
-                />
-                <Route
-                    path="edit-post/:postId"
-                    element={<SignInPage />}
-                />
-                <Route
-                    path="chat-room/:roomId"
-                    element={<SignInPage />}
-                />
+                <Route path="post/add" element={<SignInPage />} />
+                <Route path="show-all-post" element={<SignInPage />} />
+                <Route path="edit-post/:postId" element={<SignInPage />} />
+                <Route path="chat-room/:roomId" element={<SignInPage />} />
 
-                <Route
-                    path="archive"
-                    element={<SignInPage />}
-                />
+                <Route path="archive" element={<SignInPage />} />
 
-                <Route
-                    path="reviews"
-                    element={<SignInPage />}
-                />
+                <Route path="reviews" element={<SignInPage />} />
             </Route>
 
             <Route path="authentication/login" element={<SignInPage />} />

@@ -17,14 +17,13 @@ import { useAppDispatch } from "../../hooks/redux";
 import { unwrapResult } from "@reduxjs/toolkit";
 import { IFetchData, IPostInfoForRealtor } from "../../interfaces/post";
 import {
-    
     deletePost,
     getArchivedPostList,
     repostPost,
 } from "../../store/post/post.actions";
 import ErrorHandler from "../../components/common/ErrorHandler";
 import CustomizedDialogs from "../../components/common/Dialog";
-import { TablePaginationActions } from "../../components/common/TablePagination";
+import { TablePaginationActions } from "../../components/realtorDashboard/TablePagination";
 
 const StyledTableCell = styled(TableCell)(({ theme }) => ({
     [`&.${tableCellClasses.head}`]: {
@@ -68,7 +67,7 @@ export default function ArchivePage() {
         event: React.MouseEvent<HTMLButtonElement> | null,
         newPage: number
     ) => {
-        console.log(event)
+        console.log(event);
         setPage(newPage);
     };
 
@@ -182,7 +181,7 @@ export default function ArchivePage() {
                                     <StyledTableCell component="th" scope="row">
                                         {row.category}
                                     </StyledTableCell>
-                                   
+
                                     <StyledTableCell align="right">
                                         {row.adress}
                                     </StyledTableCell>

@@ -219,12 +219,11 @@ export interface IRoom {
 
 export interface IPostInfoForRealtor {
     id: string;
+    name: string;
     category: string;
     adress: string;
-    name: string;
     price: number;
-    dateOfPost: string;
-    dateOfEdit: string | null;
+    discount: number | null;
     isActive: boolean;
     isArhive: boolean;
 }

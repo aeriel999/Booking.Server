@@ -126,7 +126,7 @@ public class PostRepository(BookingDbContext context) : IPostRepository
 			.Where(c => c.UserId == realtorId)
 			.Include(post => post.Category)
 			.Include(post => post.Street!.City!.Country)
-			.Include(post => post.Rooms)
+			//.Include(post => post.Rooms)
 			.OrderByDescending(post => post.PostAt)
 			.ToListAsync();
 	}

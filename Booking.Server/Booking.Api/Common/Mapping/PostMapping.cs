@@ -204,11 +204,8 @@ public class PostMapping : IRegister
 			src => src.Street!.City!.Country!.Name + " " + src.Street.City.Name + " " + src.Street.Name)
 			.Map(desp => desp.Name, src => src.Name)
 			.Map(desp => desp.Price, src => src.Price)
-			.Map(desp => desp.DateOfPost, src => src.PostAt)
-			.Map(desp => desp.DateOfEdit, src => src.EditAt)
 			.Map(desp => desp.IsActive, src => src.IsActive)
 			.Map(desp => desp.IsArhive, src => src.IsArhive)
-			.Map(desp => desp.Rate, src => src.Rate)
 			.Map(desp => desp.Discount, src => src.Discount);
 
 		config.NewConfig<PagedList<Post>, PagedList<GetPostListForRealtorResponse>>();
