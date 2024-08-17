@@ -1,4 +1,5 @@
 ﻿using Booking.Domain.Posts;
+using System.ComponentModel.DataAnnotations.Schema;
 
 namespace Booking.Api.Contracts.Post.GetPost;
 
@@ -45,7 +46,7 @@ public record GetPostResponse
 	public required float Rate { get; init; }
 
 
-	public int? CountOfFeedbacks { get; init; }
+	public required int CountOfFeedbacks { get; init; }
 
 
 	public required string[] ImagePostList { get; init; }
@@ -57,5 +58,20 @@ public record GetPostResponse
     public string[]? Services { get; init; }
 
 
-	public List<Room>? RoomList { get; init; }
+	public List<EditRoom>? RoomList { get; init; }
+}
+
+public record EditRoom 
+{
+	public Guid Id { get; set; }
+
+	public int NumberOfGuests { get; set; }
+
+	public int NumberOfRooms { get; set; }
+
+	public int? Discount { get; set; }
+
+	public decimal Price { get; set; }
+
+	public required string MainImage { get; set; }
 }
