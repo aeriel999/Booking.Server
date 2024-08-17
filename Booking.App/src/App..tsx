@@ -143,39 +143,22 @@ export const App: React.FC = () => {
                 />
 
                 <Route path="post/:postId" element={<PostPage />} />
+
                 <Route
                     path="post/:postId/realtor/:realtorId"
                     element={<RealtorPage />}
                 />
-                {/* <Route path="dashboard/profile" element={<SignInPage />} />
-                <Route path="dashboard/profile/edit" element={<SignInPage />} />
-                <Route
-                    path="dashboard/profile/change-password"
-                    element={<SignInPage />}
-                /> */}
 
-                <Route path="*" element={<NotFound />} />
-                <Route path="dashboard/profile" element={<SignInPage />} />
-
-                <Route path="dashboard/profile/edit" element={<SignInPage />} />
-
-                <Route
-                    path="dashboard/profile/change-password"
-                    element={<SignInPage />}
-                />
-
-                <Route
-                    path="dashboard/dashboard/post/add"
-                    element={<SignInPage />}
-                />
-
-                <Route path="*" element={<NotFound />} />
+               {/* <Route path="*" element={<NotFound />} /> */}
             </Route>
+
             <Route path="/posts" element={<AnonymousDashboardLayoutForPosts />}>
                 <Route index element={<ListOfPostsPage />} />
+
                 <Route path="*" element={<NotFound />} />
             </Route>
-            <Route path="/dashboard" element={<SignInPage />}>
+
+            {/* <Route path="/dashboard" element={<SignInPage />}>
                 <Route path="profile" element={<SignInPage />} />
                 <Route path="profile/edit" element={<SignInPage />} />
                 <Route
@@ -190,9 +173,9 @@ export const App: React.FC = () => {
                 <Route path="archive" element={<SignInPage />} />
 
                 <Route path="reviews" element={<SignInPage />} />
-            </Route>
+            </Route>*/}
 
-            <Route path="authentication/login" element={<SignInPage />} />
+            <Route path="authentication/login" element={<SignInPage />} /> 
 
             <Route
                 path="/authentication/user-register"

@@ -53,7 +53,7 @@ public class PostMapping : IRegister
 		.Map(dest => dest, src => src.createPostRequest);
 
 		config.NewConfig<Post, GetPostResponse>()
-			.Map(desp => desp.Category, src => src.Category!.Name)
+			//.Map(desp => desp.Category, src => src.Category!.Name)
 			.Map(desp => desp.StreetName, src => src.Street!.Name)
 			.Map(desp => desp.UserName, src => $"{src.User!.FirstName} {src.User.LastName}")
             .Map(desp => desp.UserId, src => src.UserId)

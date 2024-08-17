@@ -41,7 +41,27 @@ apiMediaClient.interceptors.request.use((config) => {
 
     if (isTokenActive(token)) {
         config.headers.Authorization = `Bearer ${token}`;
-    }
+    }  
 
     return config;
 });
+
+apiClient.interceptors.response.use(
+    (response) => response,
+    (error) => {
+        if (error.response.status === 401) {
+            window.location.href = "/authentication/login";
+        }
+        return Promise.reject(error);
+    }
+);
+
+apiMediaClient.interceptors.response.use(
+    (response) => response,
+    (error) => {
+        if (error.response.status === 401) {
+            window.location.href = "/authentication/login";
+        }
+        return Promise.reject(error);
+    }
+);
