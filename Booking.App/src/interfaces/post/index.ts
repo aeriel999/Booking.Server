@@ -234,6 +234,7 @@ export interface IPostEdit {
     streetId: string | null;
     streetName: string | null;
     zipCode: number | null;
+    discount: number | null;
     numberOfGuests: number | null;
     price: number;
     postTypesOfRest: string[] | null;

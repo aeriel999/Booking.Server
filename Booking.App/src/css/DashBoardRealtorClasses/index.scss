@@ -653,4 +653,12 @@
     line-height: normal;
 }
 
- 
+.editLoading {
+    display: flex;
+    align-self: center;
+    justify-self: center;
+    align-items: center;
+    justify-content: center;
+    height: 100%;
+    width: 100%;
+}

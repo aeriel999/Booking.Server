@@ -1,5 +1,5 @@
 import { Resolver } from "react-hook-form";
-import { IPostCreate, IRoom } from "../../interfaces/post";
+import { IPostCreate, IPostEdit, IRoom } from "../../interfaces/post";
 
 export const addPostResolver: Resolver<IPostCreate> = async (values) => {
     const errors: Record<string, any> = {};
@@ -59,6 +59,77 @@ export const addPostResolver: Resolver<IPostCreate> = async (values) => {
             message: discountError,
         };
     }
+    return {
+        values: Object.keys(errors).length === 0 ? values : {},
+        errors,
+    };
+};
+
+export const editPostResolver: Resolver<IPostEdit> = async (values) => {
+    const errors: Record<string, any> = {};
+
+    const nameError = PostNameValidator(values.name);
+    if (nameError) {
+        errors.name = {
+            type: "validation",
+            message: nameError,
+        };
+    }
+
+    const cityError = CityNameValidator(values.cityName);
+    if (cityError) {
+        errors.cityName = {
+            type: "validation",
+            message: cityError,
+        };
+    }
+
+    const streetError = CityNameValidator(values.cityName);
+    if (streetError) {
+        errors.streetError = {
+            type: "validation",
+            message: streetError,
+        };
+    }
+
+    if(values.zipCode){
+    const zipCodeError = ZipCodeValidator(values.zipCode);
+    if (zipCodeError) {
+        errors.zipCode = {
+            type: "validation",
+            message: zipCodeError,
+        };
+    }
+
+  }
+    
+  if(values.numberOfGuests){
+    const numberOfGuestsError = NumberOfGuestsValidator(values.numberOfGuests);
+    if (numberOfGuestsError) {
+        errors.numberOfGuests = {
+            type: "validation",
+            message: numberOfGuestsError,
+        };
+    }
+  }
+
+    const priceError = PriceValidator(values.price);
+    if (priceError) {
+        errors.price = {
+            type: "validation",
+            message: priceError,
+        };
+    }
+
+  if(values.discount){
+    const discountError = DiscountValidator(values.discount);
+    if (discountError) {
+        errors.discount = {
+            type: "validation",
+            message: discountError,
+        };
+    }
+  }
     return {
         values: Object.keys(errors).length === 0 ? values : {},
         errors,
