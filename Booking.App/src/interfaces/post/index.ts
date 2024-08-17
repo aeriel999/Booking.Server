@@ -91,26 +91,36 @@ export interface IPost {
 export interface IPostInformation {
     id: number;
     name: string;
-    category: string;
-    description: string;
+    categoryName: string;
+    categoryId: string;
     countryName: string;
     countryId: string;
     cityName: string;
     cityId: string;
-    street: string;
+    streetName: string;
+    streetId: string;
     zipCode: number;
-    discount: number;
-    rate: number;
-    typesOfRest: string[];
-    services: string[];
-    numberOfGuests: number;
+    discount: number | null;
+    numberOfGuests: number | null;
     user: string;
     userId: string;
-    isArchive: boolean;
     price: number;
+    rate: number;
+    countOfFeedbacks: number | null;
     imagePostList: string[];
+    typesOfRest: string[] | null;
+    services: string[] | null;
+    roomList?: IRoomInfo[];
 }
 
+export interface IRoomInfo {
+    postId: string;
+    numberOfGuests: number;
+    numberOfRooms: number;
+    discount: number | null;
+    price: number;
+    mainImage: string;
+}
 export interface IPostByRealtorId {
     id: number;
     name: string;
@@ -160,7 +170,6 @@ export interface IService {
     name: string;
 }
 
-
 export interface IFetchDataByName {
     filter: IFilter;
     name: string;
@@ -191,7 +200,7 @@ export interface IRoom {
     numberOfRooms: number;
     discount: number | null;
     price: number;
-    mainImage: File;
+    mainImage: File | null;
 }
 
 export interface IPostInfoForRealtor {
@@ -224,11 +233,14 @@ export interface IPostEdit {
     cityName: string | null;
     streetId: string | null;
     streetName: string | null;
-
-    price: number | null;
-    description: string | null;
+    zipCode: number | null;
+    numberOfGuests: number | null;
+    price: number;
+    postTypesOfRest: string[] | null;
+    services: string[] | null;
     images: File[] | null;
     deleteImages: string[] | undefined;
+    roomList: IRoom[] | null;
 }
 
 export interface TablePaginationActionsProps {

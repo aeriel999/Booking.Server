@@ -12,7 +12,7 @@ import { Button } from "@mui/material";
 import OutlinedErrorAlert from "../../components/common/ErrorAlert";
 import { useNavigate } from "react-router-dom";
 import { useState, useEffect } from "react";
-import { useAppDispatch, useAppSelector } from "../../hooks/redux";
+import { useAppDispatch } from "../../hooks/redux";
 import { unwrapResult } from "@reduxjs/toolkit";
 import { IFetchData, IPostInfoForRealtor } from "../../interfaces/post";
 import {

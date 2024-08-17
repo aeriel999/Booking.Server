@@ -205,30 +205,30 @@ export function EditPost() {
         //         ? null
         //         : parseInt(data.get("area") as string, 10);
 
-        const model: IPostEdit = {
-            id: postId as string,
-            name: data.get("name") as string,
-            categoryId: category?.id ?? null,
-            countryId: country?.id ?? null,
-            cityId: city?.id ?? null,
-            cityName: data.get("cityName") as string,
-            streetId: street?.id ?? null,
-            streetName: data.get("streetName") as string,
-            price: parseFloat(data.get("price") as string),
-            description: data.get("description") as string,
-            images: images,
-            deleteImages: deleteImg,
-        };
-        console.log("model", model);
+        // const model: IPostEdit = {
+        //     id: postId as string,
+        //     name: data.get("name") as string,
+        //     categoryId: category?.id ?? null,
+        //     countryId: country?.id ?? null,
+        //     cityId: city?.id ?? null,
+        //     cityName: data.get("cityName") as string,
+        //     streetId: street?.id ?? null,
+        //     streetName: data.get("streetName") as string,
+        //     price: parseFloat(data.get("price") as string),
 
-        try {
-            const response = await dispatch(editPost(model));
-            unwrapResult(response);
+        //     images: images,
+        //     deleteImages: deleteImg,
+        // };
+        // console.log("model", model);
 
-            navigate("/dashboard/show-all-post");
-        } catch (error) {
-            setErrorMessage(ErrorHandler(error));
-        }
+        // try {
+        //     const response = await dispatch(editPost(model));
+        //     unwrapResult(response);
+
+        //     navigate("/dashboard/show-all-post");
+        // } catch (error) {
+        //     setErrorMessage(ErrorHandler(error));
+        // }
     };
 
     return (
@@ -293,7 +293,7 @@ export function EditPost() {
                                         options={categoryList}
                                         onChange={setCategory}
                                         label={"Category"}
-                                        defaultValue={post!.category}
+                                        defaultValue={post!.categoryName}
                                     />
                                 </Grid>
 
@@ -352,7 +352,7 @@ export function EditPost() {
                                             options={streetList}
                                             onChange={setStreet}
                                             label={"Street"}
-                                            defaultValue={post!.street}
+                                            defaultValue={post!.streetName}
                                         />
                                     </Grid>
                                 )}

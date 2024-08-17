@@ -16,17 +16,20 @@ public record EditPostRequest
 
 	public Guid? CategoryId { get; init; }
 
+
 	public Guid? CountryId { get; init; }
 
-	public Guid? CityId { get; init; }
 
+	public Guid? CityId { get; init; }
 	public string? CityName { get; init; }
 
-	public Guid? StreetId { get; init; }
 
+	public Guid? StreetId { get; init; }
 	public string? StreetName { get; init; }
 
+
 	public int ZipCode { get; init; }
+
 
 	public int? NumberOfGuests { get; init; }
 
@@ -35,13 +38,12 @@ public record EditPostRequest
 	[Range(0, 9999999999999999.99, ErrorMessage = "{PropertyName} must be between {1} and {2}")]
 	public decimal Price { get; init; }
 
-	public string? Description { get; init; }
 
-	public int? Discount { get; init; }
+	public List<Guid>? PostTypesOfRest { get; set; }
 
-	public List<Guid>? PostPostTypesOfRest { get; set; }
 
-	public List<Guid>? PostServices { get; set; }
+	public List<Guid>?  Services { get; set; }
+
 
 
 	[BindProperty(Name = "images[]")]
@@ -49,4 +51,7 @@ public record EditPostRequest
 
 
 	public List<string>? DeleteImages { get; init; }
+
+
+	public List<Room>? RoomList { get; init; }
 }
