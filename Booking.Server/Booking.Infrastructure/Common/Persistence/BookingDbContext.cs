@@ -144,7 +144,7 @@ public class BookingDbContext : IdentityDbContext<User, IdentityRole<Guid>, Guid
 			.HasKey(p => new { p.PostId, p.PostTypeOfRestId });
 
 		builder.Entity<Post>()
-			.HasMany(p => p.PostServices)
+			.HasMany(p => p.Service)
 			.WithOne(p => p.Post)
 			.HasForeignKey(p => p.PostId)
 			.OnDelete(DeleteBehavior.Cascade);

@@ -49,13 +49,13 @@ public record GetPostResponse
 	public required int CountOfFeedbacks { get; init; }
 
 
-	public required string[] ImagePostList { get; init; }
+	public required List<string> ImagePostList { get; init; }
 
 
-    public string[]? TypesOfRest { get; init; }
+    public List<string>? TypesOfRest { get; init; }
 
 
-    public string[]? Services { get; init; }
+    public List<GetService>? Services { get; init; }
 
 
 	public List<EditRoom>? RoomList { get; init; }
@@ -63,15 +63,21 @@ public record GetPostResponse
 
 public record EditRoom 
 {
-	public Guid Id { get; set; }
+	public Guid Id { get; init; }
 
-	public int NumberOfGuests { get; set; }
+	public int NumberOfGuests { get; init; }
 
-	public int NumberOfRooms { get; set; }
+	public int NumberOfRooms { get; init; }
 
-	public int? Discount { get; set; }
+	public int? Discount { get; init; }
 
-	public decimal Price { get; set; }
+	public decimal Price { get; init; }
 
-	public required string MainImage { get; set; }
+	public required string MainImage { get; init; }
+}
+
+public record GetService 
+{
+	public required string Name { get; init; }
+	public required string Icon { get; init; }
 }
