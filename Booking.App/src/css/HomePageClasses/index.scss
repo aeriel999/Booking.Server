@@ -56,27 +56,27 @@
 main {
     width: 100%;
     min-width: 1369px;
-    height: 100%;
+    height: auto;
 
 
-    @media (max-width:1924px) {
+    /*@media (max-width:1924px) {
         min-height: 2824px;
     }
 
     @media (max-width:1830px) {
         min-height: 3124px;
-    }
+    }*/
 
     display: flex;
     flex-direction: column;
-    row-gap: 3%;
+    row-gap: 60px;
+    justify-content: space-around;
     padding: $default-padding;
     box-sizing: border-box;
     font-family: $primary-font-family;
 
     .popular-places {
         width: 100%;
-        margin-top: 80px;
         height: auto;
         padding: 0px 2.2%;
         box-sizing: border-box;

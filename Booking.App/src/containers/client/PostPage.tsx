@@ -1,4 +1,4 @@
-import Container from "@mui/material/Container";
+/*import Container from "@mui/material/Container";
 import { Outlet, useNavigate, useParams } from "react-router-dom";
 import { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
@@ -221,4 +221,4 @@ export default function PostPage() {
                 <Outlet />
             </Container>
         </>);
-}
+}*/

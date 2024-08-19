@@ -1,13 +1,22 @@
 @import '../variables.scss';
 
 .post-card {
-    width: 30%;
-    height: 32.1%;
+    width: 31.3%;
+    //height: 32.1%;
+    height: 423px;
+    //max-height: 443px;
+    //justify-self: flex-start;
     display: flex;
     flex-direction: column;
     border-radius: 10px;
     border: 1px solid #a2a2a2;
     box-sizing: border-box;
+
+
+    &:hover {
+        border: 1px solid $primary-style-color;
+        cursor: pointer;
+    }
 
     .post-card-image {
         width: 100%;

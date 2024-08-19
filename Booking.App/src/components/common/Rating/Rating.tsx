@@ -6,7 +6,7 @@ import starHalf from '../../../assets/Icons/star-03.svg';
 
 interface IRating {
     rating: number;
-    countOfRating: number;
+    //countOfRating: number;
 }
 
 export const Rating = (info: IRating) => {
@@ -38,7 +38,8 @@ export const Rating = (info: IRating) => {
                     <img src={starEmpty} alt="" />
                 </div>
             ))}
-            <p>({info.countOfRating})</p>
+
         </div>
     )
 }
+//<p>({info.countOfRating})</p>

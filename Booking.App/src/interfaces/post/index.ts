@@ -97,7 +97,7 @@ export interface IPostInformation {
     countryId: string;
     cityName: string;
     cityId: string;
-    street: string;
+    streetName: string;
     zipCode: number;
     discount: number;
     rate: number;
