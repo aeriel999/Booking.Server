@@ -109,8 +109,13 @@ export interface IPostInformation {
     countOfFeedbacks: number | null;
     imagePostList: string[];
     typesOfRest: string[] | null;
-    services: string[] | null;
+    services: IServise[] | null;
     roomList?: IRoomInfo[];
+}
+
+export interface IServise{
+    name: string,
+    icon: string
 }
 
 export interface IRoomInfo {
@@ -126,6 +131,8 @@ export interface IPostByRealtorId {
     name: string;
     imagePost: string;
 }
+
+
 
 export interface IPostState {
     status: Status;
