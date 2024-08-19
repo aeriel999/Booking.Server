@@ -206,6 +206,7 @@ export default function RealtorPage() {
                                     setOpen={function (): void {
                                         setIsOpen(false);
                                     }} navigate={""}
+                                    lable="Error"
                                 ></CustomizedDialogs>
                                 <TextField
                                     id="filled-multiline-static"

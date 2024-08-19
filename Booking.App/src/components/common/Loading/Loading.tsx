@@ -1,5 +1,6 @@
 import "../../../css/LoadingClasses/insex.scss";
 import { ThreeDots } from "react-loader-spinner";
+import "../../../css/DashBoardRealtorClasses/index.scss";
 
 type LoadingProps = {
     className?: string;

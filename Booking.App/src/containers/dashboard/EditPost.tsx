@@ -1,15 +1,10 @@
-import Container from "@mui/material/Container";
-import Box from "@mui/material/Box";
-import Typography from "@mui/material/Typography";
-import { Breadcrumbs, Grid, LinearProgress } from "@mui/material";
-import { Link, useNavigate, useParams } from "react-router-dom";
-import Divider from "@mui/material/Divider";
+import {  useParams } from "react-router-dom";
 import ComboBox from "../../components/common/ComboBox.tsx";
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useState } from "react";
 import { useAppDispatch, useAppSelector } from "../../hooks/redux";
 import { unwrapResult } from "@reduxjs/toolkit";
 import {
-    editPost,
+   // editPost,
     getListOfCategories,
     getListOfCitiesByCountryId,
     getListOfCountries,
@@ -19,23 +14,12 @@ import {
 import ErrorHandler from "../../components/common/ErrorHandler.ts";
 import OutlinedErrorAlert from "../../components/common/ErrorAlert.tsx";
 import { ICategory, ICity, ICountry, IPostEdit, IRoom, IService, ITypeOfRest } from "../../interfaces/post";
-import InputGroup from "../../components/common/InputGroup.tsx";
 import {
-    CityNameValidator,
     editPostResolver,
     ImagesValidator,
     ImageValidator,
-    PostNameValidator,
-    PriceValidator,
-    StreetNameValidator,
 } from "../../validations/post";
-import FileEditUploader from "../../components/common/FileEditUploader.tsx";
-
-import Button from "@mui/material/Button";
-import * as React from "react";
 import { APP_ENV } from "../../env/index.ts";
-import { maxImagesCount } from "../../constants/index.ts";
-import DefaultImg from "../../assets/images.png";
 import { useForm } from "react-hook-form";
 import InputField from "../../components/common/InputField.tsx";
 import CheckboxList from "../../components/realtorDashboard/CheckBoxList.tsx";
@@ -66,27 +50,27 @@ export function EditPost() {
     const [cityList, setCityList] = useState<ICity[]>([]);
     const [city, setCity] = useState<ICity | null>(null);
     const [isCityValid, setIsCityValid] = useState<boolean>(true);
-    const [isCityExist, setIsCityExist] = useState<boolean>(false);
+    const [_isCityExist, setIsCityExist] = useState<boolean>(false);
 
     const [streetList, setStreetList] = useState<ICity[]>([]);
     const [street, setStreet] = useState<ICity | null>(null);
     const [isStreetValid, setIsStreetValid] = useState<boolean>(true);
-    const [isStreetExist, setIsStreetExist] = useState<boolean>(false);
+    const [_isStreetExist, setIsStreetExist] = useState<boolean>(false);
 
     const [mainImage, setMainImage] = useState<File>();
     const [images, setImages] = useState<File[]>([]);
 
-    const [typeOfRestList, setTypeOfRestList] = useState<ITypeOfRest[]>([]);
+    const [typeOfRestList, _setTypeOfRestList] = useState<ITypeOfRest[]>([]);
     const [typeOfRest, setTypeOfRest] = useState<string[] | null>([]);
 
-    const [servicesList, setServicesList] = useState<IService[]>([]);
+    const [servicesList, _setServicesList] = useState<IService[]>([]);
     const [service, setService] = useState<string[] | null>([]);
 
     const [rooms, setRooms] = useState<IRoom[] | null>([]);
     const [numberOfRooms, setNumberOfRooms] = useState<number>(1);
 
-    const navigate = useNavigate();
-    const [isHotel, setIsHotel] = useState<boolean>(false);
+    //const navigate = useNavigate();
+    const [isHotel, _setIsHotel] = useState<boolean>(false);
 
     const [postImages, setPostImages] = useState<string[]>();
 
@@ -276,7 +260,7 @@ export function EditPost() {
     //     // }
     // };
 
-    const onSubmit = async (data: IPostEdit) => {}
+    const onSubmit = async (_data: IPostEdit) => {}
 
     return (
        <>

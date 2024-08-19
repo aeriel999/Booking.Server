@@ -1,5 +1,4 @@
 import "../../../css/AuthenticationClasses/index.scss";
-import Grid from "@mui/material/Grid";
 import { PhoneNumberValidator, realtorRegisterResolver } from "../../../validations/account";
 import { useState } from "react";
 import { IRealtorRegister } from "../../../interfaces/account";

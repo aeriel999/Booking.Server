@@ -4,7 +4,7 @@ import { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { AppDispatch, RootState } from "../../store";
 import { getPostById } from "../../store/post/post.actions.ts";
-import { Box, Button, CardMedia, Rating, Typography } from "@mui/material";
+import {  Button, CardMedia, Rating, Typography } from "@mui/material";
 import Grid from "@mui/material/Grid";
 import Stack from "@mui/material/Stack";
 import { APP_ENV } from "../../env";
@@ -218,7 +218,7 @@ export default function PostPage() {
                                         Realtor :
                                     </Typography>
                                 )}
-                                {post.description == null ? (
+                                {/* {post.description == null ? (
                                     ""
                                 ) : (
                                     <Typography
@@ -231,7 +231,7 @@ export default function PostPage() {
                                     >
                                         Description :
                                     </Typography>
-                                )}
+                                )} */}
                             </Stack>
                         </Grid>
                         <Grid item xs={4}>
@@ -355,7 +355,7 @@ export default function PostPage() {
                                     readOnly
                                 />
 
-                                <Box sx={{ display: "flex", flexWrap: "wrap" }}>
+                                {/* <Box sx={{ display: "flex", flexWrap: "wrap" }}>
                                     {post.typesOfRest.map((type) => (
                                         <Box
                                             sx={{
@@ -381,7 +381,7 @@ export default function PostPage() {
                                             {type}
                                         </Box>
                                     ))}
-                                </Box>
+                                </Box> */}
 
                                 <Typography
                                     sx={{ fontSize: 21, textAlign: "center" }}
@@ -406,20 +406,7 @@ export default function PostPage() {
                                     </Typography>
                                 )}
 
-                                {post.description == null ? (
-                                    ""
-                                ) : (
-                                    <Typography
-                                        sx={{
-                                            fontSize: 21,
-                                            textAlign: "center",
-                                        }}
-                                        color="text.secondary"
-                                        gutterBottom
-                                    >
-                                        {post.description}
-                                    </Typography>
-                                )}
+                                 
                             </Stack>
                         </Grid>
                         <Grid
