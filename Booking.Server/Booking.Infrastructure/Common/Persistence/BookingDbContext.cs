@@ -63,17 +63,17 @@ public class BookingDbContext : IdentityDbContext<User, IdentityRole<Guid>, Guid
 		builder.Entity<Post>()
 			.HasMany(c => c.ChatRooms)
 			.WithOne(u => u.Post)
-			.OnDelete(DeleteBehavior.ClientCascade);
+			.OnDelete(DeleteBehavior.Cascade);
 
 		builder.Entity<ChatRoom>()
 			.HasMany(c => c.UserMessages)
 			.WithOne(u => u.ChatRoom)
-			.OnDelete(DeleteBehavior.ClientCascade);
+			.OnDelete(DeleteBehavior.Cascade);
 
 		builder.Entity<User>()
 			.HasMany(u => u.Posts)
 			.WithOne(p => p.User)
-			.OnDelete(DeleteBehavior.ClientCascade);
+			.OnDelete(DeleteBehavior.Cascade);
 
 		builder.Entity<PostCity>()
 		   .HasOne(c => c.Country)
@@ -91,7 +91,7 @@ public class BookingDbContext : IdentityDbContext<User, IdentityRole<Guid>, Guid
 			.HasMany(c => c.ImagesPost)
 			.WithOne(u => u.Post)
 			.HasForeignKey(i => i.PostId)
-			.OnDelete(DeleteBehavior.ClientCascade);
+			.OnDelete(DeleteBehavior.Cascade);
 
 		builder.Entity<PostImage>()
 		 .HasOne(pi => pi.Post)
@@ -119,46 +119,47 @@ public class BookingDbContext : IdentityDbContext<User, IdentityRole<Guid>, Guid
 			.HasMany(u => u.ReceivedFeedbacks)
 			.WithOne(u => u.Post)
 			.HasForeignKey(u => u.PostId)
-            .OnDelete(DeleteBehavior.ClientCascade);
+            .OnDelete(DeleteBehavior.Cascade);
 
         builder.Entity<User>()
             .HasMany(u => u.SentFeedbacks)
             .WithOne(u => u.Client)
             .HasForeignKey(u => u.ClientId)
-            .OnDelete(DeleteBehavior.ClientCascade);
+            .OnDelete(DeleteBehavior.Cascade);
 
 		builder.Entity<Post>()
 			.HasMany(p => p.PostPostTypesOfRest)
 			.WithOne(p => p.Post)
 			.HasForeignKey(p => p.PostId)
-			.OnDelete(DeleteBehavior.ClientCascade);
+			.OnDelete(DeleteBehavior.Cascade);
 
-        builder.Entity<PostTypeOfRest>()
+
+		builder.Entity<PostTypeOfRest>()
             .HasMany(p => p.PostPostTypesOfRest)
             .WithOne(p => p.PostTypeOfRest)
             .HasForeignKey(p => p.PostTypeOfRestId)
-            .OnDelete(DeleteBehavior.ClientCascade);
+            .OnDelete(DeleteBehavior.Cascade);
 
 		builder.Entity<PostPostTypeOfRest>()
 			.HasKey(p => new { p.PostId, p.PostTypeOfRestId });
 
 		builder.Entity<Post>()
-			.HasMany(p => p.PostServices)
+			.HasMany(p => p.Service)
 			.WithOne(p => p.Post)
 			.HasForeignKey(p => p.PostId)
-			.OnDelete(DeleteBehavior.ClientCascade);
+			.OnDelete(DeleteBehavior.Cascade);
 
 		builder.Entity<Post>()
 		 .HasMany(u => u.Rooms)
 			.WithOne(u => u.Hotel)
 			.HasForeignKey(u => u.HotelId)
-		 .OnDelete(DeleteBehavior.Cascade);
+			.OnDelete(DeleteBehavior.Cascade);
 
 		builder.Entity<Service>()
 		   .HasMany(p => p.PostServices)
 		   .WithOne(p => p.Service)
 		   .HasForeignKey(p => p.ServiceId)
-		   .OnDelete(DeleteBehavior.ClientCascade);
+		   .OnDelete(DeleteBehavior.Cascade);
 
 		builder.Entity<PostService>()
 			.HasKey(k => new { k.ServiceId, k.PostId });
@@ -166,12 +167,14 @@ public class BookingDbContext : IdentityDbContext<User, IdentityRole<Guid>, Guid
 		builder.Entity<PostBooking>()
 			.HasOne(b => b.User)
 			.WithMany(u => u.Bookings)
-			.HasForeignKey(b => b.UserId);
+			.HasForeignKey(b => b.UserId)
+			.OnDelete(DeleteBehavior.Cascade);
 
 		builder.Entity<PostBooking>()
 			.HasOne(b => b.Post)
 			.WithMany(p => p.Bookings)
-			.HasForeignKey(b => b.PostId);
+			.HasForeignKey(b => b.PostId)
+			.OnDelete(DeleteBehavior.Cascade);
 
 	}
        

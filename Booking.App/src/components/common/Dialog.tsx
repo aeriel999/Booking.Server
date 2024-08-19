@@ -1,7 +1,5 @@
 import * as React from "react";
 import Button from "@mui/material/Button";
-import { styled } from "@mui/material/styles";
-import Dialog from "@mui/material/Dialog";
 import DialogTitle from "@mui/material/DialogTitle";
 import DialogContent from "@mui/material/DialogContent";
 import DialogActions from "@mui/material/DialogActions";
@@ -9,28 +7,14 @@ import IconButton from "@mui/material/IconButton";
 import CloseIcon from "@mui/icons-material/Close";
 import Typography from "@mui/material/Typography";
 import { useNavigate } from "react-router-dom";
-
-const BootstrapDialog = styled(Dialog)(({ theme }) => ({
-    "& .MuiDialogContent-root": {
-        padding: theme.spacing(2),
-    },
-    "& .MuiDialogActions-root": {
-        padding: theme.spacing(1),
-    },
-}));
-
-interface CustomizedDialogsProps {
-    isOpen: boolean;
-    message: string;
-    setOpen: (arg: boolean) => void;
-    navigate: string;
-    action?: () => Promise<void>;
-}
+import { CustomizedDialogsProps } from "../../interfaces/common";
+import { BootstrapDialog } from "../../utils/styles";
+import { useAppDispatch } from "../../hooks/redux";
+import { changeDashboardMenuItem } from "../../store/settings/settings.slice";
 
 export default function CustomizedDialogs(props: CustomizedDialogsProps) {
-    console.log("props", props);
-
     const navigate = useNavigate();
+    const dispatch = useAppDispatch();
 
     const handleClick = async () => {
         if (props.action) {
@@ -39,9 +23,12 @@ export default function CustomizedDialogs(props: CustomizedDialogsProps) {
 
         props.setOpen(false);
 
+        if(props.menuItem){
+            dispatch(changeDashboardMenuItem(props.menuItem));
+        }
+
         navigate(props.navigate);
     };
-
 
     return (
         <React.Fragment>
@@ -53,7 +40,7 @@ export default function CustomizedDialogs(props: CustomizedDialogsProps) {
                 open={props.isOpen}
             >
                 <DialogTitle sx={{ m: 0, p: 2 }} id="customized-dialog-title">
-                    Information
+                    {props.lable}
                 </DialogTitle>
                 <IconButton
                     aria-label="close"
@@ -74,7 +61,15 @@ export default function CustomizedDialogs(props: CustomizedDialogsProps) {
                 </DialogContent>
                 <DialogActions>
                     <Button autoFocus onClick={handleClick}>
-                        Ok
+                        Yes
+                    </Button>
+                    <Button
+                        autoFocus
+                        onClick={() => {
+                            props.setOpen(false);
+                        }}
+                    >
+                        No
                     </Button>
                 </DialogActions>
             </BootstrapDialog>

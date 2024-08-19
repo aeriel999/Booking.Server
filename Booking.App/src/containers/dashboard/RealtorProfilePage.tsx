@@ -3,11 +3,11 @@ import { APP_ENV } from "../../env";
 import { useEffect, useState } from "react";
 import HeaderImg from "../../assets/Templates/Rectangle-50.webp";
 import Upload from "../../assets/DashboardIcons/camera-01.svg";
-import Edit from "../../assets/DashboardIcons/Icon.svg";
-import Lock from "../../assets/DashboardIcons/lock-02.svg";
+// import Edit from "../../assets/DashboardIcons/Icon.svg";
+// import Lock from "../../assets/DashboardIcons/lock-02.svg";
 import HeaderUpload from "../../assets/DashboardIcons/mdi_pencil-outline.svg";
 import { Rating } from "@mui/material";
-import { useNavigate } from "react-router-dom";
+//import { useNavigate } from "react-router-dom";
 import { AvatarValidator } from "../../validations/account";
 import OutlinedErrorAlert from "../../components/common/ErrorAlert";
 import {
@@ -23,7 +23,7 @@ export default function RealtorProfilePage() {
     const { user } = useAppSelector((state) => state.account);
     const [avatarUrl, setAvatarUrl] = useState<string>();
     const [rating, setRating] = useState<number>(user?.rating ?? 0);
-    const navigate = useNavigate();
+   // const navigate = useNavigate();
     const dispatch = useAppDispatch();
     const [image, setImage] = useState<File | null>(null);
     const [headerUrl, setHeaderUrl] = useState<string | null>(null);

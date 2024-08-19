@@ -132,7 +132,8 @@ export const App: React.FC = () => {
                     )}
                 </>
             )}
-            <Route />
+           
+           
             <Route path="/" element={<AnonymousDashboardLayout />}>
                 <Route
                     index
@@ -154,10 +155,8 @@ export const App: React.FC = () => {
                     element={<SignInPage />}
                 /> */}
 
-                <Route path="*" element={<NotFound />} />
-                <Route path="dashboard/profile" element={<SignInPage />} />
-
-                <Route path="dashboard/profile/edit" element={<SignInPage />} />
+               {/* <Route path="*" element={<NotFound />} /> */}
+            </Route>
 
                 <Route
                     path="dashboard/profile/change-password"
@@ -170,13 +169,15 @@ export const App: React.FC = () => {
                 />
 
                 <Route path="*" element={<NotFound />} />
-            </Route>
+            {/* </Route> */}
+            
             <Route path="/posts" element={<AnonymousDashboardLayoutForPosts />}>
                 <Route index element={<ListOfPostsPage />} />
                 <Route path="post/:postId" element={<PostOfPage />} />
                 <Route path="*" element={<NotFound />} />
             </Route>
-            <Route path="/dashboard" element={<SignInPage />}>
+
+            {/* <Route path="/dashboard" element={<SignInPage />}>
                 <Route path="profile" element={<SignInPage />} />
                 <Route path="profile/edit" element={<SignInPage />} />
                 <Route
@@ -191,9 +192,9 @@ export const App: React.FC = () => {
                 <Route path="archive" element={<SignInPage />} />
 
                 <Route path="reviews" element={<SignInPage />} />
-            </Route>
+            </Route>*/}
 
-            <Route path="authentication/login" element={<SignInPage />} />
+            <Route path="authentication/login" element={<SignInPage />} /> 
 
             <Route
                 path="/authentication/user-register"

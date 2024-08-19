@@ -90,7 +90,7 @@ export default function PostPage() {
                                     <Typography sx={{ fontSize: 21, textAlign: "center" }} color="text.secondary" gutterBottom>
                                         Discount :
                                     </Typography>
-                                }
+                                )}
 
                                 <Typography sx={{ fontSize: 21, textAlign: "center" }} color="text.secondary" gutterBottom>
                                     Rating :

@@ -34,7 +34,7 @@ public class PostRepository(BookingDbContext context) : IPostRepository
 							.Include(post => post.Street!.City!.Country)
 							.Include(post => post.PostPostTypesOfRest!)
 							.ThenInclude(post => post.PostTypeOfRest)
-							.Include(post => post.PostServices!)
+							.Include(post => post.Service!)
 							.ThenInclude(post => post.Service)
 							.Include(post => post.ReceivedFeedbacks)
 							.Include(post => post.User)

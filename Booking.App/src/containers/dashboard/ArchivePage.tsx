@@ -1,17 +1,16 @@
 import * as React from "react";
-import { styled } from "@mui/material/styles";
 import Table from "@mui/material/Table";
 import TableBody from "@mui/material/TableBody";
-import TableCell, { tableCellClasses } from "@mui/material/TableCell";
+import TableCell from "@mui/material/TableCell";
 import TableContainer from "@mui/material/TableContainer";
 import TableFooter from "@mui/material/TableFooter";
 import TableHead from "@mui/material/TableHead";
 import TablePagination from "@mui/material/TablePagination";
 import TableRow from "@mui/material/TableRow";
 import Paper from "@mui/material/Paper";
-import { Breadcrumbs, Button, Divider, Typography } from "@mui/material";
+import { Button } from "@mui/material";
 import OutlinedErrorAlert from "../../components/common/ErrorAlert";
-import { Link, useNavigate } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import { useState, useEffect } from "react";
 import { useAppDispatch } from "../../hooks/redux";
 import { unwrapResult } from "@reduxjs/toolkit";
@@ -24,26 +23,8 @@ import {
 import ErrorHandler from "../../components/common/ErrorHandler";
 import CustomizedDialogs from "../../components/common/Dialog";
 import { TablePaginationActions } from "../../components/realtorDashboard/TablePagination";
-
-const StyledTableCell = styled(TableCell)(({ theme }) => ({
-    [`&.${tableCellClasses.head}`]: {
-        backgroundColor: theme.palette.common.black,
-        color: theme.palette.common.white,
-    },
-    [`&.${tableCellClasses.body}`]: {
-        fontSize: 14,
-    },
-}));
-
-const StyledTableRow = styled(TableRow)(({ theme }) => ({
-    "&:nth-of-type(odd)": {
-        backgroundColor: theme.palette.action.hover,
-    },
-    // hide last border
-    "&:last-child td, &:last-child th": {
-        border: 0,
-    },
-}));
+import { StyledTableCell, StyledTableRow } from "../../utils/styles";
+import { changeDashboardMenuItem } from "../../store/settings/settings.slice";
 
 export default function ArchivePage() {
     const [page, setPage] = React.useState(0); // 0-based index for MUI TablePagination
@@ -100,15 +81,6 @@ export default function ArchivePage() {
         });
     }, [page, rowsPerPage]);
 
-    const formatTimestamp = (timestamp: string) => {
-        const date = new Date(timestamp);
-        const hours = String(date.getUTCHours()).padStart(2, "0");
-        const minutes = String(date.getUTCMinutes()).padStart(2, "0");
-        const formattedTime = `${hours}:${minutes}`;
-        const formattedDate = date.toISOString().split("T")[0];
-        return `${formattedTime} / ${formattedDate}`;
-    };
-
     return (
         <>
             {isDialogOpen && postName && postId && (
@@ -120,30 +92,14 @@ export default function ArchivePage() {
                         await dispatch(deletePost(postId!));
                     }}
                     navigate={"/dashboard/show-all-post"}
+                    lable="Deleting post"
+                    menuItem="All Posts"
                 />
             )}
 
-            <Breadcrumbs
-                aria-label="breadcrumb"
-                style={{ marginBottom: "20px" }}
-            >
-                <Link to={"/dashboard/profile"}>
-                    <Typography variant="h6" color="text.primary">
-                        Dashboard
-                    </Typography>
-                </Link>
-                <Link to={"/dashboard/show-all-post"}>
-                    <Typography variant="h6" color="text.primary">
-                        All Posts
-                    </Typography>
-                </Link>
-                <Typography variant="h6" color="text.primary">
-                    Archive
-                </Typography>
-            </Breadcrumbs>
-            <Divider />
-
-            {errorMessage && <OutlinedErrorAlert message={errorMessage} />}
+            {errorMessage && (
+                <OutlinedErrorAlert message={errorMessage} textColor="#000" />
+            )}
 
             <TableContainer component={Paper}>
                 <Table
@@ -155,21 +111,19 @@ export default function ArchivePage() {
                             <StyledTableCell>Category</StyledTableCell>
 
                             <StyledTableCell>Adress</StyledTableCell>
-                            <StyledTableCell>Name</StyledTableCell>
-                            <StyledTableCell>Price</StyledTableCell>
-                            <StyledTableCell>Date of post</StyledTableCell>
-                            <StyledTableCell>Date of edit</StyledTableCell>
 
-                            <StyledTableCell align="right">
+                            <StyledTableCell>Price</StyledTableCell>
+
+                            <StyledTableCell >
                                 Is Active
                             </StyledTableCell>
-                            <StyledTableCell align="right">
+                            <StyledTableCell >
                                 Edit
                             </StyledTableCell>
-                            <StyledTableCell align="right">
+                            <StyledTableCell >
                                 Post
                             </StyledTableCell>
-                            <StyledTableCell align="right">
+                            <StyledTableCell >
                                 Delete
                             </StyledTableCell>
                         </TableRow>
@@ -178,32 +132,23 @@ export default function ArchivePage() {
                         {rows?.map((row) => (
                             <>
                                 <StyledTableRow key={row.id}>
-                                    <StyledTableCell component="th" scope="row">
+                                    <StyledTableCell >
                                         {row.category}
                                     </StyledTableCell>
 
-                                    <StyledTableCell align="right">
+                                    <StyledTableCell >
                                         {row.adress}
                                     </StyledTableCell>
-                                    <StyledTableCell align="right">
-                                        {row.name}
-                                    </StyledTableCell>
-                                    <StyledTableCell align="right">
+                                    
+                                    <StyledTableCell >
                                         {"$" + row.price}
                                     </StyledTableCell>
-                                    <StyledTableCell align="right">
-                                        {formatTimestamp(row.dateOfPost)}
-                                    </StyledTableCell>
-                                    <StyledTableCell align="right">
-                                        {row.dateOfEdit === null
-                                            ? "-"
-                                            : formatTimestamp(row.dateOfEdit)}
-                                    </StyledTableCell>
-                                    <StyledTableCell align="right">
+
+                                    <StyledTableCell >
                                         {row.isActive === true ? "Yes" : "No"}
                                     </StyledTableCell>
 
-                                    <StyledTableCell align="right">
+                                    <StyledTableCell >
                                         <Button
                                             onClick={() => {
                                                 navigate(
@@ -214,12 +159,13 @@ export default function ArchivePage() {
                                             Edit
                                         </Button>
                                     </StyledTableCell>
-                                    <StyledTableCell align="right">
+                                    <StyledTableCell >
                                         <Button
                                             onClick={async () => {
                                                 await dispatch(
                                                     repostPost(row.id)
                                                 );
+                                                dispatch(changeDashboardMenuItem("All Posts"));
                                                 navigate(
                                                     "/dashboard/show-all-post"
                                                 );
@@ -228,10 +174,9 @@ export default function ArchivePage() {
                                             Post
                                         </Button>
                                     </StyledTableCell>
-                                    <StyledTableCell align="right">
+                                    <StyledTableCell >
                                         <Button
                                             onClick={() => {
-                                                console.log("delete");
                                                 setPostName(row.name);
                                                 setPostId(row.id);
                                                 setIsDialogOpen(true);
@@ -252,10 +197,7 @@ export default function ArchivePage() {
                     <TableFooter>
                         <TableRow>
                             <TablePagination
-                                rowsPerPageOptions={[
-                                    5, 10, 25,
-                                    // { label: "All", value: -1 },
-                                ]}
+                                rowsPerPageOptions={[5, 10, 25]}
                                 colSpan={6}
                                 count={totalCount}
                                 rowsPerPage={rowsPerPage}

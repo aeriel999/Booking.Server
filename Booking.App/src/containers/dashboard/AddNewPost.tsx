@@ -28,9 +28,9 @@ import { addPostResolver, ImagesValidator } from "../../validations/post";
 import { ImageValidator } from "../../validations/post";
 import InputField from "../../components/common/InputField.tsx";
 import { useForm } from "react-hook-form";
-import "../../css/DashBoardRealtorClasses/index.scss";
+
 import ImageUploader from "../../components/realtorDashboard/ImageUploader.tsx";
-import "../../css/DashBoardAnonymousClasses/index.scss";
+ 
 import ListImageUploader from "../../components/realtorDashboard/ListImagesUploader.tsx";
 import CheckboxList from "../../components/realtorDashboard/CheckBoxList.tsx";
 import { changeDashboardMenuItem } from "../../store/settings/settings.slice.ts";

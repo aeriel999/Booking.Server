@@ -105,7 +105,7 @@ export default function RealtorProfileEditPage() {
                         isOpen={open}
                         setOpen={setOpen}
                         navigate={"/dashboard/profile"}
-                    />
+                        menuItem="Profile" lable={""}                    />
                 )}
 
                 <div className="textInputsContainer">

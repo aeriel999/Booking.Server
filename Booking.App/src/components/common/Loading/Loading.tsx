@@ -1,14 +1,15 @@
-import '../../../css/LoadingClasses/insex.scss';
-import { ThreeDots } from 'react-loader-spinner';
+import "../../../css/LoadingClasses/insex.scss";
+import { ThreeDots } from "react-loader-spinner";
+import "../../../css/DashBoardRealtorClasses/index.scss";
 
-export const Loading = () => {
+type LoadingProps = {
+    className?: string;
+};
+
+export const Loading = (props: LoadingProps) => {
     return (
-        <div id="loading">
-            <ThreeDots
-                visible={true}
-                color='#00c2c1'
-                radius={9}
-            />
+        <div className={props.className ? props.className : "loading"}>
+            <ThreeDots visible={true} color="#00c2c1" radius={9} />
         </div>
     );
-}
+};

@@ -54,7 +54,7 @@ public class Post
 
     public ICollection<PostPostTypeOfRest>? PostPostTypesOfRest { get; set; }
 
-    public ICollection<PostService>? PostServices { get; set; }
+    public ICollection<PostService>? Service { get; set; }
 
 	public ICollection<PostBooking>? Bookings { get; set; }
 
