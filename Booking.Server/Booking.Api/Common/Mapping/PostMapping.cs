@@ -72,10 +72,10 @@ public class PostMapping : IRegister
 			.Map(desp => desp.Rate, src => src.Rate)
 			.Map(desp => desp.CountOfFeedbacks, src => src.ReceivedFeedbacks == null ? 0 : src.ReceivedFeedbacks.Count)
 			.Map(desp => desp.ImagePostList, src =>
-			 src.ImagesPost != null ? src.ImagesPost.OrderBy(img => img.Priority)
-			 .Select(img => img.Name).ToArray() : Array.Empty<string>())
-			.Map(desp => desp.TypesOfRest, src => src.PostPostTypesOfRest!.Select(p => p.PostTypeOfRest!.Name))
-			//.Map(desp => desp.Services, src => src.Service!.Select(p => p.Service!.Name))
+				 src.ImagesPost != null ? src.ImagesPost.OrderBy(img => img.Priority)
+				 .Select(img => img.Name).ToArray() : Array.Empty<string>())
+			.Map(desp => desp.TypesOfRest, src => src.PostPostTypesOfRest != null ? 
+				src.PostPostTypesOfRest!.Select(p => p.PostTypeOfRest!.Name) : null)
 			.Map(desp => desp.Services, src =>  src.Service != null ?  src.Service!.Select(service => new GetService
 			{
 				Name =  service.Service!.Name,
