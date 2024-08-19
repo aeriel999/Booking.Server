@@ -174,7 +174,7 @@ public class BookingDbContext : IdentityDbContext<User, IdentityRole<Guid>, Guid
 			.HasOne(b => b.Post)
 			.WithMany(p => p.Bookings)
 			.HasForeignKey(b => b.PostId)
-			.OnDelete(DeleteBehavior.Cascade); ;
+			.OnDelete(DeleteBehavior.Cascade);
 
 	}
        
