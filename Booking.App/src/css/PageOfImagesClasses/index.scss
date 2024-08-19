@@ -1,0 +1,70 @@
+@import "../variables.scss";
+
+#page-of-images {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    position: fixed;
+    top: 0;
+    right: 0;
+    bottom: 0;
+    left: 0;
+    backdrop-filter: blur(5px);
+    z-index: 1;
+
+
+    .page-of-images-list {
+        display: flex;
+        flex-direction: column;
+        width: 70%;
+        min-width: 442px;
+        height: 80%;
+        min-height: 445px;
+        padding: 15px;
+        background-color: $primary-font-color;
+        border-radius: 15px;
+
+        .page-of-images-list-exit {
+            width: 100%;
+            height: 10%;
+            display: flex;
+            padding: 0px 30px;
+            justify-content: flex-end;
+            align-items: center;
+            box-sizing: border-box;
+
+            img {
+                //width: 50px;
+                //height: 50px;
+                padding: 10px;
+                border: 3px solid rgba(0, 0, 0, 0.50);
+                border-radius: 22px;
+                cursor: pointer;
+
+                &:hover {
+                    border-color: $header-menu-background;
+                }
+            }
+        }
+
+        .page-of-images-list-items {
+            width: 100%;
+            height: 90%;
+            display: flex;
+            justify-content: space-evenly;
+            flex-wrap: wrap;
+            background-color: $primary-font-color;
+            margin-top: auto;
+
+            row-gap: 30px;
+            column-gap: 30px;
+            box-sizing: border-box;
+            overflow-y: scroll;
+
+            img {
+                width: 300px;
+                height: 300px;
+            }
+        }
+    }
+}

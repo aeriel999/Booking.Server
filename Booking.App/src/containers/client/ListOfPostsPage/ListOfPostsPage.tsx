@@ -37,6 +37,7 @@ export default function ListOfPostsPage() {
     const [firstLoading, setFirstLoading] = useState<boolean>(false);
 
 
+
     const getPosts = async () => {
         const firstPage: IFetchData = {
             page: currentPage,
@@ -201,6 +202,7 @@ export default function ListOfPostsPage() {
     }, [listOfPosts])
 
     return (<div id="list-of-posts-container">
+
         <div className="navigation">
             <a onClick={() => navigate("/")}>Home Page / </a>
             <p>View Accommodation</p>
@@ -263,6 +265,7 @@ export default function ListOfPostsPage() {
                             category={item.category}
                             typeOfRest={item.typesOfRest.join(", ")}
                             realtor={item.user}
+                            onClick={() => navigate(`post/${item.id}`)}
                         ></PostCard>
 
                     )) : ""}

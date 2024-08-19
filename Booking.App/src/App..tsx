@@ -22,7 +22,7 @@ import AnonymousDashboardLayout from "./containers/anonymous/layouts/AnonymousDa
 import ChatRoom from "./components/chat/ChatRoom.tsx";
 import AllPostList from "./containers/dashboard/AllPostList.tsx";
 import { EditPost } from "./containers/dashboard/EditPost.tsx";
-import PostPage from "./containers/client/PostPage.tsx";
+import { PostOfPage } from "./containers/client/PostOfPage/PostOfPage.tsx";
 import RealtorPage from "./containers/client/RealtorPage.tsx";
 import { EditUserEpailPage } from "./containers/client/EditUserEmailPage.tsx";
 
@@ -108,7 +108,7 @@ export const App: React.FC = () => {
                             <Route index element={<ListOfPostPage />} />
                             <Route
                                 path="/dashboard/post/:postId"
-                                element={<PostPage />}
+                                element={<PostOfPage />}
                             />
                             <Route
                                 path="/dashboard/post/:postId/realtor/:realtorId"
@@ -126,7 +126,7 @@ export const App: React.FC = () => {
                                 path="/dashboard/profile/edit"
                                 element={<EditUserEpailPage />}
                             />
-                           
+
                             <Route path="*" element={<NotFound />} />
                         </Route>
                     )}
@@ -142,19 +142,36 @@ export const App: React.FC = () => {
                     }
                 />
 
-                <Route path="post/:postId" element={<PostPage />} />
-
+                <Route path="post/:postId" element={<PostOfPage />} />
                 <Route
                     path="post/:postId/realtor/:realtorId"
                     element={<RealtorPage />}
                 />
+                {/* <Route path="dashboard/profile" element={<SignInPage />} />
+                <Route path="dashboard/profile/edit" element={<SignInPage />} />
+                <Route
+                    path="dashboard/profile/change-password"
+                    element={<SignInPage />}
+                /> */}
 
                {/* <Route path="*" element={<NotFound />} /> */}
             </Route>
 
+                <Route
+                    path="dashboard/profile/change-password"
+                    element={<SignInPage />}
+                />
+
+                <Route
+                    path="dashboard/dashboard/post/add"
+                    element={<SignInPage />}
+                />
+
+                <Route path="*" element={<NotFound />} />
+            </Route>
             <Route path="/posts" element={<AnonymousDashboardLayoutForPosts />}>
                 <Route index element={<ListOfPostsPage />} />
-
+                <Route path="post/:postId" element={<PostOfPage />} />
                 <Route path="*" element={<NotFound />} />
             </Route>
 
