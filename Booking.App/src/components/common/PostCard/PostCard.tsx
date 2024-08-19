@@ -1,4 +1,4 @@
-import '../../../css/PostCard/index.scss'
+import '../../../css/PostCardClasses/index.scss'
 import { APP_ENV } from '../../../env';
 import { Rating } from "../Rating/Rating";
 
@@ -15,12 +15,13 @@ interface IPostCardInformation {
     category: string;
     typeOfRest: string;
     realtor: string;
+    onClick: () => void;
 }
 
 export const PostCard = (info: IPostCardInformation) => {
 
     return (
-        <div className="post-card">
+        <div className="post-card" onClick={info.onClick}>
             <div className="post-card-image">
                 <img src={`${APP_ENV.BASE_URL}/images/posts/${info.image}`} alt="" />
             </div>
@@ -31,7 +32,7 @@ export const PostCard = (info: IPostCardInformation) => {
                 <div className="post-card-location">
                     <p>{info.city}, {info.country}</p>
                 </div>
-                <Rating rating={info.rating} countOfRating={info.countOfRating}></Rating>
+                <Rating rating={info.rating} ></Rating>
                 <div className="post-card-price">
                     <p>{info.price} UAH</p>
                 </div>

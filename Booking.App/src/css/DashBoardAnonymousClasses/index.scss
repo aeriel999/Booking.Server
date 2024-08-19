@@ -114,11 +114,14 @@
                         height: 100%;
                         border-radius: 7px;
                         border: 1px solid #363838;
-                        padding-left: 6.1%;
+                        padding: 18.8px 0px 18.8px 6.1%;
+
                         color: rgba(0, 0, 0, 0.50);
                         font-size: $medium-font-size;
                         font-family: $primary-font-family;
-                        font-weight: $medium-font-weight
+                        font-weight: $medium-font-weight;
+                        box-sizing: border-box;
+
                     }
 
                     button {
