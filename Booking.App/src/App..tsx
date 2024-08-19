@@ -132,7 +132,8 @@ export const App: React.FC = () => {
                     )}
                 </>
             )}
-            <Route />
+           
+           
             <Route path="/" element={<AnonymousDashboardLayout />}>
                 <Route
                     index
@@ -168,7 +169,8 @@ export const App: React.FC = () => {
                 />
 
                 <Route path="*" element={<NotFound />} />
-            </Route>
+            {/* </Route> */}
+            
             <Route path="/posts" element={<AnonymousDashboardLayoutForPosts />}>
                 <Route index element={<ListOfPostsPage />} />
                 <Route path="post/:postId" element={<PostOfPage />} />
