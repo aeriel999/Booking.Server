@@ -23,13 +23,9 @@ import {
     getListOfPosts,
     getListOfPostsByName,
     getListOfPostsName,
-    
     getListOfServices,
-    
     getListOfStreetsByCityId,
-  
     getListOfTypesOfRest,
-  
     getListPostsForRealtor,
     getPostById,
     getPostListByRealtorId,
@@ -158,8 +154,9 @@ export const postSlice = createSlice({
                 state.status = Status.LOADING;
             })
             .addCase(getPostListByRealtorId.fulfilled, (state, action) => {
-                state.postsByRealtorId = action.payload.$values;
                 state.status = Status.SUCCESS;
+
+                state.postsByRealtorId = action.payload.$values;
             })
             .addCase(getPostListByRealtorId.pending, (state) => {
                 state.status = Status.LOADING;
@@ -289,6 +286,10 @@ export const postSlice = createSlice({
     },
 });
 
-export const { setCategoryToFilter, setCountryToFilter, setCityToFilter, setRealtorToFilter, setTextForSearching } = postSlice.actions;
+export const { setCategoryToFilter, 
+                setCountryToFilter, 
+                setCityToFilter, 
+                setRealtorToFilter, 
+                setTextForSearching } = postSlice.actions;
 
 export default postSlice.reducer;

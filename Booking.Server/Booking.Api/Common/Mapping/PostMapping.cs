@@ -79,7 +79,7 @@ public class PostMapping : IRegister
 			.Map(desp => desp.Services, src =>  src.Service != null ?  src.Service!.Select(service => new GetService
 			{
 				Name =  service.Service!.Name,
-				Icon = "default"
+				Icon = service.Service!.Icon
 			}).ToList() : null) 
 			.Map(desp => desp.RoomList, src => src.Rooms!.Select(room => new EditRoom
 			{

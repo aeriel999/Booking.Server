@@ -5,6 +5,8 @@ public class Service
 
     public required string Name { get; set; }
 
-    public ICollection<PostService>? PostServices { get; set; }
+	public required string Icon { get; set; }
+
+	public ICollection<PostService>? PostServices { get; set; }
 }
 

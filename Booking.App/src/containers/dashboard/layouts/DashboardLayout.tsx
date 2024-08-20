@@ -11,9 +11,12 @@ import { APP_ENV } from "../../../env";
 import { changeDashboardMenuItem } from "../../../store/settings/settings.slice";
 import { IDashboardMenuItem } from "../../../interfaces/common";
 import { initialMenuData } from "../../../utils/data";
+import { Status } from "../../../utils/enum";
+import { Loading } from "../../../components/common/Loading/Loading";
 
 export default function DashboardLayout() {
     const { user } = useAppSelector((state) => state.account);
+    const { status } = useAppSelector((state) => state.post);
     const { currentBreadcrumbsItem } = useAppSelector(
         (state) => state.settings
     );
@@ -155,7 +158,9 @@ export default function DashboardLayout() {
 
                 {/* Dashboard Container */}
                 <div className="outlet">
-                    <Outlet />
+                     {status === Status.LOADING &&
+                            <Loading className="dashboardLoading"/>}  
+                    <Outlet/>
                 </div>
             </div>
         </div>

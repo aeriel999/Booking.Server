@@ -665,7 +665,7 @@
     line-height: normal;
 }
 
-.editLoading {
+.dashboardLoading {
     display: flex;
     align-self: center;
     justify-self: center;
@@ -673,4 +673,5 @@
     justify-content: center;
     height: 100%;
     width: 100%;
+    position: absolute;
 }
