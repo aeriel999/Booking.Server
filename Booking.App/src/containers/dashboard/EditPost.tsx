@@ -8,7 +8,9 @@ import {
     getListOfCategories,
     getListOfCitiesByCountryId,
     getListOfCountries,
+    getListOfServices,
     getListOfStreetsByCityId,
+    getListOfTypesOfRest,
     getPostById,
 } from "../../store/post/post.actions.ts";
 import ErrorHandler from "../../components/common/ErrorHandler.ts";
@@ -27,12 +29,10 @@ import ImageUploader from "../../components/realtorDashboard/ImageUploader.tsx";
 import ListImageUploader from "../../components/realtorDashboard/ListImagesUploader.tsx";
 import Room from "../../components/realtorDashboard/Room.tsx";
 import Plus from "../../assets/DashboardIcons/iconamoon_sign-plus-fill.svg";
-import { Loading } from "../../components/common/Loading/Loading";
 import "../../css/DashBoardRealtorClasses/index.scss";
 
 export function EditPost() {
     const { postId } = useParams();
-
     const { post } = useAppSelector((state) => state.post);
     const dispatch = useAppDispatch();
     const [errorMessage, setErrorMessage] = useState<string | undefined>(
@@ -50,27 +50,27 @@ export function EditPost() {
     const [cityList, setCityList] = useState<ICity[]>([]);
     const [city, setCity] = useState<ICity | null>(null);
     const [isCityValid, setIsCityValid] = useState<boolean>(true);
-    const [_isCityExist, setIsCityExist] = useState<boolean>(false);
+    const [isCityExist, setIsCityExist] = useState<boolean>(false);
 
     const [streetList, setStreetList] = useState<ICity[]>([]);
     const [street, setStreet] = useState<ICity | null>(null);
     const [isStreetValid, setIsStreetValid] = useState<boolean>(true);
-    const [_isStreetExist, setIsStreetExist] = useState<boolean>(false);
+    const [isStreetExist, setIsStreetExist] = useState<boolean>(false);
 
     const [mainImage, setMainImage] = useState<File>();
     const [images, setImages] = useState<File[]>([]);
 
-    const [typeOfRestList, _setTypeOfRestList] = useState<ITypeOfRest[]>([]);
+    const [typeOfRestList, setTypeOfRestList] = useState<ITypeOfRest[]>([]);
     const [typeOfRest, setTypeOfRest] = useState<string[] | null>([]);
 
-    const [servicesList, _setServicesList] = useState<IService[]>([]);
+    const [servicesList, setServicesList] = useState<IService[]>([]);
     const [service, setService] = useState<string[] | null>([]);
 
     const [rooms, setRooms] = useState<IRoom[] | null>([]);
     const [numberOfRooms, setNumberOfRooms] = useState<number>(1);
 
     //const navigate = useNavigate();
-    const [isHotel, _setIsHotel] = useState<boolean>(false);
+    const [isHotel, setIsHotel] = useState<boolean>(false);
 
     const [postImages, setPostImages] = useState<string[]>();
 
@@ -161,6 +161,27 @@ export function EditPost() {
         }
     };
 
+    
+    const getTypeofRestList = async () => {
+        try {
+            const response = await dispatch(getListOfTypesOfRest());
+            unwrapResult(response);
+            return response;
+        } catch (error) {
+            setErrorMessage(ErrorHandler(error));
+        }
+    };
+
+    const getServicesList = async () => {
+        try {
+            const response = await dispatch(getListOfServices());
+            unwrapResult(response);
+            return response;
+        } catch (error) {
+            setErrorMessage(ErrorHandler(error));
+        }
+    };
+
     useEffect(() => {
         getCategoryList().then((history) => {
             setCategoryList(history?.payload.$values);
@@ -169,10 +190,21 @@ export function EditPost() {
         getCountryList().then((history) => {
             setCountryList(history?.payload.$values);
         });
+
+        getTypeofRestList().then((history) => {
+            setTypeOfRestList(history?.payload.$values);
+        });
+
+        getServicesList().then((history) => {
+            setServicesList(history?.payload.$values);
+        });
     }, []);
 
     useEffect(() => {
         getPost(postId as string).then((history) => {
+            console.log(history?.payload);
+
+
             if (history?.payload.countryId) {
                 getCityList(history?.payload.countryId).then((history) => {
                     if (history?.payload.$values != null) {
@@ -187,9 +219,16 @@ export function EditPost() {
                         setStreetList(history?.payload.$values);
                     }
                 });
+
+                
+            if (history?.payload.typesOfRest.$values) {
+                setTypeOfRest(history?.payload.typesOfRest.$values)
+            }
+                
             }
 
-            const fullImageUrls: string[] = history?.payload.imagePostList.map(
+            const fullImageUrls: string[] = history?.payload.imagePostList.$values
+            .map(
                 (image: string) =>
                     `${APP_ENV.BASE_URL}${"/images/posts/"}${image}`
             );
@@ -260,18 +299,20 @@ export function EditPost() {
     //     // }
     // };
 
+
+    
+        
+
     const onSubmit = async (_data: IPostEdit) => {}
 
     return (
-       <>
-            {post && cityList && streetList && postImages ? (
-       <>
-       <div className="mainContainerForForm">
+        post && cityList && streetList && postImages && typeOfRest &&(
+            <div className="mainContainerForForm">
             {errorMessage && (
                 <OutlinedErrorAlert message={errorMessage} textColor="#000" />
             )}
             
-            <div className="title">Add New Post</div>
+            <div className="title">Edit Post</div>
 
 <div className="twoColumnsContainer">
     <div className="textInputsContainer">
@@ -304,9 +345,7 @@ export function EditPost() {
             </div>
             {/* Category */}
             <div className="fieldContainer">
-                {!category && (
-                    <div className="filedTitle">Category </div>
-                )}
+                
                 <ComboBox
                     options={categoryList}
                     onChange={setCategory}
@@ -323,9 +362,6 @@ export function EditPost() {
 
             {/* Country */}
             <div className="fieldContainer">
-                {!country && (
-                    <div className="filedTitle">Country </div>
-                )}
 
                 <ComboBox
                     options={countryList}
@@ -604,13 +640,8 @@ export function EditPost() {
 >
     Submit
 </button>
-</div>
-       </>
-) : (<Loading className="editLoading"/>)}
-       </> 
-
-
-
+            </div>
+        )
        
     );
 }

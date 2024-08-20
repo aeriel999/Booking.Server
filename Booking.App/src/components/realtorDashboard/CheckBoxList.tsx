@@ -11,19 +11,22 @@ interface CheckboxListProps {
     onChange: (selectedOptions: string[]) => void;
 }
 
-export default function CheckboxList({ options, selectedOptions, onChange }: CheckboxListProps) {
+export default function CheckboxList({
+    options,
+    selectedOptions,
+    onChange,
+}: CheckboxListProps) {
     const handleChange = (id: string) => {
         if (selectedOptions !== null && selectedOptions.includes(id)) {
-            onChange(selectedOptions.filter(option => option !== id));
+            onChange(selectedOptions.filter((option) => option !== id));
         } else {
-            if(selectedOptions !== null )
-                 onChange([...selectedOptions, id]);
+            if (selectedOptions !== null) onChange([...selectedOptions, id]);
         }
     };
 
     return (
         <div className="checkboxList">
-            {options.map(option => (
+            {options.map((option) => (
                 <label key={option.id} className="checkboxLabel">
                     <input
                         type="checkbox"

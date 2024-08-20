@@ -108,14 +108,20 @@ export interface IPostInformation {
     rate: number;
     countOfFeedbacks: number | null;
     imagePostList: string[];
-    typesOfRest: string[] | null;
-    services: IServise[] | null;
+    typesOfRest: IGetTypeOfRest[] | null;
+    services: IGetService[] | null;
     roomList?: IRoomInfo[];
 }
 
-export interface IServise{
+export interface IGetService{
+    id: string,
     name: string,
     icon: string
+}
+
+export interface IGetTypeOfRest{
+    id: string,
+    name: string,
 }
 
 export interface IRoomInfo {
