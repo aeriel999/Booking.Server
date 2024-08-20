@@ -3,6 +3,7 @@ import { RejectedAction } from "../../utils/types";
 import { Status } from "../../utils/enum";
 import {
     IPageOfPosts,
+    IPostForEdit,
     IPostInformation,
     IPostState,
 } from "../../interfaces/post";
@@ -28,6 +29,7 @@ import {
     getListOfTypesOfRest,
     getListPostsForRealtor,
     getPostById,
+    getPostForEditById,
     getPostListByRealtorId,
     getPostsWithMostDiscount,
     getPostsWithMostRating,
@@ -43,6 +45,7 @@ const initialState: IPostState = {
     status: Status.IDLE,
     post: null,
     posts: null,
+    postForEdit: null,
     categories: null,
     countries: null,
     cities: null,
@@ -88,7 +91,7 @@ export const postSlice = createSlice({
     },
     extraReducers: (builder) => {
         builder
-
+ 
             .addCase(
                 getPostById.fulfilled,
                 (state, action: PayloadAction<IPostInformation>) => {
@@ -97,6 +100,16 @@ export const postSlice = createSlice({
                 }
             )
             .addCase(getPostById.pending, (state) => {
+                state.status = Status.LOADING;
+            })
+            .addCase(
+                getPostForEditById.fulfilled,
+                (state, action: PayloadAction<IPostForEdit>) => {
+                    state.postForEdit = action.payload;
+                    state.status = Status.SUCCESS;
+                }
+            )
+            .addCase(getPostForEditById.pending, (state) => {
                 state.status = Status.LOADING;
             })
             .addCase(

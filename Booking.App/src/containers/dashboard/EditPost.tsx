@@ -12,6 +12,7 @@ import {
     getListOfStreetsByCityId,
     getListOfTypesOfRest,
     getPostById,
+    getPostForEditById,
 } from "../../store/post/post.actions.ts";
 import ErrorHandler from "../../components/common/ErrorHandler.ts";
 import OutlinedErrorAlert from "../../components/common/ErrorAlert.tsx";
@@ -33,7 +34,7 @@ import "../../css/DashBoardRealtorClasses/index.scss";
 
 export function EditPost() {
     const { postId } = useParams();
-    const { post } = useAppSelector((state) => state.post);
+    const { postForEdit } = useAppSelector((state) => state.post);
     const dispatch = useAppDispatch();
     const [errorMessage, setErrorMessage] = useState<string | undefined>(
         undefined
@@ -111,7 +112,7 @@ export function EditPost() {
 
     const getPost = async (id: string) => {
         try {
-            const response = await dispatch(getPostById(id));
+            const response = await dispatch(getPostForEditById(id));
             unwrapResult(response);
             return response;
         } catch (error) {
@@ -219,10 +220,13 @@ export function EditPost() {
                         setStreetList(history?.payload.$values);
                     }
                 });
-
                 
             if (history?.payload.typesOfRest.$values) {
                 setTypeOfRest(history?.payload.typesOfRest.$values)
+            }
+
+            if (history?.payload.services.$values) {
+                setService(history?.payload.services.$values)
             }
                 
             }
@@ -306,7 +310,7 @@ export function EditPost() {
     const onSubmit = async (_data: IPostEdit) => {}
 
     return (
-        post && cityList && streetList && postImages && typeOfRest &&(
+        postForEdit && cityList && streetList && postImages && typeOfRest &&(
             <div className="mainContainerForForm">
             {errorMessage && (
                 <OutlinedErrorAlert message={errorMessage} textColor="#000" />
@@ -332,7 +336,7 @@ export function EditPost() {
                     name="name"
                     register={register}
                     setValue={setValue}
-                    defaultValue={post?.name}
+                    defaultValue={postForEdit?.name}
                     className={
                         errors.name ? "errorFormInput" : "field"
                     }
@@ -351,7 +355,7 @@ export function EditPost() {
                     onChange={setCategory}
                     label={"Category*"}
                     isValid={setIsCategoryValid}
-                    defaultValue={post!.categoryName}
+                    defaultValue={postForEdit!.categoryName}
                 />
                 {!isCategoryValid && (
                     <div className="dashboardError">
@@ -368,7 +372,7 @@ export function EditPost() {
                     onChange={setCountry}
                     label={"Country*"}
                     isValid={setIsCountryValid}
-                    defaultValue={post!.countryName}
+                    defaultValue={postForEdit!.countryName}
                 />
                 {!isCountryValid && (
                     <div className="dashboardError">
@@ -391,7 +395,7 @@ export function EditPost() {
                         onChange={setCity}
                         label={"City"}
                         isValid={setIsCityValid}
-                        defaultValue={post!.cityName}
+                        defaultValue={postForEdit!.cityName}
                     />
                     {!isCityValid && (
                         <div className="dashboardError">
@@ -438,7 +442,7 @@ export function EditPost() {
                         onChange={setStreet}
                         label={"Street"}
                         isValid={setIsStreetValid}
-                        defaultValue={post!.streetName}
+                        defaultValue={postForEdit!.streetName}
                     />
                     {!isStreetValid && (
                         <div className="dashboardError">
@@ -484,7 +488,7 @@ export function EditPost() {
                     className={
                         errors.zipCode ? "errorFormInput" : "field"
                     }
-                    defaultValue={post?.zipCode}
+                    defaultValue={postForEdit?.zipCode}
                 />
                 {errors.zipCode && (
                     <div className="dashboardError">
@@ -507,7 +511,7 @@ export function EditPost() {
                             name="numberOfGuests"
                             register={register}
                             setValue={setValue}
-                            defaultValue={post?.numberOfGuests!}
+                            defaultValue={postForEdit?.numberOfGuests!}
                             className={
                                 errors.numberOfGuests
                                     ? "errorFormInput"
@@ -531,7 +535,7 @@ export function EditPost() {
                             name="price"
                             register={register}
                             setValue={setValue}
-                            defaultValue={post?.price}
+                            defaultValue={postForEdit?.price}
                             className={
                                 errors.price
                                     ? "errorFormInput"
@@ -554,7 +558,7 @@ export function EditPost() {
                             name="discount"
                             register={register}
                             setValue={setValue}
-                            defaultValue={post?.discount === null ? 0 : post?.discount}
+                            defaultValue={postForEdit?.discount === null ? 0 : postForEdit?.discount}
                             className={
                                 errors.discount
                                     ? "errorFormInput"

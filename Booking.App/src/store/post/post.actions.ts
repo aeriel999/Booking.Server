@@ -423,3 +423,17 @@ export const createRoom = createAsyncThunk(
         }
     }
 );
+
+export const getPostForEditById = createAsyncThunk(
+    "Post/get-post-for-edit-by-id",
+    async (id: string, { rejectWithValue }) => {
+        try {
+            const response = await apiClient.get(
+                `api/Post/get-post-for-edit-by-id-${id}`
+            );
+            return response.data;
+        } catch (error) {
+            return rejectWithValue(handleAxiosError(error, "Network error"));
+        }
+    }
+);
