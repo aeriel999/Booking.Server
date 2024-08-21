@@ -2,14 +2,7 @@ import React, { useState, useEffect } from "react";
 import TextField from "@mui/material/TextField";
 import Autocomplete from "@mui/material/Autocomplete";
 import { IListForCombobox } from "../../interfaces/post";
-
-interface ComboBoxProps {
-    options: IListForCombobox[];
-    onChange: (newValue: IListForCombobox | null) => void;
-    label: string;
-    defaultValue?: string;
-    isValid?: (isValid: boolean) => void;
-}
+import { ComboBoxProps } from "../../interfaces/common";
 
 export default function ComboBox({
     options,
@@ -35,9 +28,8 @@ export default function ComboBox({
     ) => {
         if (isValid && newValue === null) {
             isValid(false);
-        } else{
-          if(isValid)
-            isValid(true);
+        } else {
+            if (isValid) isValid(true);
         }
         setSelectedOption(newValue);
         onChange(newValue);
@@ -56,13 +48,14 @@ export default function ComboBox({
                 <TextField
                     {...params}
                     label={label}
-                    sx={{ fontFamily: "Roboto, sans-serif",
+                    sx={{
+                        fontFamily: "Roboto, sans-serif",
                         "& .MuiInputLabel-shrink": {
-                         color: "#black",  
-                         fontSize: "1rem",
-                         fontWeight:900  
-                },
-                     }}
+                            color: "#black",
+                            fontSize: "1rem",
+                            fontWeight: 900,
+                        },
+                    }}
                 />
             )}
         />

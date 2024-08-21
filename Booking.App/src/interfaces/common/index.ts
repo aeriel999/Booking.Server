@@ -1,3 +1,5 @@
+import { IListForCombobox } from "../post";
+
 export interface IDashboardState {
     currentBreadcrumbsItem: string;
     currentPaginationPage: number;
@@ -20,4 +22,12 @@ export interface IDashboardMenuItem {
     image: string;
     activeImage: string;
     link: string;
+}
+
+export interface ComboBoxProps {
+    options: IListForCombobox[];
+    onChange: (newValue: IListForCombobox | null) => void;
+    label: string;
+    defaultValue?: string;
+    isValid?: (isValid: boolean) => void;
 }

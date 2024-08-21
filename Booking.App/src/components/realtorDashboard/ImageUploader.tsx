@@ -27,6 +27,13 @@ const ImageUploader = (props: ImageUploader) => {
         }
     };
 
+    const handleKeyDown = (event: React.KeyboardEvent<HTMLAnchorElement>) => {
+        if (event.key === "Enter" || event.key === " ") {
+            event.preventDefault(); // Prevent default action for Enter and Space keys
+            document.getElementById(props.label)?.click(); // Trigger click on the hidden file input
+        }
+    };
+
     const displayImage = props.image
         ? URL.createObjectURL(props.image)
         : ImageTemplate;
@@ -48,7 +55,11 @@ const ImageUploader = (props: ImageUploader) => {
                     />
                 </label>
                 <label htmlFor={props.label}>
-                    <a type="button" className="imageUploadButton"  tabIndex={0}>
+                    <a 
+                        type="button" 
+                        className="imageUploadButton"  
+                        onKeyDown={handleKeyDown} // Handle key down events for accessibility
+                        tabIndex={0}>
                         Upload Main Image
                     </a>
                     <input

@@ -71,7 +71,7 @@ export default function DashboardLayout() {
                 {/* Header */}
                 <div id="headerMainPart">
                     <a
-                        id="logo"
+                        id="headerLogo"
                         onClick={() => {
                             navigate("/");
                         }}

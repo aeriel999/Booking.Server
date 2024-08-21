@@ -46,6 +46,13 @@ const ListImageUploader = (props: ListImageUploaderProps) => {
         setError(errorMessage);
     };
 
+    const handleKeyDown = (event: React.KeyboardEvent<HTMLAnchorElement>) => {
+        if (event.key === "Enter" || event.key === " ") {
+            event.preventDefault(); // Prevent default action for Enter and Space keys
+            document.getElementById("images-upload")?.click(); // Trigger click on the hidden file input
+        }
+    };
+
     return (
         <div className="blockImagesContainer">
             {error && <OutlinedErrorAlert message={error} />}
@@ -93,7 +100,11 @@ const ListImageUploader = (props: ListImageUploaderProps) => {
 
             <div className="buttonContainer">
                 <label htmlFor="images-upload">
-                    <a type="button" className="imageUploadButton" tabIndex={0}>
+                    <a 
+                        type="button" 
+                        className="imageUploadButton" 
+                        onKeyDown={handleKeyDown} // Handle key down events for accessibility
+                        tabIndex={0}>
                         Add Image
                     </a>
                 </label>
