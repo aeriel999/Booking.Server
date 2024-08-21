@@ -93,7 +93,7 @@ const ListImageUploader = (props: ListImageUploaderProps) => {
 
             <div className="buttonContainer">
                 <label htmlFor="images-upload">
-                    <a type="button" className="imageUploadButton">
+                    <a type="button" className="imageUploadButton" tabIndex={0}>
                         Add Image
                     </a>
                 </label>

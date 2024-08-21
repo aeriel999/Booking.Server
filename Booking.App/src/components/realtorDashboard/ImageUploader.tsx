@@ -48,7 +48,7 @@ const ImageUploader = (props: ImageUploader) => {
                     />
                 </label>
                 <label htmlFor={props.label}>
-                    <a type="button" className="imageUploadButton">
+                    <a type="button" className="imageUploadButton"  tabIndex={0}>
                         Upload Main Image
                     </a>
                     <input

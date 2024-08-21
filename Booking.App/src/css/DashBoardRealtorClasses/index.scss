@@ -505,6 +505,7 @@
 
     &:hover {
         border: 1px solid $register-button-border-color;
+        height: 35px;
     }
 }
 
@@ -665,6 +666,11 @@
     font-style: normal;
     font-weight: 400;
     line-height: normal;
+
+    &:hover {
+        border: 1px solid $register-button-border-color;
+        height: 50px;
+    }
 }
 
 .dashboardLoading {

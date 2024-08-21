@@ -24,6 +24,14 @@ export default function CheckboxList({
         }
     };
 
+    //Set oportunity make choice with enter button
+    const handleKeyDown = (event: React.KeyboardEvent<HTMLInputElement>, optionId: string) => {
+        if (event.key === 'Enter' || event.key === ' ') {
+            event.preventDefault(); // Prevent form submission or other default actions
+            handleChange(optionId);  // Trigger the change handler
+        }
+    };
+
     return (
         <div className="checkboxList">
             {options.map((option) => (
@@ -32,6 +40,8 @@ export default function CheckboxList({
                         type="checkbox"
                         checked={selectedOptions?.includes(option.id)}
                         onChange={() => handleChange(option.id)}
+                        onKeyDown={(event) => handleKeyDown(event, option.id)} // Handle Enter/Space with onKeyDown
+                        tabIndex={0}
                     />
                     {option.name}
                 </label>

@@ -6,13 +6,7 @@ import InputField from "../common/InputField";
 import { useState } from "react";
 import OutlinedErrorAlert from "../common/ErrorAlert";
 import ImageUploader from "./ImageUploader";
-
-type RoomsProps = {
-    rooms: IRoom[] | null;
-    setRooms: (rooms: IRoom[]) => void;
-    label: string;
-    formName: string;
-};
+import { RoomsProps } from "../../utils/types";
 
 export default function Room(props: RoomsProps) {
     const [errorMessage, setErrorMessage] = useState<string | undefined>(
