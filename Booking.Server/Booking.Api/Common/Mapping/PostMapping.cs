@@ -232,22 +232,6 @@ public class PostMapping : IRegister
 
 		config.NewConfig<PagedList<Post>, PagedList<GetPostListForRealtorResponse>>();
 
-
-		config.NewConfig<Post, GetPostForEditResponse>()
-			.Map(desp => desp.CategoryName, src => src.Category!.Name)
-			.Map(desp => desp.StreetName, src => src.Street!.Name)
-			.Map(desp => desp.User, src => $"{src.User!.FirstName} {src.User.LastName}")
-			.Map(desp => desp.CountryName, src => src.Street!.City!.Country!.Name)
-			.Map(desp => desp.CountryId, src => src.Street!.City!.CountryId)
-			.Map(desp => desp.CityName, src => src.Street!.City!.Name)
-			.Map(desp => desp.CityId, src => src.Street!.City!.Id)
-			.Map(desp => desp.NumberOfGuests, src => src.Rate)
-			.Map(desp => desp.Discount, src => src.Discount)
-			.Map(desp => desp.ZipCode, src => src.ZipCode)
-			.Map(desp => desp.ImagePostList, src =>
-			src.ImagesPost != null ? src.ImagesPost.Select(img => img.Name).ToArray() : Array.Empty<string>());
-	
-
 		config.NewConfig<(
 			EditPostRequest editPostRequest, Guid UserId, List<byte[]> Images), EditPostCommand>()
 		.Map(dest => dest.UserId, src => src.UserId)

@@ -12,7 +12,7 @@ type ListImageUploaderProps = {
 };
 
 const ListImageUploader = (props: ListImageUploaderProps) => {
-    const numberOfImagesUpload = 4;
+    const numberOfImagesUpload = 6;
     const [numberOfBlocks, setNumberOfBlocks] = useState<number>(1);
     const [error, setError] = useState<string | false | undefined>(false);
 
