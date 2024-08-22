@@ -4,6 +4,7 @@ import { useEffect, useState } from "react";
 import { useAppDispatch, useAppSelector } from "../../hooks/redux";
 import { unwrapResult } from "@reduxjs/toolkit";
 import {
+    editPost,
    // editPost,
     getListOfCategories,
     getListOfCitiesByCountryId,
@@ -31,6 +32,12 @@ import ListImageUploader from "../../components/realtorDashboard/ListImagesUploa
 import Room from "../../components/realtorDashboard/Room.tsx";
 import Plus from "../../assets/DashboardIcons/iconamoon_sign-plus-fill.svg";
 import "../../css/DashBoardRealtorClasses/index.scss";
+import EditImageUploader from "../../components/realtorDashboard/EditImageUploader.tsx";
+
+export interface IDeleteImage{
+    name: string;
+    index: number;
+}
 
 export function EditPost() {
     const { postId } = useParams();
@@ -74,6 +81,8 @@ export function EditPost() {
     const [isHotel, setIsHotel] = useState<boolean>(false);
 
     const [postImages, setPostImages] = useState<string[]>();
+    const [deleteImages, setDeleteImages] = useState<IDeleteImage[]>();
+
 
     // const [categoryList, setCategoryList] = useState<ICategory[]>([]);
     // const [category, setCategory] = useState<ICategory>();
@@ -596,11 +605,14 @@ export function EditPost() {
         </form>
     </div>
     <div className="addImagesContainer">
-        <ImageUploader
+        <EditImageUploader
             image={mainImage}
             setImage={setMainImage}
             validator={ImageValidator}
-            label="image-upload"
+            label={postForEdit?.imagePostList[0]}
+            defaultImageUrl={postImages[0]}
+            buttonText="Change Main image"
+            onImageDelete={setDeleteImages}
         />
 
         <ListImageUploader
