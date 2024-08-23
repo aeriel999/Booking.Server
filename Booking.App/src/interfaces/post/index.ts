@@ -88,6 +88,25 @@ export interface IPost {
     typesOfRest: string[];
 }
 
+export interface IPostForEdit {
+    id: number;
+    name: string;
+    categoryName: string;
+    countryId: string;
+    countryName: string;
+    cityName: string;
+    cityId: string;
+    streetName: string;
+    zipCode: number;
+    discount: number | null;
+    numberOfGuests: number | null;
+    price: number;
+    imagePostList: string[];
+    typesOfRest: string[] | null;
+    services: string[] | null;
+    roomList?: IRoomInfo[];
+}
+
 export interface IPostInformation {
     id: number;
     name: string;
@@ -98,7 +117,6 @@ export interface IPostInformation {
     cityName: string;
     cityId: string;
     streetName: string;
-    streetId: string;
     zipCode: number;
     discount: number | null;
     numberOfGuests: number | null;
@@ -139,12 +157,11 @@ export interface IPostByRealtorId {
     imagePost: string;
 }
 
-
-
 export interface IPostState {
     status: Status;
     post: IPostInformation | null;
     posts: IPageOfPosts | null;
+    postForEdit: IPostForEdit | null;
     categories: ICategory[] | null;
     countries: ICountry[] | null;
     cities: ICity[] | null;
@@ -301,4 +318,9 @@ export interface ISendFeedback {
     text: string | null,
     rating: number,
     postId: string
+}
+
+export interface IDeleteImage {
+    name: string;
+    index: number;
 }

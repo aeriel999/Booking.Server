@@ -1,38 +1,49 @@
-﻿namespace Booking.Api.Contracts.Post.GetPostForEditing;
+﻿using Booking.Api.Contracts.Post.GetPost;
+
+namespace Booking.Api.Contracts.Post.GetPostForEditing;
 
 public record GetPostForEditResponse
 {
-	public required Guid Id { get; set; }
+	public required Guid Id { get; init; }
 
-	public required string Name { get; set; }
 
-	public required string CountryName { get; set; }
+	public required string Name { get; init; }
 
-	public required Guid CountryId { get; set; }
 
-	public required string CityName { get; set; }
+	public required string CategoryName { get; init; }
 
-	public required Guid CityId { get; set; }
 
-	public required string CategoryName { get; set; }
+	public required string CountryName { get; init; }
+	public required Guid CountryId { get; init; }
 
-	public string? Description { get; set; }
 
-	public required string StreetName { get; set; }
+	public required string CityName { get; init; }
+	public required Guid CityId { get; init; }
 
-	public int ZipCode{ get; set; }
 
-	public int? NumberOfGuests { get; set; }
+	public required string StreetName { get; init; }
 
-	public int? Discount { get; set; }
 
-	public required string User { get; set; }
+	public int ZipCode { get; init; }
 
-	public required bool IsArhive { get; set; }
 
-	public required bool IsActive { get; set; }
+	public int? Discount { get; init; }
 
-	public required decimal Price { get; set; }
 
-	public required string[] ImagePostList { get; set; }
+	public int? NumberOfGuests { get; init; }
+
+
+	public required decimal Price { get; init; }
+
+
+	public required List<string> ImagePostList { get; init; }
+
+
+	public List<Guid>? TypesOfRest { get; init; }
+
+
+	public List<Guid>? Services { get; init; }
+
+
+	public List<EditRoom>? RoomList { get; init; }
 }

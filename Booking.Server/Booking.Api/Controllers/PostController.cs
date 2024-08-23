@@ -55,6 +55,7 @@ using Booking.Application.Posts.GetCitiesFilteredList;
 using Booking.Application.Posts.GetServicesList;
 using Booking.Api.Contracts.Post.GetServicesList;
 using Booking.Application.Posts.CreateRoom;
+using Booking.Api.Contracts.Post.GetPostForEditing;
 
 namespace Booking.Api.Controllers;
 
@@ -471,6 +472,16 @@ public class PostController(ISender mediatr, IMapper mapper) : ApiController
 
 		return getServicesListResult.Match(
 			getServicesListResult => Ok(mapper.Map<List<GetServicesListResponse>>(getServicesListResult)),
+			errors => Problem(errors));
+	}
+
+	[HttpGet("get-post-for-edit-by-id-{id}")]
+	public async Task<IActionResult> GetPostForEditByIdAsync([FromRoute] Guid id)
+	{
+		var getPostForEditResult = await mediatr.Send(new GetPostByIdQuery(id));
+
+		return getPostForEditResult.Match(
+			getPostResult => Ok(mapper.Map<GetPostForEditResponse>(getPostForEditResult.Value)),
 			errors => Problem(errors));
 	}
 }

@@ -7,9 +7,9 @@ const navigate = useNavigate();
 
     return(
         <div className="authHeader">
-            <div id="authHeaderLogo" 
+            <a id="authHeaderLogo" 
             onClick={()=>{navigate("/")}}
-            ><img  src={Logo} alt="Logo" /></div>
+            ><img  src={Logo} alt="Logo" /></a>
         </div>
     )
 }

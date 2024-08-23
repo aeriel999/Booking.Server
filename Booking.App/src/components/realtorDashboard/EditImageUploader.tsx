@@ -1,11 +1,17 @@
-import React, { useState } from "react";
-import ImageTemplate from "../../assets/Templates/Vector.webp";
+import React, { useState, useEffect } from "react";
 import OutlinedErrorAlert from "../common/ErrorAlert";
 import "../../css/DashBoardRealtorClasses/index.scss";
-import { ImageUploaderProps } from "../../utils/types";
+import { IDeleteImage } from "../../interfaces/post";
+import { EditImageUploaderType } from "../../utils/types";
 
-const ImageUploader = (props: ImageUploaderProps) => {
+
+const EditImageUploader = (props: EditImageUploaderType) => {
     const [error, setError] = useState<string | false | undefined>(false);
+    const [displayImage, setDisplayImage] = useState<string>(props.defaultImageUrl);
+
+    useEffect(() => {
+        setDisplayImage(props.image ? URL.createObjectURL(props.image) : props.defaultImageUrl);
+    }, [props.image, props.defaultImageUrl]);
 
     const handleOnAddImage = (e: React.ChangeEvent<HTMLInputElement>) => {
         if (!e.target.files) return;
@@ -17,25 +23,25 @@ const ImageUploader = (props: ImageUploaderProps) => {
 
         if (!errorMessage) {
             props.setImage(file);
+
+            const deleteImageInfo: IDeleteImage = { name: props.label, index: 0 };
+        
+            // Trigger the onImageDelete callback
+            props.onImageDelete([deleteImageInfo]);
         }
     };
 
     const handleKeyDown = (event: React.KeyboardEvent<HTMLAnchorElement>) => {
         if (event.key === "Enter" || event.key === " ") {
-            event.preventDefault(); // Prevent default action for Enter and Space keys
-            document.getElementById(props.label)?.click(); // Trigger click on the hidden file input
+            event.preventDefault();
+            document.getElementById(props.label)?.click();
         }
     };
-
-    //Set display image
-    const displayImage = props.image
-        ? URL.createObjectURL(props.image)
-        : ImageTemplate;
 
     return (
         <>
             {error && <OutlinedErrorAlert message={error} textColor="#000" />}
-            <div className="mainImage">
+            <div className="mainImage" style={{ position: "relative" }}>
                 <label htmlFor={props.label}>
                     <div
                         style={{
@@ -52,10 +58,10 @@ const ImageUploader = (props: ImageUploaderProps) => {
                     <a
                         type="button"
                         className="imageUploadButton"
-                        onKeyDown={handleKeyDown} // Handle key down events for accessibility
+                        onKeyDown={handleKeyDown}
                         tabIndex={0}
                     >
-                        Upload Main Image
+                        Change Main image
                     </a>
                     <input
                         id={props.label}
@@ -65,9 +71,10 @@ const ImageUploader = (props: ImageUploaderProps) => {
                         style={{ display: "none" }}
                     />
                 </label>
+                
             </div>
         </>
     );
 };
 
-export default ImageUploader;
+export default EditImageUploader;

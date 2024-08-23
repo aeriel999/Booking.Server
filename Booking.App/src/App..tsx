@@ -25,7 +25,6 @@ import { EditPost } from "./containers/dashboard/EditPost.tsx";
 import { PostOfPage } from "./containers/client/PostOfPage/PostOfPage.tsx";
 import RealtorPage from "./containers/client/RealtorPage.tsx";
 import { EditUserEpailPage } from "./containers/client/EditUserEmailPage.tsx";
-
 import ArchivePage from "./containers/dashboard/ArchivePage.tsx";
 import { ReviewsPage } from "./containers/dashboard/ReviewsPage.tsx";
 import "./App.scss";
@@ -132,8 +131,7 @@ export const App: React.FC = () => {
                     )}
                 </>
             )}
-           
-           
+
             <Route path="/" element={<AnonymousDashboardLayout />}>
                 <Route
                     index
@@ -155,22 +153,22 @@ export const App: React.FC = () => {
                     element={<SignInPage />}
                 /> */}
 
-               {/* <Route path="*" element={<NotFound />} /> */}
+                {/* <Route path="*" element={<NotFound />} /> */}
             </Route>
 
-                <Route
-                    path="dashboard/profile/change-password"
-                    element={<SignInPage />}
-                />
+            <Route
+                path="dashboard/profile/change-password"
+                element={<SignInPage />}
+            />
 
-                <Route
-                    path="dashboard/dashboard/post/add"
-                    element={<SignInPage />}
-                />
+            <Route
+                path="dashboard/dashboard/post/add"
+                element={<SignInPage />}
+            />
 
-                <Route path="*" element={<NotFound />} />
+            <Route path="*" element={<NotFound />} />
             {/* </Route> */}
-            
+
             <Route path="/posts" element={<AnonymousDashboardLayoutForPosts />}>
                 <Route index element={<ListOfPostsPage />} />
                 <Route path="post/:postId" element={<PostOfPage />} />
@@ -194,7 +192,7 @@ export const App: React.FC = () => {
                 <Route path="reviews" element={<SignInPage />} />
             </Route>*/}
 
-            <Route path="authentication/login" element={<SignInPage />} /> 
+            <Route path="authentication/login" element={<SignInPage />} />
 
             <Route
                 path="/authentication/user-register"

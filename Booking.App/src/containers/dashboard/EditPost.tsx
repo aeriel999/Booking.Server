@@ -1,19 +1,32 @@
-import {  useParams } from "react-router-dom";
+import { useParams } from "react-router-dom";
 import ComboBox from "../../components/common/ComboBox.tsx";
 import { useEffect, useState } from "react";
 import { useAppDispatch, useAppSelector } from "../../hooks/redux";
 import { unwrapResult } from "@reduxjs/toolkit";
 import {
-   // editPost,
+    editPost,
+    // editPost,
     getListOfCategories,
     getListOfCitiesByCountryId,
     getListOfCountries,
+    getListOfServices,
     getListOfStreetsByCityId,
+    getListOfTypesOfRest,
     getPostById,
+    getPostForEditById,
 } from "../../store/post/post.actions.ts";
 import ErrorHandler from "../../components/common/ErrorHandler.ts";
 import OutlinedErrorAlert from "../../components/common/ErrorAlert.tsx";
-import { ICategory, ICity, ICountry, IPostEdit, IRoom, IService, ITypeOfRest } from "../../interfaces/post";
+import {
+    ICategory,
+    ICity,
+    ICountry,
+    IDeleteImage,
+    IPostEdit,
+    IRoom,
+    IService,
+    ITypeOfRest,
+} from "../../interfaces/post";
 import {
     editPostResolver,
     ImagesValidator,
@@ -27,13 +40,13 @@ import ImageUploader from "../../components/realtorDashboard/ImageUploader.tsx";
 import ListImageUploader from "../../components/realtorDashboard/ListImagesUploader.tsx";
 import Room from "../../components/realtorDashboard/Room.tsx";
 import Plus from "../../assets/DashboardIcons/iconamoon_sign-plus-fill.svg";
-import { Loading } from "../../components/common/Loading/Loading";
 import "../../css/DashBoardRealtorClasses/index.scss";
+import EditImageUploader from "../../components/realtorDashboard/EditImageUploader.tsx";
+import EditListImagesUploader from "../../components/realtorDashboard/EditListImagesUploader.tsx";
 
 export function EditPost() {
     const { postId } = useParams();
-
-    const { post } = useAppSelector((state) => state.post);
+    const { postForEdit } = useAppSelector((state) => state.post);
     const dispatch = useAppDispatch();
     const [errorMessage, setErrorMessage] = useState<string | undefined>(
         undefined
@@ -50,29 +63,30 @@ export function EditPost() {
     const [cityList, setCityList] = useState<ICity[]>([]);
     const [city, setCity] = useState<ICity | null>(null);
     const [isCityValid, setIsCityValid] = useState<boolean>(true);
-    const [_isCityExist, setIsCityExist] = useState<boolean>(false);
+    const [isCityExist, setIsCityExist] = useState<boolean>(false);
 
     const [streetList, setStreetList] = useState<ICity[]>([]);
     const [street, setStreet] = useState<ICity | null>(null);
     const [isStreetValid, setIsStreetValid] = useState<boolean>(true);
-    const [_isStreetExist, setIsStreetExist] = useState<boolean>(false);
+    const [isStreetExist, setIsStreetExist] = useState<boolean>(false);
 
     const [mainImage, setMainImage] = useState<File>();
     const [images, setImages] = useState<File[]>([]);
+    const [postImagesUrl, setPostImagesUrl] = useState<string[]>();
+    const [mainImageUrl, setMainImageUrl] = useState<string>();
+    const [deleteImages, setDeleteImages] = useState<IDeleteImage[]>();
 
-    const [typeOfRestList, _setTypeOfRestList] = useState<ITypeOfRest[]>([]);
+    const [typeOfRestList, setTypeOfRestList] = useState<ITypeOfRest[]>([]);
     const [typeOfRest, setTypeOfRest] = useState<string[] | null>([]);
 
-    const [servicesList, _setServicesList] = useState<IService[]>([]);
+    const [servicesList, setServicesList] = useState<IService[]>([]);
     const [service, setService] = useState<string[] | null>([]);
 
     const [rooms, setRooms] = useState<IRoom[] | null>([]);
     const [numberOfRooms, setNumberOfRooms] = useState<number>(1);
 
     //const navigate = useNavigate();
-    const [isHotel, _setIsHotel] = useState<boolean>(false);
-
-    const [postImages, setPostImages] = useState<string[]>();
+    const [isHotel, setIsHotel] = useState<boolean>(false);
 
     // const [categoryList, setCategoryList] = useState<ICategory[]>([]);
     // const [category, setCategory] = useState<ICategory>();
@@ -98,7 +112,7 @@ export function EditPost() {
     // const [images, setImages] = useState<File[]>([]);
     // const [isFormValid, setIsFormValid] = useState(false);
     // const navigate = useNavigate();
-    
+
     // const [deleteImg, setDeleteImg] = useState<string[]>();
 
     const {
@@ -108,10 +122,9 @@ export function EditPost() {
         setValue,
     } = useForm<IPostEdit>({ resolver: editPostResolver });
 
-
     const getPost = async (id: string) => {
         try {
-            const response = await dispatch(getPostById(id));
+            const response = await dispatch(getPostForEditById(id));
             unwrapResult(response);
             return response;
         } catch (error) {
@@ -119,6 +132,7 @@ export function EditPost() {
         }
     };
 
+    //Methods for geting data for comboboxes and checkboxes
     const getCategoryList = async () => {
         try {
             const response = await dispatch(getListOfCategories());
@@ -161,6 +175,27 @@ export function EditPost() {
         }
     };
 
+    const getTypeofRestList = async () => {
+        try {
+            const response = await dispatch(getListOfTypesOfRest());
+            unwrapResult(response);
+            return response;
+        } catch (error) {
+            setErrorMessage(ErrorHandler(error));
+        }
+    };
+
+    const getServicesList = async () => {
+        try {
+            const response = await dispatch(getListOfServices());
+            unwrapResult(response);
+            return response;
+        } catch (error) {
+            setErrorMessage(ErrorHandler(error));
+        }
+    };
+
+    //Set comboboxes and checkboxes
     useEffect(() => {
         getCategoryList().then((history) => {
             setCategoryList(history?.payload.$values);
@@ -169,10 +204,22 @@ export function EditPost() {
         getCountryList().then((history) => {
             setCountryList(history?.payload.$values);
         });
+
+        getTypeofRestList().then((history) => {
+            setTypeOfRestList(history?.payload.$values);
+        });
+
+        getServicesList().then((history) => {
+            setServicesList(history?.payload.$values);
+        });
     }, []);
 
     useEffect(() => {
+        //Get post info for default values
         getPost(postId as string).then((history) => {
+            console.log(history?.payload);
+
+            //Get list of cities for country id by default country
             if (history?.payload.countryId) {
                 getCityList(history?.payload.countryId).then((history) => {
                     if (history?.payload.$values != null) {
@@ -181,6 +228,7 @@ export function EditPost() {
                 });
             }
 
+            //Get list of streets for city id by default city
             if (history?.payload.cityId) {
                 getStreetList(history?.payload.cityId).then((history) => {
                     if (history?.payload.$values != null) {
@@ -189,15 +237,36 @@ export function EditPost() {
                 });
             }
 
-            const fullImageUrls: string[] = history?.payload.imagePostList.map(
-                (image: string) =>
-                    `${APP_ENV.BASE_URL}${"/images/posts/"}${image}`
+            //Set list of default values for combobox
+            if (history?.payload.typesOfRest.$values) {
+                setTypeOfRest(history?.payload.typesOfRest.$values);
+            }
+
+            if (history?.payload.services.$values) {
+                setService(history?.payload.services.$values);
+            }
+
+            //Create Url for main image
+            setMainImageUrl(
+                `${APP_ENV.BASE_URL}${"/images/posts/"}${
+                    history?.payload.imagePostList.$values[0]
+                }`
             );
 
-            setPostImages(fullImageUrls);
+            //Create and set list of URLs for default images
+            const fullImageUrls: string[] =
+                history?.payload.imagePostList.$values
+                    .slice(1)
+                    .map(
+                        (image: string) =>
+                            `${APP_ENV.BASE_URL}${"/images/posts/"}${image}`
+                    );
+
+            setPostImagesUrl(fullImageUrls);
         });
     }, [postId]);
 
+    //Get list of cities for country id after change country
     useEffect(() => {
         if (country) {
             getCityList(country.id).then((history) => {
@@ -205,9 +274,15 @@ export function EditPost() {
                     setCityList(history?.payload.$values);
                 }
             });
+        } else {
+            setCityList([]);
+            setStreetList([]);
+            setCity(null);
+            setStreet(null);
         }
     }, [country]);
 
+    //Get list of streets for city id after change city
     useEffect(() => {
         if (city) {
             getStreetList(city.id).then((history) => {
@@ -215,10 +290,12 @@ export function EditPost() {
                     setStreetList(history?.payload.$values);
                 }
             });
+        }else {
+            setStreetList([]);
+            setStreet(null);
         }
     }, [city]);
 
-     
     // const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
     //     event.preventDefault();
 
@@ -260,362 +337,382 @@ export function EditPost() {
     //     // }
     // };
 
-    const onSubmit = async (_data: IPostEdit) => {}
+    const onSubmit = async (data: IPostEdit) => {
+
+        console.log("data", data)
+        console.log("data", deleteImages)
+    };
 
     return (
-       <>
-            {post && cityList && streetList && postImages ? (
-       <>
-       <div className="mainContainerForForm">
-            {errorMessage && (
-                <OutlinedErrorAlert message={errorMessage} textColor="#000" />
-            )}
-            
-            <div className="title">Add New Post</div>
-
-<div className="twoColumnsContainer">
-    <div className="textInputsContainer">
-
-        
-        <form
-            onSubmit={handleSubmit(onSubmit)}
-            className="formContainer"
-            id="addNewPostForm"
-        >
-            {/* Title */}
-            <div className="fieldContainer">
-                <div className="filedTitle">Title </div>
-                <InputField
-                    placeholder="Title*"
-                    type="text"
-                    name="name"
-                    register={register}
-                    setValue={setValue}
-                    defaultValue={post?.name}
-                    className={
-                        errors.name ? "errorFormInput" : "field"
-                    }
-                />
-                {errors.name && (
-                    <div className="dashboardError">
-                        * {errors.name.message}
-                    </div>
-                )}
-            </div>
-            {/* Category */}
-            <div className="fieldContainer">
-                {!category && (
-                    <div className="filedTitle">Category </div>
-                )}
-                <ComboBox
-                    options={categoryList}
-                    onChange={setCategory}
-                    label={"Category*"}
-                    isValid={setIsCategoryValid}
-                    defaultValue={post!.categoryName}
-                />
-                {!isCategoryValid && (
-                    <div className="dashboardError">
-                        *This field is required
-                    </div>
-                )}
-            </div>
-
-            {/* Country */}
-            <div className="fieldContainer">
-                {!country && (
-                    <div className="filedTitle">Country </div>
-                )}
-
-                <ComboBox
-                    options={countryList}
-                    onChange={setCountry}
-                    label={"Country*"}
-                    isValid={setIsCountryValid}
-                    defaultValue={post!.countryName}
-                />
-                {!isCountryValid && (
-                    <div className="dashboardError">
-                        *This field is required
-                    </div>
-                )}
-            </div>
-
-            {/* City */}
-            {cityList.length > 0 && (
-                <div className="fieldContainer">
-                    {!city && (
-                        <div className="instructionText">
-                            Select City from the list or enter it in
-                            a field.*
-                        </div>
-                    )}
-                    <ComboBox
-                        options={cityList}
-                        onChange={setCity}
-                        label={"City"}
-                        isValid={setIsCityValid}
-                        defaultValue={post!.cityName}
+        postForEdit &&
+        cityList &&
+        streetList &&
+        postImagesUrl &&
+        typeOfRest && (
+            <div className="mainContainerForForm">
+                {errorMessage && (
+                    <OutlinedErrorAlert
+                        message={errorMessage}
+                        textColor="#000"
                     />
-                    {!isCityValid && (
-                        <div className="dashboardError">
-                            *This field is required
-                        </div>
-                    )}
-                </div>
-            )}
-
-            {!city && (
-                <div className="fieldContainer">
-                    <div className="filedTitle">City </div>
-
-                    <InputField
-                        placeholder="City*"
-                        type="text"
-                        name="cityName"
-                        register={register}
-                        setValue={setValue}
-                        className={
-                            errors.name ? "errorFormInput" : "field"
-                        }
-                        isExist={setIsCityExist}
-                    />
-                    {errors.cityName && (
-                        <div className="dashboardError">
-                            * {errors.cityName.message}
-                        </div>
-                    )}
-                </div>
-            )}
-
-            {/* Street */}
-            {streetList.length > 0 && (
-                <div className="fieldContainer">
-                    {!street && (
-                        <div className="instructionText">
-                            Select Street from the list or enter it
-                            in a field. *
-                        </div>
-                    )}
-                    <ComboBox
-                        options={streetList}
-                        onChange={setStreet}
-                        label={"Street"}
-                        isValid={setIsStreetValid}
-                        defaultValue={post!.streetName}
-                    />
-                    {!isStreetValid && (
-                        <div className="dashboardError">
-                            *This field is required
-                        </div>
-                    )}
-                </div>
-            )}
-
-            {!street && (
-                <div className="fieldContainer">
-                    <div className="filedTitle">Street </div>
-
-                    <InputField
-                        placeholder="Street*"
-                        type="text"
-                        name="streetName"
-                        register={register}
-                        setValue={setValue}
-                        className={
-                            errors.name ? "errorFormInput" : "field"
-                        }
-                        isExist={setIsStreetExist}
-                    />
-                    {errors.streetName && (
-                        <div className="dashboardError">
-                            * {errors.streetName.message}
-                        </div>
-                    )}
-                </div>
-            )}
-
-            {/* zipCode */}
-            <div className="fieldContainer">
-                <div className="filedTitle">Zip Code </div>
-
-                <InputField
-                    placeholder="Zip Code*"
-                    type="number"
-                    name="zipCode"
-                    register={register}
-                    setValue={setValue}
-                    className={
-                        errors.zipCode ? "errorFormInput" : "field"
-                    }
-                    defaultValue={post?.zipCode}
-                />
-                {errors.zipCode && (
-                    <div className="dashboardError">
-                        * {errors.zipCode.message}
-                    </div>
                 )}
-            </div>
 
-            {!isHotel && (
-                <>
-                    {/*  Number of Guests */}
-                    <div className="fieldContainer">
-                        <div className="filedTitle">
-                            Number of Guests{" "}
-                        </div>
+                <div className="title">Edit Post</div>
 
-                        <InputField
-                            placeholder="Number of Guests*"
-                            type="number"
-                            name="numberOfGuests"
-                            register={register}
-                            setValue={setValue}
-                            defaultValue={post?.numberOfGuests!}
-                            className={
-                                errors.numberOfGuests
-                                    ? "errorFormInput"
-                                    : "field"
-                            }
-                            
-                        />
-                        {errors.numberOfGuests && (
-                            <div className="dashboardError">
-                                * {errors.numberOfGuests.message}
+                <div className="twoColumnsContainer">
+                    <div className="textInputsContainer">
+                        <form
+                            onSubmit={handleSubmit(onSubmit)}
+                            className="formContainer"
+                            id="addNewPostForm"
+                        >
+                            {/* Title */}
+                            <div className="fieldContainer">
+                                <div className="filedTitle">Title </div>
+                                <InputField
+                                    placeholder="Title*"
+                                    type="text"
+                                    name="name"
+                                    register={register}
+                                    setValue={setValue}
+                                    defaultValue={postForEdit?.name}
+                                    className={
+                                        errors.name ? "errorFormInput" : "field"
+                                    }
+                                />
+                                {errors.name && (
+                                    <div className="dashboardError">
+                                        * {errors.name.message}
+                                    </div>
+                                )}
                             </div>
-                        )}
-                    </div>
-                    {/* Price */}
-                    <div className="fieldContainer">
-                        <div className="filedTitle">Price </div>
-
-                        <InputField
-                            placeholder="Price*"
-                            type="number"
-                            name="price"
-                            register={register}
-                            setValue={setValue}
-                            defaultValue={post?.price}
-                            className={
-                                errors.price
-                                    ? "errorFormInput"
-                                    : "field"
-                            }
-                        />
-                        {errors.price && (
-                            <div className="dashboardError">
-                                * {errors.price.message}
+                            {/* Category */}
+                            <div className="fieldContainer">
+                                <ComboBox
+                                    options={categoryList}
+                                    onChange={setCategory}
+                                    label={"Category*"}
+                                    isValid={setIsCategoryValid}
+                                    defaultValue={postForEdit!.categoryName}
+                                />
+                                {!isCategoryValid && (
+                                    <div className="dashboardError">
+                                        *This field is required
+                                    </div>
+                                )}
                             </div>
-                        )}
-                    </div>
-                    {/* Discount */}
-                    <div className="fieldContainer">
-                        <div className="filedTitle">Discount </div>
 
-                        <InputField
-                            placeholder="Discount"
-                            type="number"
-                            name="discount"
-                            register={register}
-                            setValue={setValue}
-                            defaultValue={post?.discount === null ? 0 : post?.discount}
-                            className={
-                                errors.discount
-                                    ? "errorFormInput"
-                                    : "field"
-                            }
-                        />
-                        {errors.discount && (
-                            <div className="dashboardError">
-                                * {errors.discount.message}
+                            {/* Country */}
+                            <div className="fieldContainer">
+                                <ComboBox
+                                    options={countryList}
+                                    onChange={setCountry}
+                                    label={"Country*"}
+                                    isValid={setIsCountryValid}
+                                    defaultValue={postForEdit!.countryName}
+                                />
+                                {!isCountryValid && (
+                                    <div className="dashboardError">
+                                        *This field is required
+                                    </div>
+                                )}
                             </div>
-                        )}
+
+                            {/* City */}
+                            {cityList.length > 0 && (
+                                <div className="fieldContainer">
+                                    {!city && (
+                                        <div className="instructionText">
+                                            Select City from the list or enter
+                                            it in a field.*
+                                        </div>
+                                    )}
+                                    <ComboBox
+                                        options={cityList}
+                                        onChange={setCity}
+                                        label={"City"}
+                                        isValid={setIsCityValid}
+                                        defaultValue={postForEdit!.cityName}
+                                    />
+                                    {!isCityValid && (
+                                        <div className="dashboardError">
+                                            *This field is required
+                                        </div>
+                                    )}
+                                </div>
+                            )}
+
+                            {!city && (
+                                <div className="fieldContainer">
+                                    <div className="filedTitle">City </div>
+
+                                    <InputField
+                                        placeholder="City*"
+                                        type="text"
+                                        name="cityName"
+                                        register={register}
+                                        setValue={setValue}
+                                        className={
+                                            errors.name
+                                                ? "errorFormInput"
+                                                : "field"
+                                        }
+                                        isExist={setIsCityExist}
+                                    />
+                                    {errors.cityName && (
+                                        <div className="dashboardError">
+                                            * {errors.cityName.message}
+                                        </div>
+                                    )}
+                                </div>
+                            )}
+
+                            {/* Street */}
+                            {streetList.length > 0 && (
+                                <div className="fieldContainer">
+                                    {!street && (
+                                        <div className="instructionText">
+                                            Select Street from the list or enter
+                                            it in a field. *
+                                        </div>
+                                    )}
+                                    <ComboBox
+                                        options={streetList}
+                                        onChange={setStreet}
+                                        label={"Street"}
+                                        isValid={setIsStreetValid}
+                                        defaultValue={postForEdit!.streetName}
+                                    />
+                                    {!isStreetValid && (
+                                        <div className="dashboardError">
+                                            *This field is required
+                                        </div>
+                                    )}
+                                </div>
+                            )}
+
+                            {!street && (
+                                <div className="fieldContainer">
+                                    <div className="filedTitle">Street </div>
+
+                                    <InputField
+                                        placeholder="Street*"
+                                        type="text"
+                                        name="streetName"
+                                        register={register}
+                                        setValue={setValue}
+                                        className={
+                                            errors.name
+                                                ? "errorFormInput"
+                                                : "field"
+                                        }
+                                        isExist={setIsStreetExist}
+                                    />
+                                    {errors.streetName && (
+                                        <div className="dashboardError">
+                                            * {errors.streetName.message}
+                                        </div>
+                                    )}
+                                </div>
+                            )}
+
+                            {/* zipCode */}
+                            <div className="fieldContainer">
+                                <div className="filedTitle">Zip Code </div>
+
+                                <InputField
+                                    placeholder="Zip Code*"
+                                    type="number"
+                                    name="zipCode"
+                                    register={register}
+                                    setValue={setValue}
+                                    className={
+                                        errors.zipCode
+                                            ? "errorFormInput"
+                                            : "field"
+                                    }
+                                    defaultValue={postForEdit?.zipCode}
+                                />
+                                {errors.zipCode && (
+                                    <div className="dashboardError">
+                                        * {errors.zipCode.message}
+                                    </div>
+                                )}
+                            </div>
+
+                            {!isHotel && (
+                                <>
+                                    {/*  Number of Guests */}
+                                    <div className="fieldContainer">
+                                        <div className="filedTitle">
+                                            Number of Guests{" "}
+                                        </div>
+
+                                        <InputField
+                                            placeholder="Number of Guests*"
+                                            type="number"
+                                            name="numberOfGuests"
+                                            register={register}
+                                            setValue={setValue}
+                                            defaultValue={
+                                                postForEdit?.numberOfGuests!
+                                            }
+                                            className={
+                                                errors.numberOfGuests
+                                                    ? "errorFormInput"
+                                                    : "field"
+                                            }
+                                        />
+                                        {errors.numberOfGuests && (
+                                            <div className="dashboardError">
+                                                *{" "}
+                                                {errors.numberOfGuests.message}
+                                            </div>
+                                        )}
+                                    </div>
+                                    {/* Price */}
+                                    <div className="fieldContainer">
+                                        <div className="filedTitle">Price </div>
+
+                                        <InputField
+                                            placeholder="Price*"
+                                            type="number"
+                                            name="price"
+                                            register={register}
+                                            setValue={setValue}
+                                            defaultValue={postForEdit?.price}
+                                            className={
+                                                errors.price
+                                                    ? "errorFormInput"
+                                                    : "field"
+                                            }
+                                        />
+                                        {errors.price && (
+                                            <div className="dashboardError">
+                                                * {errors.price.message}
+                                            </div>
+                                        )}
+                                    </div>
+                                    {/* Discount */}
+                                    <div className="fieldContainer">
+                                        <div className="filedTitle">
+                                            Discount{" "}
+                                        </div>
+
+                                        <InputField
+                                            placeholder="Discount"
+                                            type="number"
+                                            name="discount"
+                                            register={register}
+                                            setValue={setValue}
+                                            defaultValue={
+                                                postForEdit?.discount === null
+                                                    ? 0
+                                                    : postForEdit?.discount
+                                            }
+                                            className={
+                                                errors.discount
+                                                    ? "errorFormInput"
+                                                    : "field"
+                                            }
+                                        />
+                                        {errors.discount && (
+                                            <div className="dashboardError">
+                                                * {errors.discount.message}
+                                            </div>
+                                        )}
+                                    </div>
+                                </>
+                            )}
+
+                            {/* Types of Rest */}
+                            <div className="checkBoxListContainer">
+                                <div className="filedTitle">Types of Rest </div>
+                                <CheckboxList
+                                    options={typeOfRestList}
+                                    selectedOptions={typeOfRest}
+                                    onChange={setTypeOfRest}
+                                />
+                            </div>
+                            {/* Services */}
+
+                            <div className="checkBoxListContainer">
+                                <div className="filedTitle">Services </div>
+                                <CheckboxList
+                                    options={servicesList}
+                                    selectedOptions={service}
+                                    onChange={setService}
+                                />
+                            </div>
+                        </form>
                     </div>
-                </>
-            )}
+                    <div className="addImagesContainer">
+                        <EditImageUploader
+                            image={mainImage}
+                            setImage={setMainImage}
+                            validator={ImageValidator}
+                            label={postForEdit?.imagePostList[1]}
+                            defaultImageUrl={mainImageUrl!}
+                            onImageDelete={setDeleteImages}
+                        />
 
-            {/* Types of Rest */}
-            <div className="checkBoxListContainer">
-                <div className="filedTitle">Types of Rest </div>
-                <CheckboxList
-                    options={typeOfRestList}
-                    selectedOptions={typeOfRest}
-                    onChange={setTypeOfRest}
-                />
+                         <EditListImagesUploader
+                            images={images}
+                            setImages={setImages}
+                            validator={ImagesValidator}
+                            defaultImageUrls={postImagesUrl}
+                            onImageDelete={setDeleteImages}
+
+                        />  
+
+                        {/* <ListImageUploader
+                            images={images}
+                            setImages={setImages}
+                            validator={ImagesValidator}
+                        /> */}
+                    </div>
+                </div>
+
+                {isHotel && (
+                    <div className="roomsContainer">
+                        <div className="title">Add New Post</div>
+                        {Array.from({
+                            length: numberOfRooms,
+                        }).map((_, i) => (
+                            <Room
+                                key={i}
+                                rooms={rooms}
+                                setRooms={setRooms}
+                                label={"room" + i}
+                                formName={"form" + i}
+                            />
+                        ))}
+                        <div
+                            className="linkButton"
+                            onClick={() => {
+                                setNumberOfRooms(numberOfRooms + 1);
+                            }}
+                        >
+                            <div className="text">Add Room</div>
+                            <img className="icon" src={Plus}></img>
+                        </div>
+                    </div>
+                )}
+
+                <button
+                    type="submit"
+                    className="postAddButton"
+                    form="addNewPostForm"
+                >
+                    Submit
+                </button>
             </div>
-            {/* Services */}
-
-            <div className="checkBoxListContainer">
-                <div className="filedTitle">Services </div>
-                <CheckboxList
-                    options={servicesList}
-                    selectedOptions={service}
-                    onChange={setService}
-                />
-            </div>
-        </form>
-    </div>
-    <div className="addImagesContainer">
-        <ImageUploader
-            image={mainImage}
-            setImage={setMainImage}
-            validator={ImageValidator}
-            label="image-upload"
-        />
-
-        <ListImageUploader
-            images={images}
-            setImages={setImages}
-            validator={ImagesValidator}
-        />
-    </div>
-</div>
-
-{isHotel && (
-    <div className="roomsContainer">
-        <div className="title">Add New Post</div>
-        {Array.from({
-            length: numberOfRooms,
-        }).map((_, i) => (
-            <Room
-                key={i}
-                rooms={rooms}
-                setRooms={setRooms}
-                label={"room" + i}
-                formName={"form" + i}
-            />
-        ))}
-        <div
-            className="linkButton"
-            onClick={() => {
-                setNumberOfRooms(numberOfRooms + 1);
-            }}
-        >
-            <div className="text">Add Room</div>
-            <img className="icon" src={Plus}></img>
-        </div>
-    </div>
-)}
-
-<button
-    type="submit"
-    className="postAddButton"
-    form="addNewPostForm"
->
-    Submit
-</button>
-</div>
-       </>
-) : (<Loading className="editLoading"/>)}
-       </> 
-
-
-
-       
+        )
     );
 }
 
-{/* <>
+{
+    /* <>
 <Breadcrumbs
     aria-label="breadcrumb"
     style={{ marginBottom: "20px" }}
@@ -767,9 +864,11 @@ export function EditPost() {
                             }
                             defaultValue={post!.buildingNumber}
                         />
-                    </Grid> */}
+                    </Grid> */
+}
 
-                    {/* <Grid item xs={12}>
+{
+    /* <Grid item xs={12}>
                         <InputGroup
                             label="Number of Rooms"
                             field="numberOfRooms"
@@ -802,7 +901,8 @@ export function EditPost() {
                                     : post!.area
                             }
                         />
-                    </Grid> */}
+                    </Grid> */
+}
 
 //                     <Grid item xs={12}>
 //                         <InputGroup

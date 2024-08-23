@@ -1,20 +1,32 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import ImageTemplate from "../../assets/Templates/Vector.webp";
 import OutlinedErrorAlert from "../common/ErrorAlert";
 import "../../css/DashBoardRealtorClasses/index.scss";
 import { IconButton } from "@mui/material";
 import CancelIcon from "@mui/icons-material/Cancel";
-import { ListImageUploaderProps } from "../../utils/types";
+import { IDeleteImage } from "../../interfaces/post";
 
-const ListImageUploader = (props: ListImageUploaderProps) => {
+export type EditListImagesUploaderProps = {
+    images: File[];
+    setImages: (arg: File[]) => void;
+    defaultImageUrls: string[]; // List of default images
+    onImageDelete: (deletedImages: IDeleteImage[]) => void;
+    validator: (value: File[]) => string | false | undefined;
+};
+
+const EditListImagesUploader = (props: EditListImagesUploaderProps) => {
     const numberOfImagesUpload = 6;
     const [numberOfBlocks, setNumberOfBlocks] = useState<number>(1);
     const [error, setError] = useState<string | false | undefined>(false);
+    const [deletedImages, setDeletedImages] = useState<IDeleteImage[]>([]);
 
-    const handleOnAddImage = async (e: React.ChangeEvent<HTMLInputElement>) => {
+    useEffect(() => {
+        props.onImageDelete(deletedImages);
+    }, [deletedImages]);
+
+    const handleOnAddImage = (e: React.ChangeEvent<HTMLInputElement>) => {
         if (!e.target.files) return;
         const files: File[] = Array.from(e.target.files);
-
         const errorMessage = props.validator(files);
         setError(errorMessage);
 
@@ -24,12 +36,7 @@ const ListImageUploader = (props: ListImageUploaderProps) => {
         }
         e.target.value = "";
 
-        //Set number of blocks for adding new container
-        if (
-            (props.images.length + 1) /
-                (numberOfImagesUpload * numberOfBlocks) ===
-            1
-        ) {
+        if ((props.images.length + 1) / (numberOfImagesUpload * numberOfBlocks) === 1) {
             setNumberOfBlocks(numberOfBlocks + 1);
         }
     };
@@ -37,22 +44,21 @@ const ListImageUploader = (props: ListImageUploaderProps) => {
     const handleOnRemoveImage = (index: number) => {
         const newImages = [...props.images];
         newImages.splice(index, 1);
+
+        if (index < props.defaultImageUrls.length) {
+            const deletedImageInfo: IDeleteImage = { name: props.defaultImageUrls[index], index };
+            setDeletedImages([...deletedImages, deletedImageInfo]);
+        }
+
         props.setImages(newImages);
         const errorMessage = props.validator(newImages);
         setError(errorMessage);
-
-        if (
-            (props.images.length - 1) * 2 <=
-            numberOfImagesUpload * numberOfBlocks
-        ) {
-            if (numberOfBlocks > 1) setNumberOfBlocks(numberOfBlocks - 1);
-        }
     };
 
     const handleKeyDown = (event: React.KeyboardEvent<HTMLAnchorElement>) => {
         if (event.key === "Enter" || event.key === " ") {
-            event.preventDefault(); // Prevent default action for Enter and Space keys
-            document.getElementById("images-upload")?.click(); // Trigger click on the hidden file input
+            event.preventDefault();
+            document.getElementById("images-upload")?.click();
         }
     };
 
@@ -61,24 +67,25 @@ const ListImageUploader = (props: ListImageUploaderProps) => {
             {error && <OutlinedErrorAlert message={error} />}
 
             <div className="imagesContainer">
-                {Array.from({
-                    length: numberOfImagesUpload * numberOfBlocks,
-                }).map((_, i) => (
+                {Array.from({ length: numberOfImagesUpload * numberOfBlocks }).map((_, i) => (
                     <label htmlFor="images-upload" key={i} className="image">
                         <div
                             style={{
                                 background: `url(${
                                     props.images[i]
                                         ? URL.createObjectURL(props.images[i])
-                                        : ImageTemplate
+                                        : props.defaultImageUrls[i] || ImageTemplate
                                 }) center / cover no-repeat`,
                                 position: "relative",
                                 width: "100%",
                                 height: "100%",
                             }}
                         >
-                            {(props.images[i] && numberOfBlocks > 1) &&(
-                                //Delete Image button
+                            {((props.images[i] || props.defaultImageUrls[i]) 
+                                &&(((props.images ? props.images.length : 0) +
+                                    props.defaultImageUrls.length) > 6)
+                            ) && (
+                                
                                 <IconButton
                                     aria-label="delete image"
                                     style={{
@@ -107,7 +114,7 @@ const ListImageUploader = (props: ListImageUploaderProps) => {
                     <a
                         type="button"
                         className="imageUploadButton"
-                        onKeyDown={handleKeyDown} // Handle key down events for accessibility
+                        onKeyDown={handleKeyDown}
                         tabIndex={0}
                     >
                         Add Image
@@ -125,4 +132,4 @@ const ListImageUploader = (props: ListImageUploaderProps) => {
     );
 };
 
-export default ListImageUploader;
+export default EditListImagesUploader;

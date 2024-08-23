@@ -73,7 +73,6 @@ export function AddNewPost() {
     const [numberOfRooms, setNumberOfRooms] = useState<number>(1);
 
     const navigate = useNavigate();
-    //const [upload, setUpload] = useState<boolean>(false);
     const [isHotel, setIsHotel] = useState<boolean>(false);
 
     const {
@@ -83,6 +82,7 @@ export function AddNewPost() {
         setValue,
     } = useForm<IPostCreate>({ resolver: addPostResolver });
 
+    //Methods for geting data for conboboxes and checkboxes
     const getCategoryList = async () => {
         try {
             const response = await dispatch(getListOfCategories());
@@ -145,6 +145,7 @@ export function AddNewPost() {
         }
     };
 
+    //Get Data for comboboxes and checkboxes
     useEffect(() => {
         getCategoryList().then((history) => {
             setCategoryList(history?.payload.$values);
@@ -163,6 +164,7 @@ export function AddNewPost() {
         });
     }, []);
 
+    //Set Marker for changing form if it a hotel
     useEffect(() => {
         if (category) {
             if (category.name.toLowerCase() === "hotel") {
@@ -173,6 +175,7 @@ export function AddNewPost() {
         }
     }, [category]);
 
+    //Get list of cities for country id
     useEffect(() => {
         if (country) {
             console.log("country", country.id);
@@ -190,6 +193,7 @@ export function AddNewPost() {
         }
     }, [country]);
 
+    //Get list of streets for city id
     useEffect(() => {
         if (city) {
             getStreetList(city.id).then((history) => {
@@ -204,31 +208,30 @@ export function AddNewPost() {
     }, [city]);
 
     const onSubmit = async (data: IPostCreate) => {
-        console.log("onSubmit", data);
         if (!category) {
             setIsCategoryValid(false);
             return;
-        }
+        }//set error if category doesnt choosen
 
         if (!country) {
             setIsCountryValid(false);
             return;
-        }
+        }//set error if country doesnt choosen
 
         if (!city && !isCityExist) {
             setIsCityValid(false);
             return;
-        }
+        }//set error if city doesnt choosen and doesnt type in textinput
 
         if (!street && !isStreetExist) {
             setIsStreetValid(false);
             return;
-        }
+        }//set error if street doesnt choosen and doesnt type in textinput
 
-        if (images.length === 0) {
+        if (images.length < 6) {
             setErrorMessage(ErrorHandler("Choose at least main image"));
             return;
-        }
+        }//set error if choosen less than 7 images
 
         if (
             isCategoryValid &&
@@ -263,6 +266,7 @@ export function AddNewPost() {
                 const response = await dispatch(createPost(model));
                 unwrapResult(response);
 
+                //Create rooms if it existing
                 if (rooms) {
                     for (const room of rooms) {
                         try {
@@ -279,7 +283,7 @@ export function AddNewPost() {
                 }
 
                 // await joinForPostListening(response.payload.id);
-                dispatch(changeDashboardMenuItem("All Posts"));
+                dispatch(changeDashboardMenuItem("All Posts"));//set menu item
                 navigate("/dashboard/show-all-post");
             } catch (error) {
                 setErrorMessage(ErrorHandler(error));
@@ -567,6 +571,7 @@ export function AddNewPost() {
                     </form>
                 </div>
                 <div className="addImagesContainer">
+                    {/* Main Image */}
                     <ImageUploader
                         image={mainImage}
                         setImage={setMainImage}
@@ -574,6 +579,7 @@ export function AddNewPost() {
                         label="image-upload"
                     />
 
+                {/* list of other images */}
                     <ListImageUploader
                         images={images}
                         setImages={setImages}
@@ -582,6 +588,7 @@ export function AddNewPost() {
                 </div>
             </div>
 
+            {/* Rooms */}
             {isHotel && (
                 <div className="roomsContainer">
                     <div className="title">Add New Post</div>

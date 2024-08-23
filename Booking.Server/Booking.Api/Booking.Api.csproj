@@ -42,9 +42,10 @@
 	</ItemGroup>
 
 	<ItemGroup>
-	  <Folder Include="images\avatars" />
-	 <Folder Include="images\posts" />
-
+		<None Update="images\**\*">
+			<CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+			<CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
+		</None>
 	</ItemGroup>
 
 </Project>

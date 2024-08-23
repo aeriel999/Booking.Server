@@ -237,22 +237,6 @@ public class PostMapping : IRegister
 
 		config.NewConfig<PagedList<Post>, PagedList<GetPostListForRealtorResponse>>();
 
-
-		config.NewConfig<Post, GetPostForEditResponse>()
-			.Map(desp => desp.CategoryName, src => src.Category!.Name)
-			.Map(desp => desp.StreetName, src => src.Street!.Name)
-			.Map(desp => desp.User, src => $"{src.User!.FirstName} {src.User.LastName}")
-			.Map(desp => desp.CountryName, src => src.Street!.City!.Country!.Name)
-			.Map(desp => desp.CountryId, src => src.Street!.City!.CountryId)
-			.Map(desp => desp.CityName, src => src.Street!.City!.Name)
-			.Map(desp => desp.CityId, src => src.Street!.City!.Id)
-			.Map(desp => desp.NumberOfGuests, src => src.Rate)
-			.Map(desp => desp.Discount, src => src.Discount)
-			.Map(desp => desp.ZipCode, src => src.ZipCode)
-			.Map(desp => desp.ImagePostList, src =>
-			src.ImagesPost != null ? src.ImagesPost.Select(img => img.Name).ToArray() : Array.Empty<string>());
-	
-
 		config.NewConfig<(
 			EditPostRequest editPostRequest, Guid UserId, List<byte[]> Images), EditPostCommand>()
 		.Map(dest => dest.UserId, src => src.UserId)
@@ -280,5 +264,35 @@ public class PostMapping : IRegister
 
 		config.NewConfig<Service, GetServicesListResponse>();
 		config.NewConfig<List<Service>, List<GetServicesListResponse>>();
+
+
+		config.NewConfig<Post, GetPostForEditResponse>()
+			.Map(desp => desp.Id, src => src.Id)
+			.Map(desp => desp.Name, src => src.Name)
+			.Map(desp => desp.CategoryName, src => src.Category!.Name)
+			.Map(desp => desp.CountryName, src => src.Street!.City!.Country!.Name)
+			.Map(desp => desp.CountryId, src => src.Street!.City!.Country!.Id)
+			.Map(desp => desp.CityName, src => src.Street!.City!.Name)
+			.Map(desp => desp.CityId, src => src.Street!.City!.Id)
+			.Map(desp => desp.StreetName, src => src.Street!.Name)
+			.Map(desp => desp.ZipCode, src => src.ZipCode)
+			.Map(desp => desp.Discount, src => src.Discount)
+			.Map(desp => desp.NumberOfGuests, src => src.NumberOfGuests)
+			.Map(desp => desp.Price, src => src.Price)
+			.Map(desp => desp.ImagePostList, src =>
+				 src.ImagesPost != null ? src.ImagesPost.OrderBy(img => img.Priority)
+				 .Select(img => img.Name).ToArray() : Array.Empty<string>())
+			.Map(desp => desp.TypesOfRest, src => src.PostPostTypesOfRest != null ?
+				src.PostPostTypesOfRest!.Select(p => p.PostTypeOfRest!.Id) : null)
+			.Map(desp => desp.Services, src => src.Service != null ? src.Service!.Select(p => p.Service!.Id) : null)
+			.Map(desp => desp.RoomList, src => src.Rooms!.Select(room => new EditRoom
+			{
+				Id = room.Id,
+				NumberOfGuests = room.NumberOfGuests,
+				NumberOfRooms = room.NumberOfRooms,
+				Discount = room.Discount,
+				Price = room.Price,
+				MainImage = room.MainImage
+			}).ToList());
 	}
 }

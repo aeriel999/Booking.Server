@@ -24,11 +24,13 @@
         display: flex;
         justify-content: space-between;
         align-items: center;
+        
 
-        #logo {
+        #headerLogo {
             width: 226px;
             min-height: 80px;
             flex-shrink: 0;
+            cursor: pointer;
         }
 
         #userInfo {
@@ -109,6 +111,7 @@
             justify-content: space-between;
 
             .menuItem {
+                all: unset;
                 height: 72px;
                 flex-shrink: 0;
                 border-radius: 9px;
@@ -152,10 +155,15 @@
                         opacity: 1;
                     }
                 }
+
+                &:focus {
+                    outline: 2px solid #000; /* or any color you prefer */
+                }
             }
         }
 
         #footer {
+            all: unset;
             display: flex;
             flex-direction: column;
             justify-content: space-around;
@@ -168,7 +176,7 @@
                 background-color: $menu-border-color;
             }
 
-            #button {
+            #logOutButton {
                 display: flex;
                 align-items: center;
                 gap: 20px;
@@ -184,9 +192,13 @@
                 }
             }
 
-            &:hover #button p {
+            &:hover #logOutButton p {
                 opacity: 1;
                 font-weight: 900;
+            }
+
+            &:focus {
+                outline: 2px solid #000; /* or any color you prefer */
             }
         }
 
@@ -194,7 +206,7 @@
             width: 250px;
 
             #items .menuItem .menuItemsText,
-            #footer #button p {
+            #footer #logOutButton p {
                 opacity: 1;
             }
         }
@@ -203,7 +215,7 @@
             width: 250px;
 
             #items .menuItem .menuItemsText,
-            #footer #button p {
+            #footer #logOutButton p {
                 opacity: 1;
             }
         }
@@ -419,6 +431,8 @@
 
                 .instructionText {
                     color: #000;
+                    margin-bottom: 10px;
+                    font-weight: 500;
                 }
             }
         }
@@ -491,6 +505,7 @@
 
     &:hover {
         border: 1px solid $register-button-border-color;
+        height: 35px;
     }
 }
 
@@ -651,9 +666,14 @@
     font-style: normal;
     font-weight: 400;
     line-height: normal;
+
+    &:hover {
+        border: 1px solid $register-button-border-color;
+        height: 50px;
+    }
 }
 
-.editLoading {
+.dashboardLoading {
     display: flex;
     align-self: center;
     justify-self: center;
@@ -661,4 +681,5 @@
     justify-content: center;
     height: 100%;
     width: 100%;
+    position: absolute;
 }
