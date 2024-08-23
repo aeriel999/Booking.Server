@@ -340,7 +340,8 @@ export function EditPost() {
     const onSubmit = async (data: IPostEdit) => {
 
         console.log("data", data)
-        console.log("data", deleteImages)
+        console.log("deleteImages", deleteImages)
+        console.log("images", images)
     };
 
     return (
