@@ -456,7 +456,7 @@ export const getPostForEditById = createAsyncThunk(
         }
     }
 );
-);
+
 export const sendFeedback = createAsyncThunk(
     'Post/send-feedback',
     async (payload: ISendFeedback, { rejectWithValue }) => {
