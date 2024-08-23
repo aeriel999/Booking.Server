@@ -26,6 +26,7 @@
             img {
                 size: 14.5% 100%;
                 margin-right: auto;
+                cursor: pointer;
             }
 
             button {
@@ -38,6 +39,7 @@
                 color: $default-color;
                 align-self: center;
                 border: 1px solid transparent;
+                cursor: pointer;
 
                 &:hover {
                     border-color: $primary-font-color;
@@ -80,6 +82,7 @@
                     font-size: $medium-font-size;
                     font-family: $primary-font-family;
                     font-weight: $medium-font-weight;
+                    cursor: pointer;
 
                     &:hover {
                         border-color: #363838;

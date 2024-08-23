@@ -14,7 +14,12 @@ const initialState: ISettingsState = {
         getLocalStorage("currentPaginationPage") === null
             ? 1
             : parseInt(getLocalStorage("currentPaginationPage")!),
-    loaderIsLoading: true
+    loaderIsLoading: true,
+    savedPath:
+        getLocalStorage("savedPath") === null
+            ? "/dashboard/profile"
+            : getLocalStorage("savedPath")!
+
 };
 
 export const settingsSlice = createSlice({
@@ -40,9 +45,16 @@ export const settingsSlice = createSlice({
             action: PayloadAction<boolean>
         ) => {
             state.loaderIsLoading = action.payload
+        },
+        savePath: (
+            state,
+            action: PayloadAction<string>
+        ) => {
+            state.savedPath = action.payload;
+            addLocalStorage("savedPath", action.payload);
         }
     },
 });
 
-export const { changeDashboardMenuItem, changePaginationPage, changeLoaderIsLoading } = settingsSlice.actions;
+export const { changeDashboardMenuItem, changePaginationPage, changeLoaderIsLoading, savePath } = settingsSlice.actions;
 export default settingsSlice.reducer;

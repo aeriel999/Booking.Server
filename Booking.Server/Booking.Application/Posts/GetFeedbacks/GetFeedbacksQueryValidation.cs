@@ -16,7 +16,7 @@ public class GetFeedbacksQueryValidation : AbstractValidator<GetFeedbacksQuery>
 
         RuleFor(x => x.SizeOfPage)
             .NotEmpty().WithMessage("{PropertyName} must not be empty")
-            .Must(x => x.Equals(10)).WithMessage("{PropertyName} should be 10");
+            .Must(x => x.Equals(2)).WithMessage("{PropertyName} should be 2");
     }
 }
 

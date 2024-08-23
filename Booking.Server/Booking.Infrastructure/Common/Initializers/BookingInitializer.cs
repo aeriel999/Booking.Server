@@ -350,87 +350,104 @@ public static class BookingInitializer
 			{
 				new(){
 					Id = Guid.NewGuid(),
-					Name = "Pool"
+					Name = "Pool",
+					Icon = "pool.svg"
 				},
 
                 new(){
                     Id = Guid.NewGuid(),
-                    Name = "Beach"
+                    Name = "Beach",
+                    Icon = "beach.svg"
                 },
 
                 new(){
                     Id = Guid.NewGuid(),
-                    Name = "Breakfast"
+                    Name = "Breakfast",
+                    Icon = "breakfast.svg"
                 },
 
                 new(){
                     Id = Guid.NewGuid(),
-                    Name = "Dinner"
+                    Name = "Dinner",
+                    Icon = "dinner.svg"
                 },
 
                 new(){
                     Id = Guid.NewGuid(),
-                    Name = "Spa"
+                    Name = "Spa",
+                    Icon = "spa.svg"
                 },
 
                 new(){
                     Id = Guid.NewGuid(),
-                    Name = "Sauna"
+                    Name = "Sauna",
+                    Icon = "sauna.svg"
                 },
 
                 new(){
                     Id = Guid.NewGuid(),
-                    Name = "Jacuzzi"
+                    Name = "Jacuzzi",
+                    Icon = "jacuzzi.svg"
                 },
 
                 new(){
                     Id = Guid.NewGuid(),
-                    Name = "Gym"
+                    Name = "Gym",
+                    Icon = "gym.svg"
                 },
 
 				new(){
                     Id = Guid.NewGuid(),
-                    Name = "Massage"
+                    Name = "Massage",
+                    Icon = "massage.svg"
                 },
 
                 new(){
                     Id = Guid.NewGuid(),
-                    Name = "Animated show"
+                    Name = "Animated show",
+                    Icon = "show.svg"
                 },
 
                 new(){
                     Id = Guid.NewGuid(),
-                    Name = "Restaurant or cafe"
+                    Name = "Restaurant or cafe",
+                    Icon = "cafe-or-restaurant.svg"
                 },
 
                 new(){
                     Id = Guid.NewGuid(),
-                    Name = "Bar"
+                    Name = "Bar",
+                    Icon = "bar.svg"
                 },
 
                 new(){
                     Id = Guid.NewGuid(),
-                    Name = "Wi-Fi"
+                    Name = "Wi-Fi",
+                    Icon = "wi-fi.svg"
                 },
 
                 new(){
                     Id = Guid.NewGuid(),
-                    Name = "Pool for kids"
+                    Name = "Pool for kids",
+                    Icon = "kids-pool.svg"
                 },
 
                 new(){
                     Id = Guid.NewGuid(),
-                    Name = "Organization of excursions"
+                    Name = "Organization of excursions",
+                    Icon = "travel-walk.svg"
                 },
 
                 new(){
                     Id = Guid.NewGuid(),
-                    Name = "Kids clubs"
+                    Name = "Kids clubs",
+                    Icon = "kids-room.svg"
                 },
 
                 new(){
                     Id = Guid.NewGuid(),
-                    Name = "Room service"
+                    Name = "Room service",
+                    Icon = "clean.svg"
                 }
             };
 
