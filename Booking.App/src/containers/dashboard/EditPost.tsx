@@ -42,6 +42,7 @@ import Room from "../../components/realtorDashboard/Room.tsx";
 import Plus from "../../assets/DashboardIcons/iconamoon_sign-plus-fill.svg";
 import "../../css/DashBoardRealtorClasses/index.scss";
 import EditImageUploader from "../../components/realtorDashboard/EditImageUploader.tsx";
+import EditListImagesUploader from "../../components/realtorDashboard/EditListImagesUploader.tsx";
 
 export function EditPost() {
     const { postId } = useParams();
@@ -336,7 +337,11 @@ export function EditPost() {
     //     // }
     // };
 
-    const onSubmit = async (_data: IPostEdit) => {};
+    const onSubmit = async (data: IPostEdit) => {
+
+        console.log("data", data)
+        console.log("data", deleteImages)
+    };
 
     return (
         postForEdit &&
@@ -650,22 +655,15 @@ export function EditPost() {
                             defaultImageUrl={mainImageUrl!}
                             onImageDelete={setDeleteImages}
                         />
-                        {/*   
-                        {postForEdit.imagePostList.$values.map((name, index) => (
-                            <EditImageUploader
-                                key={index}
-                                image={image}
-                                setImage={setImage}
-                                validator={ImageValidator}
-                                label={name}
-                                defaultImageUrl={postImages[index]}
-                                buttonText="Change Image"
-                                onImageDelete={setDeleteImages}
-                                index={index}
-                                images={images}
-                                setImages={setImages}
-                            />
-                        ))}   */}
+
+                         <EditListImagesUploader
+                            images={images}
+                            setImages={setImages}
+                            validator={ImagesValidator}
+                            defaultImageUrls={postImagesUrl}
+                            onImageDelete={setDeleteImages}
+
+                        />  
 
                         {/* <ListImageUploader
                             images={images}

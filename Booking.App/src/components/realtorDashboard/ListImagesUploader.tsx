@@ -24,7 +24,7 @@ const ListImageUploader = (props: ListImageUploaderProps) => {
         }
         e.target.value = "";
 
-        //Set number of blocks for ading new container
+        //Set number of blocks for adding new container
         if (
             (props.images.length + 1) /
                 (numberOfImagesUpload * numberOfBlocks) ===
@@ -40,6 +40,13 @@ const ListImageUploader = (props: ListImageUploaderProps) => {
         props.setImages(newImages);
         const errorMessage = props.validator(newImages);
         setError(errorMessage);
+
+        if (
+            (props.images.length - 1) * 2 <=
+            numberOfImagesUpload * numberOfBlocks
+        ) {
+            if (numberOfBlocks > 1) setNumberOfBlocks(numberOfBlocks - 1);
+        }
     };
 
     const handleKeyDown = (event: React.KeyboardEvent<HTMLAnchorElement>) => {
@@ -70,8 +77,8 @@ const ListImageUploader = (props: ListImageUploaderProps) => {
                                 height: "100%",
                             }}
                         >
-                            {props.images[i] && (
-                                //Delete Image button 
+                            {(props.images[i] && numberOfBlocks > 1) &&(
+                                //Delete Image button
                                 <IconButton
                                     aria-label="delete image"
                                     style={{
@@ -97,11 +104,12 @@ const ListImageUploader = (props: ListImageUploaderProps) => {
 
             <div className="buttonContainer">
                 <label htmlFor="images-upload">
-                    <a 
-                        type="button" 
-                        className="imageUploadButton" 
+                    <a
+                        type="button"
+                        className="imageUploadButton"
                         onKeyDown={handleKeyDown} // Handle key down events for accessibility
-                        tabIndex={0}>
+                        tabIndex={0}
+                    >
                         Add Image
                     </a>
                 </label>

@@ -5,7 +5,6 @@ import { IDeleteImage } from "../../interfaces/post";
 import { EditImageUploaderType } from "../../utils/types";
 
 
-
 const EditImageUploader = (props: EditImageUploaderType) => {
     const [error, setError] = useState<string | false | undefined>(false);
     const [displayImage, setDisplayImage] = useState<string>(props.defaultImageUrl);
