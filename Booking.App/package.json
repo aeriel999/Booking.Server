@@ -20,6 +20,7 @@
     "@types/qs": "^6.9.11",
     "axios": "^1.6.8",
     "classnames": "^2.5.1",
+    "date-fns": "^3.6.0",
     "formik": "^2.4.5",
     "gsap": "^3.12.5",
     "jwt-decode": "^4.0.0",

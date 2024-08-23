@@ -52,7 +52,7 @@ public record GetPostResponse
 	public required List<string> ImagePostList { get; init; }
 
 
-    public List<string>? TypesOfRest { get; init; }
+    public List<GetTypesOfRest>? TypesOfRest { get; init; }
 
 
     public List<GetService>? Services { get; init; }
@@ -78,6 +78,13 @@ public record EditRoom
 
 public record GetService 
 {
+	public Guid Id { get; init; }
 	public required string Name { get; init; }
 	public required string Icon { get; init; }
+}
+
+public record GetTypesOfRest
+{
+    public required Guid Id { get; init; }
+    public required string Name { get; init; }
 }

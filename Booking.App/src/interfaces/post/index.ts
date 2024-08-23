@@ -102,24 +102,31 @@ export interface IPostInformation {
     zipCode: number;
     discount: number | null;
     numberOfGuests: number | null;
-    user: string;
+    userName: string;
     userId: string;
     price: number;
     rate: number;
     countOfFeedbacks: number | null;
-    imagePostList: string[];
+    imagePostList: {
+        $id: number,
+        $values: string[]
+    } | null;
     typesOfRest: string[] | null;
-    services: IServise[] | null;
-    roomList?: IRoomInfo[];
+    services: IServiseInfo[] | null;
+    roomList?: {
+        $id: number,
+        $values: IRoomInfo[]
+    };
 }
 
-export interface IServise{
+export interface IServiseInfo {
     name: string,
     icon: string
 }
 
 export interface IRoomInfo {
-    postId: string;
+    //postId: string;
+    id: string;
     numberOfGuests: number;
     numberOfRooms: number;
     discount: number | null;
@@ -142,8 +149,8 @@ export interface IPostState {
     countries: ICountry[] | null;
     cities: ICity[] | null;
     streets: IStreet[] | null;
-    typesOfRest: ITypeOfRest[] | null;
-    services: IService[] | null;
+    typesOfRest: IGetTypeOfRest[] | null;
+    services: IGetService[] | null;
     searchPost: string[] | null;
     postInfoList: IPageOfPostsForRealtor | null;
     postsByRealtorId: IPostByRealtorId[] | null;
@@ -154,6 +161,7 @@ export interface IPostState {
     filteredCountries: ICountry[] | null;
     filteredCities: ICity[] | null;
     textForSearching: string | null;
+    feedbacks: IFeedbacksByPost | null;
 }
 
 interface IPostRatingAndDiscount {
@@ -259,4 +267,38 @@ export interface TablePaginationActionsProps {
         event: React.MouseEvent<HTMLButtonElement>,
         newPage: number
     ) => void;
+}
+export interface IGetService {
+    id: string,
+    name: string,
+    icon: string
+}
+export interface IGetTypeOfRest {
+    id: string,
+    name: string,
+}
+export interface IGetFeedbacksRequest {
+    id: string,
+    page: number,
+    sizeOfPage: number
+}
+export interface IFeedbacksByPost {
+    items: {
+        $id: string;
+        $values: IFeedback[];
+    };
+    page: number;
+    sizeOfPage: number;
+    totalCount: number;
+}
+export interface IFeedback {
+    text: string,
+    rating: number,
+    client: string,
+    feedbackAt: Date
+}
+export interface ISendFeedback {
+    text: string | null,
+    rating: number,
+    postId: string
 }

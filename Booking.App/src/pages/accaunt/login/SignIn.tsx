@@ -5,7 +5,7 @@ import { IGoogleLogin, ILogin } from "../../../interfaces/account";
 import { googleLogin, login } from "../../../store/accounts/account.actions.ts";
 import { unwrapResult } from "@reduxjs/toolkit";
 import ErrorHandler from "../../../components/common/ErrorHandler.ts";
-import { useAppDispatch } from "../../../hooks/redux";
+import { useAppDispatch, useAppSelector } from "../../../hooks/redux";
 import { useState } from "react";
 import OutlinedErrorAlert from "../../../components/common/ErrorAlert.tsx";
 import { useNavigate } from "react-router-dom";
@@ -16,9 +16,11 @@ import { startListening } from "../../../SignalR";
 import { getListOfChatRooms } from "../../../store/chat/chat.action.ts";
 import Header from "../../../components/authentification/Header.tsx";
 import { changeDashboardMenuItem } from "../../../store/settings/settings.slice.ts";
+import { RootState } from "../../../store/index.ts";
 
 export default function SignInPage() {
     const dispatch = useAppDispatch();
+    const savedPath = useAppSelector((state: RootState) => state.settings.savedPath);
     const [errorMessage, setErrorMessage] = useState<string | undefined>(
         undefined
     );
@@ -55,21 +57,22 @@ export default function SignInPage() {
     };
 
     const afterLogin = async (token: string) => {
-         
+
         await startListening();
-  
+
         const decodedToken: { [key: string]: string } = jwtDecode(token);
 
         const role =
             decodedToken[
-                "http://schemas.microsoft.com/ws/2008/06/identity/claims/role"
+            "http://schemas.microsoft.com/ws/2008/06/identity/claims/role"
             ];
 
         if (role.toLowerCase().includes("realtor")) {
             dispatch(changeDashboardMenuItem("Profile"));
             navigate("/dashboard/profile");
         } else if (role.toLowerCase().includes("user")) {
-            navigate("/dashboard/profile");
+            navigate(savedPath);
+            //navigate("/dashboard/profile");
         } else if (role.toLowerCase().includes("admin")) {
             navigate("/dashboard/profile");
         } else {

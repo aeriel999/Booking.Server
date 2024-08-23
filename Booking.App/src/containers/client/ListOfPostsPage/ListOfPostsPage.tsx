@@ -11,7 +11,7 @@ import { PostCard } from "../../../components/common/PostCard/PostCard";
 import { Pagination } from "../../../components/common/Pagination/Pagination";
 import { IFetchData, IFetchDataByName, IFilter, IFilteredRequest } from "../../../interfaces/post";
 import { Loading } from "../../../components/common/Loading/Loading";
-import { changeLoaderIsLoading } from "../../../store/settings/settings.slice";
+import { changeLoaderIsLoading, changePaginationPage } from "../../../store/settings/settings.slice";
 import emptyBox from "../../../assets/Icons/empty-box.png";
 
 
@@ -35,6 +35,7 @@ export default function ListOfPostsPage() {
     const [citySelect, setCitySelect] = useState<string | null>(null)
     const [realtorSelect, setRealtorSelect] = useState<string | null>(null)
     const [firstLoading, setFirstLoading] = useState<boolean>(false);
+    const [page, setPage] = useState<number>(currentPage);
 
 
 
@@ -61,7 +62,7 @@ export default function ListOfPostsPage() {
     const changePage = async () => {
         dispatch(changeLoaderIsLoading(true));
         const nextPage: IFetchData = {
-            page: currentPage,
+            page: page,
             sizeOfPage: 9
         }
 
@@ -194,8 +195,10 @@ export default function ListOfPostsPage() {
     }, [filter.realtor])
 
     useEffect(() => {
+        dispatch(changePaginationPage(page));
+        console.log("New page - " + page);
         changePage();
-    }, [currentPage])
+    }, [page])
 
     useEffect(() => {
         dispatch(changeLoaderIsLoading(false));
@@ -275,7 +278,11 @@ export default function ListOfPostsPage() {
                 </div>
 
                 {listOfPosts && listOfPosts.totalCount > 9 ?
-                    <Pagination page={listOfPosts.page} sizeOfPage={listOfPosts.sizeOfPage} countOfPosts={listOfPosts.totalCount}></Pagination>
+                    <Pagination
+                        page={listOfPosts.page}
+                        sizeOfPage={listOfPosts.sizeOfPage}
+                        countOfPosts={listOfPosts.totalCount}
+                        changePage={setPage}></Pagination>
                     : ""}
 
             </div>

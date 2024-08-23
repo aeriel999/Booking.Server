@@ -1,6 +1,7 @@
 import '../../../css/FeedbackClasses/index.scss';
 import { Avatar } from "../Avatar/Avatar";
 import starFull from '../../../assets/Icons/star-02.svg';
+import { formatDistanceToNow } from "date-fns";
 
 interface IFeedback {
     userName: string,
@@ -11,14 +12,13 @@ interface IFeedback {
 }
 
 export const Feedback = (info: IFeedback) => {
-
     return (
         <div className="feedback">
             <div className="feedback-user-information">
                 {info.avatar == null ? <Avatar userName={info.userName} /> : <img className="avatar" src={info.avatar!} alt="Avatar" />}
                 <div className="feedback-user-information-username">
                     <p>{info.userName}</p>
-                    <p>{info.date.getDate()}</p>
+                    <p>{formatDistanceToNow(info.date, { addSuffix: true })}</p>
                 </div>
                 <div className="feedback-user-information-rating">
                     <img src={starFull} alt="" />
