@@ -131,9 +131,9 @@ export interface IPostInformation {
     roomList?: IRoomInfo[];
 }
 
-export interface IServiceInfo{
-    name: string,
-    icon: string
+export interface IServiceInfo {
+    name: string;
+    icon: string;
 }
 
 export interface IRoomInfo {
@@ -276,4 +276,9 @@ export interface TablePaginationActionsProps {
         event: React.MouseEvent<HTMLButtonElement>,
         newPage: number
     ) => void;
+}
+
+export interface IDeleteImage {
+    name: string;
+    index: number;
 }

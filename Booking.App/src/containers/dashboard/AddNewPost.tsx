@@ -73,7 +73,6 @@ export function AddNewPost() {
     const [numberOfRooms, setNumberOfRooms] = useState<number>(1);
 
     const navigate = useNavigate();
-    //const [upload, setUpload] = useState<boolean>(false);
     const [isHotel, setIsHotel] = useState<boolean>(false);
 
     const {
@@ -83,6 +82,7 @@ export function AddNewPost() {
         setValue,
     } = useForm<IPostCreate>({ resolver: addPostResolver });
 
+    //Methods for geting data for conboboxes and checkboxes
     const getCategoryList = async () => {
         try {
             const response = await dispatch(getListOfCategories());
@@ -207,7 +207,6 @@ export function AddNewPost() {
         }
     }, [city]);
 
-
     const onSubmit = async (data: IPostCreate) => {
         if (!category) {
             setIsCategoryValid(false);
@@ -284,7 +283,7 @@ export function AddNewPost() {
                 }
 
                 // await joinForPostListening(response.payload.id);
-                dispatch(changeDashboardMenuItem("All Posts"));
+                dispatch(changeDashboardMenuItem("All Posts"));//set menu item
                 navigate("/dashboard/show-all-post");
             } catch (error) {
                 setErrorMessage(ErrorHandler(error));

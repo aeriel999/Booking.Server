@@ -1,22 +1,12 @@
 import React, { useState, useEffect } from "react";
-import ImageTemplate from "../../assets/Templates/Vector.webp";
 import OutlinedErrorAlert from "../common/ErrorAlert";
 import "../../css/DashBoardRealtorClasses/index.scss";
-import { IconButton } from "@mui/material";
-import CancelIcon from "@mui/icons-material/Cancel";
-import { IDeleteImage } from "../../containers/dashboard/EditPost";
+import { IDeleteImage } from "../../interfaces/post";
+import { EditImageUploaderType } from "../../utils/types";
 
-type ImageUploader = {
-    image: File | null | undefined;
-    setImage: (file: File) => void;
-    validator: (value: File) => string | false | undefined;
-    label: string;
-    defaultImageUrl: string;
-    onImageDelete: (images: IDeleteImage[]) => void;
-    buttonText: string;
-};
 
-const EditImageUploader = (props: ImageUploader) => {
+
+const EditImageUploader = (props: EditImageUploaderType) => {
     const [error, setError] = useState<string | false | undefined>(false);
     const [displayImage, setDisplayImage] = useState<string>(props.defaultImageUrl);
 
@@ -49,14 +39,6 @@ const EditImageUploader = (props: ImageUploader) => {
         }
     };
 
-    const handleDeleteImage = () => {
-        setDisplayImage(ImageTemplate);
-        const deleteImageInfo: IDeleteImage = { name: props.label, index: 0 };
-        
-        // Trigger the onImageDelete callback
-        props.onImageDelete([deleteImageInfo]);
-    };
-
     return (
         <>
             {error && <OutlinedErrorAlert message={error} textColor="#000" />}
@@ -80,7 +62,7 @@ const EditImageUploader = (props: ImageUploader) => {
                         onKeyDown={handleKeyDown}
                         tabIndex={0}
                     >
-                        {props.buttonText}
+                        Change Main image
                     </a>
                     <input
                         id={props.label}
@@ -90,20 +72,7 @@ const EditImageUploader = (props: ImageUploader) => {
                         style={{ display: "none" }}
                     />
                 </label>
-                {displayImage !== ImageTemplate && (
-                    <IconButton
-                        aria-label="delete image"
-                        style={{
-                            position: "absolute",
-                            top: 10,
-                            right: 0,
-                            color: "#fff",
-                        }}
-                        onClick={handleDeleteImage}
-                    >
-                        <CancelIcon />
-                    </IconButton>
-                )}
+                
             </div>
         </>
     );

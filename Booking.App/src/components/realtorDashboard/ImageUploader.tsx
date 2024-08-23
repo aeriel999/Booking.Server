@@ -2,19 +2,12 @@ import React, { useState } from "react";
 import ImageTemplate from "../../assets/Templates/Vector.webp";
 import OutlinedErrorAlert from "../common/ErrorAlert";
 import "../../css/DashBoardRealtorClasses/index.scss";
+import { ImageUploaderProps } from "../../utils/types";
 
-type ImageUploader = {
-    image: File | null | undefined;
-    setImage: (file: File) => void;
-    validator: (value: File) => string | false | undefined;
-    label: string;
-};
-
-const ImageUploader = (props: ImageUploader) => {
+const ImageUploader = (props: ImageUploaderProps) => {
     const [error, setError] = useState<string | false | undefined>(false);
 
     const handleOnAddImage = (e: React.ChangeEvent<HTMLInputElement>) => {
-        console.log("label", props.label)
         if (!e.target.files) return;
 
         const file = e.target.files[0];
@@ -34,13 +27,14 @@ const ImageUploader = (props: ImageUploader) => {
         }
     };
 
+    //Set display image
     const displayImage = props.image
         ? URL.createObjectURL(props.image)
         : ImageTemplate;
 
     return (
         <>
-            {error && <OutlinedErrorAlert message={error} textColor="#000"/>}
+            {error && <OutlinedErrorAlert message={error} textColor="#000" />}
             <div className="mainImage">
                 <label htmlFor={props.label}>
                     <div
@@ -55,11 +49,12 @@ const ImageUploader = (props: ImageUploader) => {
                     />
                 </label>
                 <label htmlFor={props.label}>
-                    <a 
-                        type="button" 
-                        className="imageUploadButton"  
+                    <a
+                        type="button"
+                        className="imageUploadButton"
                         onKeyDown={handleKeyDown} // Handle key down events for accessibility
-                        tabIndex={0}>
+                        tabIndex={0}
+                    >
                         Upload Main Image
                     </a>
                     <input
