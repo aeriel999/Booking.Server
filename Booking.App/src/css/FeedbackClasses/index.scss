@@ -46,7 +46,8 @@
         }
 
         .feedback-user-information-rating {
-            width: 87px;
+            width: auto;
+            min-width: 87px;
             height: 35px;
             display: flex;
             align-items: center;
@@ -76,6 +77,7 @@
         width: 100%;
         height: auto;
         box-sizing: border-box;
+        word-wrap: break-word;
         padding-left: 72px;
         padding-right: 87px;
         color: #040404;

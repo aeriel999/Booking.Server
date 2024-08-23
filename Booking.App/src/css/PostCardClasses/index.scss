@@ -68,6 +68,17 @@
             }
         }
 
+        .post-card-rating {
+            width: 70%;
+            height: auto;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            column-gap: 10px;
+            margin-top: 16px;
+            box-sizing: border-box;
+        }
+
         .post-card-price {
             width: 100%;
             margin-top: 14px;

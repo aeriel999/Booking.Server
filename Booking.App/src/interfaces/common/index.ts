@@ -4,6 +4,7 @@ export interface IDashboardState {
     currentBreadcrumbsItem: string;
     currentPaginationPage: number;
     loaderIsLoading: boolean;
+    savedPath: string;
 }
 
 export interface CustomizedDialogsProps {

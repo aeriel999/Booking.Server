@@ -32,7 +32,17 @@ export const PostCard = (info: IPostCardInformation) => {
                 <div className="post-card-location">
                     <p>{info.city}, {info.country}</p>
                 </div>
-                <Rating rating={info.rating} ></Rating>
+                <div className="post-card-rating">
+                    <Rating
+                        rating={info.rating}
+                        isSelecting={false}
+                        selectedRating={null}
+                    ></Rating>
+                    <div>
+                        ({info.countOfRating})
+                    </div>
+                </div>
+
                 <div className="post-card-price">
                     <p>{info.price} UAH</p>
                 </div>

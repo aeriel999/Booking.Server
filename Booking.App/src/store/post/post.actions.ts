@@ -9,10 +9,12 @@ import {
     IFilteredListOfCountriesRequest,
     IFilteredRequest,
     IFilteredRequestName,
+    IGetFeedbacksRequest,
     IPostCreate,
     IPostEdit,
     IRoom,
 } from "../../interfaces/post";
+import { ISendFeedback } from "../../interfaces/post/index.ts";
 
 export const getListOfCategories = createAsyncThunk(
     "Post/get-categories-list",
@@ -423,6 +425,23 @@ export const createRoom = createAsyncThunk(
         }
     }
 );
+export const getFeedbacksByPost = createAsyncThunk(
+    "Post/get-feedbacks-by-post",
+    async (payload: IGetFeedbacksRequest, { rejectWithValue }) => {
+        try {
+            const response = await apiClient.get(
+                `api/Post/get-feedbacks-${payload.id}`, {
+                params: {
+                    page: payload.page,
+                    sizeOfPage: payload.sizeOfPage
+                }
+            })
+            return response.data;
+        } catch (error) {
+            return rejectWithValue(handleAxiosError(error, "Network error"));
+        }
+    }
+);
 
 export const getPostForEditById = createAsyncThunk(
     "Post/get-post-for-edit-by-id",
@@ -437,3 +456,15 @@ export const getPostForEditById = createAsyncThunk(
         }
     }
 );
+);
+export const sendFeedback = createAsyncThunk(
+    'Post/send-feedback',
+    async (payload: ISendFeedback, { rejectWithValue }) => {
+        try {
+            const response = await apiClient.post(`/api/Post/send-feedback`, payload);
+            return response.status;
+        } catch (error) {
+            return rejectWithValue(handleAxiosError(error, "Network error"));
+        }
+    }
+)

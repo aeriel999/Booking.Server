@@ -14,6 +14,7 @@ import {
     deletePost,
     editPost,
     getArchivedPostList,
+    getFeedbacksByPost,
     getFilteredListByType,
     getFilteredListOfCategories,
     getFilteredListOfCities,
@@ -35,6 +36,7 @@ import {
     getPostsWithMostRating,
     getTypesOfRest,
     repostPost,
+    sendFeedback,
 } from "./post.actions.ts";
 
 function isRejectedAction(action: AnyAction): action is RejectedAction {
@@ -66,7 +68,8 @@ const initialState: IPostState = {
     filteredCategories: null,
     filteredCountries: null,
     filteredCities: null,
-    textForSearching: null
+    textForSearching: null,
+    feedbacks: null
 };
 
 export const postSlice = createSlice({
@@ -291,6 +294,19 @@ export const postSlice = createSlice({
                 state.status = Status.SUCCESS;
             })
             .addCase(createRoom.pending, (state) => {
+                state.status = Status.LOADING;
+            })
+            .addCase(getFeedbacksByPost.fulfilled, (state, action) => {
+                state.feedbacks = action.payload;
+                state.status = Status.SUCCESS
+            })
+            .addCase(getFeedbacksByPost.pending, (state) => {
+                state.status = Status.LOADING
+            })
+            .addCase(sendFeedback.fulfilled, (state) => {
+                state.status = Status.SUCCESS;
+            })
+            .addCase(sendFeedback.pending, (state) => {
                 state.status = Status.LOADING;
             })
             .addMatcher(isRejectedAction, (state) => {

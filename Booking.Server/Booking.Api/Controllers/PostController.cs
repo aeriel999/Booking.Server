@@ -464,7 +464,7 @@ public class PostController(ISender mediatr, IMapper mapper) : ApiController
             getPostsResult => Ok(mapper.Map<List<GetPostByUserFeedbackResponse>>(getPostsResult)),
             errors => Problem(errors));
     }
-
+	[AllowAnonymous]
 	[HttpGet("get-services-list")]
 	public async Task<IActionResult> GetServicesListAsync()
 	{

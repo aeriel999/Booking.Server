@@ -74,22 +74,27 @@ public class PostMapping : IRegister
 			.Map(desp => desp.ImagePostList, src =>
 				 src.ImagesPost != null ? src.ImagesPost.OrderBy(img => img.Priority)
 				 .Select(img => img.Name).ToArray() : Array.Empty<string>())
-			.Map(desp => desp.TypesOfRest, src => src.PostPostTypesOfRest != null ? 
-				src.PostPostTypesOfRest!.Select(p => p.PostTypeOfRest!.Name) : null)
-			.Map(desp => desp.Services, src =>  src.Service != null ?  src.Service!.Select(service => new GetService
-			{
-				Name =  service.Service!.Name,
-				Icon = service.Service!.Icon
-			}).ToList() : null) 
-			.Map(desp => desp.RoomList, src => src.Rooms!.Select(room => new EditRoom
-			{
-				Id = room.Id,
-				NumberOfGuests = room.NumberOfGuests,
-				NumberOfRooms = room.NumberOfRooms,
-				Discount = room.Discount,
-				Price = room.Price,
-				MainImage = room.MainImage
-			}).ToList());
+			.Map(desp => desp.TypesOfRest, src => src.PostPostTypesOfRest != null ?
+				 src.PostPostTypesOfRest!.Select(types => new GetTypesOfRest
+				 {
+				     Id = types.PostTypeOfRest!.Id,
+				     Name = types.PostTypeOfRest!.Name,
+				 }).ToList() : null)
+			.Map(desp => desp.Services, src => src.Service != null ? src.Service!.Select(service => new GetService
+				 {
+				     Id = service.Service!.Id,
+				     Name = service.Service!.Name,
+				     Icon = service.Service!.Icon
+				 }).ToList() : null)
+            .Map(desp => desp.RoomList, src => src.Rooms!.Select(room => new EditRoom
+				 {
+				 	  Id = room.Id,
+				 	  NumberOfGuests = room.NumberOfGuests,
+				 	  NumberOfRooms = room.NumberOfRooms,
+				 	  Discount = room.Discount,
+				 	  Price = room.Price,
+				 	  MainImage = room.MainImage
+				 }).ToList());
 
 
 		config.NewConfig<Post, GetPostListByRealtorIdResponse>()
