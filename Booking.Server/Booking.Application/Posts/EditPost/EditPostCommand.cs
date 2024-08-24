@@ -23,10 +23,18 @@ public record EditPostCommand(
 	List<Guid>? Services,
 	List<byte[]>? Images,
 	IFormFile? MainImage,
-	List<string>? DeleteImages) : IRequest<ErrorOr<Post>>;
+	List<DeletedImage>? DeleteImages) : IRequest<ErrorOr<Post>>;
+public record DeletedImage
+{
+	public required string Name { get; init; }
 
- 
- 
-	
+	public required int index { get; init; }
+}
+
+
+
+
+
+
 
 

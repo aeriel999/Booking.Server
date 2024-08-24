@@ -88,25 +88,6 @@ export interface IPost {
     typesOfRest: string[];
 }
 
-export interface IPostForEdit {
-    id: number;
-    name: string;
-    categoryName: string;
-    countryId: string;
-    countryName: string;
-    cityName: string;
-    cityId: string;
-    streetName: string;
-    zipCode: number;
-    discount: number | null;
-    numberOfGuests: number | null;
-    price: number;
-    imagePostList: string[];
-    typesOfRest: string[] | null;
-    services: string[] | null;
-    roomList?: IRoomInfo[];
-}
-
 export interface IPostInformation {
     id: number;
     name: string;
@@ -126,20 +107,20 @@ export interface IPostInformation {
     rate: number;
     countOfFeedbacks: number | null;
     imagePostList: {
-        $id: number,
-        $values: string[]
+        $id: number;
+        $values: string[];
     } | null;
     typesOfRest: string[] | null;
     services: IServiseInfo[] | null;
     roomList?: {
-        $id: number,
-        $values: IRoomInfo[]
+        $id: number;
+        $values: IRoomInfo[];
     };
 }
 
 export interface IServiseInfo {
-    name: string,
-    icon: string
+    name: string;
+    icon: string;
 }
 
 export interface IRoomInfo {
@@ -155,6 +136,27 @@ export interface IPostByRealtorId {
     id: number;
     name: string;
     imagePost: string;
+}
+
+export interface IPostForEdit {
+    id: number;
+    name: string;
+    categoryName: string;
+    categoryId: string;
+    countryId: string;
+    countryName: string;
+    cityName: string;
+    cityId: string;
+    streetName: string;
+    streetId: string;
+    zipCode: number;
+    discount: number | null;
+    numberOfGuests: number | null;
+    price: number;
+    imagePostList: string[];
+    typesOfRest: string[] | null;
+    services: string[] | null;
+    roomList?: IRoomInfo[];
 }
 
 export interface IPostState {
@@ -273,7 +275,7 @@ export interface IPostEdit {
     services: string[] | null;
     images: File[] | null;
     mainImage: File | null;
-    deleteImages: string[] | undefined;
+    deleteImages: IDeleteImage[] | null;
 }
 
 export interface TablePaginationActionsProps {
@@ -286,18 +288,18 @@ export interface TablePaginationActionsProps {
     ) => void;
 }
 export interface IGetService {
-    id: string,
-    name: string,
-    icon: string
+    id: string;
+    name: string;
+    icon: string;
 }
 export interface IGetTypeOfRest {
-    id: string,
-    name: string,
+    id: string;
+    name: string;
 }
 export interface IGetFeedbacksRequest {
-    id: string,
-    page: number,
-    sizeOfPage: number
+    id: string;
+    page: number;
+    sizeOfPage: number;
 }
 export interface IFeedbacksByPost {
     items: {
@@ -309,15 +311,15 @@ export interface IFeedbacksByPost {
     totalCount: number;
 }
 export interface IFeedback {
-    text: string,
-    rating: number,
-    client: string,
-    feedbackAt: Date
+    text: string;
+    rating: number;
+    client: string;
+    feedbackAt: Date;
 }
 export interface ISendFeedback {
-    text: string | null,
-    rating: number,
-    postId: string
+    text: string | null;
+    rating: number;
+    postId: string;
 }
 
 export interface IDeleteImage {

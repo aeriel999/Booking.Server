@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Booking.Application.Posts.EditPost;
+using Microsoft.AspNetCore.Mvc;
 using System.ComponentModel.DataAnnotations;
 
 namespace Booking.Api.Contracts.Post.EditPost;
@@ -60,5 +61,6 @@ public record EditPostRequest
 	public IFormFile? MainImage { get; init; }
 
 
-	public List<string>? DeleteImages { get; init; }
+	public List<DeletedImage>? DeleteImages { get; init; }
 }
+

@@ -219,6 +219,15 @@ export function EditPost() {
         getPost(postId as string).then((history) => {
             console.log(history?.payload);
 
+            //Set data for category
+            if(history?.payload.categoryId && history?.payload.categoryName){
+                setCategory({id: history?.payload.categoryId, name: history?.payload.categoryName})
+
+                //Set if it is hotel
+                if (history?.payload.categoryName.toLowerCase() === "hotel") {
+                    setIsHotel(true);
+            }
+
             //Get list of cities for country id by default country
             if (history?.payload.countryId) {
                 getCityList(history?.payload.countryId).then((history) => {
@@ -226,6 +235,10 @@ export function EditPost() {
                         setCityList(history?.payload.$values);
                     }
                 });
+
+                //Set data for country
+                if(history?.payload.countryName)
+                    setCountry({id: history?.payload.countryId, name: history?.payload.countryName})
             }
 
             //Get list of streets for city id by default city
@@ -235,6 +248,16 @@ export function EditPost() {
                         setStreetList(history?.payload.$values);
                     }
                 });
+
+                 //Set data for city
+                if(history?.payload.cityName)
+                    setCity({id: history?.payload.cityId, name: history?.payload.cityName})
+            }
+
+             //Set data for street
+            if(history?.payload.streetId && history?.payload.streetName)
+            {
+                setStreet({id: history?.payload.streetId, name: history?.payload.streetName})
             }
 
             //Set list of default values for combobox
@@ -265,6 +288,17 @@ export function EditPost() {
             setPostImagesUrl(fullImageUrls);
         });
     }, [postId]);
+
+    //Set Marker for changing form if it a hotel
+    useEffect(() => {
+        if (category) {
+            if (category.name.toLowerCase() === "hotel") {
+                setIsHotel(true);
+            } else {
+                setIsHotel(false);
+            }
+        }
+    }, [category]);
 
     //Get list of cities for country id after change country
     useEffect(() => {
@@ -340,95 +374,80 @@ export function EditPost() {
     const onSubmit = async (data: IPostEdit) => {
         console.log("data", data);
 
-        const model: IPostEdit = {
-            ...data,
-            id: postId!,
+        if (!category) {
+            setIsCategoryValid(false);
+            return;
+        }//set error if category doesnt choosen
 
-            categoryId: category?.id!,
-            countryId: country?.id!,
-            cityId: city === undefined || city === null ? null : city?.id!,
-            cityName:
-                city === undefined || city === null ? data.cityName : null!,
-            streetId:
-                street === undefined || street === null ? null : street?.id!,
-            streetName:
-                street === undefined || street === null
-                    ? data.streetName
-                    : null,
-            mainImage: mainImage!,
-            images: images,
-            postTypesOfRest: typeOfRest,
-            services: service,
-        };
+        if (!country) {
+            setIsCountryValid(false);
+            return;
+        }//set error if country doesnt choosen
 
-        try {
-            const response = await dispatch(editPost(model));
-            unwrapResult(response);
+        if (!city && !isCityExist) {
+            setIsCityValid(false);
+            return;
+        }//set error if city doesnt choosen and doesnt type in textinput
 
-            navigate("/dashboard/show-all-post");
-        } catch (error) {
-            setErrorMessage(ErrorHandler(error));
-        }
-        // if (!category) {
-        //     setIsCategoryValid(false);
-        //     return;
-        // }//set error if category doesnt choosen
+        if (!street && !isStreetExist) {
+            setIsStreetValid(false);
+            return;
+        }//set error if street doesnt choosen and doesnt type in textinput
 
-        // if (!country) {
-        //     setIsCountryValid(false);
-        //     return;
-        // }//set error if country doesnt choosen
+        if (images.length < 6) {
+            setErrorMessage(ErrorHandler("Choose at least main image"));
+            return;
+        }//set error if choosen less than 7 images
 
-        // if (!city && !isCityExist) {
-        //     setIsCityValid(false);
-        //     return;
-        // }//set error if city doesnt choosen and doesnt type in textinput
-
-        // if (!street && !isStreetExist) {
-        //     setIsStreetValid(false);
-        //     return;
-        // }//set error if street doesnt choosen and doesnt type in textinput
-
-        // if (images.length < 6) {
-        //     setErrorMessage(ErrorHandler("Choose at least main image"));
-        //     return;
-        // }//set error if choosen less than 7 images
-
-        // if (
-        //     isCategoryValid &&
-        //     isCountryValid &&
-        //     (isCityValid || isCityExist) &&
-        //     (isStreetValid || isStreetExist)
-        // ) {
-        //     const model: IPostEdit = {
-        //         ...data,
-        //         categoryId: category?.id!,
-        //         countryId: country?.id!,
-        //         cityId: city === undefined || city === null ? null : city?.id!,
-        //         cityName:
-        //             city === undefined || city === null ? data.cityName : null!,
-        //         streetId:
-        //             street === undefined || street === null
-        //                 ? null
-        //                 : street?.id!,
-        //         streetName:
-        //             street === undefined || street === null
-        //                 ? data.streetName
-        //                 : null,
-        //         mainImage: mainImage!,
-        //         images: images,
-        //         postTypesOfRest: typeOfRest,
-        //         services: service,
-        //     };
-
-        //     try {
-        //     const response = await dispatch(editPost(model));
-        //     unwrapResult(response);
-
-        //     navigate("/dashboard/show-all-post");
-        // } catch (error) {
-        //     setErrorMessage(ErrorHandler(error));
-        // }}
+        if (
+            isCategoryValid &&
+            isCountryValid &&
+            (isCityValid || isCityExist) &&
+            (isStreetValid || isStreetExist)
+        ) {
+            const model: IPostEdit = {
+                ...data,
+                id: postId!,
+    
+                categoryId: 
+                    category === undefined || category === null 
+                        ? null 
+                        : category.id!,
+                countryId: 
+                    country === undefined || country === null 
+                        ? null 
+                        : country.id!,
+                cityId: 
+                    city === undefined || city === null 
+                        ? null 
+                        : city.id!,
+                cityName: 
+                    city === undefined || city === null 
+                        ? data.cityName 
+                        : null,
+                streetId:
+                    street === undefined || street === null 
+                        ? null 
+                        : street.id,
+                streetName:
+                    street === undefined || street === null
+                        ? data.streetName
+                        : null,
+                mainImage: mainImage ? null : mainImage!,
+                images: images,
+                postTypesOfRest: typeOfRest,
+                services: service,
+                deleteImages: deleteImages ? null : deleteImages!
+            };
+    
+            try {
+                const response = await dispatch(editPost(model));
+                unwrapResult(response);
+    
+                navigate("/dashboard/show-all-post");
+            } catch (error) {
+                setErrorMessage(ErrorHandler(error));
+            }
     };
 
     return (

@@ -11,6 +11,7 @@ public record GetPostForEditResponse
 
 
 	public required string CategoryName { get; init; }
+	public required Guid CategoryId { get; init; }
 
 
 	public required string CountryName { get; init; }
@@ -21,6 +22,7 @@ public record GetPostForEditResponse
 	public required Guid CityId { get; init; }
 
 
+	public required Guid StreetId { get; init; }
 	public required string StreetName { get; init; }
 
 

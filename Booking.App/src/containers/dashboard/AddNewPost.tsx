@@ -243,17 +243,22 @@ export function AddNewPost() {
                 ...data,
                 categoryId: category?.id!,
                 countryId: country?.id!,
-                cityId: city === undefined || city === null ? null : city?.id!,
-                cityName:
-                    city === undefined || city === null ? data.cityName : null!,
+                cityId: 
+                        city === undefined || city === null 
+                            ? null 
+                            : city.id,
+                cityName: 
+                        city === undefined || city === null 
+                            ? data.cityName 
+                            : null,
                 streetId:
-                    street === undefined || street === null
-                        ? null
-                        : street?.id!,
+                        street === undefined || street === null
+                            ? null
+                            : street.id,
                 streetName:
-                    street === undefined || street === null
-                        ? data.streetName
-                        : null,
+                        street === undefined || street === null
+                            ? data.streetName
+                            : null,
                 mainImage: mainImage!,
                 images: images,
                 postTypesOfRest: typeOfRest,

@@ -49,7 +49,7 @@ public class EditPostCommandValidation : AbstractValidator<EditPostCommand>
 		});
 
 
-		When(r => r.Discount.HasValue && r.Discount > 0, () =>
+		When(r => r.Discount > 0, () =>
 		{
 			RuleFor(r => r.Discount)
 				.GreaterThanOrEqualTo(1).WithMessage("{PropertyName} must be at least 1.")
