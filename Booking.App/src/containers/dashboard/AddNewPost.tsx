@@ -603,7 +603,7 @@ export function AddNewPost() {
                             formName={"form" + i}
                         />
                     ))}
-                    <div
+                    <button
                         className="linkButton"
                         onClick={() => {
                             setNumberOfRooms(numberOfRooms + 1);
@@ -611,7 +611,7 @@ export function AddNewPost() {
                     >
                         <div className="text">Add Room</div>
                         <img className="icon" src={Plus}></img>
-                    </div>
+                    </button>
                 </div>
             )}
 

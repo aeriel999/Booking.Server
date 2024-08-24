@@ -1,4 +1,4 @@
-import { useParams } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 import ComboBox from "../../components/common/ComboBox.tsx";
 import { useEffect, useState } from "react";
 import { useAppDispatch, useAppSelector } from "../../hooks/redux";
@@ -85,7 +85,7 @@ export function EditPost() {
     const [rooms, setRooms] = useState<IRoom[] | null>([]);
     const [numberOfRooms, setNumberOfRooms] = useState<number>(1);
 
-    //const navigate = useNavigate();
+    const navigate = useNavigate();
     const [isHotel, setIsHotel] = useState<boolean>(false);
 
     // const [categoryList, setCategoryList] = useState<ICategory[]>([]);
@@ -340,8 +340,66 @@ export function EditPost() {
     const onSubmit = async (data: IPostEdit) => {
 
         console.log("data", data)
-        console.log("deleteImages", deleteImages)
-        console.log("images", images)
+        if (!category) {
+            setIsCategoryValid(false);
+            return;
+        }//set error if category doesnt choosen
+
+        if (!country) {
+            setIsCountryValid(false);
+            return;
+        }//set error if country doesnt choosen
+
+        if (!city && !isCityExist) {
+            setIsCityValid(false);
+            return;
+        }//set error if city doesnt choosen and doesnt type in textinput
+
+        if (!street && !isStreetExist) {
+            setIsStreetValid(false);
+            return;
+        }//set error if street doesnt choosen and doesnt type in textinput
+
+        if (images.length < 6) {
+            setErrorMessage(ErrorHandler("Choose at least main image"));
+            return;
+        }//set error if choosen less than 7 images
+
+        if (
+            isCategoryValid &&
+            isCountryValid &&
+            (isCityValid || isCityExist) &&
+            (isStreetValid || isStreetExist)
+        ) {
+            const model: IPostEdit = {
+                ...data,
+                categoryId: category?.id!,
+                countryId: country?.id!,
+                cityId: city === undefined || city === null ? null : city?.id!,
+                cityName:
+                    city === undefined || city === null ? data.cityName : null!,
+                streetId:
+                    street === undefined || street === null
+                        ? null
+                        : street?.id!,
+                streetName:
+                    street === undefined || street === null
+                        ? data.streetName
+                        : null,
+                mainImage: mainImage!,
+                images: images,
+                postTypesOfRest: typeOfRest,
+                services: service,
+            };
+
+            try {
+            const response = await dispatch(editPost(model));
+            unwrapResult(response);
+
+            navigate("/dashboard/show-all-post");
+        } catch (error) {
+            setErrorMessage(ErrorHandler(error));
+        }}
     };
 
     return (

@@ -272,6 +272,7 @@ export interface IPostEdit {
     postTypesOfRest: string[] | null;
     services: string[] | null;
     images: File[] | null;
+    mainImage: File | null;
     deleteImages: string[] | undefined;
     roomList: IRoom[] | null;
 }

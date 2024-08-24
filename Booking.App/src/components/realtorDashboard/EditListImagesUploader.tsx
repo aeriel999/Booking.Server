@@ -5,6 +5,7 @@ import "../../css/DashBoardRealtorClasses/index.scss";
 import { IconButton } from "@mui/material";
 import CancelIcon from "@mui/icons-material/Cancel";
 import { IDeleteImage } from "../../interfaces/post";
+import Plus from "../../assets/DashboardIcons/iconamoon_sign-plus-fill.svg";
 
 export type EditListImagesUploaderProps = {
     images: File[];
@@ -143,6 +144,16 @@ const EditListImagesUploader = (props: EditListImagesUploaderProps) => {
                 ))}
             </div>
 
+            <button style={{ marginLeft: "auto" }}
+                        className="linkButton"
+                        onClick={() => {
+                            setNumberOfBlocks(numberOfBlocks + 1);
+                        }}
+                    >
+                        <div className="text">Add More Images</div>
+                        <img className="icon" src={Plus}></img>
+                    </button>
+
             <div className="buttonContainer">
                 <label htmlFor="images-upload">
                     <a
@@ -153,7 +164,7 @@ const EditListImagesUploader = (props: EditListImagesUploaderProps) => {
                         }
                         tabIndex={0}
                     >
-                        Add Image
+                        Upload Image
                     </a>
                 </label>
                 <input
