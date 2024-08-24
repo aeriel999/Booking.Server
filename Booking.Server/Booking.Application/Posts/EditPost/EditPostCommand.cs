@@ -1,6 +1,7 @@
 ﻿using Booking.Domain.Posts;
 using ErrorOr;
 using MediatR;
+using Microsoft.AspNetCore.Http;
 
 namespace Booking.Application.Posts.EditPost;
 
@@ -16,12 +17,12 @@ public record EditPostCommand(
 	string? StreetName,
 	int ZipCode,
 	int? NumberOfGuests,
-	string? Description,
 	decimal Price,
 	int? Discount,
 	List<Guid>? PostPostTypesOfRest,
-	List<Guid>? PostServices,
+	List<Guid>? Services,
 	List<byte[]>? Images,
+	IFormFile? MainImage,
 	List<string>? DeleteImages) : IRequest<ErrorOr<Post>>;
 
  

@@ -12,7 +12,7 @@ public class EditUserProfileCommandHandler(IUserRepository repository,
 {
 	public async Task<ErrorOr<Updated>> Handle(EditUserProfileCommand request, CancellationToken cancellationToken)
 	{
-		var user = await repository.FindByIdAsync(request.Id);
+		var user = await repository.GetUserByIdAsync(request.Id);
 
 		if (user.IsError) return user.Errors.FirstOrDefault();
 

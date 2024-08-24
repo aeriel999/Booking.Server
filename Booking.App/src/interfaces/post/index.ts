@@ -266,15 +266,14 @@ export interface IPostEdit {
     streetId: string | null;
     streetName: string | null;
     zipCode: number | null;
-    discount: number | null;
     numberOfGuests: number | null;
+    discount: number | null;
     price: number;
     postTypesOfRest: string[] | null;
     services: string[] | null;
     images: File[] | null;
     mainImage: File | null;
     deleteImages: string[] | undefined;
-    roomList: IRoom[] | null;
 }
 
 export interface TablePaginationActionsProps {

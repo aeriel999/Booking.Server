@@ -15,7 +15,7 @@ public class ChangeProfileHeaderCommandHandler(
 	public async Task<ErrorOr<string>> Handle(ChangeProfileHeaderCommand request, CancellationToken cancellationToken)
 	{
 		//Get user
-		var errorOrUser = await userRepository.FindByIdAsync(request.UserId);
+		var errorOrUser = await userRepository.GetUserByIdAsync(request.UserId);
 
 		if (errorOrUser.IsError)
 			return errorOrUser.Errors;

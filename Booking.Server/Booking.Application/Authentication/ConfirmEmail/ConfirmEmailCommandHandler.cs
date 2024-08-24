@@ -22,7 +22,7 @@ public class ConfirmEmailCommandHandler(
 			return errorOrSuccess.Errors;
 
 		//Get user
-		var userOrError = await userRepository.FindByIdAsync(request.UserId);
+		var userOrError = await userRepository.GetUserByIdAsync(request.UserId);
 		 
 		if(userOrError.IsError)
 			return userOrError.Errors;

@@ -6,17 +6,15 @@ public class EditPostCommandValidation : AbstractValidator<EditPostCommand>
 {
     public EditPostCommandValidation()
     {
-		RuleFor(r => r.UserId).NotEmpty().WithMessage("Field must not be empty");
+		RuleFor(r => r.UserId).NotEmpty().WithMessage("{PropertyName} must not be empty");
 
-		RuleFor(r => r.Id).NotEmpty().WithMessage("Field must not be empty");
 
-		RuleFor(r => r.Name).NotEmpty().WithMessage("Field must not be empty")
+		RuleFor(r => r.Id).NotEmpty().WithMessage("{PropertyName} must not be empty");
+
+
+		RuleFor(r => r.Name).NotEmpty().WithMessage("{PropertyName} must not be empty")
 			.MaximumLength(256).MinimumLength(8);
 
-
-		RuleFor(r => r.CategoryId).NotEmpty().WithMessage("Field must not be empty");
-
-		RuleFor(r => r.CountryId).NotEmpty().WithMessage("Field must not be empty");
 
 		When(r => !string.IsNullOrEmpty(r.CityName), () =>
 		{
@@ -27,6 +25,7 @@ public class EditPostCommandValidation : AbstractValidator<EditPostCommand>
 							.MaximumLength(256);
 		});
 
+
 		When(r => !string.IsNullOrEmpty(r.StreetName), () =>
 		{
 			RuleFor(r => r.StreetName)
@@ -36,38 +35,35 @@ public class EditPostCommandValidation : AbstractValidator<EditPostCommand>
 							.MaximumLength(256);
 		});
 
-		RuleFor(r => r.ZipCode)
-			.NotEmpty().WithMessage("Field must not be empty")
-			.InclusiveBetween(10000, 99999).WithMessage("Zip Code must be a 5-digit number.");
 
-		When(r => r.NumberOfGuests.HasValue, () =>
+		RuleFor(r => r.ZipCode)
+			.NotEmpty().WithMessage("{PropertyName} must not be empty")
+			.InclusiveBetween(10000, 99999).WithMessage("{PropertyName} must be a 5-digit number.");
+
+
+		When(r => r.NumberOfGuests.HasValue && r.NumberOfGuests > 0, () =>
 		{
 			RuleFor(r => r.NumberOfGuests)
-				.GreaterThanOrEqualTo(1).WithMessage("Number of guests must be at least 1.")
+				.GreaterThanOrEqualTo(1).WithMessage("{PropertyName} must be at least 1.")
 				.LessThanOrEqualTo(20);
 		});
 
-		When(r => r.Discount.HasValue, () =>
+
+		When(r => r.Discount.HasValue && r.Discount > 0, () =>
 		{
 			RuleFor(r => r.Discount)
-				.GreaterThanOrEqualTo(5).WithMessage("Number of guests must be at least 1.")
+				.GreaterThanOrEqualTo(1).WithMessage("{PropertyName} must be at least 1.")
 				.LessThanOrEqualTo(75);
 		});
 
-		RuleFor(r => r.Price).NotEmpty().WithMessage("Field must not be empty");
 
-		When(r => !string.IsNullOrEmpty(r.Description), () =>
-		{
-			RuleFor(r => r.Description)
-						   .MinimumLength(256)
-						   .MaximumLength(5000);
-		});
+		RuleFor(r => r.Price).NotEmpty().WithMessage("{PropertyName} must not be empty");
 
 
 		When(r => r.Images != null, () =>
 		{
 			RuleFor(r => r.Images)
-				.Must(images => images!.Count <= 10)
+				.Must(images => images!.Count <= 30)
 				.WithMessage("You can upload up to 10 images.")
 				.ForEach(imageRule =>
 				{
@@ -75,6 +71,7 @@ public class EditPostCommandValidation : AbstractValidator<EditPostCommand>
 						.WithMessage("Each image must be less than or equal to 5MB.");
 				});
 		});
+
 
 		When(r => r.DeleteImages != null, () =>
 		{

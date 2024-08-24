@@ -20,13 +20,13 @@ public class EditPostCommandHandler(
 	public async Task<ErrorOr<Post>> Handle(EditPostCommand request, CancellationToken cancellationToken)
 	{
 		//Get Post
-		var post = await postRepository.GetPostWithIncludesByIdAsync(request.Id);
+		var post = await postRepository.GetPostByIdAsync(request.Id);
 
 		if (post == null)
 			return Error.NotFound("Post was not found");
 
 		//Get user
-		var userOrError = await userRepository.GetUserAsync(request.UserId.ToString());
+		var userOrError = await userRepository.GetUserByIdAsync(request.UserId);
 
 		if (userOrError.IsError)
 			return Error.NotFound("User is not found");

@@ -121,13 +121,15 @@ export const editPostResolver: Resolver<IPostEdit> = async (values) => {
         };
     }
 
-  if(values.discount){
-    const discountError = DiscountValidator(values.discount);
-    if (discountError) {
-        errors.discount = {
-            type: "validation",
-            message: discountError,
-        };
+  if(values.discount  ){
+    if(values.discount > 0){
+        const discountError = DiscountValidator(values.discount);
+        if (discountError) {
+            errors.discount = {
+                type: "validation",
+                message: discountError,
+            };
+        }
     }
   }
     return {

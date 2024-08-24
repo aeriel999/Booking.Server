@@ -235,7 +235,9 @@ public class PostMapping : IRegister
 			.Map(desp => desp.IsArhive, src => src.IsArhive)
 			.Map(desp => desp.Discount, src => src.Discount);
 
+
 		config.NewConfig<PagedList<Post>, PagedList<GetPostListForRealtorResponse>>();
+
 
 		config.NewConfig<(
 			EditPostRequest editPostRequest, Guid UserId, List<byte[]> Images), EditPostCommand>()
@@ -261,6 +263,7 @@ public class PostMapping : IRegister
 
 		config.NewConfig<PostTypeOfRest, GetPostTypesOfRestResponse>();
 		config.NewConfig<List<PostTypeOfRest>, List<GetPostTypesOfRestResponse>>();
+
 
 		config.NewConfig<Service, GetServicesListResponse>();
 		config.NewConfig<List<Service>, List<GetServicesListResponse>>();

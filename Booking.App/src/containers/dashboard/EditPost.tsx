@@ -290,7 +290,7 @@ export function EditPost() {
                     setStreetList(history?.payload.$values);
                 }
             });
-        }else {
+        } else {
             setStreetList([]);
             setStreet(null);
         }
@@ -338,68 +338,97 @@ export function EditPost() {
     // };
 
     const onSubmit = async (data: IPostEdit) => {
+        console.log("data", data);
 
-        console.log("data", data)
-        if (!category) {
-            setIsCategoryValid(false);
-            return;
-        }//set error if category doesnt choosen
+        const model: IPostEdit = {
+            ...data,
+            id: postId!,
 
-        if (!country) {
-            setIsCountryValid(false);
-            return;
-        }//set error if country doesnt choosen
+            categoryId: category?.id!,
+            countryId: country?.id!,
+            cityId: city === undefined || city === null ? null : city?.id!,
+            cityName:
+                city === undefined || city === null ? data.cityName : null!,
+            streetId:
+                street === undefined || street === null ? null : street?.id!,
+            streetName:
+                street === undefined || street === null
+                    ? data.streetName
+                    : null,
+            mainImage: mainImage!,
+            images: images,
+            postTypesOfRest: typeOfRest,
+            services: service,
+        };
 
-        if (!city && !isCityExist) {
-            setIsCityValid(false);
-            return;
-        }//set error if city doesnt choosen and doesnt type in textinput
-
-        if (!street && !isStreetExist) {
-            setIsStreetValid(false);
-            return;
-        }//set error if street doesnt choosen and doesnt type in textinput
-
-        if (images.length < 6) {
-            setErrorMessage(ErrorHandler("Choose at least main image"));
-            return;
-        }//set error if choosen less than 7 images
-
-        if (
-            isCategoryValid &&
-            isCountryValid &&
-            (isCityValid || isCityExist) &&
-            (isStreetValid || isStreetExist)
-        ) {
-            const model: IPostEdit = {
-                ...data,
-                categoryId: category?.id!,
-                countryId: country?.id!,
-                cityId: city === undefined || city === null ? null : city?.id!,
-                cityName:
-                    city === undefined || city === null ? data.cityName : null!,
-                streetId:
-                    street === undefined || street === null
-                        ? null
-                        : street?.id!,
-                streetName:
-                    street === undefined || street === null
-                        ? data.streetName
-                        : null,
-                mainImage: mainImage!,
-                images: images,
-                postTypesOfRest: typeOfRest,
-                services: service,
-            };
-
-            try {
+        try {
             const response = await dispatch(editPost(model));
             unwrapResult(response);
 
             navigate("/dashboard/show-all-post");
         } catch (error) {
             setErrorMessage(ErrorHandler(error));
-        }}
+        }
+        // if (!category) {
+        //     setIsCategoryValid(false);
+        //     return;
+        // }//set error if category doesnt choosen
+
+        // if (!country) {
+        //     setIsCountryValid(false);
+        //     return;
+        // }//set error if country doesnt choosen
+
+        // if (!city && !isCityExist) {
+        //     setIsCityValid(false);
+        //     return;
+        // }//set error if city doesnt choosen and doesnt type in textinput
+
+        // if (!street && !isStreetExist) {
+        //     setIsStreetValid(false);
+        //     return;
+        // }//set error if street doesnt choosen and doesnt type in textinput
+
+        // if (images.length < 6) {
+        //     setErrorMessage(ErrorHandler("Choose at least main image"));
+        //     return;
+        // }//set error if choosen less than 7 images
+
+        // if (
+        //     isCategoryValid &&
+        //     isCountryValid &&
+        //     (isCityValid || isCityExist) &&
+        //     (isStreetValid || isStreetExist)
+        // ) {
+        //     const model: IPostEdit = {
+        //         ...data,
+        //         categoryId: category?.id!,
+        //         countryId: country?.id!,
+        //         cityId: city === undefined || city === null ? null : city?.id!,
+        //         cityName:
+        //             city === undefined || city === null ? data.cityName : null!,
+        //         streetId:
+        //             street === undefined || street === null
+        //                 ? null
+        //                 : street?.id!,
+        //         streetName:
+        //             street === undefined || street === null
+        //                 ? data.streetName
+        //                 : null,
+        //         mainImage: mainImage!,
+        //         images: images,
+        //         postTypesOfRest: typeOfRest,
+        //         services: service,
+        //     };
+
+        //     try {
+        //     const response = await dispatch(editPost(model));
+        //     unwrapResult(response);
+
+        //     navigate("/dashboard/show-all-post");
+        // } catch (error) {
+        //     setErrorMessage(ErrorHandler(error));
+        // }}
     };
 
     return (
@@ -715,14 +744,13 @@ export function EditPost() {
                             onImageDelete={setDeleteImages}
                         />
 
-                         <EditListImagesUploader
+                        <EditListImagesUploader
                             images={images}
                             setImages={setImages}
                             validator={ImagesValidator}
                             defaultImageUrls={postImagesUrl}
                             onImageDelete={setDeleteImages}
-
-                        />  
+                        />
 
                         {/* <ListImageUploader
                             images={images}
