@@ -28,6 +28,7 @@ import {
     ITypeOfRest,
 } from "../../interfaces/post";
 import {
+    EditImageValidator,
     editPostResolver,
     ImagesValidator,
     ImageValidator,
@@ -43,6 +44,7 @@ import Plus from "../../assets/DashboardIcons/iconamoon_sign-plus-fill.svg";
 import "../../css/DashBoardRealtorClasses/index.scss";
 import EditImageUploader from "../../components/realtorDashboard/EditImageUploader.tsx";
 import EditListImagesUploader from "../../components/realtorDashboard/EditListImagesUploader.tsx";
+ 
 
 export function EditPost() {
     const { postId } = useParams();
@@ -87,33 +89,6 @@ export function EditPost() {
 
     const navigate = useNavigate();
     const [isHotel, setIsHotel] = useState<boolean>(false);
-
-    // const [categoryList, setCategoryList] = useState<ICategory[]>([]);
-    // const [category, setCategory] = useState<ICategory>();
-    // const [countryList, setCountryList] = useState<ICountry[]>([]);
-    // const [country, setCountry] = useState<ICountry>();
-    // const [cityList, setCityList] = useState<ICity[]>([]);
-    // const [city, setCity] = useState<ICity>();
-    // const [streetList, setStreetList] = useState<ICity[]>([]);
-    // const [street, setStreet] = useState<ICity>();
-    // const formValid = useRef({
-    //     cityName: false,
-    //     streetName: false,
-    //     name: false,
-    //     description: false,
-    //     buildingNumber: false,
-    //     numberOfRooms: false,
-    //     city: false,
-    //     street: false,
-    //     area: false,
-    //     price: false,
-    //     images: false,
-    // });
-    // const [images, setImages] = useState<File[]>([]);
-    // const [isFormValid, setIsFormValid] = useState(false);
-    // const navigate = useNavigate();
-
-    // const [deleteImg, setDeleteImg] = useState<string[]>();
 
     const {
         register,
@@ -225,7 +200,7 @@ export function EditPost() {
 
                 //Set if it is hotel
                 if (history?.payload.categoryName.toLowerCase() === "hotel") {
-                    setIsHotel(true);
+                    setIsHotel(true);}
             }
 
             //Get list of cities for country id by default country
@@ -330,48 +305,9 @@ export function EditPost() {
         }
     }, [city]);
 
-    // const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
-    //     event.preventDefault();
-
-    //     const data = new FormData(event.currentTarget);
-
-    //     // const numberOfRoomsResult =
-    //     //     (data.get("numberOfRooms") as string) == ""
-    //     //         ? null
-    //     //         : parseInt(data.get("numberOfRooms") as string, 10);
-
-    //     // const areaResult =
-    //     //     (data.get("area") as string) == ""
-    //     //         ? null
-    //     //         : parseInt(data.get("area") as string, 10);
-
-    //     // const model: IPostEdit = {
-    //     //     id: postId as string,
-    //     //     name: data.get("name") as string,
-    //     //     categoryId: category?.id ?? null,
-    //     //     countryId: country?.id ?? null,
-    //     //     cityId: city?.id ?? null,
-    //     //     cityName: data.get("cityName") as string,
-    //     //     streetId: street?.id ?? null,
-    //     //     streetName: data.get("streetName") as string,
-    //     //     price: parseFloat(data.get("price") as string),
-
-    //     //     images: images,
-    //     //     deleteImages: deleteImg,
-    //     // };
-    //     // console.log("model", model);
-
-    //     // try {
-    //     //     const response = await dispatch(editPost(model));
-    //     //     unwrapResult(response);
-
-    //     //     navigate("/dashboard/show-all-post");
-    //     // } catch (error) {
-    //     //     setErrorMessage(ErrorHandler(error));
-    //     // }
-    // };
-
+   
     const onSubmit = async (data: IPostEdit) => {
+
         console.log("data", data);
 
         if (!category) {
@@ -394,11 +330,7 @@ export function EditPost() {
             return;
         }//set error if street doesnt choosen and doesnt type in textinput
 
-        if (images.length < 6) {
-            setErrorMessage(ErrorHandler("Choose at least main image"));
-            return;
-        }//set error if choosen less than 7 images
-
+        
         if (
             isCategoryValid &&
             isCountryValid &&
@@ -448,7 +380,7 @@ export function EditPost() {
             } catch (error) {
                 setErrorMessage(ErrorHandler(error));
             }
-    };
+    }};
 
     return (
         postForEdit &&
@@ -757,7 +689,7 @@ export function EditPost() {
                         <EditImageUploader
                             image={mainImage}
                             setImage={setMainImage}
-                            validator={ImageValidator}
+                            validator={EditImageValidator}
                             label={postForEdit?.imagePostList[1]}
                             defaultImageUrl={mainImageUrl!}
                             onImageDelete={setDeleteImages}

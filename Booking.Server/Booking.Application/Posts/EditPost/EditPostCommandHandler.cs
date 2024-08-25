@@ -158,15 +158,15 @@ public class EditPostCommandHandler(
 		}
 
 		//Delete images
-		if (request.DeleteImages != null && request.DeleteImages.Count != 0)
-		{
-			foreach (var image in request.DeleteImages)
-			{
-				await imageStorageService.DeleteImageAsync(image, "posts");
+		//if (request.DeleteImages != null && request.DeleteImages.Count != 0)
+		//{
+		//	foreach (var image in request.DeleteImages)
+		//	{
+		//		await imageStorageService.DeleteImageAsync(image, "posts");
 
-				await postImageRepository.DeletePostImageByNameAsync(image);
-			}
-		}
+		//		await postImageRepository.DeletePostImageByNameAsync(image);
+		//	}
+		//}
 
 		return post;
 	}

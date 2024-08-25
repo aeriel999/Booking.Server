@@ -3,6 +3,7 @@ import TextField from "@mui/material/TextField";
 import Autocomplete from "@mui/material/Autocomplete";
 import { IListForCombobox } from "../../interfaces/post";
 import { ComboBoxProps } from "../../interfaces/common";
+import "../../css/DashBoardRealtorClasses/index.scss";
 
 export default function ComboBox({
     options,
