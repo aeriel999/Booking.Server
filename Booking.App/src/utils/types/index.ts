@@ -34,3 +34,16 @@ export type ImageUploaderProps = {
     validator: (value: File) => string | false | undefined;
     label: string;
 };
+
+export type OutlinedAlertsProps = {
+    message: string;
+    textColor?: string;
+};
+
+export type EditListImagesUploaderProps = {
+    images: File[];
+    setImages: (arg: File[]) => void;
+    defaultImageUrls: string[]; // List of default images
+    onImageDelete: (deletedImages: IDeleteImage[]) => void;
+    validator: (value: File[]) => string | false | undefined;
+};

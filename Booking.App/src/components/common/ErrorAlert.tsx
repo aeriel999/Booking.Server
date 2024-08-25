@@ -1,36 +1,51 @@
-import React from "react";
+import { forwardRef, useEffect, useRef } from "react";
 import Stack from "@mui/material/Stack";
 import Alert from "@mui/material/Alert";
 import { SxProps, Theme } from "@mui/system";
+import { OutlinedAlertsProps } from "../../utils/types";
 
-type OutlinedAlertsProps = {
-    message: string;
-    textColor?: string;
-};
+const OutlinedErrorAlert = forwardRef<HTMLDivElement, OutlinedAlertsProps>(
+    ({ message, textColor = "#000" }) => {
+        const alertRef = useRef<HTMLDivElement>(null);//Ref for focuse
 
-const OutlinedErrorAlert: React.FC<OutlinedAlertsProps> = ({ message, textColor = "#ffff" }) => {
+        //Set ref for focuse
+        useEffect(() => {
+            if (message && alertRef.current) {
+                alertRef.current.focus();
+            }
+        }, [message]);
 
+        //Set Style
+        const alertStyle: SxProps<Theme> = {
+            backgroundColor: "rgba(255, 255, 255, 0.33)",
+            borderColor: "#f5c2c7",
+            color: textColor,
+            borderRadius: "5px",
+            border: "1px solid #DADADA",
+            fontFamily: "Roboto",
+            fontSize: "18px",
+            fontStyle: "normal",
+            fontWeight: 300,
+            lineHeight: "normal",
+            "&:focus": {
+                outlineOffset: "2px",
+            },
+        };
 
-    const alertStyle: SxProps<Theme> = {
-        backgroundColor: "rgba(255, 255, 255, 0.33)", // Replace with your desired background color
-        borderColor: "#f5c2c7", // Optionally, you can also change the border color
-        color: textColor, // And the text color
-        borderRadius: "5px",
-        border: "1px solid #DADADA",
-        fontFamily: "Roboto", // Font family
-        fontSize: "18px", // Font size
-        fontStyle: "normal", // Font style
-        fontWeight: 300, // Font weight
-        lineHeight: "normal",
-    };
-
-    return (
-        <Stack sx={{ width: "100%" }} spacing={2}>
-            <Alert variant="outlined" severity="error" sx={alertStyle}>
-                {message}
-            </Alert>
-        </Stack>
-    );
-};
+        return (
+            <Stack sx={{ width: "100%" }} spacing={2}>
+                <Alert
+                    variant="outlined"
+                    severity="error"
+                    sx={alertStyle}
+                    ref={alertRef} // Forward the ref to Alert component
+                    tabIndex={-1} // Ensure it can be focused
+                >
+                    {message}
+                </Alert>
+            </Stack>
+        );
+    }
+);
 
 export default OutlinedErrorAlert;

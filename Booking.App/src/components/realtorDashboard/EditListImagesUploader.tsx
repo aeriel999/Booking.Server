@@ -6,14 +6,7 @@ import { IconButton } from "@mui/material";
 import CancelIcon from "@mui/icons-material/Cancel";
 import { IDeleteImage } from "../../interfaces/post";
 import Plus from "../../assets/DashboardIcons/iconamoon_sign-plus-fill.svg";
-
-export type EditListImagesUploaderProps = {
-    images: File[];
-    setImages: (arg: File[]) => void;
-    defaultImageUrls: string[]; // List of default images
-    onImageDelete: (deletedImages: IDeleteImage[]) => void;
-    validator: (value: File[]) => string | false | undefined;
-};
+import { EditListImagesUploaderProps } from "../../utils/types";
 
 const EditListImagesUploader = (props: EditListImagesUploaderProps) => {
     const numberOfImagesUpload = 6;
@@ -24,6 +17,7 @@ const EditListImagesUploader = (props: EditListImagesUploaderProps) => {
         null
     ); // Track the index for replacement
 
+    //Set list of deleted images for data
     useEffect(() => {
         props.onImageDelete(deletedImages);
     }, [deletedImages]);
@@ -52,6 +46,7 @@ const EditListImagesUploader = (props: EditListImagesUploaderProps) => {
         }
         e.target.value = ""; // Reset input value
 
+        //Add new block for images
         if (
             numberOfBlocks > 1 &&
             (props.images.length + 1) /
@@ -81,6 +76,7 @@ const EditListImagesUploader = (props: EditListImagesUploaderProps) => {
         setError(errorMessage);
     };
 
+    //Action for keyboard navigation
     const handleKeyDown = (
         event: React.KeyboardEvent<HTMLAnchorElement>,
         index: number
@@ -94,7 +90,7 @@ const EditListImagesUploader = (props: EditListImagesUploaderProps) => {
 
     return (
         <div className="blockImagesContainer">
-            {error && <OutlinedErrorAlert message={error} />}
+            {error && <OutlinedErrorAlert message={error} textColor="#000" />}
 
             <div className="imagesContainer">
                 {Array.from({
@@ -144,15 +140,16 @@ const EditListImagesUploader = (props: EditListImagesUploaderProps) => {
                 ))}
             </div>
 
-            <button style={{ marginLeft: "auto" }}
-                        className="linkButton"
-                        onClick={() => {
-                            setNumberOfBlocks(numberOfBlocks + 1);
-                        }}
-                    >
-                        <div className="text">Add More Images</div>
-                        <img className="icon" src={Plus}></img>
-                    </button>
+            <button
+                style={{ marginLeft: "auto" }}
+                className="linkButton"
+                onClick={() => {
+                    setNumberOfBlocks(numberOfBlocks + 1);
+                }}
+            >
+                <div className="text">Add More Images</div>
+                <img className="icon" src={Plus}></img>
+            </button>
 
             <div className="buttonContainer">
                 <label htmlFor="images-upload">
