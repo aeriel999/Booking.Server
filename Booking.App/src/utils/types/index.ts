@@ -1,10 +1,10 @@
-import {AsyncThunk} from '@reduxjs/toolkit';
-import { IDeleteImage, IRoom } from '../../interfaces/post';
+import { AsyncThunk } from "@reduxjs/toolkit";
+import { IDeleteImage, IRoom } from "../../interfaces/post";
 
 // eslint-disable-next-line
-type GenericAsyncThunk = AsyncThunk<unknown, unknown, any>
+type GenericAsyncThunk = AsyncThunk<unknown, unknown, any>;
 
-export type RejectedAction = ReturnType<GenericAsyncThunk['rejected']>
+export type RejectedAction = ReturnType<GenericAsyncThunk["rejected"]>;
 
 export type RoomsProps = {
     rooms: IRoom[] | null;
@@ -20,7 +20,7 @@ export type EditImageUploaderType = {
     label: string;
     defaultImageUrl: string;
     onImageDelete: (images: IDeleteImage[]) => void;
-}; 
+};
 
 export type ListImageUploaderProps = {
     images: File[];
@@ -44,6 +44,7 @@ export type EditListImagesUploaderProps = {
     images: File[];
     setImages: (arg: File[]) => void;
     defaultImageUrls: string[]; // List of default images
+    setDefaultImagesUrl:(arg: string[]) => void;
     onImageDelete: (deletedImages: IDeleteImage[]) => void;
     validator: (value: File[]) => string | false | undefined;
 };

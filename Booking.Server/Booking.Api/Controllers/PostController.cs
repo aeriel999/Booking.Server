@@ -308,7 +308,7 @@ public class PostController(ISender mediatr, IMapper mapper) : ApiController
 	{
 		string userId = User.Claims.First(u => u.Type == ClaimTypes.NameIdentifier).Value;
 
-		var images = new List<byte[]>();
+		var images = request.Images == null ? null : new List<byte[]>();
 
 		if (request.Images != null && request.Images.Count != 0)
 		{
@@ -316,12 +316,24 @@ public class PostController(ISender mediatr, IMapper mapper) : ApiController
 			{
 				using MemoryStream memoryStream = new();
 				await image.CopyToAsync(memoryStream);
-				images.Add(memoryStream.ToArray());
+				images!.Add(memoryStream.ToArray());
+			}
+		}
+
+		var mainImage = request.MainImage == null ? null : new byte[byte.MaxValue];
+
+		if (request.MainImage != null && request.MainImage.Length != 0)
+		{
+			using (MemoryStream memoryStream = new MemoryStream())
+			{
+				await request.MainImage.CopyToAsync(memoryStream);
+
+				mainImage = memoryStream.ToArray();
 			}
 		}
 
 		var editPostResult = await mediatr.Send(mapper.Map<EditPostCommand>(
-			(request, Guid.Parse(userId), images)));
+			(request, Guid.Parse(userId), images, mainImage)));
 
 		return editPostResult.Match(
 			editPostResult => Ok(editPostResult),

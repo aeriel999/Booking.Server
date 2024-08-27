@@ -240,9 +240,10 @@ public class PostMapping : IRegister
 
 
 		config.NewConfig<(
-			EditPostRequest editPostRequest, Guid UserId, List<byte[]> Images), EditPostCommand>()
+			EditPostRequest editPostRequest, Guid UserId, List<byte[]> Images, byte[] MainImage), EditPostCommand>()
 		.Map(dest => dest.UserId, src => src.UserId)
 		.Map(dest => dest.Images, src => src.Images)
+		.Map(dest => dest.MainImage, src => src.MainImage)
 		.Map(dest => dest, src => src.editPostRequest);
 
 

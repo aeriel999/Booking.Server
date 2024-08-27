@@ -334,3 +334,19 @@ export const EditImageValidator = (file: File): string | undefined => {
 
     return undefined;
 };
+
+export const EditImagesValidator = (
+    files: File[] | null
+): string | undefined => {
+    const maxSizeInBytes = 5 * 1024 * 1024; // 5 MB in bytes
+    const validFormats = ["image/png", "image/jpeg", "image/jpg", "image/gif"];
+
+    if (files) {
+        for (const file of files) {
+            if (file.size > maxSizeInBytes)
+                return "File size must not exceed 5 MB";
+            if (!validFormats.includes(file.type)) return "Invalid file format";
+        }
+    }
+    return undefined;
+};

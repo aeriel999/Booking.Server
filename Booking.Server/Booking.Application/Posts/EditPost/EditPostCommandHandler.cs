@@ -4,6 +4,7 @@ using Booking.Application.Common.Interfaces.Users;
 using Booking.Domain.Posts;
 using ErrorOr;
 using MediatR;
+using static System.Net.Mime.MediaTypeNames;
 
 namespace Booking.Application.Posts.EditPost;
 
@@ -37,16 +38,17 @@ public class EditPostCommandHandler(
 		if (post.UserId != request.UserId)
 			return Error.Validation("Access deny");
 
-		//Update fields
+	//Update fields
 		if (request.Name != post.Name)
 		{
 			post.Name = request.Name;
 		}
 
-		if (request.CategoryId != null && request.CategoryId != post.CategoryId)
+		//Category
+		if (request.CategoryId != post.CategoryId)
 		{
 			//Check category for existing
-			var category = await postCategoryRepository.FindPostCategoryByIdAsync((Guid)request.CategoryId);
+			var category = await postCategoryRepository.FindPostCategoryByIdAsync((Guid)request.CategoryId!);
 
 			if (category == null)
 				return Error.NotFound("Category is not found");
@@ -54,16 +56,18 @@ public class EditPostCommandHandler(
 			post.CategoryId = (Guid)request.CategoryId;
 		}
 
+	//Adress
+		//Street
 		if (request.StreetId == null || request.StreetId != post.StreetId)
 		{
 			Guid cityId = request.CityId ?? Guid.Empty;
 
-			//CreatePostPostTypeOfRestAsync new city
+			//Create new city
 			if (request.CityId == null && request.CityName != null)
 			{
 				var city = await postCityRepository.FindCityByNameAndCountryIdAsync(
 					request.CityName, (Guid)request.CountryId!);
-
+				
 				if (city == null)
 				{
 					city = new PostCity
@@ -79,7 +83,7 @@ public class EditPostCommandHandler(
 				cityId = city.Id;
 			}
 
-			//CreatePostPostTypeOfRestAsync new street
+			//Create new street
 			if (request.StreetId == null && request.StreetName != null)
 			{
 				var street = await postStreetRepository.FindStreetByNameAndCityIdAsync(
@@ -105,25 +109,23 @@ public class EditPostCommandHandler(
 			}
 		}
 
+		//ZipCode
 		if (request.ZipCode != post.ZipCode)
 		{
 			post.ZipCode = request.ZipCode;
 		}
 
+		//NumberOfGuests
 		if ( request.NumberOfGuests != null &&request.NumberOfGuests != post.NumberOfGuests)
 		{
 			post.NumberOfGuests = request.NumberOfGuests;
 		}
- 
+
+		//Price
 		if (request.Price != post.Price)
 		{
 			post.Price = request.Price;
 		}
-
-		//if (request.Description != null &&  request.Description != post.Description)
-		//{
-		//	post.Description = request.Description;
-		//}
 
 		post.IsActive = user.Rating >= 4.5 ? true : false;
 
@@ -133,10 +135,66 @@ public class EditPostCommandHandler(
 
 		await postRepository.SavePostAsync();
 
+		//Change main image
+		if (request.MainImage != null)
+		{
+			var mainImage = await imageStorageService.SavePostImageInStorageAsync(request.MainImage);
+
+			if (mainImage == null)
+				return Error.Validation("Image not save");
+
+			var postImage = new PostImage
+			{
+				Name = mainImage,
+				Priority = 1,
+				PostId = post.Id
+			};
+
+			await postImageRepository.CraetePostImageAsync(postImage);
+			await postImageRepository.SavePostImageAsync();
+		}
+
+		var imageList = new List<byte[]>();
+
+		if ((request.DeleteImages != null && request.DeleteImages.Count != 0)
+			&& (request.Images != null && request.Images.Count != 0))
+		{
+			int index = 0;
+
+			foreach (var image in request.DeleteImages)
+			{
+				await imageStorageService.DeleteImageAsync(image.Name, "posts");
+
+				await postImageRepository.DeletePostImageByNameAsync(image.Name);
+
+				var imageName = await imageStorageService.SavePostImageInStorageAsync(request.Images[index]);
+
+				index++;
+
+				if (imageName == null)
+					return Error.Validation("Image not save");
+
+				int priority = image.index;
+
+				var postImage = new PostImage
+				{
+					Name = imageName,
+					Priority = priority++,
+					PostId = post.Id
+				};
+
+				await postImageRepository.CraetePostImageAsync(postImage);
+				await postImageRepository.SavePostImageAsync();
+
+			}
+		}
+
 		//Save new images
 		if (request.Images != null && request.Images.Count != 0)
 		{
-			int priority = 1;
+			
+
+			int priorityCount = 0;
 
 			foreach (var image in request.Images)
 			{
@@ -145,6 +203,9 @@ public class EditPostCommandHandler(
 				if (imageName == null)
 					return Error.Validation("Image not save");
 
+				int priority = priorityCount;
+
+				 
 				var postImage = new PostImage
 				{
 					Name = imageName,
@@ -162,9 +223,7 @@ public class EditPostCommandHandler(
 		//{
 		//	foreach (var image in request.DeleteImages)
 		//	{
-		//		await imageStorageService.DeleteImageAsync(image, "posts");
-
-		//		await postImageRepository.DeletePostImageByNameAsync(image);
+		
 		//	}
 		//}
 

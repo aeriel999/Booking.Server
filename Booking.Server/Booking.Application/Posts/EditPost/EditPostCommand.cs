@@ -22,7 +22,7 @@ public record EditPostCommand(
 	List<Guid>? PostPostTypesOfRest,
 	List<Guid>? Services,
 	List<byte[]>? Images,
-	IFormFile? MainImage,
+	byte[]? MainImage,
 	List<DeletedImage>? DeleteImages) : IRequest<ErrorOr<Post>>;
 public record DeletedImage
 {

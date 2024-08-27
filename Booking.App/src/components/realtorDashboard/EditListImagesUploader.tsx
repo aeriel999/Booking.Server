@@ -10,7 +10,9 @@ import { EditListImagesUploaderProps } from "../../utils/types";
 
 const EditListImagesUploader = (props: EditListImagesUploaderProps) => {
     const numberOfImagesUpload = 6;
-    const [numberOfBlocks, setNumberOfBlocks] = useState<number>(1);
+    const [numberOfBlocks, setNumberOfBlocks] = useState<number>(
+        Math.ceil(props.defaultImageUrls.length / numberOfImagesUpload)
+    );
     const [error, setError] = useState<string | false | undefined>(false);
     const [deletedImages, setDeletedImages] = useState<IDeleteImage[]>([]);
     const [activeUploadIndex, setActiveUploadIndex] = useState<number | null>(
@@ -34,7 +36,9 @@ const EditListImagesUploader = (props: EditListImagesUploaderProps) => {
             if (activeUploadIndex < props.defaultImageUrls.length) {
                 // Replacing a default image
                 const deletedImageInfo: IDeleteImage = {
-                    name: props.defaultImageUrls[activeUploadIndex],
+                    name: props.defaultImageUrls[activeUploadIndex]
+                        .split("/")
+                        .pop()!,
                     index: activeUploadIndex,
                 };
                 setDeletedImages([...deletedImages, deletedImageInfo]);
@@ -43,6 +47,11 @@ const EditListImagesUploader = (props: EditListImagesUploaderProps) => {
             // Replace or add the new image at the correct index for correct showing in UI
             newImages[activeUploadIndex] = file;
             props.setImages(newImages);
+
+            // Create a new array excluding the deleted image
+            const updatedDefaultImages = [...props.defaultImageUrls];
+            updatedDefaultImages.splice(activeUploadIndex, 1);
+            props.setDefaultImagesUrl(updatedDefaultImages);
         }
         e.target.value = ""; // Reset input value
 
@@ -63,17 +72,46 @@ const EditListImagesUploader = (props: EditListImagesUploaderProps) => {
         const newImages = [...props.images];
         newImages.splice(index, 1);
 
+        // Remove the image from the defaultImageUrls if it exists there
         if (index < props.defaultImageUrls.length) {
             const deletedImageInfo: IDeleteImage = {
                 name: props.defaultImageUrls[index],
                 index,
             };
             setDeletedImages([...deletedImages, deletedImageInfo]);
+
+            // Create a new array excluding the deleted image
+            const updatedDefaultImages = [...props.defaultImageUrls];
+            updatedDefaultImages.splice(index, 1);
+            props.setDefaultImagesUrl(updatedDefaultImages); // Assuming setDefaultImageUrls is passed as a prop
         }
 
         props.setImages(newImages);
         const errorMessage = props.validator(newImages);
         setError(errorMessage);
+
+        console.log("props.defaultImageUrls", props.defaultImageUrls.length -1);
+        console.log("rops.images", props.images.length);
+        console.log("numberOfBlocks", numberOfBlocks * numberOfImagesUpload);
+        console.log(
+            "test",
+            ((numberOfBlocks * numberOfImagesUpload) /
+            ((props.defaultImageUrls == null
+                ? 0
+                : props.defaultImageUrls.length) +
+                (props.images == null ? 0 : props.images.length - 1))  )
+        );
+
+        if ((numberOfBlocks * numberOfImagesUpload) -
+            ((props.defaultImageUrls == null
+                ? 0
+                : props.defaultImageUrls.length) +
+                (props.images == null ? 0 : props.images.length - 1))  
+                 >=
+            6
+        ) {
+            setNumberOfBlocks(numberOfBlocks - 1);
+        }
     };
 
     //Action for keyboard navigation

@@ -28,6 +28,7 @@ import {
     ITypeOfRest,
 } from "../../interfaces/post";
 import {
+    EditImagesValidator,
     EditImageValidator,
     editPostResolver,
     ImagesValidator,
@@ -80,9 +81,11 @@ export function EditPost() {
 
     const [typeOfRestList, setTypeOfRestList] = useState<ITypeOfRest[]>([]);
     const [typeOfRest, setTypeOfRest] = useState<string[] | null>([]);
+    const [defaultTypeOfRest, setDefaultTypeOfRest] = useState<string[] | null>([]);
 
     const [servicesList, setServicesList] = useState<IService[]>([]);
     const [service, setService] = useState<string[] | null>([]);
+    const [defaultService, setDefaultService] = useState<string[] | null>([]);
 
     const [rooms, setRooms] = useState<IRoom[] | null>([]);
     const [numberOfRooms, setNumberOfRooms] = useState<number>(1);
@@ -238,10 +241,12 @@ export function EditPost() {
             //Set list of default values for combobox
             if (history?.payload.typesOfRest.$values) {
                 setTypeOfRest(history?.payload.typesOfRest.$values);
+                setDefaultTypeOfRest(history?.payload.typesOfRest.$values);
             }
 
             if (history?.payload.services.$values) {
                 setService(history?.payload.services.$values);
+                setDefaultService(history?.payload.services.$values);
             }
 
             //Create Url for main image
@@ -340,15 +345,8 @@ export function EditPost() {
             const model: IPostEdit = {
                 ...data,
                 id: postId!,
-    
-                categoryId: 
-                    category === undefined || category === null 
-                        ? null 
-                        : category.id!,
-                countryId: 
-                    country === undefined || country === null 
-                        ? null 
-                        : country.id!,
+                categoryId: category.id!,
+                countryId: country.id!,
                 cityId: 
                     city === undefined || city === null 
                         ? null 
@@ -365,11 +363,11 @@ export function EditPost() {
                     street === undefined || street === null
                         ? data.streetName
                         : null,
-                mainImage: mainImage ? null : mainImage!,
+                mainImage: mainImage ?? mainImage!,
                 images: images,
-                postTypesOfRest: typeOfRest,
-                services: service,
-                deleteImages: deleteImages ? null : deleteImages!
+                postTypesOfRest: typeOfRest ?? typeOfRest!.filter(item => !defaultTypeOfRest!.includes(item)),
+                services: service ?? service!.filter(item => !defaultService!.includes(item)),
+                deleteImages: deleteImages ?? deleteImages!
             };
     
             try {
@@ -698,8 +696,9 @@ export function EditPost() {
                         <EditListImagesUploader
                             images={images}
                             setImages={setImages}
-                            validator={ImagesValidator}
+                            validator={EditImagesValidator}
                             defaultImageUrls={postImagesUrl}
+                            setDefaultImagesUrl={setPostImagesUrl}
                             onImageDelete={setDeleteImages}
                         />
 
