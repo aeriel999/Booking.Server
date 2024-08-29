@@ -230,9 +230,12 @@ public class PostRepository(BookingDbContext context) : IPostRepository
 
 	public async Task<int> GetCountOfImagesByPostIdAsync(Guid postId)
 	{
-		return await _dbSet
+		var post = await _dbSet
 					.Where(p => p.Id == postId)
-					.Include(post => post.ImagesPost)
-					.CountAsync();
+					.Include(post => post.ImagesPost).FirstOrDefaultAsync();
+
+		return  post!.ImagesPost!.Count();
+
+
 	}
 }

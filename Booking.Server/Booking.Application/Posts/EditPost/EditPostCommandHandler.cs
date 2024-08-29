@@ -178,12 +178,14 @@ public class EditPostCommandHandler(
 		{
 			var index = 0;
 
+			var imagListLength = await postRepository.GetCountOfImagesByPostIdAsync(post.Id);
+
 			foreach (var image in request.Images)
 			{
 				var priority = ((request.DeleteImages != null && request.DeleteImages.Count != 0) 
 					&& request.DeleteImages.Count > index) ? 
 					request.DeleteImages[index].Index 
-					: (await postRepository.GetCountOfImagesByPostIdAsync(post.Id)) + 1 + index;
+					: (imagListLength + 1 + index);
 
 				index++;
 
