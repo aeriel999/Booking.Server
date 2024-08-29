@@ -39,7 +39,7 @@ const EditListImagesUploader = (props: EditListImagesUploaderProps) => {
                     name: props.defaultImageUrls[activeUploadIndex]
                         .split("/")
                         .pop()!,
-                    index: activeUploadIndex,
+                    index: activeUploadIndex + 2,
                 };
                 setDeletedImages([...deletedImages, deletedImageInfo]);
             }
@@ -51,7 +51,7 @@ const EditListImagesUploader = (props: EditListImagesUploaderProps) => {
             // Create a new array excluding the deleted image
             const updatedDefaultImages = [...props.defaultImageUrls];
             updatedDefaultImages.splice(activeUploadIndex, 1);
-            props.setDefaultImagesUrl(updatedDefaultImages);
+           // props.setDefaultImagesUrl(updatedDefaultImages);
         }
         e.target.value = ""; // Reset input value
 
@@ -75,7 +75,9 @@ const EditListImagesUploader = (props: EditListImagesUploaderProps) => {
         // Remove the image from the defaultImageUrls if it exists there
         if (index < props.defaultImageUrls.length) {
             const deletedImageInfo: IDeleteImage = {
-                name: props.defaultImageUrls[index],
+                name: props.defaultImageUrls[index]
+                        .split("/")
+                        .pop()!,
                 index,
             };
             setDeletedImages([...deletedImages, deletedImageInfo]);
@@ -89,18 +91,6 @@ const EditListImagesUploader = (props: EditListImagesUploaderProps) => {
         props.setImages(newImages);
         const errorMessage = props.validator(newImages);
         setError(errorMessage);
-
-        console.log("props.defaultImageUrls", props.defaultImageUrls.length -1);
-        console.log("rops.images", props.images.length);
-        console.log("numberOfBlocks", numberOfBlocks * numberOfImagesUpload);
-        console.log(
-            "test",
-            ((numberOfBlocks * numberOfImagesUpload) /
-            ((props.defaultImageUrls == null
-                ? 0
-                : props.defaultImageUrls.length) +
-                (props.images == null ? 0 : props.images.length - 1))  )
-        );
 
         if ((numberOfBlocks * numberOfImagesUpload) -
             ((props.defaultImageUrls == null

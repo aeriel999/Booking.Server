@@ -10,7 +10,7 @@ public interface IImageStorageService
 	Task<string> SavePostImageInStorageAsync(byte[] file);
 
 
-	Task DeleteImageAsync(string imageName, string path);
+	void DeleteImage(string imageName, string path);
 
 
 	Task<string> AddProfileHeaderImageAsync(User user, byte[] file);

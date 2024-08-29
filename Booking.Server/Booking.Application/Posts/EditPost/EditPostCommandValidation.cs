@@ -64,7 +64,7 @@ public class EditPostCommandValidation : AbstractValidator<EditPostCommand>
 		{
 			RuleFor(r => r.Images)
 				.Must(images => images!.Count <= 30)
-				.WithMessage("You can upload up to 10 images.")
+				.WithMessage("You can upload up to 30 images.")
 				.ForEach(imageRule =>
 				{
 					imageRule.Must(image => image.Length <= 5 * 1024 * 1024) 
@@ -72,15 +72,5 @@ public class EditPostCommandValidation : AbstractValidator<EditPostCommand>
 				});
 		});
 
-
-		When(r => r.DeleteImages != null, () =>
-		{
-			RuleFor(r => r.DeleteImages)
-				.ForEach(deleteImageRule =>
-				{
-					deleteImageRule.NotEmpty()
-						.WithMessage("Delete image identifier must not be empty.");
-				});
-		});
 	}
 }

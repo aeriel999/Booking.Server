@@ -4,7 +4,6 @@ using Booking.Application.Common.Interfaces.Users;
 using Booking.Domain.Posts;
 using ErrorOr;
 using MediatR;
-using static System.Net.Mime.MediaTypeNames;
 
 namespace Booking.Application.Posts.CreatePost;
 
@@ -173,13 +172,14 @@ public class CreatePostCommandHandler(
 			};
 
 			await postImageRepository.CraetePostImageAsync(postImage);
-			await postImageRepository.SavePostImageAsync();
 		}
 
 
 		if (request.Images.Count > 0 && request.Images != null)
 		{
 			int priority = 2;
+
+			var imageList = new List<PostImage>();	
 
 			foreach (var image in request.Images)
 			{
@@ -195,9 +195,11 @@ public class CreatePostCommandHandler(
 					PostId = post.Id
 				};
 
-				await postImageRepository.CraetePostImageAsync(postImage);
-				await postImageRepository.SavePostImageAsync();
+				imageList.Add(postImage);
 			}
+
+			await postImageRepository.CraetePostImageListAsync(imageList);
+
 		}
 
 		return post;

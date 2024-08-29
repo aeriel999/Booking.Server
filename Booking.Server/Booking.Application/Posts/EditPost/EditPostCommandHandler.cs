@@ -151,79 +151,86 @@ public class EditPostCommandHandler(
 			};
 
 			await postImageRepository.CraetePostImageAsync(postImage);
-			await postImageRepository.SavePostImageAsync();
 		}
 
-		var imageList = new List<byte[]>();
-
-		if ((request.DeleteImages != null && request.DeleteImages.Count != 0)
-			&& (request.Images != null && request.Images.Count != 0))
+		//Delete images 
+		if (request.DeleteImages != null && request.DeleteImages.Count != 0)
 		{
-			int index = 0;
+			var imageListForDelete = new List<PostImage>();
 
 			foreach (var image in request.DeleteImages)
 			{
-				await imageStorageService.DeleteImageAsync(image.Name, "posts");
+				var getPostImage = postImageRepository.GetImageByName(image.Name);
 
-				await postImageRepository.DeletePostImageByNameAsync(image.Name);
+				if (getPostImage.IsError)
+					return Error.NotFound("Image not found");
 
-				var imageName = await imageStorageService.SavePostImageInStorageAsync(request.Images[index]);
+				imageListForDelete.Add(getPostImage.Value);
 
-				index++;
-
-				if (imageName == null)
-					return Error.Validation("Image not save");
-
-				int priority = image.index;
-
-				var postImage = new PostImage
-				{
-					Name = imageName,
-					Priority = priority++,
-					PostId = post.Id
-				};
-
-				await postImageRepository.CraetePostImageAsync(postImage);
-				await postImageRepository.SavePostImageAsync();
-
+				imageStorageService.DeleteImage(image.Name, "posts");
 			}
+
+			await postImageRepository.DeletePostImageListByNameAsync(imageListForDelete);
 		}
 
-		//Save new images
+		//Upload new images 
 		if (request.Images != null && request.Images.Count != 0)
 		{
-			
-
-			int priorityCount = 0;
+			var index = 0;
 
 			foreach (var image in request.Images)
 			{
-				var imageName = await imageStorageService.SavePostImageInStorageAsync(image);
+				var priority = ((request.DeleteImages != null && request.DeleteImages.Count != 0) 
+					&& request.DeleteImages.Count > index) ? 
+					request.DeleteImages[index].Index 
+					: (await postRepository.GetCountOfImagesByPostIdAsync(post.Id)) + 1 + index;
+
+				index++;
+
+				var imageName = await imageStorageService
+						.SavePostImageInStorageAsync(image);
 
 				if (imageName == null)
 					return Error.Validation("Image not save");
 
-				int priority = priorityCount;
-
-				 
 				var postImage = new PostImage
 				{
 					Name = imageName,
-					Priority = priority++,
+					Priority = priority,
 					PostId = post.Id
 				};
 
 				await postImageRepository.CraetePostImageAsync(postImage);
-				await postImageRepository.SavePostImageAsync();
 			}
 		}
 
-		//Delete images
-		//if (request.DeleteImages != null && request.DeleteImages.Count != 0)
+		////Add new Types of Rest
+		//if (request.PostTypesOfRest != null)
 		//{
-		//	foreach (var image in request.DeleteImages)
+		//	foreach (var type in request.PostTypesOfRest)
 		//	{
-		
+		//		var postTypeOfRent = new PostPostTypeOfRest
+		//		{
+		//			PostId = post.Id,
+		//			PostTypeOfRestId = type
+		//		};
+
+		//		await postPostTypeOfRestRepository.CreatePostPostTypeOfRestAsync(postTypeOfRent);
+		//	}
+		//}
+
+		////Add new services
+		//if (request.PostServices != null)
+		//{
+		//	foreach (var service in request.PostServices)
+		//	{
+		//		var postService = new PostService
+		//		{
+		//			PostId = post.Id,
+		//			ServiceId = service
+		//		};
+
+		//		await postServiceRepository.CreatePostServiceAsync(postService);
 		//	}
 		//}
 

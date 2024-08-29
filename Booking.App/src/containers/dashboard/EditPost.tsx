@@ -688,7 +688,8 @@ export function EditPost() {
                             image={mainImage}
                             setImage={setMainImage}
                             validator={EditImageValidator}
-                            label={postForEdit?.imagePostList[1]}
+                            label={mainImageUrl!.split("/")
+                                .pop()!}
                             defaultImageUrl={mainImageUrl!}
                             onImageDelete={setDeleteImages}
                         />

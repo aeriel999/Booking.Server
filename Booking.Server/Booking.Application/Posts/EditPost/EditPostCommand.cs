@@ -28,7 +28,7 @@ public record DeletedImage
 {
 	public required string Name { get; init; }
 
-	public required int index { get; init; }
+	public required int Index { get; init; }
 }
 
 

@@ -4,13 +4,18 @@ import "../../css/DashBoardRealtorClasses/index.scss";
 import { IDeleteImage } from "../../interfaces/post";
 import { EditImageUploaderType } from "../../utils/types";
 
-
 const EditImageUploader = (props: EditImageUploaderType) => {
     const [error, setError] = useState<string | false | undefined>(false);
-    const [displayImage, setDisplayImage] = useState<string>(props.defaultImageUrl);
+    const [displayImage, setDisplayImage] = useState<string>(
+        props.defaultImageUrl
+    );
 
     useEffect(() => {
-        setDisplayImage(props.image ? URL.createObjectURL(props.image) : props.defaultImageUrl);
+        setDisplayImage(
+            props.image
+                ? URL.createObjectURL(props.image)
+                : props.defaultImageUrl
+        );
     }, [props.image, props.defaultImageUrl]);
 
     const handleOnAddImage = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -24,8 +29,12 @@ const EditImageUploader = (props: EditImageUploaderType) => {
         if (!errorMessage) {
             props.setImage(file);
 
-            const deleteImageInfo: IDeleteImage = { name: props.label, index: 0 };
-        
+            const deleteImageInfo: IDeleteImage = {
+                name: props.label,
+                index: 1,
+            };
+            console.log("deleteImageInfo", deleteImageInfo);
+
             // Trigger the onImageDelete callback
             props.onImageDelete([deleteImageInfo]);
         }
@@ -71,7 +80,6 @@ const EditImageUploader = (props: EditImageUploaderType) => {
                         style={{ display: "none" }}
                     />
                 </label>
-                
             </div>
         </>
     );
