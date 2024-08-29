@@ -129,6 +129,8 @@ public class CreatePostCommandHandler(
 		//Add Types of Rest
 		if (request.PostTypesOfRest != null)
 		{
+			var postList = new List<PostPostTypeOfRest>();	
+
 			foreach (var type in request.PostTypesOfRest)
 			{
 				var postTypeOfRent = new PostPostTypeOfRest
@@ -137,13 +139,18 @@ public class CreatePostCommandHandler(
 					PostTypeOfRestId = type
 				};
 
-				await postPostTypeOfRestRepository.CreatePostPostTypeOfRestAsync(postTypeOfRent);
+				postList.Add(postTypeOfRent);	
 			}
+
+			await postPostTypeOfRestRepository.CreatePostPostTypeOfRestListAsync(postList);
+
 		}
 
 		//Add services
 		if (request.PostServices != null)
 		{
+			var services = new List<PostService>();
+
 			foreach (var service in request.PostServices)
 			{
 				var postService = new PostService
@@ -152,8 +159,10 @@ public class CreatePostCommandHandler(
 					ServiceId = service
 				};
 
-				await postServiceRepository.CreatePostServiceAsync(postService);
+				services.Add(postService);
 			}
+
+			await postServiceRepository.CreatePostServiceListAsync(services);
 		}
 
 		//Save image in local storage and create and save image in DB

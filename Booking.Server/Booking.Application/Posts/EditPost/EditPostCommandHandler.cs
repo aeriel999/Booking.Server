@@ -15,7 +15,9 @@ public class EditPostCommandHandler(
 	IPostStreetRepository postStreetRepository,
 	IImageStorageService imageStorageService,
 	IPostImageRepository postImageRepository,
-	IUserRepository userRepository) 
+	IUserRepository userRepository,
+	IPostPostTypeOfRestRepository typeOfRestRepository,
+	IPostServiceRepository postServiceRepository) 
 	: IRequestHandler<EditPostCommand, ErrorOr<Post>>
 {
 	public async Task<ErrorOr<Post>> Handle(EditPostCommand request, CancellationToken cancellationToken)
@@ -206,36 +208,80 @@ public class EditPostCommandHandler(
 			}
 		}
 
-		////Add new Types of Rest
-		//if (request.PostTypesOfRest != null)
-		//{
-		//	foreach (var type in request.PostTypesOfRest)
-		//	{
-		//		var postTypeOfRent = new PostPostTypeOfRest
-		//		{
-		//			PostId = post.Id,
-		//			PostTypeOfRestId = type
-		//		};
+		//Add Types of Rest
+		if (request.PostTypesOfRest != null && request.PostTypesOfRest.Count > 0)
+		{
+			var postList = new List<PostPostTypeOfRest>();
 
-		//		await postPostTypeOfRestRepository.CreatePostPostTypeOfRestAsync(postTypeOfRent);
-		//	}
-		//}
+			foreach (var type in request.PostTypesOfRest)
+			{
+				var postTypeOfRent = new PostPostTypeOfRest
+				{
+					PostId = post.Id,
+					PostTypeOfRestId = type
+				};
 
-		////Add new services
-		//if (request.PostServices != null)
-		//{
-		//	foreach (var service in request.PostServices)
-		//	{
-		//		var postService = new PostService
-		//		{
-		//			PostId = post.Id,
-		//			ServiceId = service
-		//		};
+				postList.Add(postTypeOfRent);
+			}
 
-		//		await postServiceRepository.CreatePostServiceAsync(postService);
-		//	}
-		//}
+			await typeOfRestRepository.CreatePostPostTypeOfRestListAsync(postList);
 
+		}
+
+		//Delete Types of Rest
+		if (request.DeletedPostTypesOfRest != null && request.DeletedPostTypesOfRest.Count > 0)
+		{
+			var deletedTypesList = new List<PostPostTypeOfRest>();
+
+			foreach (var item in request.DeletedPostTypesOfRest)
+			{
+				var resultOfGetType = typeOfRestRepository.GetPostTypeOfRestById(Guid.Parse(item), post.Id);
+
+				if (resultOfGetType.IsError) return Error.NotFound("Type of rest is not found");
+
+				deletedTypesList.Add(resultOfGetType.Value);
+			}
+
+			await typeOfRestRepository.DeletePostPostTypeOfRestListAsync(deletedTypesList);
+		}
+
+
+		//Add services
+		if (request.Services != null && request.Services.Count > 0)
+		{
+			var services = new List<PostService>();
+
+			foreach (var service in request.Services)
+			{
+				var postService = new PostService
+				{
+					PostId = post.Id,
+					ServiceId = service
+				};
+
+				services.Add(postService);
+			}
+
+			await postServiceRepository.CreatePostServiceListAsync(services);
+		}
+
+		//Delete servises
+		if (request.DeletedServices != null && request.DeletedServices.Count > 0)
+		{
+			var deleteServices = new List<PostService>();
+
+			foreach (var service in request.DeletedServices)
+			{
+				var postServiceResult = postServiceRepository.GetPostServiceById(Guid.Parse(service), post.Id);
+
+				if (postServiceResult.IsError) return Error.NotFound("Type of rest is not found");
+
+				deleteServices.Add(postServiceResult.Value);
+			}
+
+			await postServiceRepository.CreatePostServiceListAsync(deleteServices);
+		}
+		
 		return post;
 	}
 }

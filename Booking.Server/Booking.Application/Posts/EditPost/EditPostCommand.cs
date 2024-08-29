@@ -19,7 +19,7 @@ public record EditPostCommand(
 	int? NumberOfGuests,
 	decimal Price,
 	int? Discount,
-	List<Guid>? PostPostTypesOfRest,
+	List<Guid>? PostTypesOfRest,
 	List<Guid>? Services,
 	List<string>? DeletedPostTypesOfRest,
 	List<string>? DeletedServices,

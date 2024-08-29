@@ -220,10 +220,6 @@ public class PostMapping : IRegister
 		config.NewConfig<List<PostStreet>, List<GetStreetResponse>>();
 
 
-		config.NewConfig<PostTypeOfRent, GetTypeOfPostResponse>();
-		config.NewConfig<List<PostTypeOfRent>, List<GetTypeOfPostResponse>>();
-
-
 		config.NewConfig<Post, GetPostListForRealtorResponse>()
 			.Map(desp => desp.Id, src => src.Id)
 			.Map(desp => desp.Category, src => src.Category!.Name)
