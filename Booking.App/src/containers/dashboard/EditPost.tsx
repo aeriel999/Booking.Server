@@ -342,6 +342,7 @@ export function EditPost() {
             (isCityValid || isCityExist) &&
             (isStreetValid || isStreetExist)
         ) {
+ 
             const model: IPostEdit = {
                 ...data,
                 id: postId!,
@@ -365,12 +366,15 @@ export function EditPost() {
                         : null,
                 mainImage: mainImage ?? mainImage!,
                 images: images,
-                postTypesOfRest: typeOfRest ?? typeOfRest!.filter(item => !defaultTypeOfRest!.includes(item)),
-                services: service ?? service!.filter(item => !defaultService!.includes(item)),
+                postTypesOfRest:  typeOfRest!.filter(id => !defaultTypeOfRest!.includes(id)),
+                deletedPostTypesOfRest:  defaultTypeOfRest!.filter(id => !typeOfRest!.includes(id)),
+                services:  service!.filter(item => !defaultService!.includes(item)),
+                deletedServices: defaultService!.filter(item => !service!.includes(item)),
                 deleteImages: deleteImages ?? deleteImages!
             };
     
             try {
+                console.log("model" , model)
                 const response = await dispatch(editPost(model));
                 unwrapResult(response);
     

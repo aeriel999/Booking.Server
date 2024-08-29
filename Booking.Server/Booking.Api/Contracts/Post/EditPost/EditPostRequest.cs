@@ -62,5 +62,11 @@ public record EditPostRequest
 
 
 	public List<DeletedImage>? DeleteImages { get; init; }
+
+
+	public List<string>? DeletedPostTypesOfRest { get; init; }
+
+
+	public List<string>? DeletedServices { get; init; }
 }
 

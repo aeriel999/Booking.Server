@@ -21,6 +21,8 @@ public record EditPostCommand(
 	int? Discount,
 	List<Guid>? PostPostTypesOfRest,
 	List<Guid>? Services,
+	List<string>? DeletedPostTypesOfRest,
+	List<string>? DeletedServices,
 	List<byte[]>? Images,
 	byte[]? MainImage,
 	List<DeletedImage>? DeleteImages) : IRequest<ErrorOr<Post>>;
@@ -30,11 +32,3 @@ public record DeletedImage
 
 	public required int Index { get; init; }
 }
-
-
-
-
-
-
-
-

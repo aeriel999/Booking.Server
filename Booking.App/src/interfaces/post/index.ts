@@ -272,7 +272,9 @@ export interface IPostEdit {
     discount: number | null;
     price: number;
     postTypesOfRest: string[] | null;
+    deletedPostTypesOfRest: string[] | null;
     services: string[] | null;
+    deletedServices: string[] | null;
     images: File[] | null;
     mainImage: File | null;
     deleteImages: IDeleteImage[] | null;
