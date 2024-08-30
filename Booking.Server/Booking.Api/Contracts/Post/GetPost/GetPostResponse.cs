@@ -1,4 +1,5 @@
-﻿using Booking.Domain.Posts;
+﻿using Booking.Api.Contracts.Post.EditRoom;
+using Booking.Domain.Posts;
 using System.ComponentModel.DataAnnotations.Schema;
 
 namespace Booking.Api.Contracts.Post.GetPost;
@@ -58,22 +59,7 @@ public record GetPostResponse
     public List<GetService>? Services { get; init; }
 
 
-	public List<EditRoom>? RoomList { get; init; }
-}
-
-public record EditRoom 
-{
-	public Guid Id { get; init; }
-
-	public int NumberOfGuests { get; init; }
-
-	public int NumberOfRooms { get; init; }
-
-	public int? Discount { get; init; }
-
-	public decimal Price { get; init; }
-
-	public required string MainImage { get; init; }
+	public List<EditRoomResponse>? RoomList { get; init; }
 }
 
 public record GetService 

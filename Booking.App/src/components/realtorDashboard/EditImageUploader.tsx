@@ -36,7 +36,8 @@ const EditImageUploader = (props: EditImageUploaderType) => {
             console.log("deleteImageInfo", deleteImageInfo);
 
             // Trigger the onImageDelete callback
-            props.onImageDelete([deleteImageInfo]);
+            if( props.onImageDelete)
+                 props.onImageDelete([deleteImageInfo]);
         }
     };
 

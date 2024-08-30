@@ -596,7 +596,7 @@ export function AddNewPost() {
             {/* Rooms */}
             {isHotel && (
                 <div className="roomsContainer">
-                    <div className="title">Add New Post</div>
+                    <div className="title">Add New Room</div>
                     {Array.from({
                         length: numberOfRooms,
                     }).map((_, i) => (

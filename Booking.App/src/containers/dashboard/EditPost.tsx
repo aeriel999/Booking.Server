@@ -5,14 +5,12 @@ import { useAppDispatch, useAppSelector } from "../../hooks/redux";
 import { unwrapResult } from "@reduxjs/toolkit";
 import {
     editPost,
-    // editPost,
     getListOfCategories,
     getListOfCitiesByCountryId,
     getListOfCountries,
     getListOfServices,
     getListOfStreetsByCityId,
     getListOfTypesOfRest,
-    getPostById,
     getPostForEditById,
 } from "../../store/post/post.actions.ts";
 import ErrorHandler from "../../components/common/ErrorHandler.ts";
@@ -24,6 +22,7 @@ import {
     IDeleteImage,
     IPostEdit,
     IRoom,
+    IRoomInfo,
     IService,
     ITypeOfRest,
 } from "../../interfaces/post";
@@ -31,21 +30,16 @@ import {
     EditImagesValidator,
     EditImageValidator,
     editPostResolver,
-    ImagesValidator,
-    ImageValidator,
 } from "../../validations/post";
 import { APP_ENV } from "../../env/index.ts";
 import { useForm } from "react-hook-form";
 import InputField from "../../components/common/InputField.tsx";
 import CheckboxList from "../../components/realtorDashboard/CheckBoxList.tsx";
-import ImageUploader from "../../components/realtorDashboard/ImageUploader.tsx";
-import ListImageUploader from "../../components/realtorDashboard/ListImagesUploader.tsx";
 import Room from "../../components/realtorDashboard/Room.tsx";
 import Plus from "../../assets/DashboardIcons/iconamoon_sign-plus-fill.svg";
 import "../../css/DashBoardRealtorClasses/index.scss";
 import EditImageUploader from "../../components/realtorDashboard/EditImageUploader.tsx";
 import EditListImagesUploader from "../../components/realtorDashboard/EditListImagesUploader.tsx";
- 
 
 export function EditPost() {
     const { postId } = useParams();
@@ -81,13 +75,17 @@ export function EditPost() {
 
     const [typeOfRestList, setTypeOfRestList] = useState<ITypeOfRest[]>([]);
     const [typeOfRest, setTypeOfRest] = useState<string[] | null>([]);
-    const [defaultTypeOfRest, setDefaultTypeOfRest] = useState<string[] | null>([]);
+    const [defaultTypeOfRest, setDefaultTypeOfRest] = useState<string[] | null>(
+        []
+    );
 
     const [servicesList, setServicesList] = useState<IService[]>([]);
     const [service, setService] = useState<string[] | null>([]);
     const [defaultService, setDefaultService] = useState<string[] | null>([]);
 
     const [rooms, setRooms] = useState<IRoom[] | null>([]);
+    const [defaultRooms, setDefaultRooms] = useState<IRoomInfo[] | null>([]);
+    const [deletedRooms, setDeletedRooms] = useState<string[] | null>([]);
     const [numberOfRooms, setNumberOfRooms] = useState<number>(1);
 
     const navigate = useNavigate();
@@ -198,12 +196,16 @@ export function EditPost() {
             console.log(history?.payload);
 
             //Set data for category
-            if(history?.payload.categoryId && history?.payload.categoryName){
-                setCategory({id: history?.payload.categoryId, name: history?.payload.categoryName})
+            if (history?.payload.categoryId && history?.payload.categoryName) {
+                setCategory({
+                    id: history?.payload.categoryId,
+                    name: history?.payload.categoryName,
+                });
 
                 //Set if it is hotel
                 if (history?.payload.categoryName.toLowerCase() === "hotel") {
-                    setIsHotel(true);}
+                    setIsHotel(true);
+                }
             }
 
             //Get list of cities for country id by default country
@@ -215,8 +217,11 @@ export function EditPost() {
                 });
 
                 //Set data for country
-                if(history?.payload.countryName)
-                    setCountry({id: history?.payload.countryId, name: history?.payload.countryName})
+                if (history?.payload.countryName)
+                    setCountry({
+                        id: history?.payload.countryId,
+                        name: history?.payload.countryName,
+                    });
             }
 
             //Get list of streets for city id by default city
@@ -227,15 +232,20 @@ export function EditPost() {
                     }
                 });
 
-                 //Set data for city
-                if(history?.payload.cityName)
-                    setCity({id: history?.payload.cityId, name: history?.payload.cityName})
+                //Set data for city
+                if (history?.payload.cityName)
+                    setCity({
+                        id: history?.payload.cityId,
+                        name: history?.payload.cityName,
+                    });
             }
 
-             //Set data for street
-            if(history?.payload.streetId && history?.payload.streetName)
-            {
-                setStreet({id: history?.payload.streetId, name: history?.payload.streetName})
+            //Set data for street
+            if (history?.payload.streetId && history?.payload.streetName) {
+                setStreet({
+                    id: history?.payload.streetId,
+                    name: history?.payload.streetName,
+                });
             }
 
             //Set list of default values for combobox
@@ -266,6 +276,10 @@ export function EditPost() {
                     );
 
             setPostImagesUrl(fullImageUrls);
+
+            if (history?.payload.roomList) {
+                setDefaultRooms(history.payload.roomList.$values);
+            }
         });
     }, [postId]);
 
@@ -310,79 +324,79 @@ export function EditPost() {
         }
     }, [city]);
 
-   
     const onSubmit = async (data: IPostEdit) => {
-
         console.log("data", data);
 
         if (!category) {
             setIsCategoryValid(false);
             return;
-        }//set error if category doesnt choosen
+        } //set error if category doesnt choosen
 
         if (!country) {
             setIsCountryValid(false);
             return;
-        }//set error if country doesnt choosen
+        } //set error if country doesnt choosen
 
         if (!city && !isCityExist) {
             setIsCityValid(false);
             return;
-        }//set error if city doesnt choosen and doesnt type in textinput
+        } //set error if city doesnt choosen and doesnt type in textinput
 
         if (!street && !isStreetExist) {
             setIsStreetValid(false);
             return;
-        }//set error if street doesnt choosen and doesnt type in textinput
+        } //set error if street doesnt choosen and doesnt type in textinput
 
-        
         if (
             isCategoryValid &&
             isCountryValid &&
             (isCityValid || isCityExist) &&
             (isStreetValid || isStreetExist)
         ) {
- 
             const model: IPostEdit = {
                 ...data,
                 id: postId!,
                 categoryId: category.id!,
                 countryId: country.id!,
-                cityId: 
-                    city === undefined || city === null 
-                        ? null 
-                        : city.id!,
-                cityName: 
-                    city === undefined || city === null 
-                        ? data.cityName 
-                        : null,
+                cityId: city === undefined || city === null ? null : city.id!,
+                cityName:
+                    city === undefined || city === null ? data.cityName : null,
                 streetId:
-                    street === undefined || street === null 
-                        ? null 
-                        : street.id,
+                    street === undefined || street === null ? null : street.id,
                 streetName:
                     street === undefined || street === null
                         ? data.streetName
                         : null,
                 mainImage: mainImage ?? mainImage!,
                 images: images,
-                postTypesOfRest:  typeOfRest!.filter(id => !defaultTypeOfRest!.includes(id)),
-                deletedPostTypesOfRest:  defaultTypeOfRest!.filter(id => !typeOfRest!.includes(id)),
-                services:  service!.filter(item => !defaultService!.includes(item)),
-                deletedServices: defaultService!.filter(item => !service!.includes(item)),
-                deleteImages: deleteImages ?? deleteImages!
+                postTypesOfRest: typeOfRest!.filter(
+                    (id) => !defaultTypeOfRest!.includes(id)
+                ),
+                deletedPostTypesOfRest: defaultTypeOfRest!.filter(
+                    (id) => !typeOfRest!.includes(id)
+                ),
+                services: service!.filter(
+                    (item) => !defaultService!.includes(item)
+                ),
+                deletedServices: defaultService!.filter(
+                    (item) => !service!.includes(item)
+                ),
+                deleteImages: deleteImages ?? deleteImages!,
             };
-    
+
             try {
-                console.log("model" , model)
+                console.log("model", model);
                 const response = await dispatch(editPost(model));
                 unwrapResult(response);
-    
+
                 navigate("/dashboard/show-all-post");
             } catch (error) {
                 setErrorMessage(ErrorHandler(error));
             }
-    }};
+        }
+    };
+
+    useEffect(() => {}, [defaultRooms]);
 
     return (
         postForEdit &&
@@ -692,8 +706,7 @@ export function EditPost() {
                             image={mainImage}
                             setImage={setMainImage}
                             validator={EditImageValidator}
-                            label={mainImageUrl!.split("/")
-                                .pop()!}
+                            label={mainImageUrl!.split("/").pop()!}
                             defaultImageUrl={mainImageUrl!}
                             onImageDelete={setDeleteImages}
                         />
@@ -715,21 +728,25 @@ export function EditPost() {
                     </div>
                 </div>
 
-                {isHotel && (
+                {/* Rooms */}
+                {isHotel && defaultRooms && (
                     <div className="roomsContainer">
-                        <div className="title">Add New Post</div>
-                        {Array.from({
-                            length: numberOfRooms,
-                        }).map((_, i) => (
+                        <div className="title">Add New Room</div>
+                        {defaultRooms.map((room, i) => (
                             <Room
                                 key={i}
                                 rooms={rooms}
                                 setRooms={setRooms}
                                 label={"room" + i}
                                 formName={"form" + i}
+                                defaultRoom={room}
+                                setDefaultRoomList={setDefaultRooms}
+                                defaultRoomList={defaultRooms}
+                                setDeletedRooms={setDeletedRooms}
+                                deletedRooms={deletedRooms}
                             />
                         ))}
-                        <div
+                        <button
                             className="linkButton"
                             onClick={() => {
                                 setNumberOfRooms(numberOfRooms + 1);
@@ -737,10 +754,9 @@ export function EditPost() {
                         >
                             <div className="text">Add Room</div>
                             <img className="icon" src={Plus}></img>
-                        </div>
+                        </button>
                     </div>
                 )}
-
                 <button
                     type="submit"
                     className="postAddButton"
@@ -752,301 +768,3 @@ export function EditPost() {
         )
     );
 }
-
-{
-    /* <>
-<Breadcrumbs
-    aria-label="breadcrumb"
-    style={{ marginBottom: "20px" }}
->
-    <Link to={"/dashboard/profile"}>
-        <Typography variant="h6" color="text.primary">
-            Dashboard
-        </Typography>
-    </Link>
-    <Link to={"/dashboard/show-all-post"}>
-        <Typography variant="h6" color="text.primary">
-            All Posts
-        </Typography>
-    </Link>
-    <Typography variant="h6" color="text.primary">
-        Edit Post
-    </Typography>
-</Breadcrumbs>
-<Divider />
-
-{errorMessage && <OutlinedErrorAlert message={errorMessage} />}
-
-{post && cityList && streetList && postImages ? (
-    <Container component="main" maxWidth="xs">
-        <Box
-            sx={{
-                marginTop: 8,
-                display: "flex",
-                flexDirection: "column",
-                alignItems: "center",
-            }}
-        >
-            <Typography component="h1" variant="h5">
-                Edit Post
-            </Typography>
-            <Box
-                component="form"
-                onSubmit={handleSubmit}
-                noValidate
-                sx={{ mt: 1 }}
-            >
-                <Grid container spacing={2}>
-                    <Grid item xs={12}>
-                        <InputGroup
-                            label="Enter title for your post"
-                            field="name"
-                            type="text"
-                            validator={PostNameValidator}
-                            onChange={(isValid) =>
-                                (formValid.current.name = isValid)
-                            }
-                            defaultValue={post?.name}
-                        />
-                    </Grid>
-
-                    <Grid item xs={12}>
-                        <ComboBox
-                            options={categoryList}
-                            onChange={setCategory}
-                            label={"Category"}
-                            defaultValue={post!.categoryName}
-                        />
-                    </Grid>
-
-                    <Grid item xs={12}>
-                        <ComboBox
-                            options={countryList}
-                            onChange={setCountry}
-                            label={"Country"}
-                            defaultValue={post!.countryName}
-                        />
-                    </Grid>
-
-                    {cityList.length > 0 && (
-                        <Grid item xs={12}>
-                            <Typography
-                                variant="subtitle1"
-                                color="text.primary"
-                            >
-                                Select City from the list or enter
-                                it in a field.
-                            </Typography>
-                            <ComboBox
-                                options={cityList}
-                                onChange={setCity}
-                                label={"City"}
-                                defaultValue={post!.cityName}
-                            />
-                        </Grid>
-                    )}
-
-                    {city === undefined && (
-                        <Grid item xs={12}>
-                            <InputGroup
-                                label="City"
-                                field="cityName"
-                                type="text"
-                                validator={CityNameValidator}
-                                onChange={(isValid) =>
-                                    (formValid.current.city =
-                                        isValid)
-                                }
-                            />
-                        </Grid>
-                    )}
-
-                    {streetList.length > 0 && (
-                        <Grid item xs={12}>
-                            <Typography
-                                variant="subtitle1"
-                                color="text.primary"
-                            >
-                                Select Street from the list or enter
-                                it in a field.
-                            </Typography>
-                            <ComboBox
-                                options={streetList}
-                                onChange={setStreet}
-                                label={"Street"}
-                                defaultValue={post!.streetName}
-                            />
-                        </Grid>
-                    )}
-
-                    {street === undefined && (
-                        <Grid item xs={12}>
-                            <InputGroup
-                                label="Street"
-                                field="streetName"
-                                type="text"
-                                validator={StreetNameValidator}
-                                onChange={(isValid) =>
-                                    (formValid.current.street =
-                                        isValid)
-                                }
-                            />
-                        </Grid>
-                    )}
-
-                    {/* <Grid item xs={12}>
-                        <InputGroup
-                            label="Bulding number"
-                            field="buildingNumber"
-                            type="text"
-                            validator={BuildingNumberValidator}
-                            onChange={(isValid) =>
-                                (formValid.current.buildingNumber =
-                                    isValid)
-                            }
-                            defaultValue={post!.buildingNumber}
-                        />
-                    </Grid> */
-}
-
-{
-    /* <Grid item xs={12}>
-                        <InputGroup
-                            label="Number of Rooms"
-                            field="numberOfRooms"
-                            type="number"
-                            validator={NumberOfRoomsValidator}
-                            onChange={(isValid) =>
-                                (formValid.current.numberOfRooms =
-                                    isValid)
-                            }
-                            defaultValue={
-                                post!.area == null
-                                    ? null
-                                    : post!.area
-                            }
-                        />
-                    </Grid>
-
-                    <Grid item xs={12}>
-                        <InputGroup
-                            label="Area"
-                            field="area"
-                            type="number"
-                            validator={AreaValidator}
-                            onChange={(isValid) =>
-                                (formValid.current.area = isValid)
-                            }
-                            defaultValue={
-                                post!.area == null
-                                    ? null
-                                    : post!.area
-                            }
-                        />
-                    </Grid> */
-}
-
-//                     <Grid item xs={12}>
-//                         <InputGroup
-//                             label="Price"
-//                             field="price"
-//                             type="number"
-//                             validator={PriceValidator}
-//                             onChange={(isValid) =>
-//                                 (formValid.current.price = isValid)
-//                             }
-//                             defaultValue={post?.price}
-//                         />
-//                     </Grid>
-
-//                     <Grid item xs={12}>
-//                         <InputGroup
-//                             label="Description"
-//                             field="description"
-//                             type="text"
-//                             validator={DescriptionValidator}
-//                             onChange={(isValid) =>
-//                                 (formValid.current.description =
-//                                     isValid)
-//                             }
-//                             rowsCount={7}
-//                             isMultiline={true}
-//                             defaultValue={
-//                                 post?.description == null
-//                                     ? null
-//                                     : post?.description
-//                             }
-//                         />
-//                     </Grid>
-
-//                     {postImages.map((img, index) => (
-//                         <Grid item xs={12} key={index}>
-//                             <Typography
-//                                 variant="subtitle1"
-//                                 color="text.primary"
-//                             >
-//                                 {" "}
-//                                 Image # {index + 1}
-//                             </Typography>
-
-//                             <FileEditUploader
-//                                 images={images}
-//                                 setImages={setImages}
-//                                 maxImagesUpload={maxImagesCount}
-//                                 validator={ImageValidator}
-//                                 defaultImage={img}
-//                                 onChange={(isValid) =>
-//                                     (formValid.current.images =
-//                                         isValid)
-//                                 }
-//                                 onDelete={handleChange}
-//                                 setDeleteImages={setDeleteImg}
-//                             />
-//                         </Grid>
-//                     ))}
-
-//                     {Array.from({
-//                         length: maxImagesCount - postImages.length,
-//                     }).map((_, index) => (
-//                         <Grid item xs={12} key={index}>
-//                             <Typography
-//                                 variant="subtitle1"
-//                                 color="text.primary"
-//                             >
-//                                 {" "}
-//                                 Image #{" "}
-//                                 {postImages.length + index + 1}
-//                             </Typography>
-
-//                             <FileEditUploader
-//                                 images={images}
-//                                 setImages={setImages}
-//                                 maxImagesUpload={maxImagesCount}
-//                                 validator={ImageValidator}
-//                                 defaultImage={DefaultImg}
-//                                 onChange={(isValid) =>
-//                                     (formValid.current.images =
-//                                         isValid)
-//                                 }
-//                                 onDelete={handleChange}
-//                                 setDeleteImages={setDeleteImg}
-//                             />
-//                         </Grid>
-//                     ))}
-//                 </Grid>
-//                 <Button
-//                     type="submit"
-//                     fullWidth
-//                     variant="contained"
-//                     sx={{ mt: 3, mb: 2 }}
-//                     // disabled={!isFormValid}
-//                 >
-//                     Edit post
-//                 </Button>
-//             </Box>
-//         </Box>
-//     </Container>
-// ) : (
-//     <LinearProgress />
-// )}
-// </> */}

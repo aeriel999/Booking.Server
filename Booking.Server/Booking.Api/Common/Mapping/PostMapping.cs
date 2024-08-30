@@ -32,6 +32,7 @@ using Booking.Api.Contracts.Post.Feedback;
 using Booking.Api.Contracts.Post.GetRealtorByUserFeedback;
 using Booking.Api.Contracts.Post.GetServicesList;
 using Booking.Application.Posts.CreateRoom;
+using Booking.Api.Contracts.Post.EditRoom;
 
 namespace Booking.Api.Common.Mapping;
 
@@ -86,7 +87,7 @@ public class PostMapping : IRegister
 				     Name = service.Service!.Name,
 				     Icon = service.Service!.Icon
 				 }).ToList() : null)
-            .Map(desp => desp.RoomList, src => src.Rooms!.Select(room => new EditRoom
+            .Map(desp => desp.RoomList, src => src.Rooms!.Select(room => new EditRoomResponse
 				 {
 				 	  Id = room.Id,
 				 	  NumberOfGuests = room.NumberOfGuests,
@@ -285,7 +286,7 @@ public class PostMapping : IRegister
 			.Map(desp => desp.TypesOfRest, src => src.PostPostTypesOfRest != null ?
 				src.PostPostTypesOfRest!.Select(p => p.PostTypeOfRest!.Id) : null)
 			.Map(desp => desp.Services, src => src.Service != null ? src.Service!.Select(p => p.Service!.Id) : null)
-			.Map(desp => desp.RoomList, src => src.Rooms!.Select(room => new EditRoom
+			.Map(desp => desp.RoomList, src => src.Rooms!.Select(room => new EditRoomResponse
 			{
 				Id = room.Id,
 				NumberOfGuests = room.NumberOfGuests,

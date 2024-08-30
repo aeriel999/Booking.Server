@@ -124,7 +124,6 @@ export interface IServiseInfo {
 }
 
 export interface IRoomInfo {
-    //postId: string;
     id: string;
     numberOfGuests: number;
     numberOfRooms: number;
@@ -132,6 +131,7 @@ export interface IRoomInfo {
     price: number;
     mainImage: string;
 }
+
 export interface IPostByRealtorId {
     id: number;
     name: string;
