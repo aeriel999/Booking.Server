@@ -5,10 +5,11 @@ import "../../css/DashBoardAnonymousClasses/index.scss";
 import InputField from "../common/InputField";
 import { useState } from "react";
 import OutlinedErrorAlert from "../common/ErrorAlert";
-import ImageUploader from "./ImageUploader";
-import { RoomsProps } from "../../utils/types";
+import { EditRoomsProps } from "../../utils/types";
+import EditImageUploader from "./EditImageUploader";
+import { APP_ENV } from "../../env";
 
-export default function Room(props: RoomsProps) {
+export default function EditRoom(props: EditRoomsProps) {
     const [errorMessage, setErrorMessage] = useState<string | undefined>(
         undefined
     );
@@ -22,6 +23,7 @@ export default function Room(props: RoomsProps) {
         setValue,
     } = useForm<IRoom>({ resolver: addRoomResolver });
 
+    //Add new room in list
     const onSubmit = async (data: IRoom) => {
         if (!mainImage) {
             setErrorMessage("Upload images");
@@ -39,6 +41,32 @@ export default function Room(props: RoomsProps) {
         props.setRooms([...(props.rooms || []), model]);
 
         setIsSubmit(true);
+    };
+
+    //deleted room from list of default rooms and set it in delRoom list
+    const onDelete = () => {
+        if (
+            props.roomId &&
+            props.setDefaultRoomList &&
+            props.defaultRoomList
+        ) {
+            console.log("props.roomId", props.roomId)
+            // Filter out the room to be deleted
+            const updatedRoomList = props.defaultRoomList.filter(
+                (room) => room.id !== props.roomId
+            );
+            // Update the state with the new room list
+            props.setDefaultRoomList(updatedRoomList);
+
+            if (props.deletedRooms && props.setDeletedRooms) {
+                // Update the state with the new deleted rooms list
+                const updatedDeletedRooms = [
+                    ...props.deletedRooms,
+                    props.roomId,
+                ];
+                props.setDeletedRooms(updatedDeletedRooms);
+            }
+        }
     };
 
     return (
@@ -63,6 +91,7 @@ export default function Room(props: RoomsProps) {
                                 name="numberOfGuests"
                                 register={register}
                                 setValue={setValue}
+                                defaultValue={props.defaultRoom?.numberOfGuests}
                                 className={
                                     errors.numberOfGuests
                                         ? "errorFormInput"
@@ -84,6 +113,7 @@ export default function Room(props: RoomsProps) {
                                 name="numberOfRooms"
                                 register={register}
                                 setValue={setValue}
+                                defaultValue={props.defaultRoom?.numberOfRooms}
                                 className={
                                     errors.numberOfRooms
                                         ? "errorFormInput"
@@ -105,6 +135,7 @@ export default function Room(props: RoomsProps) {
                                 name="price"
                                 register={register}
                                 setValue={setValue}
+                                defaultValue={props.defaultRoom?.price}
                                 className={
                                     errors.price ? "errorFormInput" : "field"
                                 }
@@ -124,6 +155,7 @@ export default function Room(props: RoomsProps) {
                                 name="discount"
                                 register={register}
                                 setValue={setValue}
+                                defaultValue={props.defaultRoom?.discount ?? 0}
                                 className={
                                     errors.discount ? "errorFormInput" : "field"
                                 }
@@ -137,11 +169,14 @@ export default function Room(props: RoomsProps) {
                     </form>
                 </div>
                 <div className="addImagesContainer">
-                    <ImageUploader
+                    <EditImageUploader
                         image={mainImage}
                         setImage={setMainImage}
                         validator={ImageValidator}
                         label={props.label}
+                        defaultImageUrl={`${
+                            APP_ENV.BASE_URL
+                        }${"/images/posts/"}${props.defaultRoom?.mainImage}`}
                     />
                 </div>
             </div>
@@ -153,6 +188,16 @@ export default function Room(props: RoomsProps) {
             >
                 Save
             </button>
+
+            {props.defaultRoom && (
+                <button
+                    type="button"
+                    className="roomButton"
+                    onClick={onDelete} // Trigger onDelete
+                >
+                    Delete
+                </button>
+            )}
         </div>
     );
 }

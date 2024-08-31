@@ -139,7 +139,7 @@ export interface IPostByRealtorId {
 }
 
 export interface IPostForEdit {
-    id: number;
+    id: string;
     name: string;
     categoryName: string;
     categoryId: string;
@@ -270,7 +270,7 @@ export interface IPostEdit {
     zipCode: number | null;
     numberOfGuests: number | null;
     discount: number | null;
-    price: number;
+    price: number | null;
     postTypesOfRest: string[] | null;
     deletedPostTypesOfRest: string[] | null;
     services: string[] | null;
@@ -278,6 +278,7 @@ export interface IPostEdit {
     images: File[] | null;
     mainImage: File | null;
     deleteImages: IDeleteImage[] | null;
+    deleteRooms: string[] | null;
 }
 
 export interface TablePaginationActionsProps {

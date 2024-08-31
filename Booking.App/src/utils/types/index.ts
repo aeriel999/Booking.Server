@@ -11,11 +11,18 @@ export type RoomsProps = {
     setRooms: (rooms: IRoom[]) => void;
     label: string;
     formName: string;
-    defaultRoom?: IRoomInfo;
-    setDefaultRoomList?: (rooms: IRoomInfo[]) => void;
-    defaultRoomList?: IRoomInfo[];
-    setDeletedRooms?: (delRooms: string[]) => void;
-    deletedRooms?: string[] | null;
+};
+export type EditRoomsProps = {
+    rooms: IRoom[] | null;
+    setRooms: (rooms: IRoom[]) => void;
+    label: string;
+    formName: string;
+    defaultRoom: IRoomInfo;
+    setDefaultRoomList: (rooms: IRoomInfo[]) => void;
+    defaultRoomList: IRoomInfo[];
+    setDeletedRooms: (delRooms: string[]) => void;
+    deletedRooms: string[] | null;
+    roomId: string;
 };
 
 export type EditImageUploaderType = {

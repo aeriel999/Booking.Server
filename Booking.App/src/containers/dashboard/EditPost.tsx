@@ -40,6 +40,7 @@ import Plus from "../../assets/DashboardIcons/iconamoon_sign-plus-fill.svg";
 import "../../css/DashBoardRealtorClasses/index.scss";
 import EditImageUploader from "../../components/realtorDashboard/EditImageUploader.tsx";
 import EditListImagesUploader from "../../components/realtorDashboard/EditListImagesUploader.tsx";
+import EditRoom from "../../components/realtorDashboard/EditRoom.tsx";
 
 export function EditPost() {
     const { postId } = useParams();
@@ -48,48 +49,60 @@ export function EditPost() {
     const [errorMessage, setErrorMessage] = useState<string | undefined>(
         undefined
     );
+    const [numberOfRooms, setNumberOfRooms] = useState<number>(0); //default value of numberOfRooms
+    const navigate = useNavigate();
+    const [isHotel, setIsHotel] = useState<boolean>(false);
 
+    //Work with category
     const [categoryList, setCategoryList] = useState<ICategory[]>([]);
-    const [category, setCategory] = useState<ICategory | null>(null);
+    const [category, setCategory] = useState<ICategory | null>(null); //Set also as default value
     const [isCategoryValid, setIsCategoryValid] = useState<boolean>(true);
 
+    //Work with country
     const [countryList, setCountryList] = useState<ICountry[]>([]);
-    const [country, setCountry] = useState<ICountry | null>(null);
+    const [country, setCountry] = useState<ICountry | null>(null); //Set also as default value
     const [isCountryValid, setIsCountryValid] = useState<boolean>(true);
 
+    //Work with city
     const [cityList, setCityList] = useState<ICity[]>([]);
-    const [city, setCity] = useState<ICity | null>(null);
+    const [city, setCity] = useState<ICity | null>(null); //Set also as default value
     const [isCityValid, setIsCityValid] = useState<boolean>(true);
     const [isCityExist, setIsCityExist] = useState<boolean>(false);
 
+    //Work with street
     const [streetList, setStreetList] = useState<ICity[]>([]);
-    const [street, setStreet] = useState<ICity | null>(null);
+    const [street, setStreet] = useState<ICity | null>(null); //Set also as default value
     const [isStreetValid, setIsStreetValid] = useState<boolean>(true);
     const [isStreetExist, setIsStreetExist] = useState<boolean>(false);
 
+    //Work with images
     const [mainImage, setMainImage] = useState<File>();
     const [images, setImages] = useState<File[]>([]);
-    const [postImagesUrl, setPostImagesUrl] = useState<string[]>();
-    const [mainImageUrl, setMainImageUrl] = useState<string>();
+    const [defaultImagesUrlList, setDefaultImagesUrlList] =
+        useState<string[]>();
+    const [defaultMainImageUrl, setDefaultMainImageUrl] = useState<string>();
     const [deleteImages, setDeleteImages] = useState<IDeleteImage[]>();
 
+    //Work with types
     const [typeOfRestList, setTypeOfRestList] = useState<ITypeOfRest[]>([]);
     const [typeOfRest, setTypeOfRest] = useState<string[] | null>([]);
     const [defaultTypeOfRest, setDefaultTypeOfRest] = useState<string[] | null>(
         []
     );
 
+    //Work with services
     const [servicesList, setServicesList] = useState<IService[]>([]);
     const [service, setService] = useState<string[] | null>([]);
     const [defaultService, setDefaultService] = useState<string[] | null>([]);
 
+    //Work with rooms
     const [rooms, setRooms] = useState<IRoom[] | null>([]);
     const [defaultRooms, setDefaultRooms] = useState<IRoomInfo[] | null>([]);
     const [deletedRooms, setDeletedRooms] = useState<string[] | null>([]);
-    const [numberOfRooms, setNumberOfRooms] = useState<number>(1);
 
-    const navigate = useNavigate();
-    const [isHotel, setIsHotel] = useState<boolean>(false);
+    useEffect(() => {
+        console.log("defaultRooms", defaultRooms);
+    }, [defaultRooms]);
 
     const {
         register,
@@ -190,6 +203,7 @@ export function EditPost() {
         });
     }, []);
 
+    //Get and set default values
     useEffect(() => {
         //Get post info for default values
         getPost(postId as string).then((history) => {
@@ -260,7 +274,7 @@ export function EditPost() {
             }
 
             //Create Url for main image
-            setMainImageUrl(
+            setDefaultMainImageUrl(
                 `${APP_ENV.BASE_URL}${"/images/posts/"}${
                     history?.payload.imagePostList.$values[0]
                 }`
@@ -275,8 +289,9 @@ export function EditPost() {
                             `${APP_ENV.BASE_URL}${"/images/posts/"}${image}`
                     );
 
-            setPostImagesUrl(fullImageUrls);
+            setDefaultImagesUrlList(fullImageUrls);
 
+            //Set default room list
             if (history?.payload.roomList) {
                 setDefaultRooms(history.payload.roomList.$values);
             }
@@ -325,7 +340,7 @@ export function EditPost() {
     }, [city]);
 
     const onSubmit = async (data: IPostEdit) => {
-        console.log("data", data);
+        console.log("model", data);
 
         if (!category) {
             setIsCategoryValid(false);
@@ -382,11 +397,16 @@ export function EditPost() {
                     (item) => !service!.includes(item)
                 ),
                 deleteImages: deleteImages ?? deleteImages!,
+                deleteRooms: deletedRooms!,
+                price: data.price ?? 100,
             };
 
             try {
                 console.log("model", model);
+                console.log("deletedRooms", deletedRooms);
+                console.log("postId", postId);
                 const response = await dispatch(editPost(model));
+
                 unwrapResult(response);
 
                 navigate("/dashboard/show-all-post");
@@ -396,13 +416,11 @@ export function EditPost() {
         }
     };
 
-    useEffect(() => {}, [defaultRooms]);
-
     return (
         postForEdit &&
         cityList &&
         streetList &&
-        postImagesUrl &&
+        defaultImagesUrlList &&
         typeOfRest && (
             <div className="mainContainerForForm">
                 {errorMessage && (
@@ -610,7 +628,7 @@ export function EditPost() {
                                             register={register}
                                             setValue={setValue}
                                             defaultValue={
-                                                postForEdit?.numberOfGuests!
+                                                postForEdit?.numberOfGuests ?? 1
                                             }
                                             className={
                                                 errors.numberOfGuests
@@ -635,7 +653,9 @@ export function EditPost() {
                                             name="price"
                                             register={register}
                                             setValue={setValue}
-                                            defaultValue={postForEdit?.price}
+                                            defaultValue={
+                                                postForEdit?.price ?? 100
+                                            }
                                             className={
                                                 errors.price
                                                     ? "errorFormInput"
@@ -706,8 +726,8 @@ export function EditPost() {
                             image={mainImage}
                             setImage={setMainImage}
                             validator={EditImageValidator}
-                            label={mainImageUrl!.split("/").pop()!}
-                            defaultImageUrl={mainImageUrl!}
+                            label={defaultMainImageUrl!.split("/").pop()!}
+                            defaultImageUrl={defaultMainImageUrl!}
                             onImageDelete={setDeleteImages}
                         />
 
@@ -715,8 +735,8 @@ export function EditPost() {
                             images={images}
                             setImages={setImages}
                             validator={EditImagesValidator}
-                            defaultImageUrls={postImagesUrl}
-                            setDefaultImagesUrl={setPostImagesUrl}
+                            defaultImageUrls={defaultImagesUrlList}
+                            setDefaultImagesUrl={setDefaultImagesUrlList}
                             onImageDelete={setDeleteImages}
                         />
 
@@ -733,8 +753,8 @@ export function EditPost() {
                     <div className="roomsContainer">
                         <div className="title">Add New Room</div>
                         {defaultRooms.map((room, i) => (
-                            <Room
-                                key={i}
+                            <EditRoom
+                                key={room.id}
                                 rooms={rooms}
                                 setRooms={setRooms}
                                 label={"room" + i}
@@ -744,17 +764,29 @@ export function EditPost() {
                                 defaultRoomList={defaultRooms}
                                 setDeletedRooms={setDeletedRooms}
                                 deletedRooms={deletedRooms}
+                                roomId={room.id}
                             />
                         ))}
-                        <button
-                            className="linkButton"
-                            onClick={() => {
-                                setNumberOfRooms(numberOfRooms + 1);
-                            }}
-                        >
-                            <div className="text">Add Room</div>
-                            <img className="icon" src={Plus}></img>
-                        </button>
+                    {Array.from({
+                        length: numberOfRooms,
+                    }).map((_, i) => (
+                        <Room
+                            key={i}
+                            rooms={rooms}
+                            setRooms={setRooms}
+                            label={"room" + i}
+                            formName={"form" + i}
+                        />
+                    ))}
+                    <button
+                        className="linkButton"
+                        onClick={() => {
+                            setNumberOfRooms(numberOfRooms + 1);
+                        }}
+                    >
+                        <div className="text">Add Room</div>
+                        <img className="icon" src={Plus}></img>
+                    </button>
                     </div>
                 )}
                 <button

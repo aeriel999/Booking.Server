@@ -100,21 +100,25 @@ export const editPostResolver: Resolver<IPostEdit> = async (values) => {
         };
     }
 
-    const numberOfGuestsError = NumberOfGuestsValidator(values.numberOfGuests!);
-    if (numberOfGuestsError) {
-        errors.numberOfGuests = {
-            type: "validation",
-            message: numberOfGuestsError,
-        };
+    if(values.numberOfGuests){
+        const numberOfGuestsError = NumberOfGuestsValidator(values.numberOfGuests);
+        if (numberOfGuestsError) {
+            errors.numberOfGuests = {
+                type: "validation",
+                message: numberOfGuestsError,
+            };
+        }
     }
 
-    const priceError = PriceValidator(values.price);
-    if (priceError) {
-        errors.price = {
-            type: "validation",
-            message: priceError,
-        };
-    }
+   if(values.price){
+        const priceError = PriceValidator(values.price);
+        if (priceError) {
+            errors.price = {
+                type: "validation",
+                message: priceError,
+            };
+        }
+   }
 
     if (values.discount) {
         if (values.discount > 0) {

@@ -1,7 +1,6 @@
 ﻿using Booking.Domain.Posts;
 using ErrorOr;
 using MediatR;
-using Microsoft.AspNetCore.Http;
 
 namespace Booking.Application.Posts.EditPost;
 
@@ -25,7 +24,9 @@ public record EditPostCommand(
 	List<string>? DeletedServices,
 	List<byte[]>? Images,
 	byte[]? MainImage,
-	List<DeletedImage>? DeleteImages) : IRequest<ErrorOr<Post>>;
+	List<DeletedImage>? DeleteImages,
+	List<string> DeleteRooms) : IRequest<ErrorOr<Post>>;
+
 public record DeletedImage
 {
 	public required string Name { get; init; }

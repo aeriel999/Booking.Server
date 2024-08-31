@@ -17,7 +17,8 @@ public class EditPostCommandHandler(
 	IPostImageRepository postImageRepository,
 	IUserRepository userRepository,
 	IPostPostTypeOfRestRepository typeOfRestRepository,
-	IPostServiceRepository postServiceRepository) 
+	IPostServiceRepository postServiceRepository,
+	IRoomRepository roomRepository) 
 	: IRequestHandler<EditPostCommand, ErrorOr<Post>>
 {
 	public async Task<ErrorOr<Post>> Handle(EditPostCommand request, CancellationToken cancellationToken)
@@ -280,6 +281,25 @@ public class EditPostCommandHandler(
 			}
 
 			await postServiceRepository.CreatePostServiceListAsync(deleteServices);
+		}
+
+		//Delete rooms
+		if (request.DeleteRooms != null && request.DeleteRooms.Count > 0)
+		{
+			var roomList = new List<Room>();	
+
+			foreach (var item in request.DeleteRooms)
+			{
+				var room = roomRepository.GetRoomById(Guid.Parse(item));
+
+				if(room.IsError) return Error.NotFound("Room is not found");
+
+				imageStorageService.DeleteImage(room.Value.MainImage, "posts");
+
+				roomList.Add(room.Value);
+			}
+
+			await roomRepository.DeleteRoomListAsync(roomList);
 		}
 		
 		return post;

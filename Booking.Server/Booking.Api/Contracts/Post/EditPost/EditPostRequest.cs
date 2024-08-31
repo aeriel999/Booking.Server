@@ -68,5 +68,9 @@ public record EditPostRequest
 
 
 	public List<string>? DeletedServices { get; init; }
+
+
+	public List<string>? DeleteRooms { get; init; }
+
 }
 
