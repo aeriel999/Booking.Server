@@ -5,7 +5,7 @@ namespace Booking.Application.Posts.EditRoom;
 
 public record EditRoomCommand(
 	Guid UserId,
-	Guid RoomId,
+	Guid Id,
 	int NumberOfGuests,
 	int NumberOfRooms,
 	decimal Price,

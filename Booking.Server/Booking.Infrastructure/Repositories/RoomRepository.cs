@@ -32,7 +32,7 @@ public class RoomRepository(BookingDbContext context) : IRoomRepository
 		var roomOrError = await _dbSet.Where(r => r.Id == roomId)
 										.FirstOrDefaultAsync();
 
-		if (roomOrError != null) 
+		if (roomOrError == null) 
 			return Error.NotFound();
 
 		return roomOrError!;

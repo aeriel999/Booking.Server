@@ -775,7 +775,7 @@ export function EditPost() {
                 {/* Rooms */}
                 {isHotel && defaultRooms && (
                     <div className="roomsContainer">
-                        <div className="title">Add New Room</div>
+                        <div className="title">Edit Rooms</div>
                         {defaultRooms.map((room, i) => (
                             <EditRoom
                                 key={room.id}

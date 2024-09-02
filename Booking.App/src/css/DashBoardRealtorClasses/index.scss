@@ -389,7 +389,7 @@
 .twoColumnsContainer {
     display: flex;
     width: 100%;
-    justify-content: space-around;
+    justify-content: space-between;
     align-items: stretch;
 
     .textInputsContainer {
@@ -397,6 +397,7 @@
         flex-direction: column;
         width: 45%;
         gap: 30px;
+        
 
         .formContainer {
             display: flex;
@@ -678,4 +679,9 @@
     height: 100%;
     width: 100%;
     position: absolute;
+}
+
+.editRoomButtonContainer{
+    display: flex;
+    gap: 5px;
 }

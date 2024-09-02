@@ -8,7 +8,6 @@ namespace Booking.Application.Posts.EditRoom;
 
 public class EditRoomCommandHandler(
 	IUserRepository userRepository,
-	IPostRepository postRepository,
 	IImageStorageService imageStorageService,
 	IRoomRepository roomRepository) : IRequestHandler<EditRoomCommand, ErrorOr<Success>>
 {
@@ -20,10 +19,8 @@ public class EditRoomCommandHandler(
 		if (userOrError.IsError)
 			return Error.NotFound("User is not found");
 
-		var user = userOrError.Value;
-
 		//Get room
-		var roomOrError = await roomRepository.GetRoomByIdAsync(request.UserId);
+		var roomOrError = await roomRepository.GetRoomByIdAsync(request.Id);
 
 		if (userOrError.IsError) return Error.NotFound("Room is not found");
 
@@ -36,7 +33,7 @@ public class EditRoomCommandHandler(
 		if (request.NumberOfRooms != room.NumberOfRooms)
 			room.NumberOfRooms = request.NumberOfRooms;
 
-        if (request.Price != request.Price)
+        if (request.Price != room.Price)
 			room.Price = request.Price;
          
 		if(request.Discount != null && request.Discount != room.Discount)
@@ -51,6 +48,8 @@ public class EditRoomCommandHandler(
 
 			if (imageName == null)
 				return Error.Validation("Image not save");
+
+			room.MainImage = imageName;
 		}
 
 		await roomRepository.UpdateRoomAsync(room);

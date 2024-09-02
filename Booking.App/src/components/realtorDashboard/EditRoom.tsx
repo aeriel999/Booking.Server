@@ -171,7 +171,8 @@ export default function EditRoom(props: EditRoomsProps) {
                     />
                 </div>
             </div>
-            <button
+         <div className="editRoomButtonContainer">
+         <button
                 type="submit"
                 className="roomButton"
                 form={props.formName}
@@ -179,16 +180,14 @@ export default function EditRoom(props: EditRoomsProps) {
             >
                 Save
             </button>
-
-            {props.defaultRoom && (
-                <button
+            <button
                     type="button"
                     className="roomButton"
                     onClick={onDelete} // Trigger onDelete
                 >
                     Delete
                 </button>
-            )}
+         </div>
         </div>
     );
 }

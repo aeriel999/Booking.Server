@@ -9,7 +9,7 @@ public class EditRoomCommandValidation : AbstractValidator<EditRoomCommand>
 		RuleFor(r => r.UserId).NotEmpty().WithMessage("Field must not be empty");
 
 
-		RuleFor(r => r.RoomId).NotEmpty().WithMessage("Field must not be empty");
+		RuleFor(r => r.Id).NotEmpty().WithMessage("Field must not be empty");
 
 
 		RuleFor(r => r.NumberOfGuests)
@@ -41,4 +41,4 @@ public class EditRoomCommandValidation : AbstractValidator<EditRoomCommand>
 		
 	}
 }
-}
+

@@ -13,7 +13,6 @@ using Booking.Api.Contracts.Post.GetPostWithMostDiscount;
 using Booking.Api.Contracts.Post.GetPostWithMostRating;
 using Booking.Api.Contracts.Post.GetPostPostTypesOfRest;
 using Booking.Api.Contracts.Post.GetStreets;
-using Booking.Api.Contracts.Post.GetTypeOfPost;
 using Booking.Api.Contracts.Post.GetTypeOfRest;
 using Booking.Application.Common.Behaviors;
 using Booking.Application.Posts.CreatePost;
@@ -33,7 +32,7 @@ using Booking.Api.Contracts.Post.GetRealtorByUserFeedback;
 using Booking.Api.Contracts.Post.GetServicesList;
 using Booking.Application.Posts.CreateRoom;
 using Booking.Api.Contracts.Post.EditRoom;
-using Booking.Api.Contracts.Post.CreateRoom;
+using Booking.Application.Posts.EditRoom;
 
 namespace Booking.Api.Common.Mapping;
 
@@ -49,10 +48,18 @@ public class PostMapping : IRegister
 		.Map(dest => dest, src => src.createPostRequest);
 
 		config.NewConfig<(
-			CreateRoomRequest createPostRequest, Guid UserId, byte[] MainImage), CreateRoomCommand>()
-		.Map(dest => dest.UserId, src => src.UserId)
-		.Map(dest => dest.MainImage, src => src.MainImage)
-		.Map(dest => dest, src => src.createPostRequest);
+			CreateRoomRequest createRoomRequest, Guid UserId, byte[] MainImage), CreateRoomCommand>()
+			.Map(dest => dest.UserId, src => src.UserId)
+			.Map(dest => dest.MainImage, src => src.MainImage)
+			.Map(dest => dest, src => src.createRoomRequest);
+
+
+		config.NewConfig<(
+			EditRoomRequest editRoomRequest, Guid UserId, byte[] MainImage), EditRoomCommand>()
+			.Map(dest => dest.UserId, src => src.UserId)
+			.Map(dest => dest.MainImage, src => src.MainImage)
+			.Map(dest => dest, src => src.editRoomRequest);
+
 
 		config.NewConfig<Post, GetPostResponse>()
 			.Map(desp => desp.Id, src => src.Id)
