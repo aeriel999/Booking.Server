@@ -15,4 +15,7 @@ public interface IRoomRepository
 
 
 	ErrorOr<Room> GetRoomById(Guid roomId);
+
+
+	Task<Room> UpdateRoomAsync(Room room);
 }

@@ -33,6 +33,7 @@ using Booking.Api.Contracts.Post.GetRealtorByUserFeedback;
 using Booking.Api.Contracts.Post.GetServicesList;
 using Booking.Application.Posts.CreateRoom;
 using Booking.Api.Contracts.Post.EditRoom;
+using Booking.Api.Contracts.Post.CreateRoom;
 
 namespace Booking.Api.Common.Mapping;
 

@@ -3,6 +3,7 @@ using Booking.Domain.Posts;
 using Booking.Infrastructure.Common.Persistence;
 using ErrorOr;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Hosting;
 
 namespace Booking.Infrastructure.Repositories;
 
@@ -37,6 +38,7 @@ public class RoomRepository(BookingDbContext context) : IRoomRepository
 		return roomOrError!;
 	}
 
+
 	public ErrorOr<Room> GetRoomById(Guid roomId)
 	{
 		var roomOrError = _dbSet.Where(r => r.Id == roomId)
@@ -46,5 +48,20 @@ public class RoomRepository(BookingDbContext context) : IRoomRepository
 			return Error.NotFound();
 
 		return roomOrError!;
+	}
+
+
+	public async Task<Room> UpdateRoomAsync(Room room)
+	{
+		await Task.Run
+			(() =>
+			{
+				_dbSet.Attach(room);
+				context.Entry(room).State = EntityState.Modified;
+			});
+
+		await context.SaveChangesAsync();
+
+		return room;
 	}
 }

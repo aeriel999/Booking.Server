@@ -1,6 +1,6 @@
 import { useForm } from "react-hook-form";
-import { IRoom } from "../../interfaces/post";
-import { addRoomResolver, ImageValidator } from "../../validations/post";
+import { IEditRoom } from "../../interfaces/post";
+import { editRoomResolver, ImageValidator } from "../../validations/post";
 import "../../css/DashBoardAnonymousClasses/index.scss";
 import InputField from "../common/InputField";
 import { useState } from "react";
@@ -21,21 +21,17 @@ export default function EditRoom(props: EditRoomsProps) {
         handleSubmit,
         formState: { errors },
         setValue,
-    } = useForm<IRoom>({ resolver: addRoomResolver });
+    } = useForm<IEditRoom>({ resolver: editRoomResolver });
 
     //Add new room in list
-    const onSubmit = async (data: IRoom) => {
-        if (!mainImage) {
-            setErrorMessage("Upload images");
-
-            return;
-        }
-
+    const onSubmit = async (data: IEditRoom) => {
+        console.log("data", data);
         setErrorMessage(undefined);
 
-        const model: IRoom = {
+        const model: IEditRoom = {
             ...data,
-            mainImage: mainImage!,
+            id: props.roomId,
+            mainImage: mainImage ?? null,
         };
 
         props.setRooms([...(props.rooms || []), model]);
@@ -45,12 +41,7 @@ export default function EditRoom(props: EditRoomsProps) {
 
     //deleted room from list of default rooms and set it in delRoom list
     const onDelete = () => {
-        if (
-            props.roomId &&
-            props.setDefaultRoomList &&
-            props.defaultRoomList
-        ) {
-            console.log("props.roomId", props.roomId)
+        if (props.roomId && props.setDefaultRoomList && props.defaultRoomList) {
             // Filter out the room to be deleted
             const updatedRoomList = props.defaultRoomList.filter(
                 (room) => room.id !== props.roomId

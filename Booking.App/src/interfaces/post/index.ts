@@ -279,6 +279,16 @@ export interface IPostEdit {
     mainImage: File | null;
     deleteImages: IDeleteImage[] | null;
     deleteRooms: string[] | null;
+    editRooms: IEditRoom[] | null;
+}
+
+export interface IEditRoom{
+    id: string;
+    numberOfGuests: number | null;
+    numberOfRooms: number  | null;
+    discount: number | null;
+    price: number  | null;
+    mainImage: File | null;
 }
 
 export interface TablePaginationActionsProps {

@@ -56,6 +56,8 @@ using Booking.Application.Posts.GetServicesList;
 using Booking.Api.Contracts.Post.GetServicesList;
 using Booking.Application.Posts.CreateRoom;
 using Booking.Api.Contracts.Post.GetPostForEditing;
+using Booking.Api.Contracts.Post.EditRoom;
+using Booking.Application.Posts.EditRoom;
 
 namespace Booking.Api.Controllers;
 
@@ -494,6 +496,31 @@ public class PostController(ISender mediatr, IMapper mapper) : ApiController
 
 		return getPostForEditResult.Match(
 			getPostResult => Ok(mapper.Map<GetPostForEditResponse>(getPostForEditResult.Value)),
+			errors => Problem(errors));
+	}
+
+	[HttpPost("edit-room")]
+	public async Task<IActionResult> EditRoomAsync([FromForm] EditRoomRequest request)
+	{
+		string userId = User.Claims.First(u => u.Type == ClaimTypes.NameIdentifier).Value;
+
+		var mainImage = request.MainImage == null ? null : new byte[byte.MaxValue];
+
+		if (request.MainImage != null && request.MainImage.Length != 0)
+		{
+			using (MemoryStream memoryStream = new MemoryStream())
+			{
+				await request.MainImage.CopyToAsync(memoryStream);
+
+				mainImage = memoryStream.ToArray();
+			}
+		}
+
+		var createRoomResult = await mediatr.Send(mapper.Map<EditRoomCommand>(
+			(request, Guid.Parse(userId), mainImage)));
+
+		return createRoomResult.Match(
+			createRoomResult => Ok(createRoomResult),
 			errors => Problem(errors));
 	}
 }

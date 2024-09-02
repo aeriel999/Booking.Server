@@ -1,5 +1,5 @@
 import { Resolver } from "react-hook-form";
-import { IPostCreate, IPostEdit, IRoom } from "../../interfaces/post";
+import { IEditRoom, IPostCreate, IPostEdit, IRoom } from "../../interfaces/post";
 
 export const addPostResolver: Resolver<IPostCreate> = async (values) => {
     const errors: Record<string, any> = {};
@@ -162,6 +162,53 @@ export const addRoomResolver: Resolver<IRoom> = async (values) => {
             type: "validation",
             message: priceError,
         };
+    }
+
+    const discountError = DiscountValidator(values.discount);
+    if (discountError) {
+        errors.discount = {
+            type: "validation",
+            message: discountError,
+        };
+    }
+
+    return {
+        values: Object.keys(errors).length === 0 ? values : {},
+        errors,
+    };
+};
+
+export const editRoomResolver: Resolver<IEditRoom> = async (values) => {
+    const errors: Record<string, any> = {};
+
+   if(values.numberOfGuests){
+        const numberOfGuestsError = NumberOfGuestsValidator(values.numberOfGuests);
+        if (numberOfGuestsError) {
+            errors.numberOfGuests = {
+                type: "validation",
+                message: numberOfGuestsError,
+            };
+        }
+   }
+
+    if(values.numberOfRooms){
+        const numberOfRoomsError = NumberOfRoomsValidator(values.numberOfRooms);
+    if (numberOfRoomsError) {
+        errors.numberOfRooms = {
+            type: "validation",
+            message: numberOfRoomsError,
+        };
+    }
+    }
+
+    if(values.price){
+        const priceError = PriceValidator(values.price);
+    if (priceError) {
+        errors.price = {
+            type: "validation",
+            message: priceError,
+        };
+    }
     }
 
     const discountError = DiscountValidator(values.discount);

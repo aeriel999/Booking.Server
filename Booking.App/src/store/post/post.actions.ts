@@ -2,6 +2,7 @@ import { createAsyncThunk } from "@reduxjs/toolkit";
 import { apiClient, apiMediaClient } from "../../utils/api/apiClient.ts";
 import { handleAxiosError } from "../../utils/errors";
 import {
+    IEditRoom,
     IFetchData,
     IFetchDataByName,
     IFilteredListOfCategoriesRequest,
@@ -425,6 +426,7 @@ export const createRoom = createAsyncThunk(
         }
     }
 );
+
 export const getFeedbacksByPost = createAsyncThunk(
     "Post/get-feedbacks-by-post",
     async (payload: IGetFeedbacksRequest, { rejectWithValue }) => {
@@ -468,3 +470,18 @@ export const sendFeedback = createAsyncThunk(
         }
     }
 )
+
+export const editRoom = createAsyncThunk(
+    "Post/edit-room",
+    async (payload: IEditRoom, { rejectWithValue }) => {
+        try {
+            const response = await apiMediaClient.post(
+                "/api/Post/edit-room",
+                payload
+            );
+            return response.data;
+        } catch (error) {
+            return rejectWithValue(handleAxiosError(error, "Network error"));
+        }
+    }
+);

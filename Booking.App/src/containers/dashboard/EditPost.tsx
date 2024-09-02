@@ -4,7 +4,9 @@ import { useEffect, useState } from "react";
 import { useAppDispatch, useAppSelector } from "../../hooks/redux";
 import { unwrapResult } from "@reduxjs/toolkit";
 import {
+    createRoom,
     editPost,
+    editRoom,
     getListOfCategories,
     getListOfCitiesByCountryId,
     getListOfCountries,
@@ -20,6 +22,7 @@ import {
     ICity,
     ICountry,
     IDeleteImage,
+    IEditRoom,
     IPostEdit,
     IRoom,
     IRoomInfo,
@@ -41,6 +44,7 @@ import "../../css/DashBoardRealtorClasses/index.scss";
 import EditImageUploader from "../../components/realtorDashboard/EditImageUploader.tsx";
 import EditListImagesUploader from "../../components/realtorDashboard/EditListImagesUploader.tsx";
 import EditRoom from "../../components/realtorDashboard/EditRoom.tsx";
+import { changeDashboardMenuItem } from "../../store/settings/settings.slice.ts";
 
 export function EditPost() {
     const { postId } = useParams();
@@ -97,6 +101,7 @@ export function EditPost() {
 
     //Work with rooms
     const [rooms, setRooms] = useState<IRoom[] | null>([]);
+    const [editRooms, setEditRooms] = useState<IEditRoom[] | null>([]);
     const [defaultRooms, setDefaultRooms] = useState<IRoomInfo[] | null>([]);
     const [deletedRooms, setDeletedRooms] = useState<string[] | null>([]);
 
@@ -402,13 +407,38 @@ export function EditPost() {
             };
 
             try {
-                console.log("model", model);
-                console.log("deletedRooms", deletedRooms);
-                console.log("postId", postId);
                 const response = await dispatch(editPost(model));
 
                 unwrapResult(response);
 
+                 //Create rooms if it existing
+                 if (rooms) {
+                    for (const room of rooms) {
+                        try {
+                            const newRoom: IRoom = {
+                                ...room,
+                                postId: response.payload.id,
+                            };
+
+                            await dispatch(createRoom(newRoom));
+                        } catch (error) {
+                            setErrorMessage(ErrorHandler(error));
+                        }
+                    }
+                }
+
+                if(editRooms){
+                    for (const room of editRooms) {
+                        try {
+                            await dispatch(editRoom(room));
+                        } catch (error) {
+                            setErrorMessage(ErrorHandler(error));
+                        }
+                    }
+                }
+
+                // await joinForPostListening(response.payload.id);
+                dispatch(changeDashboardMenuItem("All Posts"));//set menu item
                 navigate("/dashboard/show-all-post");
             } catch (error) {
                 setErrorMessage(ErrorHandler(error));
@@ -739,12 +769,6 @@ export function EditPost() {
                             setDefaultImagesUrl={setDefaultImagesUrlList}
                             onImageDelete={setDeleteImages}
                         />
-
-                        {/* <ListImageUploader
-                            images={images}
-                            setImages={setImages}
-                            validator={ImagesValidator}
-                        /> */}
                     </div>
                 </div>
 
@@ -755,8 +779,8 @@ export function EditPost() {
                         {defaultRooms.map((room, i) => (
                             <EditRoom
                                 key={room.id}
-                                rooms={rooms}
-                                setRooms={setRooms}
+                                rooms={editRooms}
+                                setRooms={setEditRooms}
                                 label={"room" + i}
                                 formName={"form" + i}
                                 defaultRoom={room}
@@ -767,26 +791,26 @@ export function EditPost() {
                                 roomId={room.id}
                             />
                         ))}
-                    {Array.from({
-                        length: numberOfRooms,
-                    }).map((_, i) => (
-                        <Room
-                            key={i}
-                            rooms={rooms}
-                            setRooms={setRooms}
-                            label={"room" + i}
-                            formName={"form" + i}
-                        />
-                    ))}
-                    <button
-                        className="linkButton"
-                        onClick={() => {
-                            setNumberOfRooms(numberOfRooms + 1);
-                        }}
-                    >
-                        <div className="text">Add Room</div>
-                        <img className="icon" src={Plus}></img>
-                    </button>
+                        {Array.from({
+                            length: numberOfRooms,
+                        }).map((_, i) => (
+                            <Room
+                                key={i}
+                                rooms={rooms}
+                                setRooms={setRooms}
+                                label={"room" + i}
+                                formName={"form" + i}
+                            />
+                        ))}
+                        <button
+                            className="linkButton"
+                            onClick={() => {
+                                setNumberOfRooms(numberOfRooms + 1);
+                            }}
+                        >
+                            <div className="text">Add Room</div>
+                            <img className="icon" src={Plus}></img>
+                        </button>
                     </div>
                 )}
                 <button

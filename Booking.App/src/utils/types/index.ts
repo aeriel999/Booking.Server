@@ -1,5 +1,10 @@
 import { AsyncThunk } from "@reduxjs/toolkit";
-import { IDeleteImage, IRoom, IRoomInfo } from "../../interfaces/post";
+import {
+    IDeleteImage,
+    IEditRoom,
+    IRoom,
+    IRoomInfo,
+} from "../../interfaces/post";
 
 // eslint-disable-next-line
 type GenericAsyncThunk = AsyncThunk<unknown, unknown, any>;
@@ -13,8 +18,8 @@ export type RoomsProps = {
     formName: string;
 };
 export type EditRoomsProps = {
-    rooms: IRoom[] | null;
-    setRooms: (rooms: IRoom[]) => void;
+    rooms: IEditRoom[] | null;
+    setRooms: (rooms: IEditRoom[]) => void;
     label: string;
     formName: string;
     defaultRoom: IRoomInfo;
