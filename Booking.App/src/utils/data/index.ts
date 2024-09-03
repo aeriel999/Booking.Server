@@ -43,7 +43,7 @@ export const initialMenuData: IDashboardMenuItem[] = [
         isActive: false,
         image: Inbox,
         activeImage: Inbox,
-        link: "/dashboard/show-all-post",
+        link: "/dashboard/chat",
     },
     {
         name: "Reviews",
