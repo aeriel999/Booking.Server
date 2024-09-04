@@ -16,7 +16,7 @@ public class CreateRoomCommandHandler(
 	public async Task<ErrorOr<Success>> Handle(CreateRoomCommand request, CancellationToken cancellationToken)
 	{
 		//Get user
-		var userOrError = await userRepository.FindByIdAsync(request.UserId);
+		var userOrError = await userRepository.GetUserByIdAsync(request.UserId);
 
 		if (userOrError.IsError)
 			return Error.NotFound("User is not found");

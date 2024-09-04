@@ -16,13 +16,33 @@ body {
     width: 100%;
     box-sizing: border-box;
     height: 100vh;
-
 }
 
-/*#root {
-    width: 100vw;
-    height: 3924px;
-    margin: 0;
-    padding: 0;
+.errorFormInput {
+    display: flex;
+    height: 50px;
+    padding-left: 10px;
+    align-items: center;
+    gap: 10px;
+    align-self: stretch;
+    border-radius: 5px;
+    border: 1px solid $error-border-color;
+    background: #fff;
 
-}*/
+    &.focused {
+        border-color: $error-border-color;
+        outline: none;
+    }
+
+    p {
+        color: $secondary-font-color;
+        font-size: $medium-font-size;
+        font-style: normal;
+        font-weight: $light-font-weight;
+        line-height: normal;
+    }
+}
+
+.dashboardError {
+    color: $error-border-color;
+}

@@ -28,7 +28,7 @@ import { addPostResolver, ImagesValidator } from "../../validations/post";
 import { ImageValidator } from "../../validations/post";
 import InputField from "../../components/common/InputField.tsx";
 import { useForm } from "react-hook-form";
-
+import "../../css/DashBoardRealtorClasses/index.scss";
 import ImageUploader from "../../components/realtorDashboard/ImageUploader.tsx";
  
 import ListImageUploader from "../../components/realtorDashboard/ListImagesUploader.tsx";
@@ -229,7 +229,7 @@ export function AddNewPost() {
         }//set error if street doesnt choosen and doesnt type in textinput
 
         if (images.length < 6) {
-            setErrorMessage(ErrorHandler("Choose at least main image"));
+            setErrorMessage(ErrorHandler("You must add at least 6 images"));
             return;
         }//set error if choosen less than 7 images
 
@@ -243,17 +243,22 @@ export function AddNewPost() {
                 ...data,
                 categoryId: category?.id!,
                 countryId: country?.id!,
-                cityId: city === undefined || city === null ? null : city?.id!,
-                cityName:
-                    city === undefined || city === null ? data.cityName : null!,
+                cityId: 
+                        city === undefined || city === null 
+                            ? null 
+                            : city.id,
+                cityName: 
+                        city === undefined || city === null 
+                            ? data.cityName 
+                            : null,
                 streetId:
-                    street === undefined || street === null
-                        ? null
-                        : street?.id!,
+                        street === undefined || street === null
+                            ? null
+                            : street.id,
                 streetName:
-                    street === undefined || street === null
-                        ? data.streetName
-                        : null,
+                        street === undefined || street === null
+                            ? data.streetName
+                            : null,
                 mainImage: mainImage!,
                 images: images,
                 postTypesOfRest: typeOfRest,
@@ -591,7 +596,7 @@ export function AddNewPost() {
             {/* Rooms */}
             {isHotel && (
                 <div className="roomsContainer">
-                    <div className="title">Add New Post</div>
+                    <div className="title">Add New Room</div>
                     {Array.from({
                         length: numberOfRooms,
                     }).map((_, i) => (
@@ -603,7 +608,7 @@ export function AddNewPost() {
                             formName={"form" + i}
                         />
                     ))}
-                    <div
+                    <button
                         className="linkButton"
                         onClick={() => {
                             setNumberOfRooms(numberOfRooms + 1);
@@ -611,7 +616,7 @@ export function AddNewPost() {
                     >
                         <div className="text">Add Room</div>
                         <img className="icon" src={Plus}></img>
-                    </div>
+                    </button>
                 </div>
             )}
 

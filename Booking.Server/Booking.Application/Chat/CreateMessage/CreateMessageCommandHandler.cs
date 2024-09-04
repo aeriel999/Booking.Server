@@ -16,7 +16,7 @@ public class CreateMessageCommandHandler(
 		CreateMessageCommand request, CancellationToken cancellationToken)
 	{
 		//Find User
-		var userOrError = await userRepository.FindByIdAsync(request.UserId);
+		var userOrError = await userRepository.GetUserByIdAsync(request.UserId);
 
 		if (userOrError.IsError)
 			return Error.NotFound();

@@ -9,6 +9,9 @@ public class CreateRoomCommandValidation : AbstractValidator<CreateRoomCommand>
 		RuleFor(r => r.UserId).NotEmpty().WithMessage("Field must not be empty");
 
 
+		RuleFor(r => r.PostId).NotEmpty().WithMessage("Field must not be empty");
+
+
 		RuleFor(r => r.NumberOfGuests)
 			.GreaterThanOrEqualTo(1).WithMessage("Number of guests must be at least 1.")
 			.LessThanOrEqualTo(20);

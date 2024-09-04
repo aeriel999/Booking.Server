@@ -1,4 +1,5 @@
-﻿using Booking.Api.Contracts.Post.GetPost;
+﻿using Booking.Api.Contracts.Post.EditRoom;
+using Booking.Api.Contracts.Post.GetPost;
 
 namespace Booking.Api.Contracts.Post.GetPostForEditing;
 
@@ -11,6 +12,7 @@ public record GetPostForEditResponse
 
 
 	public required string CategoryName { get; init; }
+	public required Guid CategoryId { get; init; }
 
 
 	public required string CountryName { get; init; }
@@ -21,6 +23,7 @@ public record GetPostForEditResponse
 	public required Guid CityId { get; init; }
 
 
+	public required Guid StreetId { get; init; }
 	public required string StreetName { get; init; }
 
 
@@ -45,5 +48,5 @@ public record GetPostForEditResponse
 	public List<Guid>? Services { get; init; }
 
 
-	public List<EditRoom>? RoomList { get; init; }
+	public List<EditRoomResponse>? RoomList { get; init; }
 }

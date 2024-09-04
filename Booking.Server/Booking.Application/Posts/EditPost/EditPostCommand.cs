@@ -16,16 +16,20 @@ public record EditPostCommand(
 	string? StreetName,
 	int ZipCode,
 	int? NumberOfGuests,
-	string? Description,
 	decimal Price,
 	int? Discount,
-	List<Guid>? PostPostTypesOfRest,
-	List<Guid>? PostServices,
+	List<Guid>? PostTypesOfRest,
+	List<Guid>? Services,
+	List<string>? DeletedPostTypesOfRest,
+	List<string>? DeletedServices,
 	List<byte[]>? Images,
-	List<string>? DeleteImages) : IRequest<ErrorOr<Post>>;
+	byte[]? MainImage,
+	List<DeletedImage>? DeleteImages,
+	List<string> DeleteRooms) : IRequest<ErrorOr<Post>>;
 
- 
- 
-	
+public record DeletedImage
+{
+	public required string Name { get; init; }
 
-
+	public required int Index { get; init; }
+}

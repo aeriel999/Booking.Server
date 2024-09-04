@@ -59,6 +59,8 @@ using Booking.Api.Contracts.Post.GetPostForEditing;
 using Booking.Application.Posts.GetFeedbacksByClient;
 using Booking.Api.Contracts.Post.GetHistoryOfFeedbacks;
 using Booking.Api.Contracts.Post.GetPageOfSelectedFeedback;
+using Booking.Api.Contracts.Post.EditRoom;
+using Booking.Application.Posts.EditRoom;
 
 namespace Booking.Api.Controllers;
 
@@ -311,7 +313,7 @@ public class PostController(ISender mediatr, IMapper mapper) : ApiController
 	{
 		string userId = User.Claims.First(u => u.Type == ClaimTypes.NameIdentifier).Value;
 
-		var images = new List<byte[]>();
+		var images = request.Images == null ? null : new List<byte[]>();
 
 		if (request.Images != null && request.Images.Count != 0)
 		{
@@ -319,12 +321,24 @@ public class PostController(ISender mediatr, IMapper mapper) : ApiController
 			{
 				using MemoryStream memoryStream = new();
 				await image.CopyToAsync(memoryStream);
-				images.Add(memoryStream.ToArray());
+				images!.Add(memoryStream.ToArray());
+			}
+		}
+
+		var mainImage = request.MainImage == null ? null : new byte[byte.MaxValue];
+
+		if (request.MainImage != null && request.MainImage.Length != 0)
+		{
+			using (MemoryStream memoryStream = new MemoryStream())
+			{
+				await request.MainImage.CopyToAsync(memoryStream);
+
+				mainImage = memoryStream.ToArray();
 			}
 		}
 
 		var editPostResult = await mediatr.Send(mapper.Map<EditPostCommand>(
-			(request, Guid.Parse(userId), images)));
+			(request, Guid.Parse(userId), images, mainImage)));
 
 		return editPostResult.Match(
 			editPostResult => Ok(editPostResult),
@@ -496,6 +510,31 @@ public class PostController(ISender mediatr, IMapper mapper) : ApiController
 
 		return getPostForEditResult.Match(
 			getPostResult => Ok(mapper.Map<GetPostForEditResponse>(getPostForEditResult.Value)),
+			errors => Problem(errors));
+	}
+
+	[HttpPost("edit-room")]
+	public async Task<IActionResult> EditRoomAsync([FromForm] EditRoomRequest request)
+	{
+		string userId = User.Claims.First(u => u.Type == ClaimTypes.NameIdentifier).Value;
+
+		var mainImage = request.MainImage == null ? null : new byte[byte.MaxValue];
+
+		if (request.MainImage != null && request.MainImage.Length != 0)
+		{
+			using (MemoryStream memoryStream = new MemoryStream())
+			{
+				await request.MainImage.CopyToAsync(memoryStream);
+
+				mainImage = memoryStream.ToArray();
+			}
+		}
+
+		var createRoomResult = await mediatr.Send(mapper.Map<EditRoomCommand>(
+			(request, Guid.Parse(userId), mainImage)));
+
+		return createRoomResult.Match(
+			createRoomResult => Ok(createRoomResult),
 			errors => Problem(errors));
 	}
 

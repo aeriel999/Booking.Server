@@ -88,25 +88,6 @@ export interface IPost {
     typesOfRest: string[];
 }
 
-export interface IPostForEdit {
-    id: number;
-    name: string;
-    categoryName: string;
-    countryId: string;
-    countryName: string;
-    cityName: string;
-    cityId: string;
-    streetName: string;
-    zipCode: number;
-    discount: number | null;
-    numberOfGuests: number | null;
-    price: number;
-    imagePostList: string[];
-    typesOfRest: string[] | null;
-    services: string[] | null;
-    roomList?: IRoomInfo[];
-}
-
 export interface IPostInformation {
     id: number;
     name: string;
@@ -126,8 +107,8 @@ export interface IPostInformation {
     rate: number;
     countOfFeedbacks: number | null;
     imagePostList: {
-        $id: number,
-        $values: string[]
+        $id: number;
+        $values: string[];
     } | null;
     typesOfRest: string[] | null;
     services: {
@@ -135,18 +116,17 @@ export interface IPostInformation {
         $values: IServiseInfo[]
     } | null;
     roomList?: {
-        $id: number,
-        $values: IRoomInfo[]
+        $id: number;
+        $values: IRoomInfo[];
     };
 }
 
 export interface IServiseInfo {
-    name: string,
-    icon: string
+    name: string;
+    icon: string;
 }
 
 export interface IRoomInfo {
-    //postId: string;
     id: string;
     numberOfGuests: number;
     numberOfRooms: number;
@@ -154,10 +134,32 @@ export interface IRoomInfo {
     price: number;
     mainImage: string;
 }
+
 export interface IPostByRealtorId {
     id: number;
     name: string;
     imagePost: string;
+}
+
+export interface IPostForEdit {
+    id: string;
+    name: string;
+    categoryName: string;
+    categoryId: string;
+    countryId: string;
+    countryName: string;
+    cityName: string;
+    cityId: string;
+    streetName: string;
+    streetId: string;
+    zipCode: number;
+    discount: number | null;
+    numberOfGuests: number | null;
+    price: number;
+    imagePostList: string[];
+    typesOfRest: string[] | null;
+    services: string[] | null;
+    roomList?: IRoomInfo[];
 }
 
 export interface IPostState {
@@ -293,14 +295,27 @@ export interface IPostEdit {
     streetId: string | null;
     streetName: string | null;
     zipCode: number | null;
-    discount: number | null;
     numberOfGuests: number | null;
-    price: number;
+    discount: number | null;
+    price: number | null;
     postTypesOfRest: string[] | null;
+    deletedPostTypesOfRest: string[] | null;
     services: string[] | null;
+    deletedServices: string[] | null;
     images: File[] | null;
-    deleteImages: string[] | undefined;
-    roomList: IRoom[] | null;
+    mainImage: File | null;
+    deleteImages: IDeleteImage[] | null;
+    deleteRooms: string[] | null;
+    editRooms: IEditRoom[] | null;
+}
+
+export interface IEditRoom{
+    id: string;
+    numberOfGuests: number | null;
+    numberOfRooms: number  | null;
+    discount: number | null;
+    price: number  | null;
+    mainImage: File | null;
 }
 
 export interface TablePaginationActionsProps {
@@ -313,9 +328,9 @@ export interface TablePaginationActionsProps {
     ) => void;
 }
 export interface IGetService {
-    id: string,
-    name: string,
-    icon: string
+    id: string;
+    name: string;
+    icon: string;
 }
 export interface IGetTypeOfRest {
     id: string,
@@ -325,11 +340,13 @@ export interface IGetTypeOfRestWithImage {
     id: string,
     name: string,
     image: string
+    id: string;
+    name: string;
 }
 export interface IGetFeedbacksRequest {
-    id: string,
-    page: number,
-    sizeOfPage: number
+    id: string;
+    page: number;
+    sizeOfPage: number;
 }
 export interface IFeedbacksByPost {
     items: {
@@ -348,9 +365,9 @@ export interface IFeedback {
     feedbackAt: Date
 }
 export interface ISendFeedback {
-    text: string | null,
-    rating: number,
-    postId: string
+    text: string | null;
+    rating: number;
+    postId: string;
 }
 
 export interface IDeleteImage {

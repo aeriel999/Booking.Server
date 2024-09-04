@@ -8,13 +8,14 @@ public interface IUserRepository
 {
 	Task<List<User>> GetRealtorsFilteredListAsync(Guid? Category, Guid? Country, Guid? City);
 
+
     Task<List<User>> GetRealtorsListAsync();
 
 
     Task<ErrorOr<User>> FindByEmailAsync(string email);
 
 
-	Task<ErrorOr<User>> FindByIdAsync(Guid userId);
+	Task<ErrorOr<User>> GetUserByIdAsync(Guid userId);
 
 
 	Task<ErrorOr<List<string>>> FindRolesByUserIdAsync(User user);
@@ -31,8 +32,6 @@ public interface IUserRepository
 
 	Task<ErrorOr<Deleted>> DeleteUserAsync(Guid userId);
 
-
-	Task<ErrorOr<User>> GetUserAsync(string userId);
 
 	Task<ErrorOr<Updated>> EditUserAsync(Guid id, string? email);
 

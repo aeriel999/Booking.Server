@@ -1,5 +1,6 @@
 ﻿using Booking.Application.Common.Interfaces.Common;
 using Booking.Domain.Users;
+using ErrorOr;
 using Microsoft.IdentityModel.Tokens;
 using SixLabors.ImageSharp;
 using SixLabors.ImageSharp.Formats.Webp;
@@ -79,17 +80,14 @@ public class ImageStorageService : IImageStorageService
 	}
 
 
-	public async Task DeleteImageAsync(string imageName, string path)
+	public void DeleteImage(string imageName, string path)
 	{
-		await Task.Run
-		(() =>
-		{
-			var uploadFolderPath = Path.Combine(Directory.GetCurrentDirectory(), "images", path);
+		var uploadFolderPath = Path.Combine(Directory.GetCurrentDirectory(), "images", path);
 
-			var delFilePath = Path.Combine(uploadFolderPath, imageName);
+		var delFilePath = Path.Combine(uploadFolderPath, imageName);
 
+		if (File.Exists(delFilePath))
 			File.Delete(delFilePath);
-		});
 	}
 
 }

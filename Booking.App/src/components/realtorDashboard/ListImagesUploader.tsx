@@ -77,7 +77,7 @@ const ListImageUploader = (props: ListImageUploaderProps) => {
                                 height: "100%",
                             }}
                         >
-                            {(props.images[i] && numberOfBlocks > 1) &&(
+                            {(props.images[i] && props.images.length > 6) &&(
                                 //Delete Image button
                                 <IconButton
                                     aria-label="delete image"

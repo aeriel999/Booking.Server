@@ -101,7 +101,16 @@ export const App: React.FC = () => {
                                 path="/dashboard/reviews"
                                 element={<ReviewsPage />}
                             />
-                            <Route path="/dashboard/*" element={<NotFound />} />
+
+                            <Route
+                                path="/dashboard/chat"
+                                element={<ChatRoom />}
+                            />
+
+                            <Route
+                                path="/dashboard/reviews"
+                                element={<ReviewsPage />}
+                            />
                         </Route>
                     )}
 
@@ -139,20 +148,6 @@ export const App: React.FC = () => {
                                 path="/dashboard/profile/page-of-messages"
                                 element={<PageOfMessages />}
                             />
-
-
-                            <Route path="*" element={<NotFound />} />
-                        </Route>
-
-                        <Route path="/posts" element={<AnonymousDashboardLayoutForPosts />}>
-                            <Route index element={<ListOfPostsPage />} />
-
-                            <Route path="post/:postId" element={<PostOfPage />} />
-                            <Route
-                                path="realtor/:realtorId"
-                                element={<RealtorPageForClient />}
-                            />
-                            <Route path="*" element={<NotFound />} />
                         </Route>
 
                     </>)}
@@ -205,23 +200,6 @@ export const App: React.FC = () => {
                 />
                 <Route path="*" element={<NotFound />} />
             </Route>
-
-            {/* <Route path="/dashboard" element={<SignInPage />}>
-                <Route path="profile" element={<SignInPage />} />
-                <Route path="profile/edit" element={<SignInPage />} />
-                <Route
-                    path="profile/change-password"
-                    element={<SignInPage />}
-                />
-                <Route path="post/add" element={<SignInPage />} />
-                <Route path="show-all-post" element={<SignInPage />} />
-                <Route path="edit-post/:postId" element={<SignInPage />} />
-                <Route path="chat-room/:roomId" element={<SignInPage />} />
-
-                <Route path="archive" element={<SignInPage />} />
-
-                <Route path="reviews" element={<SignInPage />} />
-            </Route>*/}
 
             <Route path="authentication/login" element={<SignInPage />} />
 

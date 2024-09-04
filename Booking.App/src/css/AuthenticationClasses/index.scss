@@ -230,25 +230,6 @@ h1 {
     line-height: normal;
 }
 
-.errorFormInput {
-    display: flex;
-    height: 50px;
-    padding-left: 10px;
-    align-items: center;
-    gap: 10px;
-    align-self: stretch;
-    border-radius: 5px;
-    border: 1px solid $error-border-color;
-    background: #fff;
-
-    p {
-        color: $secondary-font-color;
-        font-size: $medium-font-size;
-        font-style: normal;
-        font-weight: $light-font-weight;
-        line-height: normal;
-    }
-}
 
 #secondaryAuthText {
     display: flex;

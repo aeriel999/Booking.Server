@@ -50,7 +50,7 @@ public class GetChatRoomsListQueryHandler(
 						}
 					}
 
-					var user = await userRepository.FindByIdAsync(chat.ClientId);
+					var user = await userRepository.GetUserByIdAsync(chat.ClientId);
 
 					var userName = await userRepository.GetUserNameByUserAsync(user.Value);
 

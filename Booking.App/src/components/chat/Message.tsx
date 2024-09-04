@@ -4,10 +4,12 @@ import { styled } from "@mui/system";
 import { IUserMessage } from "../../interfaces/chat";
 const MessageRow = styled("div")({
     display: "flex",
+    flexDirection: "column",
 });
 
 const MessageRowRight = styled("div")({
     display: "flex",
+    flexDirection: "column",
     justifyContent: "flex-end",
 });
 
@@ -16,18 +18,20 @@ const MessageBlue = styled("div")({
     marginLeft: "20px",
     marginBottom: "10px",
     padding: "10px",
-    backgroundColor: "#A8DDFD",
+    backgroundColor: "#00C2C1",
     width: "60%",
     textAlign: "left",
     font: "400 .9em 'Open Sans', sans-serif",
     border: "1px solid #97C6E3",
     borderRadius: "10px",
+    
+    color:"#ffff",
     "&:after": {
         content: '""',
         position: "absolute",
         width: "0",
         height: "0",
-        borderTop: "15px solid #A8DDFD",
+        borderTop: "15px solid #00C2C1",
         borderLeft: "15px solid transparent",
         borderRight: "15px solid transparent",
         top: "0",
@@ -48,6 +52,7 @@ const MessageBlue = styled("div")({
 
 const MessageOrange = styled("div")({
     position: "relative",
+    alignSelf:"end",
     marginRight: "20px",
     marginBottom: "10px",
     padding: "10px",
@@ -87,31 +92,37 @@ const MessageContent = styled("p")({
 });
 
 const MessageTimeStampRight = styled("div")({
-    position: "absolute",
+ //  position: "absolute",
+    alignSelf:"start",
     fontSize: ".85em",
     fontWeight: "300",
     marginTop: "10px",
+    marginBo: "10px",
+    bottom: "-3px",
+    right: "5px",
+});
+const MessageTimeStampLeft = styled("div")({
+ //  position: "absolute",
+    alignSelf:"end",
+    fontSize: ".85em",
+    fontWeight: "300",
+    marginTop: "10px",
+    marginBo: "10px",
     bottom: "-3px",
     right: "5px",
 });
 
-
-
-// const DisplayName = styled("div")({
-//     marginLeft: "20px",
-// });
+ 
 
 // MessageLeft component
 export const MessageLeft = (userMsg: IUserMessage) => {
     return (
         <MessageRow>
-            {/* <DisplayName>{userMsg.userName}</DisplayName> */}
             <MessageBlue>
-                <div>
-                    <MessageContent>{userMsg.message}</MessageContent>
-                </div>
-                <MessageTimeStampRight>{userMsg.sentAt}</MessageTimeStampRight>
+                <MessageContent>{userMsg.message}</MessageContent>
             </MessageBlue>
+
+             <MessageTimeStampRight>{userMsg.sentAt}</MessageTimeStampRight>
         </MessageRow>
     );
 };
@@ -120,11 +131,13 @@ export const MessageLeft = (userMsg: IUserMessage) => {
 export const MessageRight = (userMsg: IUserMessage) => {
     return (
         <MessageRowRight>
-            {/* <DisplayName>{userMsg.userName}</DisplayName> */}
+           
             <MessageOrange>
                 <MessageContent>{userMsg.message}</MessageContent>
-                <MessageTimeStampRight>{userMsg.sentAt}</MessageTimeStampRight>
             </MessageOrange>
+
+            <MessageTimeStampLeft>{userMsg.sentAt}</MessageTimeStampLeft>
+
         </MessageRowRight>
     );
 };

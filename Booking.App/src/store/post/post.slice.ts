@@ -14,6 +14,7 @@ import {
     createRoom,
     deletePost,
     editPost,
+    editRoom,
     getArchivedPostList,
     getFeedbacksByPost,
     getFilteredListByType,
@@ -315,6 +316,12 @@ export const postSlice = createSlice({
                 state.status = Status.SUCCESS;
             })
             .addCase(createRoom.pending, (state) => {
+                state.status = Status.LOADING;
+            })
+            .addCase(editRoom.fulfilled, (state) => {
+                state.status = Status.SUCCESS;
+            })
+            .addCase(editRoom.pending, (state) => {
                 state.status = Status.LOADING;
             })
             .addCase(getFeedbacksByPost.fulfilled, (state, action) => {

@@ -13,7 +13,6 @@ using Booking.Api.Contracts.Post.GetPostWithMostDiscount;
 using Booking.Api.Contracts.Post.GetPostWithMostRating;
 using Booking.Api.Contracts.Post.GetPostPostTypesOfRest;
 using Booking.Api.Contracts.Post.GetStreets;
-using Booking.Api.Contracts.Post.GetTypeOfPost;
 using Booking.Api.Contracts.Post.GetTypeOfRest;
 using Booking.Application.Common.Behaviors;
 using Booking.Application.Posts.CreatePost;
@@ -32,6 +31,8 @@ using Booking.Api.Contracts.Post.Feedback;
 using Booking.Api.Contracts.Post.GetRealtorByUserFeedback;
 using Booking.Api.Contracts.Post.GetServicesList;
 using Booking.Application.Posts.CreateRoom;
+using Booking.Api.Contracts.Post.EditRoom;
+using Booking.Application.Posts.EditRoom;
 using Booking.Application.Posts.GetFeedbacksByClient;
 using Booking.Api.Contracts.Post.GetHistoryOfFeedbacks;
 
@@ -49,10 +50,18 @@ public class PostMapping : IRegister
 		.Map(dest => dest, src => src.createPostRequest);
 
 		config.NewConfig<(
-			CreateRoomRequest createPostRequest, Guid UserId, byte[] MainImage), CreateRoomCommand>()
-		.Map(dest => dest.UserId, src => src.UserId)
-		.Map(dest => dest.MainImage, src => src.MainImage)
-		.Map(dest => dest, src => src.createPostRequest);
+			CreateRoomRequest createRoomRequest, Guid UserId, byte[] MainImage), CreateRoomCommand>()
+			.Map(dest => dest.UserId, src => src.UserId)
+			.Map(dest => dest.MainImage, src => src.MainImage)
+			.Map(dest => dest, src => src.createRoomRequest);
+
+
+		config.NewConfig<(
+			EditRoomRequest editRoomRequest, Guid UserId, byte[] MainImage), EditRoomCommand>()
+			.Map(dest => dest.UserId, src => src.UserId)
+			.Map(dest => dest.MainImage, src => src.MainImage)
+			.Map(dest => dest, src => src.editRoomRequest);
+
 
 		config.NewConfig<Post, GetPostResponse>()
 			.Map(desp => desp.Id, src => src.Id)
@@ -88,7 +97,7 @@ public class PostMapping : IRegister
 				     Name = service.Service!.Name,
 				     Icon = service.Service!.Icon
 				 }).ToList() : null)
-            .Map(desp => desp.RoomList, src => src.Rooms!.Select(room => new EditRoom
+            .Map(desp => desp.RoomList, src => src.Rooms!.Select(room => new EditRoomResponse
 				 {
 				 	  Id = room.Id,
 				 	  NumberOfGuests = room.NumberOfGuests,
@@ -226,10 +235,6 @@ public class PostMapping : IRegister
 		config.NewConfig<List<PostStreet>, List<GetStreetResponse>>();
 
 
-		config.NewConfig<PostTypeOfRent, GetTypeOfPostResponse>();
-		config.NewConfig<List<PostTypeOfRent>, List<GetTypeOfPostResponse>>();
-
-
 		config.NewConfig<Post, GetPostListForRealtorResponse>()
 			.Map(desp => desp.Id, src => src.Id)
 			.Map(desp => desp.Category, src => src.Category!.Name)
@@ -241,12 +246,15 @@ public class PostMapping : IRegister
 			.Map(desp => desp.IsArhive, src => src.IsArhive)
 			.Map(desp => desp.Discount, src => src.Discount);
 
+
 		config.NewConfig<PagedList<Post>, PagedList<GetPostListForRealtorResponse>>();
 
+
 		config.NewConfig<(
-			EditPostRequest editPostRequest, Guid UserId, List<byte[]> Images), EditPostCommand>()
+			EditPostRequest editPostRequest, Guid UserId, List<byte[]> Images, byte[] MainImage), EditPostCommand>()
 		.Map(dest => dest.UserId, src => src.UserId)
 		.Map(dest => dest.Images, src => src.Images)
+		.Map(dest => dest.MainImage, src => src.MainImage)
 		.Map(dest => dest, src => src.editPostRequest);
 
 
@@ -267,6 +275,7 @@ public class PostMapping : IRegister
 
 		config.NewConfig<PostTypeOfRest, GetPostTypesOfRestResponse>();
 		config.NewConfig<List<PostTypeOfRest>, List<GetPostTypesOfRestResponse>>();
+
 
 		config.NewConfig<Service, GetServicesListResponse>();
 		config.NewConfig<List<Service>, List<GetServicesListResponse>>();
@@ -291,7 +300,7 @@ public class PostMapping : IRegister
 			.Map(desp => desp.TypesOfRest, src => src.PostPostTypesOfRest != null ?
 				src.PostPostTypesOfRest!.Select(p => p.PostTypeOfRest!.Id) : null)
 			.Map(desp => desp.Services, src => src.Service != null ? src.Service!.Select(p => p.Service!.Id) : null)
-			.Map(desp => desp.RoomList, src => src.Rooms!.Select(room => new EditRoom
+			.Map(desp => desp.RoomList, src => src.Rooms!.Select(room => new EditRoomResponse
 			{
 				Id = room.Id,
 				NumberOfGuests = room.NumberOfGuests,

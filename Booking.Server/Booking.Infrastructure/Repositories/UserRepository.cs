@@ -25,8 +25,6 @@ public class UserRepository(UserManager<User> userManager)
                              && (City == null ? true : r.Posts!.Any(post => post.Street!.CityId == City))
                              && (Country == null ? true : r.Posts!.Any(post => post.Street!.City!.CountryId == Country)))
                 .ToList();
-
-
 	}
 
     public async Task<List<User>> GetRealtorsListAsync()
@@ -121,7 +119,7 @@ public class UserRepository(UserManager<User> userManager)
         return user;
     }
 
-    public async Task<ErrorOr<User>> FindByIdAsync(Guid userId)
+    public async Task<ErrorOr<User>> GetUserByIdAsync(Guid userId)
     {
 		var user = await userManager.FindByIdAsync(userId.ToString());
 
@@ -189,11 +187,7 @@ public class UserRepository(UserManager<User> userManager)
 		return await userManager.AddLoginAsync(user, userLoginInfo);
 	}
  
-	public Task<ErrorOr<User>> GetUserAsync(string userId)
-	{
-		throw new NotImplementedException();
-	}
-
+	 
     public async Task<ErrorOr<string>> GetRoleByUserAsync(User user)
     {
         var roles = await userManager.GetRolesAsync(user);
@@ -206,7 +200,7 @@ public class UserRepository(UserManager<User> userManager)
 
     public async Task<ErrorOr<bool>> IsPasswordAsync(Guid userId)
     {
-        var user = await FindByIdAsync(userId);
+        var user = await GetUserByIdAsync(userId);
 
         if(user.IsError) return user.Errors.FirstOrDefault();
 

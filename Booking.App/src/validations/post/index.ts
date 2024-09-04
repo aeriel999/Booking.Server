@@ -1,5 +1,5 @@
 import { Resolver } from "react-hook-form";
-import { IPostCreate, IPostEdit, IRoom } from "../../interfaces/post";
+import { IEditRoom, IPostCreate, IPostEdit, IRoom } from "../../interfaces/post";
 
 export const addPostResolver: Resolver<IPostCreate> = async (values) => {
     const errors: Record<string, any> = {};
@@ -92,8 +92,7 @@ export const editPostResolver: Resolver<IPostEdit> = async (values) => {
         };
     }
 
-    if(values.zipCode){
-    const zipCodeError = ZipCodeValidator(values.zipCode);
+    const zipCodeError = ZipCodeValidator(values.zipCode!);
     if (zipCodeError) {
         errors.zipCode = {
             type: "validation",
@@ -101,35 +100,37 @@ export const editPostResolver: Resolver<IPostEdit> = async (values) => {
         };
     }
 
-  }
-    
-  if(values.numberOfGuests){
-    const numberOfGuestsError = NumberOfGuestsValidator(values.numberOfGuests);
-    if (numberOfGuestsError) {
-        errors.numberOfGuests = {
-            type: "validation",
-            message: numberOfGuestsError,
-        };
-    }
-  }
-
-    const priceError = PriceValidator(values.price);
-    if (priceError) {
-        errors.price = {
-            type: "validation",
-            message: priceError,
-        };
+    if(values.numberOfGuests){
+        const numberOfGuestsError = NumberOfGuestsValidator(values.numberOfGuests);
+        if (numberOfGuestsError) {
+            errors.numberOfGuests = {
+                type: "validation",
+                message: numberOfGuestsError,
+            };
+        }
     }
 
-  if(values.discount){
-    const discountError = DiscountValidator(values.discount);
-    if (discountError) {
-        errors.discount = {
-            type: "validation",
-            message: discountError,
-        };
+   if(values.price){
+        const priceError = PriceValidator(values.price);
+        if (priceError) {
+            errors.price = {
+                type: "validation",
+                message: priceError,
+            };
+        }
+   }
+
+    if (values.discount) {
+        if (values.discount > 0) {
+            const discountError = DiscountValidator(values.discount);
+            if (discountError) {
+                errors.discount = {
+                    type: "validation",
+                    message: discountError,
+                };
+            }
+        }
     }
-  }
     return {
         values: Object.keys(errors).length === 0 ? values : {},
         errors,
@@ -170,7 +171,54 @@ export const addRoomResolver: Resolver<IRoom> = async (values) => {
             message: discountError,
         };
     }
- 
+
+    return {
+        values: Object.keys(errors).length === 0 ? values : {},
+        errors,
+    };
+};
+
+export const editRoomResolver: Resolver<IEditRoom> = async (values) => {
+    const errors: Record<string, any> = {};
+
+   if(values.numberOfGuests){
+        const numberOfGuestsError = NumberOfGuestsValidator(values.numberOfGuests);
+        if (numberOfGuestsError) {
+            errors.numberOfGuests = {
+                type: "validation",
+                message: numberOfGuestsError,
+            };
+        }
+   }
+
+    if(values.numberOfRooms){
+        const numberOfRoomsError = NumberOfRoomsValidator(values.numberOfRooms);
+    if (numberOfRoomsError) {
+        errors.numberOfRooms = {
+            type: "validation",
+            message: numberOfRoomsError,
+        };
+    }
+    }
+
+    if(values.price){
+        const priceError = PriceValidator(values.price);
+    if (priceError) {
+        errors.price = {
+            type: "validation",
+            message: priceError,
+        };
+    }
+    }
+
+    const discountError = DiscountValidator(values.discount);
+    if (discountError) {
+        errors.discount = {
+            type: "validation",
+            message: discountError,
+        };
+    }
+
     return {
         values: Object.keys(errors).length === 0 ? values : {},
         errors,
@@ -246,10 +294,9 @@ export const ZipCodeValidator = (
 };
 
 export const NumberOfGuestsValidator = (value: number): string | undefined => {
-    if(value === null || value === undefined || value.toString() === ""){
+    if (value === null || value === undefined || value.toString() === "") {
         return "It is a required field";
     }
-       
 
     if (value < 0) {
         return "Value must be a positive number";
@@ -262,10 +309,10 @@ export const NumberOfGuestsValidator = (value: number): string | undefined => {
     return undefined;
 };
 export const NumberOfRoomsValidator = (value: number): string | undefined => {
-    if(value === null || value === undefined || value.toString() === ""){
+    if (value === null || value === undefined || value.toString() === "") {
         return "It is a required field";
     }
-        
+
     if (value < 0) {
         return "Value must be a positive number";
     }
@@ -326,5 +373,31 @@ export const ImagesValidator = (files: File[]): string | undefined => {
         if (!validFormats.includes(file.type)) return "Invalid file format";
     }
 
+    return undefined;
+};
+
+export const EditImageValidator = (file: File): string | undefined => {
+    const maxSizeInBytes = 5 * 1024 * 1024; // 5 MB in bytes
+    const validFormats = ["image/png", "image/jpeg", "image/jpg", "image/gif"];
+
+    if (file.size > maxSizeInBytes) return "File size must not exceed 5 MB";
+    if (!validFormats.includes(file.type)) return "Invalid file format";
+
+    return undefined;
+};
+
+export const EditImagesValidator = (
+    files: File[] | null
+): string | undefined => {
+    const maxSizeInBytes = 5 * 1024 * 1024; // 5 MB in bytes
+    const validFormats = ["image/png", "image/jpeg", "image/jpg", "image/gif"];
+
+    if (files) {
+        for (const file of files) {
+            if (file.size > maxSizeInBytes)
+                return "File size must not exceed 5 MB";
+            if (!validFormats.includes(file.type)) return "Invalid file format";
+        }
+    }
     return undefined;
 };

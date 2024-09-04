@@ -1,6 +1,6 @@
 import { styled } from "@mui/system";
 import { TextField, Button } from "@mui/material";
-import SendIcon from "@mui/icons-material/Send";
+import SendIcon from "../../assets/DashboardIcons/send.svg";
 
 const WrapForm = styled("form")(({ theme }) => ({
     display: "flex",
@@ -11,11 +11,10 @@ const WrapForm = styled("form")(({ theme }) => ({
 
 const WrapText = styled(TextField)({
     width: "100%",
+    
 });
 
-const StyledButton = styled(Button)(({ theme }) => ({
-     margin: theme.spacing(1),
-}));
+ 
 
 export const ChatTextInput = () => {
     return (
@@ -24,9 +23,9 @@ export const ChatTextInput = () => {
                 id="standard-text"
                 label="Enter your message"
             /> 
-            <StyledButton variant="contained" color="primary">
-                <SendIcon />
-            </StyledButton>
+           <button className="sendIcon">
+                <img src={SendIcon} alt="" />
+           </button>
         </WrapForm>
     );
 };

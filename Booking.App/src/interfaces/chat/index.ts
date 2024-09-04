@@ -31,12 +31,14 @@ export interface IChatRoom {
     realtorId: string;
     postId: string;
     postName: string;
+    postImage: string;
     sendUserName: string;
     sendUserAvatar: string;
     userMessages: IUserMessage[];
 }
 
 export interface IUserMessage {
+    userName: any;
     id: string;
     userId: string;
     message: string;

@@ -40,9 +40,6 @@ public record CreatePostRequest
 	public int NumberOfGuests { get; init; }
 
 
-	public string? Description { get; init; }
-
-
 	[Required(ErrorMessage = "{PropertyName} must not be empty")]
 	[Range(0, 9999999999999999.99, ErrorMessage = "{PropertyName} must be between {1} and {2}")]
 	public decimal Price { get; init; }
