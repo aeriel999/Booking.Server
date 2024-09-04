@@ -60,3 +60,45 @@ export const initialMenuData: IDashboardMenuItem[] = [
         link: "/dashboard/profile/edit",
     },
 ];
+
+export const clientMenuData: IDashboardMenuItem[] = [
+    {
+        name: "Profile",
+        isActive: true,
+        image: UserProfiler,
+        activeImage: ActiveUserProfiler,
+        link: "/dashboard/profile",
+    },
+    {
+        name: "My feedbacks",
+        isActive: false,
+        image: Reviews,
+        activeImage: Reviews,
+        link: "/dashboard/profile/history-of-feedbacks",
+    },
+    {
+        name: "Messages",
+        isActive: false,
+        image: Inbox,
+        activeImage: Inbox,
+        link: "/dashboard/profile/page-of-messages",
+    },
+    {
+        name: "Settings",
+        isActive: false,
+        image: Settings,
+        activeImage: Settings,
+        link: "/dashboard/profile/edit",
+    },
+];
+
+export function cutNumber(num: number) {
+    let number = num;
+    if (num % 1 < 0.09) {
+        number = parseFloat(num.toFixed(0));
+    }
+    else {
+        number = parseFloat(num.toFixed(1));
+    }
+    return number
+}

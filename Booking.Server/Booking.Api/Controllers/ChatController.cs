@@ -1,5 +1,6 @@
 ﻿using Booking.Api.Infrastructure;
 using Booking.Application.Chat.GetChatRoomsList;
+using Booking.Application.Chat.GetChatRoomsListForClient;
 using MediatR;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Authorization;
@@ -41,5 +42,17 @@ public class ChatController(ISender mediatr) : ApiController
 			errors => Problem(errors));
 	}
 
-	 
+    [HttpGet("get-chat-list-for-client")]
+    public async Task<IActionResult> GetListOfChatsForClientAsync()
+    {
+        var userId = User.Claims.First(u => u.Type == ClaimTypes.NameIdentifier).Value;
+
+        var getListOfChatRoomsForClientResult = await mediatr.Send(
+            new GetChatRoomsListForClientQuery(Guid.Parse(userId)));
+
+        //ToDo Make response
+        return getListOfChatRoomsForClientResult.Match(
+            getListOfChatRoomsForClientResult => Ok(getListOfChatRoomsForClientResult),
+            errors => Problem(errors));
+    }
 }

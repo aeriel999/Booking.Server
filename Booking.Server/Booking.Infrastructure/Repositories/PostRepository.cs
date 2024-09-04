@@ -69,12 +69,16 @@ public class PostRepository(BookingDbContext context) : IPostRepository
 
         return posts.OrderByDescending(item => item.PostAt).ToList();
     }
-   public async Task<List<Post>> GetPostByNameAsync(Guid? category, Guid? country, Guid? city, Guid? realtor, string name)
+   public async Task<Guid> GetPostByNameAsync(Guid? category, Guid? country, Guid? city, Guid? realtor, string name)
     {
         var posts = await Filter(category, country, city, realtor);
 
-		return posts.Where(p => p.Name.ToLower().Equals(name.ToLower()))
-			        .ToList();
+		Guid postId = posts.Where(p => p.Name.ToLower().Equals(name.ToLower()))
+					.Select(p => p.Id).FirstOrDefault();
+
+		if (postId == Guid.Empty) return Guid.Empty;
+
+        return postId;
 	}
 
 	public async Task<List<string>> GetNameOfPostAsync(

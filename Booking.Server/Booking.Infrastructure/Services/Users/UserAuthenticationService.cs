@@ -1,8 +1,10 @@
 ﻿using Booking.Application.Common.Interfaces.Authentication;
 using Booking.Domain.Users;
+using Booking.Infrastructure.Authentification;
 using ErrorOr;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.WebUtilities;
+using System.IdentityModel.Tokens.Jwt;
 using System.Text;
 
 namespace Booking.Infrastructure.Services.Users;
@@ -99,9 +101,12 @@ public class UserAuthenticationService(UserManager<User> userManager, SignInMana
 
     public async Task<ErrorOr<User>> ResetPasswordAsync(User user, string token, string password)
     {
-		var decodedToken = WebEncoders.Base64UrlDecode(token);
 
-		var normalToken = Encoding.UTF8.GetString(decodedToken);
+       var decodedToken = WebEncoders.Base64UrlDecode(token);
+        
+
+      var normalToken = Encoding.UTF8.GetString(decodedToken);
+
 
 		var result = await userManager.ResetPasswordAsync(user, normalToken, password);
 

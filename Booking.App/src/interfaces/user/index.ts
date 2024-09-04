@@ -6,6 +6,11 @@ export interface IChangePassword {
     confirmNewPassword: string,
 }
 
+export interface ICreatePassword {
+    password: string,
+    confirmPassword: string,
+}
+
 export interface IUserState {
     status: Status;
     realtors: IRealtor[] | null,
@@ -32,7 +37,8 @@ export interface IRealtorInformation {
     email: string,
     avatar: string,
     rating: number,
-    phone: string
+    phone: string,
+    headerImage: string | null
 }
 export interface IFeedback {
     text: string,
@@ -75,4 +81,10 @@ export interface IRealtorByUserFeedbacks {
     id: string,
     realtor: string,
     avatar: string
+}
+
+export interface IEditClientProfile {
+    email: string,
+    firstName: string,
+    lastName: string
 }

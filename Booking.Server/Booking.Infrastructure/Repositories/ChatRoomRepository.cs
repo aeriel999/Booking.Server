@@ -1,4 +1,5 @@
 ﻿using Ardalis.Specification;
+using Booking.Application.Chat.GetChatRoomsListForClient;
 using Booking.Application.Common.Interfaces.Chat;
 using Booking.Domain.Chat;
 using Booking.Domain.Users;
@@ -56,4 +57,31 @@ public class ChatRoomRepository(BookingDbContext context) : IChatRoomRepository
 			.Include(c => c.UserMessages)
 			.ToListAsync();
 	}
+
+	public async Task<List<Guid>> GetRealtorChatRoomsIdByClient(Guid clientId)
+	{
+		return await _dbSet
+			.Where(c => c.ClientId == clientId)
+			.Select(c => c.RealtorId)
+			.Distinct()
+			.ToListAsync();
+	}
+
+    public async Task<List<ChatRoomForClient>> GetListOfChatRoomsForClientByRealtorId(Guid realtorId)
+    {
+        return await _dbSet
+            .Where(c => c.RealtorId == realtorId)
+			.Include(c => c.Post)
+			.ThenInclude(c => c!.ImagesPost)
+            .Select(c => new ChatRoomForClient()
+			{
+				ChatRoomId = c.ChatRoomId,
+				PostImage = c.Post!.ImagesPost!.FirstOrDefault(img => img.Priority == 1)!.Name,
+				PostName = c.Post!.Name,
+				HasUnreadMessages = false,
+				UnreadMessages = null
+			})
+            .Distinct()
+            .ToListAsync();
+    }
 }

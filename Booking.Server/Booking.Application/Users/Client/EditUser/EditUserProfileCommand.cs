@@ -2,5 +2,5 @@
 using MediatR;
 
 namespace Booking.Application.Users.Client.EditUser;
-public record EditUserProfileCommand(Guid Id, string? Email, string baseUrl) : IRequest<ErrorOr<Updated>>;
+public record EditUserProfileCommand(Guid Id, string? Email,string? FirstName, string? LastName, string baseUrl) : IRequest<ErrorOr<EditUserProfileCommandResult>>;
 

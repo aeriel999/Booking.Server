@@ -7,8 +7,10 @@ import {
 import { RejectedAction } from "../../utils/types";
 import {
     changeEmail,
+    checkPasswordIsNotNull,
     confirmEmail,
     editProfile,
+    editUserProfile,
     forgotPassword,
     googleLogin,
     login,
@@ -31,19 +33,20 @@ const updateLoginUserState = (state: IAccountState, token: string): void => {
     const email = decodedToken["email"];
     const role =
         decodedToken[
-            "http://schemas.microsoft.com/ws/2008/06/identity/claims/role"
+        "http://schemas.microsoft.com/ws/2008/06/identity/claims/role"
         ];
     const id = decodedToken["sub"];
     const headerImage = decodedToken["ProfileHeaderImage"];
     const avatar = decodedToken["Avatar"];
+    const firstName = decodedToken["given_name"];
+    const lastName = decodedToken["family_name"];
 
     if (role === "realtor") {
-        const firstName = decodedToken["given_name"];
-        const lastName = decodedToken["family_name"];
-         
+
+
         const phoneNumber =
             decodedToken[
-                "http://schemas.xmlsoap.org/ws/2005/05/identity/claims/mobilephone"
+            "http://schemas.xmlsoap.org/ws/2005/05/identity/claims/mobilephone"
             ];
 
         const rating = decodedToken["Rating"];
@@ -61,17 +64,35 @@ const updateLoginUserState = (state: IAccountState, token: string): void => {
                 headerImage === null ? null : "/images/avatars/" + headerImage,
         };
     } else {
+        let savedAvatar: string | null = null;
+        if (avatar != null) {
+            if (avatar.slice(0, 5) == "https") {
+                savedAvatar = avatar;
+            }
+            else {
+                savedAvatar = "/images/avatars/" + avatar;
+            }
+        }
+
+        let savedHeader: string | null = null;
+        if (headerImage != null) {
+            if (headerImage.trim() === "") {
+                savedHeader = null;
+            }
+            else {
+                savedHeader = "/images/avatars/" + headerImage;
+            }
+        }
         state.user = {
             id: id,
             email: email,
             role: role,
-            firstName: null,
-            lastName: null,
+            firstName: firstName,
+            lastName: lastName,
             phoneNumber: null,
-            avatar: avatar === null ? null : "/images/avatars/" + avatar,
+            avatar: savedAvatar,
             rating: null,
-            profileHeaderImage:
-                headerImage === null ? null : "/images/avatars/" + headerImage,
+            profileHeaderImage: savedHeader
         };
     }
     state.token = token;
@@ -86,6 +107,7 @@ const initialState: IAccountState = {
     isLogin: false,
     status: Status.IDLE,
     registerData: null,
+    isUserHasPassword: true
 };
 
 export const accountsSlice = createSlice({
@@ -191,6 +213,21 @@ export const accountsSlice = createSlice({
             })
             .addCase(reconfirmEmail.pending, (state) => {
                 state.status = Status.LOADING;
+            })
+            .addCase(editUserProfile.fulfilled, (state, action) => {
+                const { token } = action.payload;
+                updateLoginUserState(state, token);
+                state.status = Status.SUCCESS
+            })
+            .addCase(editUserProfile.pending, (state) => {
+                state.status = Status.LOADING
+            })
+            .addCase(checkPasswordIsNotNull.fulfilled, (state, action) => {
+                state.isUserHasPassword = action.payload;
+                state.status = Status.SUCCESS
+            })
+            .addCase(checkPasswordIsNotNull.pending, (state) => {
+                state.status = Status.LOADING
             })
             .addMatcher(isRejectedAction, (state) => {
                 state.status = Status.ERROR;

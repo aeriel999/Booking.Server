@@ -32,6 +32,8 @@ using Booking.Api.Contracts.Post.Feedback;
 using Booking.Api.Contracts.Post.GetRealtorByUserFeedback;
 using Booking.Api.Contracts.Post.GetServicesList;
 using Booking.Application.Posts.CreateRoom;
+using Booking.Application.Posts.GetFeedbacksByClient;
+using Booking.Api.Contracts.Post.GetHistoryOfFeedbacks;
 
 namespace Booking.Api.Common.Mapping;
 
@@ -117,6 +119,9 @@ public class PostMapping : IRegister
         config.NewConfig<PagedList<GetListOfPostResponse>, PagedList<Post>>()
 			.Map(desp => desp.items, src => src.items.Adapt<List<GetListOfPostResponse>>());
 
+        config.NewConfig< PagedList<Post> ,PagedList<GetListOfPostResponse>>()
+            .Map(desp => desp.items, src => src.items.Adapt<List<GetListOfPostResponse>>());
+
 
         config.NewConfig<(GetFilteredListRequest request, string name), GetNameOfPostQuery>()
             .Map(dest => dest.Category, src => src.request.Category)
@@ -165,7 +170,10 @@ public class PostMapping : IRegister
             .Map(desp => desp.Text, src => src.Text)
             .Map(desp => desp.Rating, src => src.Rating)
             .Map(desp => desp.ClientId, src => src.ClientId)
-            .Map(desp => desp.Client, src => src.Client!.Email)
+            .Map(desp => desp.Client, src => (src.Client!.FirstName != null && src.Client!.LastName !=null) ? 
+														  $"{src.Client!.FirstName} {src.Client!.LastName}" :
+														  src.Client!.Email)
+            .Map(desp => desp.ClientAvatar, src => src.Client!.Avatar)
             .Map(desp => desp.FeedbackAt, src => src.FeedbackAt);
 
 
@@ -185,15 +193,13 @@ public class PostMapping : IRegister
 			.Map(desp => desp.Image, src => src.PostPostTypesOfRest!.FirstOrDefault()!.Post!.ImagesPost!.FirstOrDefault(img => img.Priority == 1)!.Name);
 
 
-        config.NewConfig<(GetFilteredListRequest request,string name, int page, int sizeOfPage),
+        config.NewConfig<(GetFilteredListRequest request,string name),
 			GetPostByNameQuery>()
             .Map(dest => dest.Category, src => src.request.Category)
             .Map(dest => dest.Country, src => src.request.Country)
             .Map(dest => dest.City, src => src.request.City)
             .Map(dest => dest.Realtor, src => src.request.Realtor)
-            .Map(dest => dest.Name, src => src.name)
-            .Map(dest => dest.Page, src => src.page)
-            .Map(dest => dest.SizeOfPage, src => src.sizeOfPage);
+            .Map(dest => dest.Name, src => src.name);
 
 
         config.NewConfig<PostCategory, GetCategoryResponse>();
@@ -294,5 +300,25 @@ public class PostMapping : IRegister
 				Price = room.Price,
 				MainImage = room.MainImage
 			}).ToList());
-	}
+
+		config.NewConfig<(string id, int page, int sizeOfPage), GetHistoryOfFeedbacksByClientQuery>()
+			.Map(desp => desp.ClientId, src => Guid.Parse(src.id))
+			.Map(desp => desp.Page, src => src.page)
+			.Map(desp => desp.SizeOfPage, src => src.sizeOfPage);
+
+        config.NewConfig<Feedback, GetHistoryOfFeedbackByClientResponse>()
+            .Map(desp => desp.FeedbackId, src => src.Id)
+			.Map(desp => desp.PostId, src => src.PostId)
+			.Map(desp => desp.FeedbackAt, src => src.FeedbackAt)
+			.Map(desp => desp.TextOfFeedback, src => src.Text)
+			.Map(desp => desp.Rating, src => src.Rating)
+			.Map(desp => desp.ImageOfPost, src => src.Post!.ImagesPost!.FirstOrDefault((img) => img.Priority==1)!.Name)
+			.Map(desp => desp.NameOfPost, src => src.Post!.Name)
+			.Map(desp => desp.Country, src => src.Post!.Street!.City!.Country!.Name)
+			.Map(desp => desp.City, src => src.Post!.Street!.City!.Name);
+
+		config.NewConfig<PagedList<GetHistoryOfFeedbackByClientResponse>, PagedList<Feedback>>()
+            .Map(desp => desp.items, src => src.items.Adapt<List<GetHistoryOfFeedbackByClientResponse>>());
+
+    }
 }

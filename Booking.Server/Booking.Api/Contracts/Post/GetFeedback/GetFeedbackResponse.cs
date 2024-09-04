@@ -5,6 +5,7 @@ public record GetFeedbackResponse
     public float Rating { get; set; }
     public Guid ClientId { get; set; }
     public required string Client { get; set; }
+    public string? ClientAvatar { get; set; }
     public required DateTime FeedbackAt { get; set; }
 }
 

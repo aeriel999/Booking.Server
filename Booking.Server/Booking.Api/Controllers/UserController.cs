@@ -199,7 +199,7 @@ public class UserController(ISender mediatr, IMapper mapper, IConfiguration conf
         var updateUser = await mediatr.Send(mapper.Map<EditUserProfileCommand>((request,userId,baseUrl)));
 
         return updateUser.Match(
-            updateUser => Ok(updateUser),
+            updateUser => Ok(mapper.Map<EditUserProfileResponse>(updateUser)),
             errors => Problem(errors));
     }
 }

@@ -110,7 +110,14 @@ export const HomePage = () => {
                     </div>
                     <div className='posts'>
                         {mostRating != null ? mostRating.map((item) => (
-                            <PostCardForHomePage key={item.id} post={item.name} rating={item.rating} city={item.city} country={item.country} image={item.image}></PostCardForHomePage>
+                            <PostCardForHomePage
+                                id={item.id}
+                                key={item.id}
+                                post={item.name}
+                                rating={item.rating}
+                                city={item.city}
+                                country={item.country}
+                                image={item.image} />
                         )) : ""}
 
 
@@ -152,7 +159,15 @@ export const HomePage = () => {
                     </div>
                     <div className='posts'>
                         {mostDiscount != null ? mostDiscount.map((item) => (
-                            <PostCardForHomePage key={item.id} post={item.name} rating={item.rating} city={item.city} country={item.country} discount={item.discount} image={item.image}></PostCardForHomePage>
+                            <PostCardForHomePage
+                                key={item.id}
+                                id={item.id}
+                                post={item.name}
+                                rating={item.rating}
+                                city={item.city}
+                                country={item.country}
+                                discount={item.discount}
+                                image={item.image} />
                         )) : ""}
 
 
@@ -313,57 +328,3 @@ export const HomePage = () => {
         </>
     )
 }
-/*
-<PostCard post='Holiday Village Valle' rating={8.3} city='Утсйокі' country='Фінляндія' discount={13} image='https://www.telegraph.co.uk/content/dam/Travel/hotels/europe/finland/arctic-treehouse-hotel-finland-p.jpg?imwidth=480'>
-
-                        </PostCard>
-                        <PostCard post='Holiday Village Valle' rating={8.3} city='Утсйокі' country='Фінляндія' discount={10} image='https://www.strawberryhotels.com/globalassets/global/hotel-pictures/clarion-hotel/clarion-hotel-helsinki/the-hotel/outdoor/clarion-hotel-helsinki-city-from-the-air-3.jpg?t=SmartScale%7c1024x570'>
-
-                        </PostCard>
-                        <PostCard post='Holiday Village Valle' rating={8.3} city='Утсйокі' country='Фінляндія' discount={25} image='https://hotelli-isosyote.fi/wp-content/uploads/2019/08/kotkanpesa_ulos_ylakerta-720x479.jpg'>
-
-                        </PostCard>
-                        <PostCard post='Holiday Village Valle' rating={8.3} city='Утсйокі' country='Фінляндія' discount={10} image='https://cf.bstatic.com/xdata/images/city/square250/842918.webp?k=6ce3f4cc4f46abf9454bd670eb766e1a06d7196e03ff0757d6e5402e77009e16&o='>
-
-                        </PostCard>
-
-
-<PostCard post='Holiday Village Valle' rating={8.3} city='Утсйокі' country='Фінляндія' image='https://www.telegraph.co.uk/content/dam/Travel/hotels/europe/finland/arctic-treehouse-hotel-finland-p.jpg?imwidth=480'>
-
-                        </PostCard>
-                        <PostCard post='Holiday Village Valle' rating={8.3} city='Утсйокі' country='Фінляндія' image='https://www.strawberryhotels.com/globalassets/global/hotel-pictures/clarion-hotel/clarion-hotel-helsinki/the-hotel/outdoor/clarion-hotel-helsinki-city-from-the-air-3.jpg?t=SmartScale%7c1024x570'>
-
-                        </PostCard>
-                        <PostCard post='Holiday Village Valle' rating={8.3} city='Утсйокі' country='Фінляндія' image='https://hotelli-isosyote.fi/wp-content/uploads/2019/08/kotkanpesa_ulos_ylakerta-720x479.jpg'>
-
-                        </PostCard>
-                        <PostCard post='Holiday Village Valle' rating={8.3} city='Утсйокі' country='Фінляндія' image='https://cf.bstatic.com/xdata/images/city/square250/842918.webp?k=6ce3f4cc4f46abf9454bd670eb766e1a06d7196e03ff0757d6e5402e77009e16&o='>
-
-                        </PostCard>
-*/
-/*
-<div>
-                            <img src={image2}></img>
-                            <p>Venice</p>
-                        </div>
-                        <div>
-                            <img src={image3}></img>
-                            <p>Big Ben</p>
-                        </div>
-                        <div>
-                            <img src={image4}></img>
-                            <p>Palace of Versailles</p>
-                        </div>
-                        <div>
-                            <img src={image5}></img>
-                            <p>Synevir</p>
-                        </div>
-                        <div>
-                            <img src={image6}></img>
-                            <p>Kamianets-Podilskyi</p>
-                        </div>
-                        <div>
-                            <img src={image7}></img>
-                            <p>Eiffel Tower</p>
-                        </div>
-*/ 

@@ -7,6 +7,7 @@ using Booking.Api.Contracts.Authetication.Register;
 using Booking.Api.Contracts.Authetication.ResetPassword;
 using Booking.Api.Infrastructure;
 using Booking.Application.Authentication.ChangeEmail;
+using Booking.Application.Authentication.CheckPasswordIsNotNull;
 using Booking.Application.Authentication.ConfirmEmail;
 using Booking.Application.Authentication.ForgotPassword;
 using Booking.Application.Authentication.GoogleLogin;
@@ -17,6 +18,7 @@ using Booking.Application.Authentication.SendConfirmationEmail;
 using MapsterMapper;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
+using System.Security.Claims;
 
 namespace Booking.Api.Controllers;
 
@@ -151,4 +153,16 @@ public class AuthenticationController(
 	{
 		return Ok(DateTime.Now);
 	}
+
+    [HttpGet("check-password-is-not-null")]
+    public async Task<IActionResult>CheckPasswordIsNotNullAsync()
+    {
+        string userId = User.Claims.First(u => u.Type == ClaimTypes.NameIdentifier).Value;
+
+        var checkPasswordIsNotNull = await mediatr.Send(new CheckPasswordIsNotNullQuery(Guid.Parse(userId)));
+
+        return checkPasswordIsNotNull.Match(
+            checkPasswordIsNotNull => Ok(checkPasswordIsNotNull),
+            errors => Problem(errors));
+    }
 }

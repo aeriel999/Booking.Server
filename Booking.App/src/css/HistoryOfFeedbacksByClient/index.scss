@@ -1,0 +1,69 @@
+@import '../variables.scss';
+
+#history-of-feedbacks {
+    width: 100%;
+    height: auto;
+    display: flex;
+    flex-direction: column;
+    row-gap: 40px;
+    position: relative;
+
+
+    .history-of-feedbacks-item {
+        width: 100%;
+        height: auto;
+        display: flex;
+        flex-direction: column;
+        row-gap: 16px;
+        border-radius: 10px;
+        border: 1px solid #A2A2A2;
+        padding: 10px 15px;
+        box-sizing: border-box;
+        cursor: pointer;
+
+        &:hover {
+            border-color: $primary-style-color;
+        }
+
+        .history-of-feedbacks-item-post-details {
+            width: 100%;
+            height: 100px;
+            display: flex;
+            align-items: center;
+            column-gap: 18px;
+            border-radius: 12px;
+            background: #D9D9D9;
+            padding: 10px 9px;
+            box-sizing: border-box;
+
+            img {
+                width: 76px;
+                height: 76px;
+            }
+
+            .location {
+                height: 100%;
+                display: flex;
+                flex-direction: column;
+
+                p {
+                    margin: 0;
+                    font-style: $primary-font-normal-style;
+                    line-height: normal;
+
+                    &:first-of-type {
+                        font-family: $baloo-font-family;
+                        font-size: $large-font-size;
+                        font-weight: $big-font-weight;
+                    }
+
+                    &:last-of-type {
+                        color: #676767;
+                        font-size: $medium-font-size;
+                        font-weight: $medium-font-weight;
+                    }
+                }
+            }
+        }
+    }
+}

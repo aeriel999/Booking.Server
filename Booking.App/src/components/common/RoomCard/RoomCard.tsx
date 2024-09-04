@@ -17,7 +17,7 @@ export const RoomCard = (info: IRoomCard) => {
         <div className="room-card">
             <img src={`${APP_ENV.BASE_URL}/images/posts/${info.image}`} alt="Main Photo" />
             <div className='room-card-info'>
-                <p>Room room for {info.numberOfGuests} people</p>
+                <p>Room for {info.numberOfGuests} people</p>
                 {info.discount ?
                     <>
                         <p>Discount:</p>
