@@ -38,7 +38,7 @@ public interface IPostRepository
 
 
 
-	Task<List<Post>> GetPostByNameAsync(Guid? category, Guid? country, Guid? city, Guid? realtor, string name);
+	Task<Guid> GetPostByNameAsync(Guid? category, Guid? country, Guid? city, Guid? realtor, string name);
 
 
 

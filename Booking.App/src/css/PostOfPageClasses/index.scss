@@ -2,6 +2,7 @@
 
 #post-page-container {
     width: 100%;
+    min-width: 1567px;
     //height: 64.3%;
     height: auto;
     //height: 100%;
@@ -259,10 +260,17 @@
                     }
 
                     .send-feedback-rating {
+                        display: flex;
+                        flex-direction: column;
                         width: 200px;
-                        height: 39px;
+                        height: auto;
                         //margin-left: 40.1%;
                         margin: auto;
+
+                        #error-message {
+                            height: 40px;
+                            color: red;
+                        }
                     }
 
                     .send-feedback-text-area {
@@ -423,6 +431,16 @@
                         &:nth-child(even) {
                             color: var(--darker-blue, #23A1A0);
                             font-size: $normal-font-size;
+                        }
+
+
+                    }
+
+                    #hovered {
+                        &:hover {
+                            color: $link-color;
+                            cursor: pointer;
+
                         }
                     }
                 }

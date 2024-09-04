@@ -1,4 +1,5 @@
-﻿using Booking.Domain.Chat;
+﻿using Booking.Application.Chat.GetChatRoomsListForClient;
+using Booking.Domain.Chat;
 
 namespace Booking.Application.Common.Interfaces.Chat;
 
@@ -23,4 +24,8 @@ public interface IChatRoomRepository
 
 
 	Task<List<ChatRoom>?> GetChatRoomListByPostId(Guid postId);
+
+	Task<List<Guid>> GetRealtorChatRoomsIdByClient(Guid clientId);
+
+	Task<List<ChatRoomForClient>> GetListOfChatRoomsForClientByRealtorId(Guid realtorId);
 }

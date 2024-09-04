@@ -3,7 +3,7 @@ import "../../../css/ListOfPostsClasses/index.scss"
 import { FilterPanelItem } from "../../../components/common/FilterPanelItem/FilterPanelItem";
 import { useDispatch, useSelector } from "react-redux";
 import { AppDispatch, RootState } from "../../../store";
-import { getFilteredListByType, getFilteredListOfCategories, getFilteredListOfCities, getFilteredListOfCountries, getListOfCitiesByCountryId, getListOfPosts, getListOfPostsByName } from "../../../store/post/post.actions";
+import { getFilteredListByType, getFilteredListOfCategories, getFilteredListOfCities, getFilteredListOfCountries, getListOfCitiesByCountryId, getListOfPosts, getPostByName } from "../../../store/post/post.actions";
 import { useEffect, useState } from "react";
 import { getFilteredListOfRealtors } from "../../../store/users/user.action";
 import { setCategoryToFilter, setCityToFilter, setCountryToFilter, setRealtorToFilter } from "../../../store/post/post.slice";
@@ -71,23 +71,24 @@ export default function ListOfPostsPage() {
 
     const findPost = async () => {
 
-        if (searchingText == null || searchingText == "") {
-            const currentFilter: IFilter = {
-                category: filter.category,
-                country: filter.country,
-                city: filter.city,
-                realtor: filter.realtor,
-            };
-            const payload: IFilteredRequest = {
-                filter: currentFilter,
-                pages: {
-                    page: 1,
-                    sizeOfPage: 9
-                }
+        //if (searchingText == null || searchingText == "") {
+        const currentFilter: IFilter = {
+            category: filter.category,
+            country: filter.country,
+            city: filter.city,
+            realtor: filter.realtor,
+        };
+        const payload: IFilteredRequest = {
+            filter: currentFilter,
+            pages: {
+                page: 1,
+                sizeOfPage: 9
             }
-            await dispatch(getFilteredListByType(payload));
         }
-        else {
+        await dispatch(getFilteredListByType(payload));
+        console.log("Finding");
+        //}
+        /*else {
             const currentFilter: IFilter = {
                 category: filter.category,
                 country: filter.country,
@@ -97,13 +98,9 @@ export default function ListOfPostsPage() {
             const payload: IFetchDataByName = {
                 filter: currentFilter,
                 name: searchingText,
-                pages: {
-                    page: 1,
-                    sizeOfPage: 9
-                }
             }
-            await dispatch(getListOfPostsByName(payload));
-        }
+            await dispatch(getPostByName(payload));
+        }*/
 
 
 
@@ -196,7 +193,6 @@ export default function ListOfPostsPage() {
 
     useEffect(() => {
         dispatch(changePaginationPage(page));
-        console.log("New page - " + page);
         changePage();
     }, [page])
 
@@ -253,7 +249,10 @@ export default function ListOfPostsPage() {
                         :
                         ("")
                 }
-                <div className="posts-cards">
+                <div className="posts-cards" style={{
+                    justifyContent: listOfPosts && listOfPosts.items.$values.length <= 0 ? "center" : "flex-start",
+                    alignItems: listOfPosts && listOfPosts.items.$values.length <= 0 ? "center" : "flex-start"
+                }}>
                     {listOfPosts && listOfPosts.items.$values.length > 0 ? listOfPosts.items.$values.map((item) => (
                         <PostCard
                             key={item.id}

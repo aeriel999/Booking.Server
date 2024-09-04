@@ -9,12 +9,13 @@
 
     header {
         width: 100%;
+        min-width: 1363px;
         height: 36.3%;
         //height: 13.8%;
         min-height: 389.7px;
         font-family: $primary-font-family;
         box-sizing: border-box;
-        min-width: 1363px;
+
         background: linear-gradient(0deg, rgba(0, 0, 0, 0.35) 0%, rgba(0, 0, 0, 0.35) 100%), url('../../assets/Background/unsplash_d7M5Xramf8g.png') lightgray 50% / cover no-repeat;
         padding: $default-padding;
 
@@ -43,7 +44,7 @@
                     background-color: #00C2C1;
                     border-radius: 7px;
                     font-size: $normal-font-size;
-                    outline: none;
+                    //outline: none;
                     padding: 10px 15px;
                     color: $primary-font-color;
                     align-self: center;
@@ -51,6 +52,28 @@
 
                     &:hover {
                         border-color: white;
+                    }
+                }
+
+                #userInfo {
+                    display: flex;
+                    align-items: center;
+                    gap: 11px;
+
+                    #avatar {
+                        width: 40px;
+                        height: 40px;
+                        border-radius: 50%;
+                        overflow: hidden;
+                    }
+
+                    #name {
+                        color: #fff;
+                        font-size: $normal-font-size;
+                        font-style: $primary-font-normal-style;
+                        font-weight: $normal-font-weight;
+                        line-height: normal;
+                        cursor: pointer;
                     }
                 }
 

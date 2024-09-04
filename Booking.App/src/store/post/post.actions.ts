@@ -127,7 +127,7 @@ export const getListOfPostsName = createAsyncThunk(
         }
     }
 );
-export const getListOfPostsByName = createAsyncThunk(
+/*export const getListOfPostsByName = createAsyncThunk(
     "Post/get-list-of-posts-by-name",
     async (payload: IFetchDataByName, { rejectWithValue }) => {
         try {
@@ -140,6 +140,25 @@ export const getListOfPostsByName = createAsyncThunk(
                     name: payload.name,
                     page: payload.pages.page,
                     sizeOfPage: payload.pages.sizeOfPage,
+                },
+            });
+            return response.data;
+        } catch (error) {
+            return rejectWithValue(handleAxiosError(error, "Network error"));
+        }
+    }
+);*/
+export const getPostByName = createAsyncThunk(
+    "Post/get-list-of-posts-by-name",
+    async (payload: IFetchDataByName, { rejectWithValue }) => {
+        try {
+            const response = await apiClient.get(`/api/Post/get-post-by-name`, {
+                params: {
+                    category: payload.filter.category,
+                    country: payload.filter.country,
+                    city: payload.filter.city,
+                    realtor: payload.filter.realtor,
+                    name: payload.name
                 },
             });
             return response.data;
@@ -469,6 +488,38 @@ export const sendFeedback = createAsyncThunk(
             return rejectWithValue(handleAxiosError(error, "Network error"));
         }
     }
+)
+export const getHistoryOfFeedbacksByClient = createAsyncThunk(
+    'Post/get-history-of-feedbacks-by-client',
+    async (payload: IFetchData, { rejectWithValue }) => {
+        try {
+            const response = await apiClient.get(`/api/Post/get-history-of-feedbacks-by-client`, {
+                params: {
+                    page: payload.page,
+                    sizeOfPage: payload.sizeOfPage
+                }
+            });
+            return response.data;
+        } catch (error) {
+            return rejectWithValue(handleAxiosError(error, "Network error"));
+        }
+    }
+)
+export const getPageOfSelectedFeedback = createAsyncThunk(
+    'Post/get-page-of-selected-feedback',
+    async (payload: { feedbackId: string, postId: string }, { rejectWithValue }) => {
+        try {
+            const response = await apiClient.get(`/api/Post/get-page-of-selected-feedback-${payload.feedbackId}`, {
+                params: {
+                    postId: payload.postId
+                }
+            });
+            return response.data;
+        } catch (error) {
+            return rejectWithValue(handleAxiosError(error, "Network error"));
+        }
+    }
+)
 )
 
 export const editRoom = createAsyncThunk(

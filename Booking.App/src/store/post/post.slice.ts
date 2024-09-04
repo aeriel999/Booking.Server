@@ -2,6 +2,7 @@ import { AnyAction, createSlice, PayloadAction } from "@reduxjs/toolkit";
 import { RejectedAction } from "../../utils/types";
 import { Status } from "../../utils/enum";
 import {
+    IHistoryOfFeedbacksByClient,
     IPageOfPosts,
     IPostForEdit,
     IPostInformation,
@@ -20,17 +21,19 @@ import {
     getFilteredListOfCategories,
     getFilteredListOfCities,
     getFilteredListOfCountries,
+    getHistoryOfFeedbacksByClient,
     getListOfCategories,
     getListOfCitiesByCountryId,
     getListOfCountries,
     getListOfPosts,
-    getListOfPostsByName,
     getListOfPostsName,
     getListOfServices,
     getListOfStreetsByCityId,
     getListOfTypesOfRest,
     getListPostsForRealtor,
+    getPageOfSelectedFeedback,
     getPostById,
+    getPostByName,
     getPostForEditById,
     getPostListByRealtorId,
     getPostsWithMostDiscount,
@@ -70,7 +73,11 @@ const initialState: IPostState = {
     filteredCountries: null,
     filteredCities: null,
     textForSearching: null,
-    feedbacks: null
+    feedbacks: null,
+    historyOfFeedbacksByClient: null,
+    idOfSelectedFeedback: null,
+    pageOfSelectedFeedback: 1,
+    searchingPost: null
 };
 
 export const postSlice = createSlice({
@@ -91,11 +98,14 @@ export const postSlice = createSlice({
         },
         setTextForSearching: (state, action: PayloadAction<string | null>) => {
             state.textForSearching = action.payload;
+        },
+        setIdOfSelectedFeedback: (state, action: PayloadAction<string | null>) => {
+            state.idOfSelectedFeedback = action.payload;
         }
     },
     extraReducers: (builder) => {
         builder
- 
+
             .addCase(
                 getPostById.fulfilled,
                 (state, action: PayloadAction<IPostInformation>) => {
@@ -146,7 +156,7 @@ export const postSlice = createSlice({
             .addCase(getFilteredListByType.pending, (state) => {
                 state.status = Status.LOADING;
             })
-            .addCase(
+            /*.addCase(
                 getListOfPostsByName.fulfilled,
                 (state, action: PayloadAction<IPageOfPosts>) => {
                     state.posts = action.payload;
@@ -155,7 +165,18 @@ export const postSlice = createSlice({
             )
             .addCase(getListOfPostsByName.pending, (state) => {
                 state.status = Status.LOADING;
+            })*/
+            .addCase(
+                getPostByName.fulfilled,
+                (state, action: PayloadAction<string>) => {
+                    state.searchingPost = action.payload;
+                    state.status = Status.SUCCESS;
+                }
+            )
+            .addCase(getPostByName.pending, (state) => {
+                state.status = Status.LOADING;
             })
+
             .addCase(getListOfCategories.fulfilled, (state, action) => {
                 state.categories = action.payload.$values;
                 state.status = Status.SUCCESS;
@@ -316,16 +337,31 @@ export const postSlice = createSlice({
             .addCase(sendFeedback.pending, (state) => {
                 state.status = Status.LOADING;
             })
+            .addCase(getHistoryOfFeedbacksByClient.fulfilled, (state, action: PayloadAction<IHistoryOfFeedbacksByClient>) => {
+                state.historyOfFeedbacksByClient = action.payload;
+                state.status = Status.SUCCESS;
+            })
+            .addCase(getHistoryOfFeedbacksByClient.pending, (state) => {
+                state.status = Status.LOADING;
+            })
+            .addCase(getPageOfSelectedFeedback.fulfilled, (state, action: PayloadAction<number>) => {
+                state.pageOfSelectedFeedback = action.payload;
+                state.status = Status.SUCCESS;
+            })
+            .addCase(getPageOfSelectedFeedback.pending, (state) => {
+                state.status = Status.LOADING;
+            })
             .addMatcher(isRejectedAction, (state) => {
                 state.status = Status.ERROR;
             });
     },
 });
 
-export const { setCategoryToFilter, 
-                setCountryToFilter, 
-                setCityToFilter, 
-                setRealtorToFilter, 
-                setTextForSearching } = postSlice.actions;
+export const { setCategoryToFilter,
+    setCountryToFilter,
+    setCityToFilter,
+    setRealtorToFilter,
+    setTextForSearching,
+    setIdOfSelectedFeedback } = postSlice.actions;
 
 export default postSlice.reducer;

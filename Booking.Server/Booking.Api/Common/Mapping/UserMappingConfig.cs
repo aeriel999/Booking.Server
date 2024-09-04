@@ -28,8 +28,10 @@ public class UserMappingConfig : IRegister
 
 		config.NewConfig<EditRealtorPrifileInfoCommandResult, EditRealtorPrifileInfoResponse>();
 
+        config.NewConfig<EditUserProfileCommandResult, EditUserProfileResponse>();
 
-		config.NewConfig<(ChangePasswordRequest changePassword, Guid UserId),	ChangePasswordCommand>()
+
+        config.NewConfig<(ChangePasswordRequest changePassword, Guid UserId),	ChangePasswordCommand>()
 		.Map(dest => dest.UserId, src => src.UserId)
 		.Map(dest => dest, src => src.changePassword);
 
@@ -44,7 +46,8 @@ public class UserMappingConfig : IRegister
 			.Map(dest => dest.Email, src => src.Email)
 			.Map(dest => dest.Avatar, src => src.Avatar)
 			.Map(dest => dest.Rating, src => src.Rating)
-            .Map(dest => dest.Phone, src => src.PhoneNumber);
+            .Map(dest => dest.Phone, src => src.PhoneNumber)
+			.Map(desp => desp.HeaderImage, src => src.ProfileHeaderImage);
 
 
 		
@@ -52,6 +55,8 @@ public class UserMappingConfig : IRegister
         config.NewConfig<(EditUserProfileRequest request, string Id,string baseUrl), EditUserProfileCommand>()
             .Map(desp => desp.Id, src => Guid.Parse(src.Id))
             .Map(desp => desp.Email, src => src.request.Email)
-			.Map(desp => desp.baseUrl, src => src.baseUrl);
+            .Map(desp => desp.FirstName, src => src.request.FirstName)
+            .Map(desp => desp.LastName, src => src.request.LastName)
+            .Map(desp => desp.baseUrl, src => src.baseUrl);
     }
 }

@@ -102,14 +102,5 @@ export const deleteUserAccount = createAsyncThunk(
         }
     }
 )
-export const editUserProfile = createAsyncThunk(
-    'User/edit-user-profile',
-    async (email: { Email: string }, { rejectWithValue }) => {
-        try {
-            const response = await apiClient.put(`/api/User/edit-user-profile`, email);
-            return response.status;
-        } catch (error) {
-            return rejectWithValue(handleAxiosError(error, "Network error"));
-        }
-    }
-)
+
+

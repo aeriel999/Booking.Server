@@ -1,8 +1,8 @@
 import { useEffect, useState } from "react";
 import { useDispatch } from "react-redux";
-import { useNavigate, useParams } from "react-router-dom"
+import { useLocation, useNavigate, useParams } from "react-router-dom"
 import { AppDispatch, RootState } from "../../../store";
-import { getFeedbacksByPost, getPostById, sendFeedback } from "../../../store/post/post.actions";
+import { getFeedbacksByPost, getPageOfSelectedFeedback, getPostById, sendFeedback } from "../../../store/post/post.actions";
 import { useAppSelector } from "../../../hooks/redux";
 import '../../../css/PostOfPageClasses/index.scss';
 import { Loading } from "../../../components/common/Loading/Loading";
@@ -18,16 +18,25 @@ import { Pagination } from "../../../components/common/Pagination/Pagination";
 import { TextArea } from "../../../components/common/TextArea/TextArea";
 import { savePath } from "../../../store/settings/settings.slice";
 import { RoomCard } from "../../../components/common/RoomCard/RoomCard";
+import { setIdOfSelectedFeedback } from "../../../store/post/post.slice";
+import { cutNumber } from "../../../utils/data";
+import { unwrapResult } from "@reduxjs/toolkit";
+import ErrorHandler from "../../../components/common/ErrorHandler";
+import OutlinedErrorAlert from "../../../components/common/ErrorAlert";
 
 
 export const PostOfPage = () => {
 
     const navigate = useNavigate();
+    const location = useLocation();
     const dispatch = useDispatch<AppDispatch>();
 
     const post = useAppSelector((state: RootState) => state.post.post);
     const feedbacks = useAppSelector((state: RootState) => state.post.feedbacks);
     const isLogin = useAppSelector((state: RootState) => state.account.isLogin);
+    const selectedFeedback = useAppSelector((state: RootState) => state.post.idOfSelectedFeedback);
+    const pageOfSelectedFeedback = useAppSelector((state: RootState) => state.post.pageOfSelectedFeedback);
+    const searchingPost = useAppSelector((state: RootState) => state.post.searchingPost);
 
     const { postId } = useParams<string>();
     const [isLoading, setIsLoading] = useState<boolean>(true);
@@ -35,12 +44,13 @@ export const PostOfPage = () => {
     const [isFeedbacksLoading, setIsFeedbacksLoading] = useState<boolean>(true);
     const [pageOfFeedbacks, setPageOfFeedbacks] = useState<number>(1);
     const [selectedRating, setSelectedRating] = useState<number | null>(null);
-    const [feedbackMessage, setFeedbackMessage] = useState<string | null>(null);
+    const [error, setError] = useState<string | null>(null);
+    const [errorMessage, setErrorMessage] = useState<string | null>(null);
     const [postImages, setPostImages] = useState<string[]>([]);
 
 
-    const getPost = async () => {
-        await dispatch(getPostById(postId!));
+    const getPost = async (id: string) => {
+        await dispatch(getPostById(id));
     }
     const getFeedbacks = async () => {
         const response: IGetFeedbacksRequest = {
@@ -50,12 +60,27 @@ export const PostOfPage = () => {
         }
         await dispatch(getFeedbacksByPost(response));
     }
+    const getFeedbackByPage = async () => {
+        await dispatch(getPageOfSelectedFeedback({
+            feedbackId: selectedFeedback!,
+            postId: postId!
+        }));
+    }
     useEffect(() => {
-        getPost();
+        getPost(postId!);
+        if (selectedFeedback) {
+            getFeedbackByPage();
+            dispatch(setIdOfSelectedFeedback(null));
+        }
         //getFeedbacks();
     }, [])
+    useEffect(() => {
+        setPageOfFeedbacks(pageOfSelectedFeedback);
+
+    }, [pageOfSelectedFeedback])
 
     useEffect(() => {
+        console.log(post);
         if (post && post.id.toString() == postId!) {
             setIsLoading(false);
             setPostImages(post!.imagePostList!.$values!);
@@ -76,30 +101,45 @@ export const PostOfPage = () => {
         setIsFeedbacksLoading(true);
     }, [pageOfFeedbacks])
     useEffect(() => {
-        console.log(`Rating - ${selectedRating}`);
+        if (error) {
+            setError(null);
+        }
     }, [selectedRating])
 
-    const sendFeedbackAsync = async () => {
-        const payload: ISendFeedback = {
-            text: feedbackMessage,
-            rating: selectedRating!,
-            postId: postId!
+    const sendFeedbackAsync = async (text: string) => {
+        if (selectedRating == null) setError("Choose a rating from 1 to 5!")
+        else {
+            try {
+                const payload: ISendFeedback = {
+                    text: text,
+                    rating: selectedRating!,
+                    postId: postId!
+                }
+                console.log(payload);
+                const response = await dispatch(sendFeedback(payload));
+                unwrapResult(response);
+
+                setIsFeedbacksLoading(true);
+                getFeedbacks();
+            } catch (error) {
+                setErrorMessage(ErrorHandler(error));
+            }
         }
-        console.log(payload);
-        await dispatch(sendFeedback(payload));
-        setIsLoading(true);
-        //setRestartPage(true);
-        getPost();
+
+
 
     }
-    function cutNumber(num: number) {
-        if (num % 1 < 0.09) {
-            return num.toFixed(0);
+    useEffect(() => {
+        if (searchingPost != null) {
+            setIsLoading(true);
+            navigate(`/posts/post/${searchingPost}`);
         }
-        else {
-            return num.toFixed(1);
+    }, [searchingPost])
+    useEffect(() => {
+        if (postId != null) {
+            getPost(postId!);
         }
-    }
+    }, [postId])
 
     return (
         <>
@@ -109,7 +149,7 @@ export const PostOfPage = () => {
                     :
                     ""
                 }
-                {isLoading == true ?
+                {isLoading ?
                     <Loading />
                     :
                     <>
@@ -118,6 +158,7 @@ export const PostOfPage = () => {
                             <a onClick={() => navigate("/posts/")}>View Accommodation / </a>
                             <p>{post?.name}</p>
                         </div>
+                        {errorMessage && <OutlinedErrorAlert message={errorMessage} />}
                         <div className="post-page-container-image-list">
                             {postImages.length < 7 ? (
                                 postImages.map((item, index) => (
@@ -160,6 +201,7 @@ export const PostOfPage = () => {
                                             isSelecting={false}
                                             selectedRating={null}
                                         />
+
                                     </div>
                                     {post?.categoryName != "Hotel" ? <button>Booking</button> : <div></div>}
                                     <div className="booking-location">
@@ -181,14 +223,14 @@ export const PostOfPage = () => {
                                                     rating={item.rating}
                                                     message={item.text}
                                                     date={new Date(item.feedbackAt)}
-                                                    avatar={null}
+                                                    avatar={item.clientAvatar}
                                                 ></Feedback>
                                             ))}
-                                        {feedbacks!.totalCount! > 2 ? (
+                                        {feedbacks?.totalCount != null && feedbacks?.totalCount > 2 ? (
                                             <Pagination
                                                 page={pageOfFeedbacks}
                                                 sizeOfPage={feedbacks!.sizeOfPage}
-                                                countOfPosts={feedbacks!.totalCount}
+                                                countOfPosts={feedbacks!.totalCount!}
                                                 changePage={setPageOfFeedbacks}
                                             />) : <div className="leave-a-feedback">Leave a feedback</div>}
                                     </div>
@@ -203,11 +245,14 @@ export const PostOfPage = () => {
                                                     isSelecting={true}
                                                     selectedRating={setSelectedRating}
                                                 />
+                                                {error ? <div id="error-message">
+                                                    {error}
+                                                </div> : ""}
                                             </div>
                                             <div className="send-feedback-text-area">
                                                 <TextArea
                                                     maxLength={300}
-                                                    setText={setFeedbackMessage}
+                                                    //setText={setFeedbackMessage}
                                                     onClickSend={sendFeedbackAsync} />
                                             </div>
                                         </>
@@ -218,8 +263,8 @@ export const PostOfPage = () => {
                                                 </p>
                                                 <div className="buttons">
                                                     <button onClick={() => {
+                                                        dispatch(savePath(location.pathname))
                                                         navigate("/authentication/login")
-                                                        dispatch(savePath(`/dashboard/post/${postId!}`))
 
                                                     }}>
                                                         Login
@@ -236,12 +281,81 @@ export const PostOfPage = () => {
                             </div>
                             <div className="more-information">
                                 <div className="more-information-rating">
-                                    <p>{cutNumber(post?.rate!)}/5 {post?.rate == 5 ? "Excelent" : (post?.rate! >= 3 && post?.rate! < 5) ? "Good" : "Bad"}</p>
+                                    <p>{cutNumber(post?.rate ? post.rate : 0)}/5 {post?.rate == 5 ? "Excelent" : (post?.rate! >= 3 && post?.rate! < 5) ? "Good" : "Bad"}</p>
                                     <p>Based on {post?.countOfFeedbacks} verified feedbacks</p>
                                 </div>
                                 <div className="more-information-services">
                                     <p>Services</p>
-                                    <div className="service-card">
+                                    {post && post.services ? post.services.$values.map((item, index) => (
+                                        <div className="service-card" key={`service-${index}`}>
+                                            <img src={`${APP_ENV.BASE_URL}/images/icons/${item.icon}`} alt="Icon" />
+                                            <p>{item.name}</p>
+                                        </div>
+                                    )) : ""}
+
+                                </div>
+                                <div className="more-information-details">
+                                    <p>Details</p>
+                                    <div className="details">
+
+                                        <p>Realtor : </p>
+                                        <p
+                                            id="hovered"
+                                            onClick={() => navigate(`/posts/realtor/${post?.userId!}`)}>
+                                            {post?.userName}
+                                        </p>
+                                        {post?.categoryName == "Hotel" ? ""
+                                            :
+                                            <>
+                                                <p>Price : </p>
+                                                <p>{post?.price} UAH</p>
+                                                <p>Number of guests:</p>
+                                                <p>{post?.numberOfGuests}</p>
+                                                {post?.discount ?
+                                                    <>
+                                                        <p>Discount:</p>
+                                                        <p>{post?.discount} %</p>
+                                                    </>
+                                                    :
+                                                    ""}
+
+                                            </>
+                                        }
+                                        <p>Category:</p>
+                                        <p>{post?.categoryName}</p>
+                                    </div>
+                                    <div className="important">
+                                        Please inform {post?.name} of your expected arrival time in advance. To do this, you can use the special requests box when booking. Bachelorette parties, hen parties and similar parties are not allowed in this property.
+                                    </div>
+                                </div>
+                            </div>
+
+                        </div>
+                        {post?.categoryName == "Hotel" ?
+                            <div className="post-page-room-list">
+                                {post.roomList?.$values.map((item) => (
+                                    <RoomCard
+                                        key={item.id}
+                                        id={item.id}
+                                        image={item.mainImage}
+                                        discount={item.discount}
+                                        price={item.price}
+                                        numberOfGuests={item.numberOfGuests}
+                                        numberOfRooms={item.numberOfRooms}
+                                    />
+                                ))}
+
+                            </div>
+                            : ""}
+
+                    </>
+                }
+
+            </div>
+        </>)
+}
+/*
+<div className="service-card">
                                         <img src={`${APP_ENV.BASE_URL}/images/icons/wi-fi.svg`} alt="Icon" />
                                         <p>Wi-Fi</p>
                                     </div>
@@ -277,75 +391,4 @@ export const PostOfPage = () => {
                                         <img src={`${APP_ENV.BASE_URL}/images/icons/cafe-or-restaurant.svg`} alt="Icon" />
                                         <p>Cafe or restaurant</p>
                                     </div>
-                                </div>
-                                <div className="more-information-details">
-                                    <p>Details</p>
-                                    <div className="details">
-
-                                        <p>Realtor : </p>
-                                        <p>{post?.userName}</p>
-                                        {post?.categoryName == "Hotel" ? ""
-                                            :
-                                            <>
-                                                <p>Price : </p>
-                                                <p>{post?.price} UAH</p>
-                                                <p>Number of guests:</p>
-                                                <p>{post?.numberOfGuests}</p>
-                                            </>
-                                        }
-                                        <p>Category:</p>
-                                        <p>{post?.categoryName}</p>
-                                    </div>
-                                    <div className="important">
-                                        Please inform {post?.name} of your expected arrival time in advance. To do this, you can use the special requests box when booking. Bachelorette parties, hen parties and similar parties are not allowed in this property.
-                                    </div>
-                                </div>
-                            </div>
-
-                        </div>
-                        {post?.categoryName == "Hotel" ?
-                            <div className="post-page-room-list">
-                                {post.roomList?.$values.map((item, index) => (
-                                    <RoomCard
-                                        key={item.id}
-                                        id={item.id}
-                                        image={item.mainImage}
-                                        discount={item.discount}
-                                        price={item.price}
-                                        numberOfGuests={item.numberOfGuests}
-                                        numberOfRooms={item.numberOfRooms}
-                                    />
-                                ))}
-
-                            </div>
-                            : ""}
-
-                    </>
-                }
-
-            </div>
-        </>)
-}
-/*
-{post!.services!.map((item, index) => (
-                                        <div className="service-card" key={`icon-${index}`}>
-                                            <img src={`${APP_ENV.BASE_URL}/images/icons/${item.icon}`} alt="Icon" />
-                                            <p>{item.name}</p>
-                                        </div>
-                                    ))}
-<Feedback
-                                            userName="Ten3ee"
-                                            rating={5}
-                                            message="Дуже гарний чистий будинок у тихому красивому районі, ліжка були дуже хорошими, гарний душ і дуже гарно прикрашені різними дизайнерськими меблями Дуже гарний чистий будинок у тихому красивому районі, ліжка були дуже хорошими, гарний душ і дуже гарно прикрашені різними дизайнерськими меблями Дуже гар "
-
-                                            date={new Date(Date.now())}
-                                            avatar={null}
-                                        ></Feedback>
-                                        <Feedback
-                                            userName="Maxum"
-                                            rating={5}
-                                            message="Дуже зручно, передача ключів і спілкування були дуже хорошими та простими"
-                                            date={new Date(Date.now())}
-                                            avatar={null}
-                                        ></Feedback>
-*/ 
+*/

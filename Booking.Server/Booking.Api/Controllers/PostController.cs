@@ -56,6 +56,9 @@ using Booking.Application.Posts.GetServicesList;
 using Booking.Api.Contracts.Post.GetServicesList;
 using Booking.Application.Posts.CreateRoom;
 using Booking.Api.Contracts.Post.GetPostForEditing;
+using Booking.Application.Posts.GetFeedbacksByClient;
+using Booking.Api.Contracts.Post.GetHistoryOfFeedbacks;
+using Booking.Api.Contracts.Post.GetPageOfSelectedFeedback;
 using Booking.Api.Contracts.Post.EditRoom;
 using Booking.Application.Posts.EditRoom;
 
@@ -156,12 +159,12 @@ public class PostController(ISender mediatr, IMapper mapper) : ApiController
     [AllowAnonymous]
     [HttpGet("get-post-by-name")]
     public async Task<IActionResult> GetPostByNameAsync(
-		[FromQuery] GetFilteredListRequest types, string name, int page, int sizeOfPage)
+		[FromQuery] GetFilteredListRequest types, string name)
     {
-        var getPostResult = await mediatr.Send(mapper.Map<GetPostByNameQuery>((types, name,page,sizeOfPage)));
+        var getPostResult = await mediatr.Send(mapper.Map<GetPostByNameQuery>((types, name)));
 
         return getPostResult.Match(
-            getPostResult => Ok(mapper.Map<PagedList<GetListOfPostResponse>>(getPostResult)),
+            getPostResult => Ok(getPostResult),
             errors => Problem(errors));
     }
 
@@ -466,6 +469,17 @@ public class PostController(ISender mediatr, IMapper mapper) : ApiController
             errors => Problem(errors));
     }
 
+    [HttpGet("get-history-of-feedbacks-by-client")]
+    public async Task<IActionResult> GetHistoryOfFeedbacksByClientAsync([FromQuery] int page, int sizeOfPage)
+    {
+		var clientId = User.Claims.First(u => u.Type == ClaimTypes.NameIdentifier).Value;
+
+        var getHistoryOfFeedbacksResult = await mediatr.Send(mapper.Map<GetHistoryOfFeedbacksByClientQuery>((clientId, page, sizeOfPage)));
+
+        return getHistoryOfFeedbacksResult.Match(
+            getHistoryOfFeedbacksResult => Ok(mapper.Map<PagedList<GetHistoryOfFeedbackByClientResponse>>(getHistoryOfFeedbacksResult)),
+            errors => Problem(errors));
+    }
 
     [HttpGet("get-posts-by-user-feedbacks")]
     public async Task<IActionResult> GetPostsByUserFeedbacksAsync()
@@ -523,4 +537,15 @@ public class PostController(ISender mediatr, IMapper mapper) : ApiController
 			createRoomResult => Ok(createRoomResult),
 			errors => Problem(errors));
 	}
+
+
+    [HttpGet("get-page-of-selected-feedback-{FeedbackId}")]
+    public async Task<IActionResult> GetPageOfSelectedFeedbackAsync([FromRoute] Guid FeedbackId, [FromQuery] Guid PostId)
+    {
+        var getPageOfSelectedFeedback = await mediatr.Send(new GetPageOfSelectedFeedbackQuery(FeedbackId,PostId));
+
+        return getPageOfSelectedFeedback.Match(
+            getPageOfSelectedFeedback => Ok(getPageOfSelectedFeedback),
+            errors => Problem(errors));
+    }
 }

@@ -7,5 +7,6 @@ public record GetInformationAboutRealtorResponse
     public required string Avatar { get; set; }
     public  float Rating { get; set; }
     public required string Phone { get; set; }
+    public string? HeaderImage { get; set; }
 
 }

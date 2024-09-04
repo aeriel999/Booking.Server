@@ -11,6 +11,11 @@
     border: 1px solid #a2a2a2;
     background: $primary-font-color;
     position: relative;
+    cursor: pointer;
+
+    &:hover {
+        border-color: $primary-style-color;
+    }
 
     img {
         height: 100%;

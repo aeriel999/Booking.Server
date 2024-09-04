@@ -76,8 +76,12 @@ public class PostRepository(BookingDbContext context) : IPostRepository
     {
         var posts = await Filter(category, country, city, realtor);
 
-		return posts.Where(p => p.Name.ToLower().Equals(name.ToLower()))
-			        .ToList();
+		Guid postId = posts.Where(p => p.Name.ToLower().Equals(name.ToLower()))
+					.Select(p => p.Id).FirstOrDefault();
+
+		if (postId == Guid.Empty) return Guid.Empty;
+
+        return postId;
 	}
 
 	public async Task<List<string>> GetNameOfPostAsync(

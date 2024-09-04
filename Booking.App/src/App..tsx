@@ -7,14 +7,15 @@ import UserRegisterPage from "./pages/accaunt/register/UserRegisterPage.tsx";
 import InformationAfterConfirmationEmail from "./pages/accaunt/instruction/InformationAfterConfirmationEmail.tsx";
 import RealtorProfilePage from "./containers/dashboard/RealtorProfilePage.tsx";
 import RealtorProfileEditPage from "./containers/dashboard/RealtorProfileEditPage.tsx";
-import UserProfilePage from "./containers/client/UserProfilePage.tsx";
+//import ChangePasswordPage from "./containers/dashboard/ChangePasswordPage.tsx";
+//import UserProfilePage from "./containers/client/UserProfilePage.tsx";
 import RegisterInformationPage from "./pages/accaunt/register/RegisterInformationPage.tsx";
 import ConfirmEmailPage from "./pages/accaunt/confirmation/ConfirmEmailPage.tsx";
 import ForgotPasswordPage from "./pages/accaunt/forgot-password/ForgotPasswordPage.tsx";
 import ForgotPasswordInformationPage from "./pages/accaunt/forgot-password/ForgotPasswordInformationPage.tsx";
 import ResetPasswordPage from "./pages/accaunt/reset-password/ResetPasswordPage.tsx";
 import ReConfirmEmailPage from "./pages/reconfirm-email/ReConfirmEmailPage.tsx";
-import ClientDashboardLayout from "./containers/client/layouts/_ClientDashboardLayout.tsx";
+//import ClientDashboardLayout from "./containers/client/layouts/_ClientDashboardLayout.tsx";
 import { AddNewPost } from "./containers/dashboard/AddNewPost.tsx";
 import ListOfPostPage from "./containers/client/ListOfPostsPage/ListOfPostsPage.tsx";
 import AnonymousDashboardLayout from "./containers/anonymous/layouts/AnonymousDashboardLayout.tsx";
@@ -23,7 +24,7 @@ import AllPostList from "./containers/dashboard/AllPostList.tsx";
 import { EditPost } from "./containers/dashboard/EditPost.tsx";
 import { PostOfPage } from "./containers/client/PostOfPage/PostOfPage.tsx";
 import RealtorPage from "./containers/client/RealtorPage.tsx";
-import { EditUserEpailPage } from "./containers/client/EditUserEmailPage.tsx";
+//import { EditUserEpailPage } from "./containers/client/EditUserEmailPage.tsx";
 import ArchivePage from "./containers/dashboard/ArchivePage.tsx";
 import { ReviewsPage } from "./containers/dashboard/ReviewsPage.tsx";
 import "./App.scss";
@@ -33,6 +34,12 @@ import RealtorRegisterAvatarPage from "./pages/accaunt/register/RealtotRegisterA
 import DashboardLayout from "./containers/dashboard/layouts/DashboardLayout.tsx";
 import { AnonymousDashboardLayoutForPosts } from "./containers/anonymous/layouts/AnonymousDashboardLayoutForPosts.tsx";
 import ListOfPostsPage from "./containers/client/ListOfPostsPage/ListOfPostsPage.tsx";
+import ClientDashboardLayout from "./containers/client/layouts/ClientDashboardLayout.tsx";
+import ClientProfilePage from "./containers/client/ClientProfilePage/ClientProfilePage.tsx";
+import { ClientProfileEditPage } from "./containers/client/ClientProfileEditPage/ClientProfileEditPage.tsx";
+import { HistoryOfFeedbacksPage } from "./containers/client/HistoryOfFeedbacksPage/HistoryOfFeedbacksPage.tsx";
+import { RealtorPageForClient } from "./containers/client/RealtorPageForClient/RealtorPageForClient.tsx";
+import { PageOfMessages } from "./containers/client/PageOfMessages/PageOfMessages.tsx";
 
 export const App: React.FC = () => {
     const { isLogin, user } = useAppSelector((state) => state.account);
@@ -107,7 +114,7 @@ export const App: React.FC = () => {
                         </Route>
                     )}
 
-                    {role() === "user" && (
+                    {role() === "user" && (<>
                         <Route
                             path="/dashboard"
                             element={<ClientDashboardLayout />}
@@ -121,20 +128,29 @@ export const App: React.FC = () => {
                                 path="/dashboard/post/:postId/realtor/:realtorId"
                                 element={<RealtorPage />}
                             />
-                            <Route
+                            {/*<Route
                                 path="/dashboard/realtor/:realtorId"
                                 element={<RealtorPage />}
-                            />
+                    />*/}
                             <Route
                                 path="/dashboard/profile"
-                                element={<UserProfilePage />}
+                                element={<ClientProfilePage />}
                             />
                             <Route
                                 path="/dashboard/profile/edit"
-                                element={<EditUserEpailPage />}
+                                element={<ClientProfileEditPage />}
+                            />
+                            <Route
+                                path="/dashboard/profile/history-of-feedbacks"
+                                element={<HistoryOfFeedbacksPage />}
+                            />
+                            <Route
+                                path="/dashboard/profile/page-of-messages"
+                                element={<PageOfMessages />}
                             />
                         </Route>
-                    )}
+
+                    </>)}
                 </>
             )}
 
@@ -178,6 +194,11 @@ export const App: React.FC = () => {
             <Route path="/posts" element={<AnonymousDashboardLayoutForPosts />}>
                 <Route index element={<ListOfPostsPage />} />
                 <Route path="post/:postId" element={<PostOfPage />} />
+                <Route
+                    path="realtor/:realtorId"
+                    element={<RealtorPageForClient />}
+                />
+                <Route path="*" element={<NotFound />} />
             </Route>
 
             <Route path="authentication/login" element={<SignInPage />} />

@@ -2,6 +2,7 @@ import { Status } from "../../utils/enum";
 
 export interface IChatState {
     chatRooms: IChatRoom[] | null;
+    charRoomsForClient: IChatRoomListForClient[] | null;
     hasNewPosts: boolean;
     status: Status;
 }
@@ -44,4 +45,20 @@ export interface IUserMessage {
     chatRoomId: string;
     sentAt: string;
     isRead: boolean;
+}
+export interface IChatRoomListForClient {
+    realtorId: string;
+    realtorAvatar: string;
+    realtorName: string,
+    hasUnreadMessages: boolean,
+    unreadMessages: number | null,
+    chatsForClient: IChatRoomForClient[]
+
+}
+export interface IChatRoomForClient {
+    chatRoomId: string;
+    postImage: string;
+    postName: string,
+    hasUnreadMessages: boolean,
+    unreadMessages: number | null
 }
