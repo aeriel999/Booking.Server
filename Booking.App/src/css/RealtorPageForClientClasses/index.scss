@@ -1,0 +1,164 @@
+@import "../variables.scss";
+
+.profileOfRealtorContainer {
+    width: 100%;
+    min-width: 762px;
+    display: flex;
+    flex-direction: column;
+    //  align-items: center;
+    padding: 20px 180px;
+    box-sizing: border-box;
+    height: auto;
+    margin-bottom: 20px;
+    //min-height: 80px;
+
+    .profileOfRealtorContainer-content {
+        width: 100%;
+        height: auto;
+        display: flex;
+        position: relative;
+        flex-direction: column;
+        justify-content: start;
+
+        .header {
+            height: 40%;
+            min-height: 200px;
+            flex-shrink: 0;
+            border-radius: 10px;
+            //  position: "relative";
+            display: flex;
+
+            #reload {
+                width: 30px;
+                height: 30px;
+                flex-shrink: 0;
+                align-self: end;
+                margin-left: auto;
+                padding-right: 10px;
+                padding-bottom: 10px;
+            }
+        }
+
+        .avatar {
+            display: flex;
+            width: 220px;
+            height: 220px;
+            align-self: center;
+            justify-content: end;
+            flex-shrink: 0;
+            border-radius: 50%;
+            margin-top: -110px;
+        }
+
+        .uploadIcon {
+            display: flex;
+            width: 30px;
+            height: 30px;
+            padding: 6px 7px;
+            align-items: center;
+            justify-content: center;
+            align-self: end;
+            gap: 10px;
+            flex-shrink: 0;
+            border-radius: 50%;
+            border: 3px solid $primary-font-color;
+            background: $primary-style-color;
+
+            #logo {
+                width: 24px;
+                height: 24px;
+                flex-shrink: 0;
+            }
+        }
+
+        .userInfoContainer {
+            display: flex;
+            //  width: 566px;
+            flex-direction: column;
+            align-items: center;
+            gap: 25px;
+            align-self: center;
+            // height: 100px;
+            margin-top: 50px;
+            padding-bottom: 50px;
+
+            #name {
+                display: flex;
+                //  width: 260px;
+                flex-direction: column;
+                align-items: center;
+                gap: 10px;
+                color: $default-color;
+                font-size: $extra-large-font-size;
+                font-style: normal;
+                font-weight: $big-font-weight;
+                line-height: normal;
+            }
+
+            #rating {
+                display: flex;
+                flex-direction: column;
+                gap: 6px;
+
+                #text {
+                    align-self: stretch;
+                    color: $dashboard-text-color;
+                    text-align: center;
+                    font-size: $medium-font-size;
+                    font-style: normal;
+                    font-weight: $medium-font-weight;
+                    line-height: normal;
+                }
+            }
+
+            #infoContainer {
+                display: flex;
+                flex-direction: column;
+                align-items: center;
+                gap: 45px;
+                align-self: stretch;
+
+                #info {
+                    display: flex;
+                    // width: 388px;
+                    flex-direction: column;
+                    align-items: center;
+                    gap: 10px;
+
+                    .textContainer {
+                        display: flex;
+                        justify-content: space-between;
+                        align-items: center;
+                        align-self: stretch;
+                        font-size: $normal-font-size;
+                        font-style: normal;
+                        line-height: normal;
+                        gap: 30px;
+
+                        .name {
+                            color: $dashboard-title-color;
+                            font-weight: $medium-font-weight;
+                        }
+
+                        .value {
+                            color: $default-color;
+                            font-weight: $normal-font-weight;
+                        }
+                    }
+                }
+
+                #buttons {
+                    button {
+                        background-color: $primary-style-color;
+
+                        p {
+                            color: $primary-font-color;
+                        }
+
+                    }
+
+                }
+            }
+        }
+    }
+}

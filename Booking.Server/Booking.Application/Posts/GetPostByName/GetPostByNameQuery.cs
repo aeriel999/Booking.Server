@@ -8,6 +8,4 @@ public record GetPostByNameQuery(Guid? Category,
                                  Guid? Country,
                                  Guid? City,
                                  Guid? Realtor,  
-                                 string Name,
-                                 int Page,
-                                 int SizeOfPage) : IRequest<ErrorOr<PagedList<Post>>>;
+                                 string Name) : IRequest<ErrorOr<Guid>>;

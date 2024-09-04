@@ -1,70 +1,87 @@
 import { useRef, useState } from 'react';
 import '../../../css/TextAreaClasses/index.scss';
 import sendMessage from '../../../assets/Icons/send.svg';
+import { SubmitHandler, useForm } from "react-hook-form";
 
 interface ITextArea {
 
     maxLength: number,
-    setText: React.Dispatch<React.SetStateAction<string | null>>,
-    onClickSend: () => void;
+    //setText: React.Dispatch<React.SetStateAction<string | null>>,
+    onClickSend: (text: string) => void;
 }
+type FeedbackForm = {
+    feedbackText: string
+};
 export const TextArea = (info: ITextArea) => {
 
     const [textLength, setTextLength] = useState<number>(0);
-    const [isError, setIsError] = useState<boolean>(false);
-    const textareaRef = useRef<HTMLTextAreaElement>(null);
     const buttonCounterRef = useRef<HTMLDivElement>(null);
+    const
+        {
+            register,
+            handleSubmit,
+            setError,
+            formState: { errors, isSubmitting }
+        } = useForm<FeedbackForm>();
 
     const handleChange = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
         setTextLength(e.target.value.length);
-        info.setText(e.target.value);
-        const textArea = textareaRef.current;
         const buttonCounter = buttonCounterRef.current;
-        if ((e.target.value.length > 10 || e.target.value.length == 0) && isError) {
-            setIsError(false);
-        }
-        if (textArea) {
-            textArea.style.height = 'auto';
-            textArea.style.height = `${textArea.scrollHeight}px`;
+
+        if (e.currentTarget) {
+            e.currentTarget.style.height = 'auto';
+            e.currentTarget.style.height = `${e.currentTarget.scrollHeight}px`;
             if (buttonCounter) {
                 buttonCounter.style.height = 'auto';
-                buttonCounter.style.height = `${textArea.scrollHeight}px`;
+                buttonCounter.style.height = `${e.currentTarget.scrollHeight}px`;
             }
 
 
         }
     };
+
+    const onSubmit: SubmitHandler<FeedbackForm> = (data: FeedbackForm) => {
+        if (data.feedbackText.length > 0 && data.feedbackText.length <= 10) {
+            setError("feedbackText", {
+                message: "Feedback text length must be 0 or greater than 10"
+            })
+
+        }
+        else {
+            //info.setText(data.feedbackText);
+            info.onClickSend(data.feedbackText);
+        }
+    };
     return (
         <>
-            <div className='text-area' style={{ borderColor: (textLength > 0 && textLength <= 10) ? "red" : "#C9C9C9" }}>
+            <form className='text-area'
+                onSubmit={handleSubmit(onSubmit)}>
                 <textarea
-                    ref={textareaRef}
+
+                    {...register("feedbackText")}
                     onChange={(e) => handleChange(e)}
-                    name="message-text-area"
                     maxLength={300} id=""
                     placeholder="Leave a comment..."
+                    disabled={isSubmitting}
                 ></textarea>
                 <div ref={buttonCounterRef} className='text-area-counter-and-button'>
-                    <img
-                        src={sendMessage}
-                        alt="Send"
-                        onClick={() => {
-                            if (textLength > 0 && textLength <= 10) {
-                                setIsError(true);
-                            }
-                            else {
-                                info.onClickSend();
-                            }
-                        }} />
+                    <button disabled={isSubmitting} type='submit'>
+                        <img
+                            src={sendMessage}
+                            alt="Send"
+                        />
+                    </button>
+
                     <div className='counter'>{textLength}/{info.maxLength}</div>
                 </div>
 
-            </div>
-            <div
+            </form>
+            {errors.feedbackText && (<div
                 className='error-message'
-                style={{ display: isError ? "block" : "none" }}>
-                The text must contain more than 10 characters
-            </div>
+            >
+                {errors.feedbackText?.message}
+            </div>)}
+
         </>
 
 

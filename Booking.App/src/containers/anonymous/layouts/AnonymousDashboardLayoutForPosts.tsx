@@ -1,27 +1,50 @@
 import { useEffect, useState } from "react"
+import "../../../css/DashBoardRealtorClasses/index.scss";
 import "../../../css/DashBoardAnonymousForPostsClasses/index.scss"
 import logo from "../../../assets/Logo/tripbook 1.svg";
 import globe from "../../../assets/Icons/globe-01.svg";
 import facebook from "../../../assets/Icons/ic_baseline-facebook.svg";
 import instagram from "../../../assets/Icons/ri_instagram-fill.svg";
 import telegram from "../../../assets/Icons/ic_outline-telegram.svg";
-import { Outlet, useNavigate } from "react-router-dom";
+import { Outlet, useLocation, useNavigate } from "react-router-dom";
 import { FindPostInput } from "../../../components/common/FindPostInput/FindPostInput";
-import { IFetchDataByName, IFilter, IFilteredRequest, IFilteredRequestName } from "../../../interfaces/post";
+import { IFetchDataByName, IFilter, IFilteredRequestName } from "../../../interfaces/post";
 import { useDispatch, useSelector } from "react-redux";
 import { AppDispatch, RootState } from "../../../store";
-import { getFilteredListByType, getListOfPostsByName, getListOfPostsName } from "../../../store/post/post.actions";
+import { getListOfPostsName, getPostByName } from "../../../store/post/post.actions";
 import { setTextForSearching } from "../../../store/post/post.slice";
-import { changeLoaderIsLoading, changePaginationPage } from "../../../store/settings/settings.slice";
+import { changeLoaderIsLoading, changePaginationPage, savePath } from "../../../store/settings/settings.slice";
+import { Avatar } from "../../../components/common/Avatar/Avatar";
+import { APP_ENV } from "../../../env";
 
 export const AnonymousDashboardLayoutForPosts = () => {
 
     const navigate = useNavigate();
+    const location = useLocation();
     const filter = useSelector((state: RootState) => state.post.filter);
+    const searchingPost = useSelector((state: RootState) => state.post.searchingPost);
     const dispatch = useDispatch<AppDispatch>();
     const [searchingText, setSearchingText] = useState<string | null>(null);
     const listOfPostsName = useSelector((state: RootState) => state.post.searchPost);
+    const isLogin = useSelector((state: RootState) => state.account.isLogin);
+    const user = useSelector((state: RootState) => state.account.user);
+    const [avatarUrl, setAvatarUrl] = useState<string>();
     //const [isBlur, setIsBlur] = useState<boolean>(true);
+    /*
+    <div id="userInfo">
+                        {user!.avatar != null ? <div
+                            id="avatar"
+                            style={{
+                                background: `url(${avatarUrl}) center / cover no-repeat`,
+                            }}
+                        /> :
+                            <Avatar userName={user?.email!} />}
+
+                        <div id="name">
+                            {user?.firstName && user?.lastName ? `${user?.firstName} ${user?.lastName}` : user?.email}
+                        </div>
+                    </div>
+    */
 
     const changeText = async (text: string | null) => {
         const currentFilter: IFilter = {
@@ -51,7 +74,7 @@ export const AnonymousDashboardLayoutForPosts = () => {
         event.preventDefault();
         dispatch(changeLoaderIsLoading(true));
         if (searchingText == null || searchingText == "") {
-            const currentFilter: IFilter = {
+            /*const currentFilter: IFilter = {
                 category: filter.category,
                 country: filter.country,
                 city: filter.city,
@@ -64,7 +87,7 @@ export const AnonymousDashboardLayoutForPosts = () => {
                     sizeOfPage: 9
                 }
             }
-            await dispatch(getFilteredListByType(payload));
+            await dispatch(getFilteredListByType(payload));*/
         }
         else {
             const currentFilter: IFilter = {
@@ -76,12 +99,8 @@ export const AnonymousDashboardLayoutForPosts = () => {
             const payload: IFetchDataByName = {
                 filter: currentFilter,
                 name: searchingText,
-                pages: {
-                    page: 1,
-                    sizeOfPage: 9
-                }
             }
-            await dispatch(getListOfPostsByName(payload));
+            await dispatch(getPostByName(payload));
             dispatch(changePaginationPage(1))
         }
     }
@@ -91,29 +110,69 @@ export const AnonymousDashboardLayoutForPosts = () => {
     }, [])
 
     useEffect(() => {
+        if (searchingPost != null) {
+            navigate(`/posts/post/${searchingPost}`);
+        }
+    }, [searchingPost])
+
+
+
+    useEffect(() => {
         changeText(searchingText);
         dispatch(setTextForSearching(searchingText));
     }, [searchingText])
+
+    useEffect(() => {
+        if (user) {
+
+            if (user?.avatar != null) {
+                if (user?.avatar.slice(0, 5) == "https") {
+                    setAvatarUrl(user?.avatar);
+                }
+                else {
+                    setAvatarUrl(APP_ENV.BASE_URL + user?.avatar);
+                }
+            }
+        }
+    }, [user]);
+
     return (
         <div id="mainDashboardForPosts">
             <header>
                 <div className="auth">
-                    <img src={logo} onClick={() => navigate("/")} alt="logo" />
+                    <img tabIndex={0} src={logo} onClick={() => navigate("/")} alt="logo" />
+                    {isLogin ? <><div id="userInfo">
+                        {user!.avatar != null ? <div
+                            id="avatar"
+                            style={{
+                                background: `url(${avatarUrl}) center / cover no-repeat`,
+                            }}
+                        /> :
+                            <Avatar userName={user?.email!} />}
 
-                    <button
+                        <div id="name" onClick={() => navigate("/dashboard/profile")}>
+                            {user?.firstName && user?.lastName ? `${user?.firstName} ${user?.lastName}` : user?.email}
+                        </div>
+                    </div></> : <><button
                         onClick={() => {
                             navigate("/authentication/user-register");
                         }}
+                        tabIndex={1}
                     >
                         Register
                     </button>
-                    <button
-                        onClick={() => {
-                            navigate("/authentication/login");
-                        }}
-                    >
-                        Login
-                    </button>
+                        <button
+                            onClick={() => {
+                                //console.log(location);
+                                dispatch(savePath(location.pathname))
+                                navigate("/authentication/login");
+
+                            }}
+                            tabIndex={2}
+                        >
+                            Login
+                        </button></>}
+
                 </div>
                 <div className="searching">
                     <form onSubmit={findPost}>
@@ -135,35 +194,35 @@ export const AnonymousDashboardLayoutForPosts = () => {
                 <div className="information">
                     <div>
                         <h6>Company</h6>
-                        <a>About the company</a>
-                        <a>Vacancies</a>
-                        <a>Mobile applications</a>
-                        <a>How we work</a>
+                        <a tabIndex={3}>About the company</a>
+                        <a tabIndex={4}>Vacancies</a>
+                        <a tabIndex={5}>Mobile applications</a>
+                        <a tabIndex={6}>How we work</a>
                     </div>
                     <div>
                         <h6>Connection</h6>
-                        <a>Help and FAQ</a>
-                        <a>Affiliate programs</a>
-                        <a>Hotel owners</a>
-                        <a>To partners</a>
+                        <a tabIndex={7}>Help and FAQ</a>
+                        <a tabIndex={8}>Affiliate programs</a>
+                        <a tabIndex={9}>Hotel owners</a>
+                        <a tabIndex={10}>To partners</a>
                     </div>
                     <div>
                         <h6>Explore</h6>
-                        <a>Countries</a>
-                        <a>Regions</a>
-                        <a>Cities</a>
-                        <a>Districts</a>
-                        <a>Airports</a>
-                        <a>Hotels</a>
-                        <a>Attractions</a>
+                        <a tabIndex={11}>Countries</a>
+                        <a tabIndex={12}>Regions</a>
+                        <a tabIndex={13}>Cities</a>
+                        <a tabIndex={14}>Districts</a>
+                        <a tabIndex={15}>Airports</a>
+                        <a tabIndex={16}>Hotels</a>
+                        <a tabIndex={17}>Attractions</a>
                     </div>
                     <div>
                         <h6>Support</h6>
-                        <a>Reference center</a>
-                        <a>Anti-discrimination</a>
-                        <a>Support for people with disabilities</a>
-                        <a>Options for canceling reservations</a>
-                        <a>Send a complaint from neighbors</a>
+                        <a tabIndex={18}>Reference center</a>
+                        <a tabIndex={19}>Anti-discrimination</a>
+                        <a tabIndex={20}>Support for people with disabilities</a>
+                        <a tabIndex={21}>Options for canceling reservations</a>
+                        <a tabIndex={22}>Send a complaint from neighbors</a>
                     </div>
                 </div>
                 <div className="social-networks">

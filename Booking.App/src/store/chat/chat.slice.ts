@@ -1,8 +1,8 @@
-import {AnyAction, createSlice} from "@reduxjs/toolkit";
-import {RejectedAction} from "../../utils/types";
-import {Status} from "../../utils/enum";
-import {IChatState} from "../../interfaces/chat";
-import {getListOfChatRooms} from "./chat.action.ts";
+import { AnyAction, createSlice } from "@reduxjs/toolkit";
+import { RejectedAction } from "../../utils/types";
+import { Status } from "../../utils/enum";
+import { IChatState } from "../../interfaces/chat";
+import { getListOfChatRooms, getListOfChatRoomsForClient } from "./chat.action.ts";
 
 
 function isRejectedAction(action: AnyAction): action is RejectedAction {
@@ -11,6 +11,7 @@ function isRejectedAction(action: AnyAction): action is RejectedAction {
 
 const initialState: IChatState = {
     chatRooms: null,
+    charRoomsForClient: null,
     hasNewPosts: false,
     status: Status.IDLE,
 };
@@ -29,13 +30,20 @@ export const chatSlice = createSlice({
     extraReducers: (builder) => {
         builder
             .addCase(getListOfChatRooms.fulfilled, (state, action) => {
-                const  {chatRooms, hasNewPosts} = action.payload;
+                const { chatRooms, hasNewPosts } = action.payload;
                 state.chatRooms = chatRooms;
                 state.hasNewPosts = hasNewPosts;
 
                 state.status = Status.SUCCESS;
             })
             .addCase(getListOfChatRooms.pending, (state) => {
+                state.status = Status.LOADING;
+            })
+            .addCase(getListOfChatRoomsForClient.fulfilled, (state, action) => {
+                state.charRoomsForClient = action.payload;
+                state.status = Status.SUCCESS;
+            })
+            .addCase(getListOfChatRoomsForClient.pending, (state) => {
                 state.status = Status.LOADING;
             })
             .addMatcher(isRejectedAction, (state) => {

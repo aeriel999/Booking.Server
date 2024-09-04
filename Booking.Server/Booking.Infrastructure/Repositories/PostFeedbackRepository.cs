@@ -15,17 +15,14 @@ public class PostFeedbackRepository(BookingDbContext context,UserManager<User> u
     {
         await _dbSet.AddAsync(feedback);
     }
-    public async  Task<PagedList<Feedback>> GetFeedbacksAsync(Guid id, int page, int sizeOfPage)
+    public async  Task<List<Feedback>> GetFeedbacksAsync(Guid id)
     {
-            var list = await _dbSet
+            return await _dbSet
             .Where(f => f.PostId == id)
             .OrderByDescending(f => f.FeedbackAt)
             .Include(f => f.Client)
             .ToListAsync();
 
-            var pagedList = PagedList<Feedback>.getPagedList(list, page, sizeOfPage);
-
-            return pagedList; 
     }
     public async Task DeleteAllFeedbacksAsync(string id)
     {
@@ -49,6 +46,33 @@ public class PostFeedbackRepository(BookingDbContext context,UserManager<User> u
             .ToListAsync();
 
         return res!;
+    }
+
+    public async Task<List<Feedback>> GetHistoryOfFeedbacksByUserAsync(Guid id)
+    {
+        return await _dbSet
+        .Where(f => f.ClientId == id)
+        .OrderByDescending(f => f.FeedbackAt)
+        .Include(f => f.Client)
+        .Include(f => f.Post!.Street!.City!.Country)
+        .Include(f => f.Post!.ImagesPost)
+        .ToListAsync();
+    }
+
+    public async Task<int?> GetPageOfSelectedFeedbackAsync(Guid FeedbackId, Guid PostId)
+    {
+        var feedbacks = await _dbSet
+            .Where(f => f.PostId == PostId)
+            .OrderByDescending(f => f.FeedbackAt)
+            .Select(f=>f.Id)
+            .ToArrayAsync();
+
+        var index = Array.IndexOf(feedbacks, FeedbackId) + 1;
+        if (index == 0) return null;
+
+
+        return (int)Math.Ceiling(index / (decimal)2); 
+
     }
 }
 

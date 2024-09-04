@@ -2,6 +2,8 @@ import '../../../css/FeedbackClasses/index.scss';
 import { Avatar } from "../Avatar/Avatar";
 import starFull from '../../../assets/Icons/star-02.svg';
 import { formatDistanceToNow } from "date-fns";
+import { useEffect, useState } from 'react';
+import { APP_ENV } from '../../../env';
 
 interface IFeedback {
     userName: string,
@@ -12,10 +14,24 @@ interface IFeedback {
 }
 
 export const Feedback = (info: IFeedback) => {
+
+    const [avatar, setAvatar] = useState<string | null>(null);
+
+    useEffect(() => {
+        if (info.avatar != null && info.avatar.trim() != "") {
+            if (info.avatar.slice(0, 4) == "http") {
+                setAvatar(info.avatar);
+            }
+            else {
+                setAvatar(APP_ENV.BASE_URL + "/images/avatars/" + info.avatar);
+            }
+        }
+    }, [info])
+
     return (
         <div className="feedback">
             <div className="feedback-user-information">
-                {info.avatar == null ? <Avatar userName={info.userName} /> : <img className="avatar" src={info.avatar!} alt="Avatar" />}
+                {avatar == null ? <Avatar userName={info.userName} /> : <img className="avatarImg" src={avatar} alt="Avatar" />}
                 <div className="feedback-user-information-username">
                     <p>{info.userName}</p>
                     <p>{formatDistanceToNow(info.date, { addSuffix: true })}</p>

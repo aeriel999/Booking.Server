@@ -51,6 +51,8 @@ public interface IUserRepository
 
 	Task<ErrorOr<string>> GetRoleByUserAsync(User user);
 
+	Task<ErrorOr<bool>> IsPasswordAsync(Guid userId);
 
-	//Task<ErrorOr<Deleted>> DeleteUserAsync(Guid userId);
+
+    //Task<ErrorOr<Deleted>> DeleteUserAsync(Guid userId);
 }

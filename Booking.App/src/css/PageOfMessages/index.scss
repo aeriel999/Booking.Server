@@ -1,0 +1,32 @@
+.page-of-messages-container {
+    width: 100%;
+    display: grid;
+    grid-template-columns: 40% 60%;
+    grid-template-rows: auto;
+    column-gap: 22px;
+
+    .first-container {
+        width: 100%;
+        height: auto;
+
+        border: 1px solid black;
+        border-radius: 10px;
+        box-sizing: border-box;
+        padding: 10px;
+        padding-left: 0px;
+        overflow: hidden;
+
+        .chat-list {
+            height: auto;
+            max-height: 625px;
+
+            display: flex;
+            flex-direction: column;
+            overflow-y: auto;
+
+        }
+    }
+
+
+
+}

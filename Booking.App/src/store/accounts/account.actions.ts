@@ -15,6 +15,7 @@ import {
     IResetPassword,
     IUserRegister,
 } from "../../interfaces/account";
+import { IEditClientProfile } from "../../interfaces/user/index.ts";
 
 export const login = createAsyncThunk(
     "Authentication/login",
@@ -103,7 +104,6 @@ export const forgotPassword = createAsyncThunk(
                 "/api/Authentication/forgot-password",
                 payload
             );
-
             return response.data;
         } catch (error) {
             return rejectWithValue(handleAxiosError(error, "Network error"));
@@ -196,6 +196,30 @@ export const reloadProfileHeaderImage = createAsyncThunk(
                 "/api/User/upload-header",
                 payload
             );
+            return response.data;
+        } catch (error) {
+            return rejectWithValue(handleAxiosError(error, "Network error"));
+        }
+    }
+);
+export const editUserProfile = createAsyncThunk(
+    'User/edit-user-profile',
+    async (payload: IEditClientProfile, { rejectWithValue }) => {
+        try {
+            const response = await apiClient.put(`/api/User/edit-user-profile`, payload);
+            return response.data;
+        } catch (error) {
+            return rejectWithValue(handleAxiosError(error, "Network error"));
+        }
+    }
+)
+
+
+export const checkPasswordIsNotNull = createAsyncThunk(
+    'User/check-password-is-not-null',
+    async (_, { rejectWithValue }) => {
+        try {
+            const response = await apiClient.get(`/api/Authentication/check-password-is-not-null`);
             return response.data;
         } catch (error) {
             return rejectWithValue(handleAxiosError(error, "Network error"));

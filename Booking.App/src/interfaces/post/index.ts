@@ -130,7 +130,10 @@ export interface IPostInformation {
         $values: string[]
     } | null;
     typesOfRest: string[] | null;
-    services: IServiseInfo[] | null;
+    services: {
+        $id: number,
+        $values: IServiseInfo[]
+    } | null;
     roomList?: {
         $id: number,
         $values: IRoomInfo[]
@@ -166,7 +169,7 @@ export interface IPostState {
     countries: ICountry[] | null;
     cities: ICity[] | null;
     streets: IStreet[] | null;
-    typesOfRest: IGetTypeOfRest[] | null;
+    typesOfRest: IGetTypeOfRestWithImage[] | null;
     services: IGetService[] | null;
     searchPost: string[] | null;
     postInfoList: IPageOfPostsForRealtor | null;
@@ -179,7 +182,32 @@ export interface IPostState {
     filteredCities: ICity[] | null;
     textForSearching: string | null;
     feedbacks: IFeedbacksByPost | null;
+    historyOfFeedbacksByClient: IHistoryOfFeedbacksByClient | null;
+    idOfSelectedFeedback: string | null;
+    pageOfSelectedFeedback: number;
+    searchingPost: string | null
 }
+export interface IHistoryOfFeedbacksByClient {
+    items: {
+        $id: string;
+        $values: IFeedbackForClient[];
+    };
+    page: number;
+    sizeOfPage: number;
+    totalCount: number;
+}
+export interface IFeedbackForClient {
+    feedbackId: string;
+    postId: string;
+    feedbackAt: Date,
+    textOfFeedback: string;
+    rating: number;
+    imageOfPost: string,
+    nameOfPost: string,
+    country: string,
+    city: string;
+}
+
 
 interface IPostRatingAndDiscount {
     id: string;
@@ -205,7 +233,6 @@ export interface IService {
 export interface IFetchDataByName {
     filter: IFilter;
     name: string;
-    pages: IFetchData;
 }
 
 export interface IPostCreate {
@@ -294,6 +321,11 @@ export interface IGetTypeOfRest {
     id: string,
     name: string,
 }
+export interface IGetTypeOfRestWithImage {
+    id: string,
+    name: string,
+    image: string
+}
 export interface IGetFeedbacksRequest {
     id: string,
     page: number,
@@ -312,6 +344,7 @@ export interface IFeedback {
     text: string,
     rating: number,
     client: string,
+    clientAvatar: string | null,
     feedbackAt: Date
 }
 export interface ISendFeedback {

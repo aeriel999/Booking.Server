@@ -8,7 +8,7 @@ import {
     IResetPassword,
     IUserRegister,
 } from "../../interfaces/account";
-import { IChangePassword } from "../../interfaces/user";
+import { IChangePassword, ICreatePassword, IEditClientProfile } from "../../interfaces/user";
 import { isValidPhoneNumber } from "libphonenumber-js";
 
 export const loginResolver: Resolver<ILogin> = async (values) => {
@@ -192,6 +192,41 @@ export const reconfirmemaildResolver: Resolver<IReconfirmEmail> = async (
     };
 };
 
+export const editClientProfileResolver: Resolver<IEditClientProfile> = async (
+    values
+) => {
+    const errors: Record<string, any> = {};
+
+    const emailError = EmailValidator(values.email);
+    if (emailError) {
+        errors.email = {
+            type: "validation",
+            message: emailError,
+        };
+    }
+
+    const firstNameError = FirstNameValidator(values.firstName);
+    if (firstNameError) {
+        errors.firstName = {
+            type: "validation",
+            message: firstNameError
+        }
+    }
+
+    const lastNameError = LastNameValidator(values.lastName);
+    if (lastNameError) {
+        errors.lastName = {
+            type: "validation",
+            message: lastNameError
+        }
+    }
+
+    return {
+        values: Object.keys(errors).length === 0 ? values : {},
+        errors,
+    };
+};
+
 export const realtorEditProfileResolver: Resolver<IEditRealtorInfo> = async (
     values
 ) => {
@@ -270,6 +305,37 @@ export const changePasswordResolver: Resolver<IChangePassword> = async (
         errors,
     };
 };
+
+export const createPasswordResolver: Resolver<ICreatePassword> = async (
+    values
+) => {
+    const errors: Record<string, any> = {};
+
+    const passwordErrors = PasswordValidator(values.password);
+    if (passwordErrors) {
+        errors.password = {
+            type: 'validation',
+            message: passwordErrors
+        }
+    }
+
+    const confirmPasswordErrors = ConfirmPasswordValidator(
+        values.password,
+        values.confirmPassword
+    );
+
+    if (confirmPasswordErrors) {
+        errors.confirmPassword = {
+            type: 'validation',
+            message: confirmPasswordErrors
+        }
+    }
+
+    return {
+        values: Object.keys(errors).length === 0 ? values : {},
+        errors
+    }
+}
 
 export const EmailValidator = (value: string): string | undefined => {
     if (!value) return "Email must not be empty";

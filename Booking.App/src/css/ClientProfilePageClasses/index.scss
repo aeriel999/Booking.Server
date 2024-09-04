@@ -1,0 +1,21 @@
+@import '../variables.scss';
+
+#buttons {
+    display: flex;
+    column-gap: 22px;
+
+
+    button {
+        cursor: pointer;
+
+        &:last-of-type {
+            background-color: $primary-font-color;
+            border-radius: 5px;
+            border: 1px solid var(--dark-gray, #6C6C6C);
+
+            p {
+                color: $default-color;
+            }
+        }
+    }
+}

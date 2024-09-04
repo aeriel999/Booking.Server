@@ -12,6 +12,7 @@ export interface IAccountState {
     isLogin: boolean;
     status: Status;
     registerData: IRealtorRegister | null;
+    isUserHasPassword: boolean
 }
 
 export interface IConfirmEmail {

@@ -203,4 +203,13 @@ public class UserRepository(UserManager<User> userManager)
 
 		return roles.FirstOrDefault()!;
 	}
+
+    public async Task<ErrorOr<bool>> IsPasswordAsync(Guid userId)
+    {
+        var user = await FindByIdAsync(userId);
+
+        if(user.IsError) return user.Errors.FirstOrDefault();
+
+        return await userManager.HasPasswordAsync(user.Value);
+    }
 }
