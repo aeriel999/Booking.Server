@@ -20,7 +20,9 @@ import { RootState } from "../../../store/index.ts";
 
 export default function SignInPage() {
     const dispatch = useAppDispatch();
-    const savedPath = useAppSelector((state: RootState) => state.settings.savedPath);
+    const savedPath = useAppSelector(
+        (state: RootState) => state.settings.savedPath
+    );
     const [errorMessage, setErrorMessage] = useState<string | undefined>(
         undefined
     );
@@ -57,14 +59,13 @@ export default function SignInPage() {
     };
 
     const afterLogin = async (token: string) => {
-
         await startListening();
 
         const decodedToken: { [key: string]: string } = jwtDecode(token);
 
         const role =
             decodedToken[
-            "http://schemas.microsoft.com/ws/2008/06/identity/claims/role"
+                "http://schemas.microsoft.com/ws/2008/06/identity/claims/role"
             ];
 
         if (role.toLowerCase().includes("realtor")) {
@@ -72,7 +73,6 @@ export default function SignInPage() {
             navigate("/dashboard/profile");
         } else if (role.toLowerCase().includes("user")) {
             navigate(savedPath);
-            //navigate("/dashboard/profile");
         } else if (role.toLowerCase().includes("admin")) {
             navigate("/dashboard/profile");
         } else {

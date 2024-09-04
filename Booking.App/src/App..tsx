@@ -33,7 +33,6 @@ import RealtorRegisterAvatarPage from "./pages/accaunt/register/RealtotRegisterA
 import DashboardLayout from "./containers/dashboard/layouts/DashboardLayout.tsx";
 import { AnonymousDashboardLayoutForPosts } from "./containers/anonymous/layouts/AnonymousDashboardLayoutForPosts.tsx";
 import ListOfPostsPage from "./containers/client/ListOfPostsPage/ListOfPostsPage.tsx";
-import { ChatTextInput } from "./components/chat/ChatTextInput.tsx";
 
 export const App: React.FC = () => {
     const { isLogin, user } = useAppSelector((state) => state.account);
@@ -100,8 +99,11 @@ export const App: React.FC = () => {
                                 path="/dashboard/chat"
                                 element={<ChatRoom />}
                             />
-                           
 
+                            <Route
+                                path="/dashboard/reviews"
+                                element={<ReviewsPage />}
+                            />
                         </Route>
                     )}
 
@@ -131,8 +133,6 @@ export const App: React.FC = () => {
                                 path="/dashboard/profile/edit"
                                 element={<EditUserEpailPage />}
                             />
-
-                            <Route path="*" element={<NotFound />} />
                         </Route>
                     )}
                 </>
@@ -178,7 +178,6 @@ export const App: React.FC = () => {
             <Route path="/posts" element={<AnonymousDashboardLayoutForPosts />}>
                 <Route index element={<ListOfPostsPage />} />
                 <Route path="post/:postId" element={<PostOfPage />} />
-                <Route path="*" element={<NotFound />} />
             </Route>
 
             <Route path="authentication/login" element={<SignInPage />} />

@@ -691,8 +691,8 @@
     width: 70%;
     height: 98%;
     flex-shrink: 0;
-   
-  //  border: 1px solid $menu-border-color;
+
+    //  border: 1px solid $menu-border-color;
     background: #fdfdff;
     display: flex;
     flex-direction: column;
@@ -769,4 +769,161 @@
     display: flex;
     max-height: 95%;
     gap: 20px;
+}
+
+//Reviews
+
+.rewievContainer {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+
+    h1 {
+        color: #000;
+        font-size: 34px;
+        font-style: normal;
+        font-weight: 500;
+        line-height: normal;
+    }
+}
+
+.revievedCard {
+    width: 100%;
+   // height: 20vh;
+    min-height: 150px;
+    flex-shrink: 0;
+    border-radius: 10px;
+    border: 1px solid #a2a2a2;
+    display: flex;
+    flex-direction: column;
+    padding: 10px;
+    gap: 15px;
+
+    .postInfoHeader {
+        display: flex;
+        height: 30%;
+        min-height: 50px;
+        padding: 10px 9px;
+        justify-content: space-between;
+        gap: 10px;
+        flex-shrink: 0;
+        border-radius: 12px;
+        background: var(--gray, #d9d9d9);
+
+        .postInfo {
+            display: flex;
+            align-items: center;
+            gap: 18px;
+
+            img {
+                height: 5vh;
+                min-height: 50px;
+                border-radius: 5px;
+            }
+            .postGeneralInfo {
+                display: flex;
+                flex-direction: column;
+
+                .name {
+                    align-self: stretch;
+                    color: #000;
+                    font-size: 28px;
+                    font-style: normal;
+                    font-weight: 600;
+                    line-height: normal;
+                }
+
+                .address {
+                    color: #676767;
+                    font-size: 18px;
+                    font-style: normal;
+                    font-weight: 400;
+                    line-height: normal;
+                }
+            }
+        }
+
+        .rating {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+    }
+
+    .rewiev {
+        display: flex;
+        gap: 20px;
+
+        .lefRewievtContainer {
+            width: 48px;
+            height: 48px;
+            border-radius: 48px;
+        }
+
+        .rightRewievContainer {
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+
+            .topPart {
+                display: flex;
+                justify-content: space-between;
+
+                .leftPart{
+                    display: flex;
+                    flex-direction: column;
+                    gap: 3px;
+                    height: 48px;
+
+                    .name {
+                        align-self: stretch;
+                        color: #000;
+                        font-family: Roboto;
+                        font-size: 20px;
+                        font-style: normal;
+                        font-weight: 500;
+                        line-height: normal;
+                    }
+    
+                    .date {
+                        align-self: stretch;
+                        color: #676767;
+                        font-family: Roboto;
+                        font-size: 14px;
+                        font-style: normal;
+                        font-weight: 400;
+                        line-height: normal;
+                    }
+                }
+              
+                .rightPart{
+                    display: flex;
+                    width: 50px;
+                    height: 30px;
+                    padding: 5px 13px;
+                    flex-direction: column;
+                    align-items: flex-start;
+                    gap: 10px;
+                    flex-shrink: 0;
+                    border-radius: 24px;
+                    background: #EBEBEB;
+
+                    .rateContainer{
+                        display: flex;
+                        align-items: flex-start;
+                        gap: 6px;
+                    }
+                }
+            }
+
+            .reviewText {
+                align-self: stretch;
+                color: #040404;
+                font-size: 18px;
+                font-style: normal;
+                font-weight: 400;
+                line-height: normal;
+            }
+        }
+    }
 }
