@@ -4,11 +4,13 @@ using ErrorOr;
 using MediatR;
 
 namespace Booking.Application.Chat.GetChatRoomsListForClient;
-public class GetChatRoomsListForClientQueryHandler(IChatRoomRepository repositoryChatRoom, IUserRepository repositoryUser) : IRequestHandler<GetChatRoomsListForClientQuery, ErrorOr<List<GetChatRoomsListForClientResult>>>
+public class GetChatRoomsListForClientQueryHandler(
+    IChatRoomRepository repositoryChatRoom, IUserRepository repositoryUser) 
+    : IRequestHandler<GetChatRoomsListForClientQuery, ErrorOr<List<GetChatRoomsListForClientResult>>>
 {
     public async Task<ErrorOr<List<GetChatRoomsListForClientResult>>> Handle(GetChatRoomsListForClientQuery request, CancellationToken cancellationToken)
     {
-        var user = await repositoryUser.FindByIdAsync(request.ClientId);
+        var user = await repositoryUser.GetUserByIdAsync(request.ClientId);
 
         if(user.IsError) return user.Errors.FirstOrDefault();
 
@@ -18,7 +20,7 @@ public class GetChatRoomsListForClientQueryHandler(IChatRoomRepository repositor
 
         foreach(var item in listOfRealtorsId)
         {
-            var currentRealtor = await repositoryUser.FindByIdAsync(item);
+            var currentRealtor = await repositoryUser.GetUserByIdAsync(item);
 
             if (currentRealtor.IsError) return currentRealtor.Errors.FirstOrDefault();
 

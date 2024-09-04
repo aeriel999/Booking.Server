@@ -200,7 +200,7 @@ public class UserRepository(UserManager<User> userManager)
 
     public async Task<ErrorOr<bool>> IsPasswordAsync(Guid userId)
     {
-        var user = await FindByIdAsync(userId);
+        var user = await GetUserByIdAsync(userId);
 
         if(user.IsError) return user.Errors.FirstOrDefault();
 

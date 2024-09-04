@@ -520,7 +520,7 @@ export const getPageOfSelectedFeedback = createAsyncThunk(
         }
     }
 )
-)
+
 
 export const editRoom = createAsyncThunk(
     "Post/edit-room",

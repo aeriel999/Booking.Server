@@ -25,7 +25,6 @@
         justify-content: space-between;
         align-items: center;
 
-
         #headerLogo {
             width: 226px;
             min-height: 80px;
@@ -796,7 +795,7 @@
 
 .revievedCard {
     width: 100%;
-   // height: 20vh;
+    // height: 20vh;
     min-height: 150px;
     flex-shrink: 0;
     border-radius: 10px;
@@ -876,7 +875,7 @@
                 display: flex;
                 justify-content: space-between;
 
-                .leftPart{
+                .leftPart {
                     display: flex;
                     flex-direction: column;
                     gap: 3px;
@@ -891,7 +890,7 @@
                         font-weight: 500;
                         line-height: normal;
                     }
-    
+
                     .date {
                         align-self: stretch;
                         color: #676767;
@@ -902,8 +901,8 @@
                         line-height: normal;
                     }
                 }
-              
-                .rightPart{
+
+                .rightPart {
                     display: flex;
                     width: 50px;
                     height: 30px;
@@ -913,9 +912,9 @@
                     gap: 10px;
                     flex-shrink: 0;
                     border-radius: 24px;
-                    background: #EBEBEB;
+                    background: #ebebeb;
 
-                    .rateContainer{
+                    .rateContainer {
                         display: flex;
                         align-items: flex-start;
                         gap: 6px;
@@ -933,7 +932,6 @@
             }
         }
     }
-}
 }
 
 .dashboardClientLoading {
