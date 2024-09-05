@@ -35,6 +35,7 @@ using Booking.Api.Contracts.Post.EditRoom;
 using Booking.Application.Posts.EditRoom;
 using Booking.Application.Posts.GetFeedbacksByClient;
 using Booking.Api.Contracts.Post.GetHistoryOfFeedbacks;
+using Booking.Application.Posts.GetListOfFeedbackForRealtor;
 
 namespace Booking.Api.Common.Mapping;
 
@@ -329,5 +330,19 @@ public class PostMapping : IRegister
 		config.NewConfig<PagedList<GetHistoryOfFeedbackByClientResponse>, PagedList<Feedback>>()
             .Map(desp => desp.items, src => src.items.Adapt<List<GetHistoryOfFeedbackByClientResponse>>());
 
-    }
+		config.NewConfig<Feedback, GetListOfFeedbackForRealtorResponse>()
+			.Map(desp => desp.PostName, src => src.Post!.Name)
+			.Map(desp => desp.CountryName, src => src.Post!.Street!.City!.Country!.Name)
+			.Map(desp => desp.CityName, src => src.Post!.Street!.City!.Name)
+			.Map(desp => desp.PostRaiting, src => src.Post!.Rate)
+			.Map(desp => desp.PostImage, src => src.Post!.ImagesPost!.ToList()[0].Name)
+			.Map(desp => desp.UserName, src => src.Client!.UserName)
+			.Map(desp => desp.Date, src => src.FeedbackAt.ToUniversalTime())
+			.Map(desp => desp.GivenRate, src => src.Rating)
+			.Map(desp => desp.ReviewText, src => src.Text);
+
+		config.NewConfig<PagedList<Feedback>, PagedList<GetListOfFeedbackForRealtorResponse>>();
+			 
+
+	}
 }
