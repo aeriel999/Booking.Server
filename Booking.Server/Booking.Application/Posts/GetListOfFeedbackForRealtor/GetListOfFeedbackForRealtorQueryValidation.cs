@@ -12,7 +12,6 @@ public class GetListOfFeedbackForRealtorQueryValidation : AbstractValidator<GetL
 		   .GreaterThan(0).WithMessage("{PropertyName} must be greater than 0");
 
 		RuleFor(f => f.SizeOfPage)
-			.NotEmpty().WithMessage("{PropertyName} must not be empty")
-			.GreaterThan(5).WithMessage("{PropertyName} must be greater than 5");
+			.NotEmpty().WithMessage("{PropertyName} must not be empty");
 	}
 }

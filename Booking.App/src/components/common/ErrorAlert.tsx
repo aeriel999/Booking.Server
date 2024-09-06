@@ -27,6 +27,7 @@ const OutlinedErrorAlert = forwardRef<HTMLDivElement, OutlinedAlertsProps>(
             fontStyle: "normal",
             fontWeight: 300,
             lineHeight: "normal",
+            marginBottom: "20px",
             "&:focus": {
                 outlineOffset: "2px",
             },

@@ -27,7 +27,7 @@ export function ReviewCard(props: ReviewCardProps) {
 
             <div className="rewiev">
                 <div
-                    className="lefRewievtContainer"
+                    className="leftRewievtContainer"
                     style={{
                         background: `url(${props.postImage}) lightgray 50% / cover no-repeat`,
                     }}
