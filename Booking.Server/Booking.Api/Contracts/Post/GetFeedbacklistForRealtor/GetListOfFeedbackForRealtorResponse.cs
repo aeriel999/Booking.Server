@@ -9,6 +9,7 @@ public record GetListOfFeedbackForRealtorResponse(
 	string UserName,
 	string GivenRate,
 	string Date,
+	string? Avatar,
 	string ReviewText);
  
  

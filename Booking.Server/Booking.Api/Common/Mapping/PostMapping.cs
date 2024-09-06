@@ -339,6 +339,7 @@ public class PostMapping : IRegister
 			.Map(desp => desp.UserName, src => src.Client!.UserName)
 			.Map(desp => desp.Date, src => src.FeedbackAt.ToUniversalTime())
 			.Map(desp => desp.GivenRate, src => src.Rating)
+			.Map(desp => desp.Avatar, src => src.Client!.Avatar ?? null)
 			.Map(desp => desp.ReviewText, src => src.Text);
 
 		config.NewConfig<PagedList<Feedback>, PagedList<GetListOfFeedbackForRealtorResponse>>();

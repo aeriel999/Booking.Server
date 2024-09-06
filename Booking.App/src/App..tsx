@@ -128,10 +128,7 @@ export const App: React.FC = () => {
                                 path="/dashboard/post/:postId/realtor/:realtorId"
                                 element={<RealtorPage />}
                             />
-                            {/*<Route
-                                path="/dashboard/realtor/:realtorId"
-                                element={<RealtorPage />}
-                    />*/}
+                            
                             <Route
                                 path="/dashboard/profile"
                                 element={<ClientProfilePage />}

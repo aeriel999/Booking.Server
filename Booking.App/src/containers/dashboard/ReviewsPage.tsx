@@ -8,8 +8,10 @@ import { unwrapResult } from "@reduxjs/toolkit";
 import ErrorHandler from "../../components/common/ErrorHandler";
 import { ReviewCard } from "../../components/realtorDashboard/ReviewCard";
 import { TablePagination } from "@mui/material";
-import TablePaginationActions from "@mui/material/TablePagination/TablePaginationActions";
+
 import OutlinedErrorAlert from "../../components/common/ErrorAlert";
+import { APP_ENV } from "../../env";
+import { TablePaginationActions } from "../../components/realtorDashboard/TablePagination";
 
 export function ReviewsPage() {
     const dispatch = useAppDispatch();
@@ -17,14 +19,14 @@ export function ReviewsPage() {
         undefined
     );
     const [feedbackList, setFeedbackList] = useState<ReviewCardProps[]>([]);
-    const defaultFetchData: IFetchData = {
-        page: 1,
-        sizeOfPage: 3,
-    };
-    const [fetchData, setFetchData] = useState<IFetchData>(defaultFetchData);
     const [totalCount, setTotalCount] = useState(0);
     const [page, setPage] = useState(0);
-    const [rowsPerPage, setRowsPerPage] = useState(5);
+    const [rowsPerPage, setRowsPerPage] = useState(3);
+    const defaultFetchData: IFetchData = {
+        page: 1,
+        sizeOfPage: rowsPerPage,
+    };
+    const [fetchData, setFetchData] = useState<IFetchData>(defaultFetchData);
 
     const getfeedbackList = async (data: IFetchData) => {
         try {
@@ -36,10 +38,11 @@ export function ReviewsPage() {
         }
     };
 
+    //get list of feedback due to page and count of iteps per page
     useEffect(() => {
         getfeedbackList(fetchData).then((history) => {
             setFeedbackList(history?.payload.items.$values);
-            setTotalCount(history?.payload.sizeOfPage);
+            setTotalCount(history?.payload.totalCount);
         });
     }, [fetchData]);
 
@@ -51,7 +54,7 @@ export function ReviewsPage() {
     const handleChangeRowsPerPage = (
         event: React.ChangeEvent<HTMLInputElement>
     ) => {
-        const newRowsPerPage = parseInt(event.target.value);
+        const newRowsPerPage = parseInt(event.target.value, 10);
         setRowsPerPage(newRowsPerPage);
         setPage(0); // Reset to the first page
         setFetchData({ page: 1, sizeOfPage: newRowsPerPage });
@@ -71,11 +74,14 @@ export function ReviewsPage() {
                         countryName={feedback.countryName}
                         cityName={feedback.cityName}
                         postRaiting={feedback.postRaiting}
-                        postImage={feedback.postImage}
+                        postImage={`${APP_ENV.BASE_URL}${"/images/posts/"}${
+                            feedback.postImage
+                        }`}
                         userName={feedback.userName}
                         date={feedback.date}
                         givenRate={feedback.givenRate}
                         reviewText={feedback.reviewText}
+                        avatar={feedback.avatar}
                     />
                 ))
             ) : (

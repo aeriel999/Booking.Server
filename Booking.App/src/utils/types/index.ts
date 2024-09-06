@@ -73,6 +73,7 @@ export type ReviewCardProps = {
     postRaiting: number;
     postImage: string;
     userName: string;
+    avatar: string | null;
     date: string;
     givenRate: number;
     reviewText: string;

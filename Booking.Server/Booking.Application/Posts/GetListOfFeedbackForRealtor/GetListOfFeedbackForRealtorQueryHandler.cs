@@ -42,8 +42,10 @@ public class GetListOfFeedbackForRealtorQueryHandler(
 			}
 		}
 
+		var orderList = feedbackList.OrderByDescending(f => f.FeedbackAt);
+
 		//Get part of list
-		var list = PagedList<Feedback>.getPagedList(feedbackList, request.Page, request.SizeOfPage);
+		var list = PagedList<Feedback>.getPagedList(orderList, request.Page, request.SizeOfPage);
 
 		return list;
 	}

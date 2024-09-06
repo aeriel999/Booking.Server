@@ -878,13 +878,11 @@
             .topPart {
                 display: flex;
                 justify-content: space-between;
-                
 
                 .leftPart {
                     display: flex;
                     flex-direction: column;
                     gap: 3px;
-                   
 
                     .name {
                         align-self: stretch;
@@ -909,12 +907,12 @@
 
                 .rightPart {
                     display: flex;
-                    width: 60px;
+                    // width: 60px;
                     height: 25px;
                     padding: 5px 13px;
                     flex-direction: column;
-                   // align-items: flex-start;
-                   // gap: 10px;
+                    // align-items: flex-start;
+                    // gap: 10px;
                     flex-shrink: 0;
                     border-radius: 24px;
                     background: #ebebeb;
@@ -924,9 +922,8 @@
                         align-items: flex-start;
                         gap: 6px;
 
-                        .rateText{
+                        .rateText {
                             color: #000;
-                            font-family: Roboto;
                             font-size: 20px;
                             font-style: normal;
                             font-weight: 500;
@@ -945,9 +942,9 @@
                 line-height: normal;
             }
 
-            .reply{
+            .reply {
                 all: unset;
-                color: #6C6C6C;
+                color: #6c6c6c;
                 font-family: Roboto;
                 font-size: 16px;
                 font-style: normal;
@@ -955,7 +952,7 @@
                 line-height: normal;
                 margin-bottom: 20px;
 
-                &:hover{
+                &:hover {
                     text-decoration: underline;
                 }
             }
@@ -963,7 +960,7 @@
     }
 }
 
-.pagination{
+.pagination {
     display: flex;
 }
 
