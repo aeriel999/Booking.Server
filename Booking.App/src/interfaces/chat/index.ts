@@ -38,7 +38,6 @@ export interface IChatRoom {
 }
 
 export interface IUserMessage {
-    userName: any;
     id: string;
     userId: string;
     message: string;
@@ -46,6 +45,7 @@ export interface IUserMessage {
     sentAt: string;
     isRead: boolean;
 }
+
 export interface IChatRoomListForClient {
     realtorId: string;
     realtorAvatar: string;
@@ -55,6 +55,7 @@ export interface IChatRoomListForClient {
     chatsForClient: IChatRoomForClient[]
 
 }
+
 export interface IChatRoomForClient {
     chatRoomId: string;
     postImage: string;

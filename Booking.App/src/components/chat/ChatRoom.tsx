@@ -1,43 +1,18 @@
 import { styled } from "@mui/system";
-import Paper from "@mui/material/Paper";
 import { IChatRoom, IUserMessage } from "../../interfaces/chat";
 import { Avatar, Button } from "@mui/material";
 import { useAppSelector } from "../../hooks/redux";
 import { MessageLeft, MessageRight } from "./Message";
 import { ChatTextInput } from "./ChatTextInput";
 import UAvatar from "../../assets/Templates/Rectangle-50.webp";
-import { deepOrange } from "@mui/material/colors";
 import "../../css/DashBoardAnonymousClasses/index.scss";
+import { ChatPostList } from "./ChatPostList";
+import Trash from "../../assets/DashboardIcons/mdi_trash-outline.svg";
 
-const StyledPaper = styled(Paper)({
-    width: "98%",
-    maxHeight: "80%",
-    display: "flex",
-    alignItems: "center",
-    flexDirection: "column",
-    position: "relative",
-    padding: "5px",
-});
-
-// const StyledPaper2 = styled(Paper)({
-//   width: '80vw',
-//   maxWidth: '500px',
-//   display: 'flex',
-//   alignItems: 'center',
-//   flexDirection: 'column',
-//   position: 'relative',
-// });
-
-const MessagesBody = styled("div")({
-    width: "calc( 100% - 20px )",
-    margin: 10,
-    overflowY: "scroll",
-    height: "calc( 100% - 80px )",
-});
 
 const StyledAvatar = styled(Avatar)({
     color: "#fff",
-    backgroundColor: deepOrange[500],
+    backgroundColor: "#23a1a0",
     width: "32px",
     height: "32px",
 });
@@ -51,7 +26,6 @@ const testMsg: IUserMessage[] = [
         chatRoomId: "testRoom1",
         sentAt: "2024-05-22T10:00:00Z",
         isRead: true,
-        userName: undefined,
     },
     {
         id: "test2",
@@ -60,7 +34,6 @@ const testMsg: IUserMessage[] = [
         chatRoomId: "testRoom2",
         sentAt: "2024-05-22T10:05:00Z",
         isRead: true,
-        userName: undefined,
     },
     {
         id: "test1",
@@ -70,7 +43,6 @@ const testMsg: IUserMessage[] = [
         chatRoomId: "testRoom1",
         sentAt: "2024-05-22T10:00:00Z",
         isRead: true,
-        userName: undefined,
     },
     {
         id: "test2",
@@ -79,7 +51,6 @@ const testMsg: IUserMessage[] = [
         chatRoomId: "testRoom2",
         sentAt: "2024-05-22T10:05:00Z",
         isRead: true,
-        userName: undefined,
     },
     {
         id: "test1",
@@ -89,7 +60,6 @@ const testMsg: IUserMessage[] = [
         chatRoomId: "testRoom1",
         sentAt: "2024-05-22T10:00:00Z",
         isRead: true,
-        userName: undefined,
     },
     {
         id: "test2",
@@ -98,7 +68,6 @@ const testMsg: IUserMessage[] = [
         chatRoomId: "testRoom2",
         sentAt: "2024-05-22T10:05:00Z",
         isRead: true,
-        userName: undefined,
     },
     {
         id: "test1",
@@ -108,7 +77,6 @@ const testMsg: IUserMessage[] = [
         chatRoomId: "testRoom1",
         sentAt: "2024-05-22T10:00:00Z",
         isRead: false,
-        userName: undefined,
     },
     {
         id: "test2",
@@ -117,7 +85,6 @@ const testMsg: IUserMessage[] = [
         chatRoomId: "testRoom2",
         sentAt: "2024-05-22T10:05:00Z",
         isRead: false,
-        userName: undefined,
     },
 ];
 
@@ -137,15 +104,72 @@ export default function ChatRoom() {
     //  const { roomId } = useParams();
     const { user } = useAppSelector((state) => state.account);
 
+    function deleteChat(): void {
+        throw new Error("Function not implemented.");
+    }
+
     return (
         <div className="chatRoom">
-            <div className="chatList">Chat List</div>
+            <div className="chatList">
+                <ChatPostList
+                    postChatItem={{
+                        name: "Luxury Villas with Beach Access by VB Homes",
+                        mainImage:
+                            "https://cf.bstatic.com/xdata/images/hotel/max1024x768/518332246.jpg?k=852d9e83009ac082a7bb8366d5e27fb1f21801ea9cb6dde9c14e1aa99c49ea63&o=&hp=1",
+                        chats: [
+                            {
+                                clientName:
+                                    "Hotel Boulevard, Autograph Collection",
+                                avatar: "https://cf.bstatic.com/xdata/images/hotel/max1024x768/518332246.jpg?k=852d9e83009ac082a7bb8366d5e27fb1f21801ea9cb6dde9c14e1aa99c49ea63&o=&hp=1",
+                                countOfUnreadMessages: null,
+                                chatId: "",
+                            },
+                            {
+                                clientName: "Атлас Делюкс Готель",
+                                avatar: "https://cf.bstatic.com/xdata/images/hotel/max1024x768/585364794.jpg?k=9efa57e0a316aa1c4a0661edd8103e5f670b8af21cd17b851c75d0ce21e74a1c&o=&hp=1",
+                                countOfUnreadMessages: null,
+                                chatId: "",
+                            },
+                            {
+                                clientName: "Carinya Park",
+                                avatar: "https://cf.bstatic.com/xdata/images/hotel/max1024x768/154543781.jpg?k=868ff54aa25ef6a79bf336d10a70cbb0460e9200740fc7686e3f5b050bd41af0&o=&hp=1",
+                                countOfUnreadMessages: null,
+                                chatId: "",
+                            },
+                        ],
+                    }}
+                    countOfUnreadMessages={null}
+                />
+                <ChatPostList
+                    postChatItem={{
+                        name: "Luxury Villas with Beach Access by VB Homes",
+                        mainImage:
+                            "https://cdn-icons-png.flaticon.com/512/149/149071.png",
+                        chats: [
+                            {
+                                clientName: "Harbor View",
+                                avatar: "https://cf.bstatic.com/xdata/images/hotel/max1024x768/261566046.jpg?k=4cfe859b080369303ee8124fece054c1012ff0e1b7a2850c7aa462a3f0827ba1&o=&hp=1",
+                                countOfUnreadMessages: 2,
+                                chatId: "",
+                            },
+                            {
+                                clientName: "Готель Україна",
+                                avatar: "https://cf.bstatic.com/xdata/images/hotel/max1024x768/579719496.jpg?k=1d8db7b66c669227f9efa5ecc1643a15d52974dccb920ae11090cd29bbab1963&o=&hp=1",
+                                countOfUnreadMessages: 1,
+                                chatId: "",
+                            },
+                        ],
+                    }}
+                    countOfUnreadMessages={3}
+                />
+            </div>
+
             <div className="chatContainer">
-                <div className="chatHeader">
-                    <div className="chatGroupName">
-                        <img src={props.postImage} alt="post" />
-                        <p>{props.postName}</p>
-                    </div>
+                <div className="chatGroupName">
+                    <img src={props.postImage} alt="post" />
+                    <p>{props.postName}</p>
+                </div>
+                <div className="chatUserContainer">
                     <div className="chatInfo">
                         <div className="userInfo">
                             <StyledAvatar
@@ -158,22 +182,23 @@ export default function ChatRoom() {
                             />
                             <p>{props.sendUserName}</p>
                         </div>
-                        <Button>Delete chat</Button>
+                        <Button onClick={deleteChat}>
+                            <img src={Trash} alt="delete" />
+                        </Button>
+                    </div>
+                    <div className="messageContainer">
+                        <div className="messages">
+                            {props.userMessages.map((msg, index) =>
+                                msg.userId === user?.id ? (
+                                    <MessageRight key={index} {...msg} />
+                                ) : (
+                                    <MessageLeft key={index} {...msg} />
+                                )
+                            )}
+                        </div>
+                        <ChatTextInput chatId={""} />
                     </div>
                 </div>
-
-                <StyledPaper elevation={2}>
-                    <MessagesBody id="style-1">
-                        {props.userMessages.map((msg, index) =>
-                            msg.userId === user?.id ? (
-                                <MessageRight key={index} {...msg} />
-                            ) : (
-                                <MessageLeft key={index} {...msg} />
-                            )
-                        )}
-                    </MessagesBody>
-                    <ChatTextInput></ChatTextInput>
-                </StyledPaper>
             </div>
         </div>
     );
