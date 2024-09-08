@@ -13,9 +13,13 @@ import { IDashboardMenuItem } from "../../../interfaces/common";
 import { initialMenuData } from "../../../utils/data";
 import { Status } from "../../../utils/enum";
 import { Loading } from "../../../components/common/Loading/Loading";
+import { Badge } from "@mui/material";
 
 export default function DashboardLayout() {
     const { user } = useAppSelector((state) => state.account);
+    const { generalNumberOfUnreadMessages } = useAppSelector(
+        (state) => state.chat
+    );
     const { status } = useAppSelector((state) => state.post);
     const { currentBreadcrumbsItem } = useAppSelector(
         (state) => state.settings
@@ -78,7 +82,7 @@ export default function DashboardLayout() {
                     >
                         <img src={Logo} alt="Logo" />
                     </a>
-                        {/* User Info */}
+                    {/* User Info */}
                     <div id="userInfo">
                         <div
                             id="avatar"
@@ -110,6 +114,13 @@ export default function DashboardLayout() {
                                 onClick={() => handleMenuClick(index)}
                             >
                                 <div className="text">
+                                <Badge badgeContent={item.counterOfMsg && generalNumberOfUnreadMessages} 
+                                 sx={{
+                                    "& .MuiBadge-badge": {
+                                      backgroundColor: "#FF6347",  
+                                      color: "white",              
+                                    },
+                                  }}>
                                     <img
                                         src={
                                             item.isActive
@@ -118,7 +129,9 @@ export default function DashboardLayout() {
                                         }
                                         alt={item.name}
                                     />
+                                    </Badge>
                                     <p className="menuItemsText">{item.name}</p>
+                                     
                                 </div>
                                 {isExpanded &&
                                     currentMenuItem === item.name && (
@@ -139,7 +152,7 @@ export default function DashboardLayout() {
                         ))}
                     </div>
                     {/* Logout Button */}
-                    <button   
+                    <button
                         id="footer"
                         onClick={async () => {
                             dispatch(logout());
@@ -147,20 +160,22 @@ export default function DashboardLayout() {
                             navigate("/authentication/login");
                         }}
                     >
-                        <><div id="line"></div>
-                        <div id="logOutButton">
-                            <img src={LogOut} alt="logOut" />
-                            <p>Log Out</p>
-                        </div></>
-                        
+                        <>
+                            <div id="line"></div>
+                            <div id="logOutButton">
+                                <img src={LogOut} alt="logOut" />
+                                <p>Log Out</p>
+                            </div>
+                        </>
                     </button>
                 </div>
 
                 {/* Dashboard Container */}
                 <div className="outlet">
-                     {status === Status.LOADING &&
-                            <Loading className="dashboardLoading"/>}  
-                    <Outlet/>
+                    {status === Status.LOADING && (
+                        <Loading className="dashboardLoading" />
+                    )}
+                    <Outlet />
                 </div>
             </div>
         </div>

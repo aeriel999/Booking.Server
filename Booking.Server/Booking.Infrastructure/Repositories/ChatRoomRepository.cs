@@ -2,7 +2,6 @@
 using Booking.Application.Chat.GetChatRoomsListForClient;
 using Booking.Application.Common.Interfaces.Chat;
 using Booking.Domain.Chat;
-using Booking.Domain.Users;
 using Booking.Infrastructure.Common.Persistence;
 using Microsoft.EntityFrameworkCore;
 
@@ -27,7 +26,7 @@ public class ChatRoomRepository(BookingDbContext context) : IChatRoomRepository
 		return await _dbSet.FindAsync(roomId);
 	}
 
-	public async Task<List<ChatRoom>> GetChatRoomListWithPostsByRealtorIdAsync(Guid realtorId)
+	public async Task<List<ChatRoom>> GetChatRoomListWithMessagesByRealtorIdAsync(Guid realtorId)
 	{
 		return await _dbSet
 			.Where(c => c.RealtorId == realtorId)
@@ -35,7 +34,16 @@ public class ChatRoomRepository(BookingDbContext context) : IChatRoomRepository
 			.ToListAsync();
 	}
 
-	public async Task<List<ChatRoom>> GetChatRoomListWithPostByUserIdAsync(Guid userId)
+
+	public async Task<List<ChatRoom>> GetChatRoomListByRealtorIdAsync(Guid realtorId)
+	{
+		return await _dbSet
+			.Where(c => c.RealtorId == realtorId)
+			.ToListAsync();
+	}
+
+
+	public async Task<List<ChatRoom>> GetChatRoomListWithMessagesByUserIdAsync(Guid userId)
 	{
 		return await _dbSet
 			.Where(c => c.ClientId == userId)

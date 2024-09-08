@@ -5,6 +5,7 @@ export interface IChatState {
     charRoomsForClient: IChatRoomListForClient[] | null;
     hasNewPosts: boolean;
     status: Status;
+    generalNumberOfUnreadMessages: number
 }
 
 export interface IChatRoomList {
@@ -44,6 +45,11 @@ export interface IUserMessage {
     chatRoomId: string;
     sentAt: string;
     isRead: boolean;
+}
+
+export interface ISendMessage{
+    message: string;
+    roomId:string;
 }
 
 export interface IChatRoomListForClient {

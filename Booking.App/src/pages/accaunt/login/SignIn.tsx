@@ -13,10 +13,10 @@ import { jwtDecode } from "jwt-decode";
 import { loginResolver } from "../../../validations/account";
 import { CredentialResponse, GoogleLogin } from "@react-oauth/google";
 import { startListening } from "../../../SignalR";
-import { getListOfChatRooms } from "../../../store/chat/chat.action.ts";
 import Header from "../../../components/authentification/Header.tsx";
 import { changeDashboardMenuItem } from "../../../store/settings/settings.slice.ts";
 import { RootState } from "../../../store/index.ts";
+import { getNumberOfUnleastMessages } from "../../../store/chat/chat.action.ts";
 
 export default function SignInPage() {
     const dispatch = useAppDispatch();
@@ -80,11 +80,11 @@ export default function SignInPage() {
         }
 
         try {
-            const response = await dispatch(getListOfChatRooms());
+            const response = await dispatch(getNumberOfUnleastMessages());
             unwrapResult(response);
         } catch (error) {
             setErrorMessage(ErrorHandler(error));
-        }
+         }
     };
 
     return (

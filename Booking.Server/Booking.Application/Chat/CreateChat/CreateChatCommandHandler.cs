@@ -36,7 +36,8 @@ public class CreateChatCommandHandler(
 			ClientId = request.UserId,
 			RealtorId = request.UserId,
 			PostId = request.PostId,
-			PostName = post.Name
+			PostName = post.Name,
+			NumberOfUnreadMessages = 0
 		};
 
 		await chatRoomRepositories.CreateChatRoomAsync(chatRoom);

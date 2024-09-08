@@ -4,7 +4,6 @@ using Booking.Application.Common.Interfaces.Users;
 using Booking.Domain.Posts;
 using ErrorOr;
 using MediatR;
-using Microsoft.Extensions.Hosting;
 
 namespace Booking.Application.Posts.GetListOfFeedbackForRealtor;
 

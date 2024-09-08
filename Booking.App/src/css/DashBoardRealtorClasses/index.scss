@@ -871,14 +871,14 @@
 
 .chatListItem {
     @include listPostItem;
+    background-color: #ececec;
+    border-radius: 10px;
 
     #chewron {
         width: 30px;
         height: 30px;
     }
 
-    background-color: #ececec;
-    border-radius: 10px;
 }
 
 .chatUseritem {
@@ -886,6 +886,8 @@
 
     width: 100%;
 }
+
+
 
 //Reviews
 
@@ -1085,4 +1087,21 @@
     width: 100%;
     position: absolute;
     backdrop-filter: blur(5px);
+}
+
+///Chat
+.generalCountOfMsg{
+    width: 30px;
+    height: 30px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 16px;
+    background: $primary-style-color;
+    color: var(--Backgrounds-Primary, $primary-font-color);
+    text-align: center;
+    font-size: $small-font-size;
+    font-style: $primary-font-normal-style;
+    font-weight: $normal-font-weight;
+    line-height: normal;
 }

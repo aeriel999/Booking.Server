@@ -26,13 +26,13 @@ namespace Booking.Api.Common.SignalR
 			await Groups.AddToGroupAsync(Context.ConnectionId, request.RoomId.ToString());
 		}
 
-		//CreatePostPostTypeOfRestAsync new chatroom and join it by client send notify for realtor about new chat
+		//Create new chatroom and join it by client send notify for realtor about new chat
 		public async Task<string> JoinNewPostChatByUser(RoomRequest request)
 		{
 			var userId = Context.User!.Claims.FirstOrDefault(
 				x => x.Type == ClaimTypes.NameIdentifier)!.Value;
 
-			//CreatePostPostTypeOfRestAsync and save chatRoom in DB
+			//Create and save chatRoom in DB
 			var createChatResult = await mediatr
 					.Send(new CreateChatCommand(request.RoomId, Guid.Parse(userId)));
 
@@ -67,7 +67,7 @@ namespace Booking.Api.Common.SignalR
 			return Groups.RemoveFromGroupAsync(Context.ConnectionId, request.RoomId.ToString());
 		}
 
-		//CreatePostPostTypeOfRestAsync and save new message in Db. Send new message 
+		//Create  and save new message in Db. Send new message 
 		public async Task SendMessage(InputMessage message)
 		{
 			var userId = Context.User!.Claims.FirstOrDefault(

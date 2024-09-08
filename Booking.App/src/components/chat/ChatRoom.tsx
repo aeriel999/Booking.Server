@@ -9,7 +9,6 @@ import "../../css/DashBoardAnonymousClasses/index.scss";
 import { ChatPostList } from "./ChatPostList";
 import Trash from "../../assets/DashboardIcons/mdi_trash-outline.svg";
 
-
 const StyledAvatar = styled(Avatar)({
     color: "#fff",
     backgroundColor: "#23a1a0",
@@ -196,7 +195,7 @@ export default function ChatRoom() {
                                 )
                             )}
                         </div>
-                        <ChatTextInput chatId={""} />
+                        <ChatTextInput roomId={""} />
                     </div>
                 </div>
             </div>

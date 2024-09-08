@@ -1,6 +1,7 @@
 ﻿using Booking.Api.Infrastructure;
 using Booking.Application.Chat.GetChatRoomsList;
 using Booking.Application.Chat.GetChatRoomsListForClient;
+using Booking.Application.Chat.GetNumberOfUnleastMessages;
 using MediatR;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Authorization;
@@ -55,4 +56,19 @@ public class ChatController(ISender mediatr) : ApiController
             getListOfChatRoomsForClientResult => Ok(getListOfChatRoomsForClientResult),
             errors => Problem(errors));
     }
+
+
+	[HttpGet("get-unread-messages-count")]
+	public async Task<IActionResult> GetNumberOfUnleastMessagesAsync()
+	{
+		var userId = User.Claims.First(u => u.Type == ClaimTypes.NameIdentifier).Value;
+
+		var getNumberOfUnleastMessagesResult = await mediatr.Send(
+			new GetNumberOfUnleastMessagesQuery(Guid.Parse(userId)));
+
+		return getNumberOfUnleastMessagesResult.Match(
+			getListOfChatRoomsResult => Ok(getListOfChatRoomsResult),
+			errors => Problem(errors));
+	}
+
 }

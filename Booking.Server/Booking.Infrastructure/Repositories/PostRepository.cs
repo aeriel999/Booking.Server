@@ -152,7 +152,6 @@ public class PostRepository(BookingDbContext context) : IPostRepository
 			.ToListAsync();
 	}
 
-
 	public async Task UpdatePostAsync(Post post)
 	{
 		await Task.Run
