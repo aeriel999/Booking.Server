@@ -16,10 +16,48 @@ const connection = new signalR.HubConnectionBuilder()
     })
     .build();
 
-export const startListening = () =>
-    connection.start().then(() => {
-        console.log("Conected");
-    });
+export const connectToSignalR = async (list: string[]) => {
+    if (connection.state === signalR.HubConnectionState.Disconnected) {
+        await connection
+            .start()
+            .then(() => {
+                if (list) {
+                    for (const id of list) {
+                        startListeningPost(id);
+                    }
+                }
+            })
+            .catch((err) => console.error("Connection failed: ", err));
+    } else {
+        console.log("Connection already started.");
+    }
+};
+
+export const startListeningPost = (roomId: string) =>
+    connection
+        .invoke("JoinPostChanelForNotifyByRealtor", { roomId })
+        .then(() => {
+            console.log("roomId", roomId);
+            connection.on("send_notify", (m) => joinForChatListening(m));
+        });
+
+export const joinForChatListening = (roomId: string) =>
+    connection
+        .invoke("JoinPostChanelForNotifyByRealtor", { roomId })
+        .then(() => {
+            console.log("Add to list", roomId);
+        });
+//   .then(() => connection.invoke("JoinRoomForListening",  "f694fed5-3f09-4cdb-a6c0-64590755f446" ))
+// .then((history) => {
+//     console.log("message history", history);
+
+//   connection.on('send_message', m => console.log(m))
+// connection.on('send_message', logMessage) // needed for working example
+// });
+//     .then((history) => {
+//     connection.on('send_notify', logMessage)
+//     console.log("history", history);
+// });
 // .then(() => {
 //     connection.on('send_notify', joinNewChatRoom)
 //     connection.on('send_message', logMessage)
@@ -30,19 +68,26 @@ export const endListening = () =>
         console.log("Disconnected");
     });
 
-export const joinForPostListening = (roomId: string) =>
-    connection
-        .invoke("JoinPostChanelForNotifyByRealtor", { roomId })
-        .then(() => {
-            console.log("joinForPostListening");
-        });
+export const joinNewPostChatByUser = (roomId: string) =>
+    connection.invoke("JoinNewPostChatByUser", { roomId }).then((history) => {
+        console.log("JoinNewPostChatByUser history", history);
+    });
+
+// export const joinRoomByClientForPost = (roomId: string) =>
+//     connection.invoke('joinRoomByClientForPost', {roomId})
+//         .then((history) => {
+//             console.log("Get Id for post",history);
+//             var currentRoom = history;
+//             console.log("currentRoom",currentRoom);
+
+//         });
 
 // export const send = (message: string, roomId : string) =>
 //     connection.send('SendMessage', {message, roomId})
 //
 //
 // export const joinForPostListening = (roomId: string) => connection.invoke("JoinRoomForListening", {roomId})
-// const logMessage = (m: string) => console.log("logMessage", m)
+const logMessage = (m: string) => console.log("logMessage", m);
 //
 // export const joinChatRoom = (roomId: string)=> connection.invoke('JoinRoomForListening', {roomId})
 //     .then((history) => {
@@ -54,14 +99,7 @@ export const joinForPostListening = (roomId: string) =>
 //
 //
 //
-// export const joinRoomByClientForPost = (roomId: string) =>
-//     connection.invoke('joinRoomByClientForPost', {roomId});
-//         // .then((history) => {
-//         //     console.log("Get Id for post",history);
-//         //     currentRoom = history;
-//         //     console.log("currentRoom",currentRoom);
-//         //
-//         // });
+
 //
 //
 //

@@ -6,6 +6,7 @@ export interface IChatState {
     hasNewPosts: boolean;
     status: Status;
     generalNumberOfUnreadMessages: number
+    listOfIdForListening: string[] | null
 }
 
 export interface IChatRoomList {

@@ -2,6 +2,7 @@
 using Booking.Application.Chat.GetChatRoomsList;
 using Booking.Application.Chat.GetChatRoomsListForClient;
 using Booking.Application.Chat.GetNumberOfUnleastMessages;
+using Booking.Application.Posts.GetPostIdListForRealtor;
 using MediatR;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Authorization;
@@ -71,4 +72,18 @@ public class ChatController(ISender mediatr) : ApiController
 			errors => Problem(errors));
 	}
 
+
+	[HttpGet("get-post-id-list-for-realtor")]
+	public async Task<IActionResult> GetPostIdListForListeningChatsByRealtorAsync()
+	{
+		var userId = User.Claims.First(u => u.Type == ClaimTypes.NameIdentifier).Value;
+
+		var getPostIdListForRealtorResult = await mediatr.Send(
+			new GetPostIdListForRealtorQuery(Guid.Parse(userId)));
+
+		return getPostIdListForRealtorResult.Match(
+			getPostIdListForRealtorResult => Ok(
+				getPostIdListForRealtorResult),
+			errors => Problem(errors));
+	}
 }

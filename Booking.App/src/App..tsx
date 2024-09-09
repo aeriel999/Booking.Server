@@ -40,9 +40,11 @@ import { ClientProfileEditPage } from "./containers/client/ClientProfileEditPage
 import { HistoryOfFeedbacksPage } from "./containers/client/HistoryOfFeedbacksPage/HistoryOfFeedbacksPage.tsx";
 import { RealtorPageForClient } from "./containers/client/RealtorPageForClient/RealtorPageForClient.tsx";
 import { PageOfMessages } from "./containers/client/PageOfMessages/PageOfMessages.tsx";
+import { connectToSignalR, startListeningPost } from "./SignalR/index.ts";
 
 export const App: React.FC = () => {
     const { isLogin, user } = useAppSelector((state) => state.account);
+    const { listOfIdForListening } = useAppSelector((state) => state.chat);
 
     const role = () => {
         if (user?.role.toLowerCase().includes("realtor")) {
@@ -53,6 +55,14 @@ export const App: React.FC = () => {
             return "admin";
         }
     };
+
+    if (isLogin) {
+        try {
+            connectToSignalR(listOfIdForListening!);
+        } catch (e) {
+            console.log("catch", e);
+        }
+    }
 
     return (
         <Routes>
@@ -114,40 +124,41 @@ export const App: React.FC = () => {
                         </Route>
                     )}
 
-                    {role() === "user" && (<>
-                        <Route
-                            path="/dashboard"
-                            element={<ClientDashboardLayout />}
-                        >
-                            <Route index element={<ListOfPostPage />} />
+                    {role() === "user" && (
+                        <>
                             <Route
-                                path="/dashboard/post/:postId"
-                                element={<PostOfPage />}
-                            />
-                            <Route
-                                path="/dashboard/post/:postId/realtor/:realtorId"
-                                element={<RealtorPage />}
-                            />
-                            
-                            <Route
-                                path="/dashboard/profile"
-                                element={<ClientProfilePage />}
-                            />
-                            <Route
-                                path="/dashboard/profile/edit"
-                                element={<ClientProfileEditPage />}
-                            />
-                            <Route
-                                path="/dashboard/profile/history-of-feedbacks"
-                                element={<HistoryOfFeedbacksPage />}
-                            />
-                            <Route
-                                path="/dashboard/profile/page-of-messages"
-                                element={<PageOfMessages />}
-                            />
-                        </Route>
+                                path="/dashboard"
+                                element={<ClientDashboardLayout />}
+                            >
+                                <Route index element={<ListOfPostPage />} />
+                                <Route
+                                    path="/dashboard/post/:postId"
+                                    element={<PostOfPage />}
+                                />
+                                <Route
+                                    path="/dashboard/post/:postId/realtor/:realtorId"
+                                    element={<RealtorPage />}
+                                />
 
-                    </>)}
+                                <Route
+                                    path="/dashboard/profile"
+                                    element={<ClientProfilePage />}
+                                />
+                                <Route
+                                    path="/dashboard/profile/edit"
+                                    element={<ClientProfileEditPage />}
+                                />
+                                <Route
+                                    path="/dashboard/profile/history-of-feedbacks"
+                                    element={<HistoryOfFeedbacksPage />}
+                                />
+                                <Route
+                                    path="/dashboard/profile/page-of-messages"
+                                    element={<PageOfMessages />}
+                                />
+                            </Route>
+                        </>
+                    )}
                 </>
             )}
 

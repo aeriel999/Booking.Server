@@ -61,4 +61,7 @@ public interface IPostRepository
 
 
 	Task<int> GetCountOfImagesByPostIdAsync(Guid postId);
+
+
+	Task<List<Guid>?> GetListOfPostIdForRealtor(Guid userId);
 }

@@ -92,4 +92,9 @@ public class ChatRoomRepository(BookingDbContext context) : IChatRoomRepository
             .Distinct()
             .ToListAsync();
     }
+
+	public async Task<ChatRoom?> GetChatRoomByPostIdAndUserIdAsync(Guid userId, Guid postId)
+	{
+		return await _dbSet.Where(c => c.ClientId == userId && c.PostId == postId).FirstOrDefaultAsync();
+	}
 }

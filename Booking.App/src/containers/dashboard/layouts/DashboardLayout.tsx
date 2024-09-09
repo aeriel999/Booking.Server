@@ -5,7 +5,7 @@ import ArrowBack from "../../../assets/DashboardIcons/chevron-left.svg";
 import { Outlet, useNavigate } from "react-router-dom";
 import { useAppDispatch, useAppSelector } from "../../../hooks/redux";
 import { logout } from "../../../store/accounts/account.slice";
-import { endListening } from "../../../SignalR";
+import { endListening, startListeningPost } from "../../../SignalR";
 import { useEffect, useState } from "react";
 import { APP_ENV } from "../../../env";
 import { changeDashboardMenuItem } from "../../../store/settings/settings.slice";
@@ -114,24 +114,28 @@ export default function DashboardLayout() {
                                 onClick={() => handleMenuClick(index)}
                             >
                                 <div className="text">
-                                <Badge badgeContent={item.counterOfMsg && generalNumberOfUnreadMessages} 
-                                 sx={{
-                                    "& .MuiBadge-badge": {
-                                      backgroundColor: "#FF6347",  
-                                      color: "white",              
-                                    },
-                                  }}>
-                                    <img
-                                        src={
-                                            item.isActive
-                                                ? item.activeImage
-                                                : item.image
+                                    <Badge
+                                        badgeContent={
+                                            item.counterOfMsg &&
+                                            generalNumberOfUnreadMessages
                                         }
-                                        alt={item.name}
-                                    />
+                                        sx={{
+                                            "& .MuiBadge-badge": {
+                                                backgroundColor: "#FF6347",
+                                                color: "white",
+                                            },
+                                        }}
+                                    >
+                                        <img
+                                            src={
+                                                item.isActive
+                                                    ? item.activeImage
+                                                    : item.image
+                                            }
+                                            alt={item.name}
+                                        />
                                     </Badge>
                                     <p className="menuItemsText">{item.name}</p>
-                                     
                                 </div>
                                 {isExpanded &&
                                     currentMenuItem === item.name && (

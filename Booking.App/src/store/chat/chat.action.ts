@@ -45,3 +45,17 @@ export const getNumberOfUnleastMessages = createAsyncThunk(
         }
     }
 );
+
+export const getPostIdListForListeningChatsByRealtor = createAsyncThunk(
+    "chat/get-post-id-list-for-realtor",
+    async (_, { rejectWithValue }) => {
+        try {
+            const response = await apiClient.get(
+                "/api/Chat/get-post-id-list-for-realtor"
+            );
+            return response.data;
+        } catch (error) {
+            return rejectWithValue(handleAxiosError(error, "Network error"));
+        }
+    }
+);

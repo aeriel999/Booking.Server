@@ -6,7 +6,13 @@ import {
     getListOfChatRooms,
     getListOfChatRoomsForClient,
     getNumberOfUnleastMessages,
+    getPostIdListForListeningChatsByRealtor,
 } from "./chat.action.ts";
+import {
+    addlistToLocalStorage,
+    addLocalStorage,
+    getListFromLocalStorage,
+} from "../../utils/storage/localStorageUtils.ts";
 
 function isRejectedAction(action: AnyAction): action is RejectedAction {
     return action.type.endsWith("/rejected");
@@ -18,6 +24,7 @@ const initialState: IChatState = {
     hasNewPosts: false,
     status: Status.IDLE,
     generalNumberOfUnreadMessages: 0,
+    listOfIdForListening: getListFromLocalStorage("updateListOfIdForListening"),
 };
 
 export const chatSlice = createSlice({
@@ -35,6 +42,16 @@ export const chatSlice = createSlice({
             action: PayloadAction<number>
         ) => {
             state.generalNumberOfUnreadMessages = action.payload;
+        },
+        updateListOfIdForListening: (
+            state: IChatState,
+            action: PayloadAction<string>
+        ) => {
+            state.listOfIdForListening!.push(action.payload);
+            addlistToLocalStorage(
+                "updateListOfIdForListening",
+                state.listOfIdForListening!
+            );
         },
     },
     extraReducers: (builder) => {
@@ -63,7 +80,24 @@ export const chatSlice = createSlice({
             .addCase(getNumberOfUnleastMessages.pending, (state) => {
                 state.status = Status.LOADING;
             })
-
+            .addCase(
+                getPostIdListForListeningChatsByRealtor.fulfilled,
+                (state, action) => {
+                    state.listOfIdForListening = action.payload.$values;
+                    addlistToLocalStorage(
+                        "updateListOfIdForListening",
+                        state.listOfIdForListening!
+                    );
+                    state.status = Status.SUCCESS;
+                }
+            )
+            .addCase(
+                getPostIdListForListeningChatsByRealtor.pending,
+                (state) => {
+                    state.status = Status.LOADING;
+                }
+            )
+            //
             .addMatcher(isRejectedAction, (state) => {
                 state.status = Status.ERROR;
             });
@@ -74,5 +108,6 @@ export const {
     addNewPostState,
     deleteNewPostState,
     changeGeneralNumberOfUnreadMessages,
+    updateListOfIdForListening,
 } = chatSlice.actions;
 export default chatSlice.reducer;
