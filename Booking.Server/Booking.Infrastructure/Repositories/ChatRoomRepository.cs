@@ -97,4 +97,22 @@ public class ChatRoomRepository(BookingDbContext context) : IChatRoomRepository
 	{
 		return await _dbSet.Where(c => c.ClientId == userId && c.PostId == postId).FirstOrDefaultAsync();
 	}
+
+	public async Task<List<Guid>?> GetChatRoomIdListByRealtorIdAsync(Guid realtorId)
+	{
+		var list = await _dbSet
+			.Where(c => c.RealtorId == realtorId)
+			.ToListAsync();
+
+		return list.Select(c => c.ChatRoomId).ToList();  
+	}
+
+	public async Task<List<Guid>?> GetChatRoomIdListByUserIdAsync(Guid userId)
+	{
+		var list = await _dbSet
+			.Where(c => c.ClientId == userId)
+			.ToListAsync();
+
+		return list.Select(c => c.ChatRoomId).ToList();
+	}
 }

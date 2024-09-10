@@ -45,7 +45,10 @@ import EditImageUploader from "../../components/realtorDashboard/EditImageUpload
 import EditListImagesUploader from "../../components/realtorDashboard/EditListImagesUploader.tsx";
 import EditRoom from "../../components/realtorDashboard/EditRoom.tsx";
 import { changeDashboardMenuItem } from "../../store/settings/settings.slice.ts";
-import { joinForPostListening, connectToSignalR } from "../../SignalR/index.ts";
+import {
+    joinForPostListening,
+    connectForRealtorToSignalR,
+} from "../../SignalR/index.ts";
 
 export function EditPost() {
     const { postId } = useParams();

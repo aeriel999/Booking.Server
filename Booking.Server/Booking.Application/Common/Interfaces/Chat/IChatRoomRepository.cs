@@ -36,4 +36,10 @@ public interface IChatRoomRepository
 
 
 	Task<ChatRoom?> GetChatRoomByPostIdAndUserIdAsync(Guid userId, Guid postId);
+
+
+	Task<List<Guid>?> GetChatRoomIdListByRealtorIdAsync(Guid realtorId);
+
+
+	Task<List<Guid>?> GetChatRoomIdListByUserIdAsync(Guid userId);
 }

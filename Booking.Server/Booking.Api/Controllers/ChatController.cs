@@ -1,4 +1,5 @@
 ﻿using Booking.Api.Infrastructure;
+using Booking.Application.Chat.GetChatIdList;
 using Booking.Application.Chat.GetChatRoomsList;
 using Booking.Application.Chat.GetChatRoomsListForClient;
 using Booking.Application.Chat.GetNumberOfUnleastMessages;
@@ -84,6 +85,21 @@ public class ChatController(ISender mediatr) : ApiController
 		return getPostIdListForRealtorResult.Match(
 			getPostIdListForRealtorResult => Ok(
 				getPostIdListForRealtorResult),
+			errors => Problem(errors));
+	}
+
+	[HttpGet("get-chat-id-list")]
+	public async Task<IActionResult> GetChatIdListAsync()
+	{
+		var userId = User.Claims.First(u => u.Type == ClaimTypes.NameIdentifier).Value;
+		var useRole = User.Claims.First(u => u.Type == ClaimTypes.Role).Value;
+
+		var getChatIdListResult = await mediatr.Send(
+			new GetChatIdListQuery(Guid.Parse(userId), useRole));
+
+		return getChatIdListResult.Match(
+			getChatIdListResult => Ok(
+				getChatIdListResult),
 			errors => Problem(errors));
 	}
 }

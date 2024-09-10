@@ -5,8 +5,9 @@ export interface IChatState {
     charRoomsForClient: IChatRoomListForClient[] | null;
     hasNewPosts: boolean;
     status: Status;
-    generalNumberOfUnreadMessages: number
-    listOfIdForListening: string[] | null
+    generalNumberOfUnreadMessages: number;
+    listOfPostIdForListening: string[] | null;
+    listOfChatsIdForListening: string[] | null
 }
 
 export interface IChatRoomList {
@@ -48,25 +49,24 @@ export interface IUserMessage {
     isRead: boolean;
 }
 
-export interface ISendMessage{
+export interface ISendMessage {
     message: string;
-    roomId:string;
+    roomId: string;
 }
 
 export interface IChatRoomListForClient {
     realtorId: string;
     realtorAvatar: string;
-    realtorName: string,
-    hasUnreadMessages: boolean,
-    unreadMessages: number | null,
-    chatsForClient: IChatRoomForClient[]
-
+    realtorName: string;
+    hasUnreadMessages: boolean;
+    unreadMessages: number | null;
+    chatsForClient: IChatRoomForClient[];
 }
 
 export interface IChatRoomForClient {
     chatRoomId: string;
     postImage: string;
-    postName: string,
-    hasUnreadMessages: boolean,
-    unreadMessages: number | null
+    postName: string;
+    hasUnreadMessages: boolean;
+    unreadMessages: number | null;
 }

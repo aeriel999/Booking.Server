@@ -36,7 +36,7 @@ import CheckboxList from "../../components/realtorDashboard/CheckBoxList.tsx";
 import { changeDashboardMenuItem } from "../../store/settings/settings.slice.ts";
 import Room from "../../components/realtorDashboard/Room.tsx";
 import Plus from "../../assets/DashboardIcons/iconamoon_sign-plus-fill.svg";
-import { updateListOfIdForListening } from "../../store/chat/chat.slice.ts";
+import { updateListOfPostIdForListening } from "../../store/chat/chat.slice.ts";
 
 export function AddNewPost() {
     const dispatch = useAppDispatch();
@@ -283,7 +283,7 @@ export function AddNewPost() {
 
                 //join chanel for listening of creating of new chatrooms
                 //update list of posts id for reconection for listening
-                dispatch(updateListOfIdForListening(response.payload.id));
+                dispatch(updateListOfPostIdForListening(response.payload.id));
                 await joinForPostListening(response.payload.id);
 
                 dispatch(changeDashboardMenuItem("All Posts")); //set menu item

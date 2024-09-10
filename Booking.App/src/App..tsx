@@ -40,11 +40,13 @@ import { ClientProfileEditPage } from "./containers/client/ClientProfileEditPage
 import { HistoryOfFeedbacksPage } from "./containers/client/HistoryOfFeedbacksPage/HistoryOfFeedbacksPage.tsx";
 import { RealtorPageForClient } from "./containers/client/RealtorPageForClient/RealtorPageForClient.tsx";
 import { PageOfMessages } from "./containers/client/PageOfMessages/PageOfMessages.tsx";
-import { connectToSignalR, startListeningPost } from "./SignalR/index.ts";
+import { connectionForRealtorToSignalR } from "./SignalR/index.ts";
 
 export const App: React.FC = () => {
     const { isLogin, user } = useAppSelector((state) => state.account);
-    const { listOfIdForListening } = useAppSelector((state) => state.chat);
+    const { listOfPostIdForListening: listOfIdForListening } = useAppSelector(
+        (state) => state.chat
+    );
 
     const role = () => {
         if (user?.role.toLowerCase().includes("realtor")) {
@@ -57,11 +59,11 @@ export const App: React.FC = () => {
     };
 
     if (isLogin) {
-        try {
-            connectToSignalR(listOfIdForListening!);
-        } catch (e) {
-            console.log("catch", e);
-        }
+        connectionForRealtorToSignalR(listOfIdForListening!);
+
+        // if(role() === "realtor" && listOfIdForListening){
+        //     startListeningPostChanelsForJoiningToNewChats(listOfIdForListening);
+        // }
     }
 
     return (

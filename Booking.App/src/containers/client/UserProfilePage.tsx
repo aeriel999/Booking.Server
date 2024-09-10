@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import { getListOfChatRooms } from "../../store/chat/chat.action.ts";
 import { unwrapResult } from "@reduxjs/toolkit";
-import { connectToSignalR } from "../../SignalR";
+import { connectForRealtorToSignalR } from "../../SignalR";
 import { useAppDispatch, useAppSelector } from "../../hooks/redux";
 import {
     Avatar,
@@ -41,7 +41,7 @@ export default function UserProfilePage() {
             };
 
             getRooms();
-            connectToSignalR();
+            connectForRealtorToSignalR();
         }
     }, [user]);
 

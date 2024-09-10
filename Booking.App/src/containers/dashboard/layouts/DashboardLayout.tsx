@@ -5,7 +5,7 @@ import ArrowBack from "../../../assets/DashboardIcons/chevron-left.svg";
 import { Outlet, useNavigate } from "react-router-dom";
 import { useAppDispatch, useAppSelector } from "../../../hooks/redux";
 import { logout } from "../../../store/accounts/account.slice";
-import { endListening, startListeningPost } from "../../../SignalR";
+import { endListening } from "../../../SignalR";
 import { useEffect, useState } from "react";
 import { APP_ENV } from "../../../env";
 import { changeDashboardMenuItem } from "../../../store/settings/settings.slice";

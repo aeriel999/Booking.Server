@@ -27,7 +27,7 @@ import Button from "@mui/material/Button";
 import { logout } from "../../../store/accounts/account.slice.ts";
 import LogoutIcon from "@mui/icons-material/Logout";
 import StarBorder from "@mui/icons-material/StarBorder";
-import { connectToSignalR } from "../../../SignalR";
+import { connectForRealtorToSignalR } from "../../../SignalR";
 import { getListOfChatRooms } from "../../../store/chat/chat.action.ts";
 import { unwrapResult } from "@reduxjs/toolkit";
 import { Collapse } from "@mui/material";
@@ -125,7 +125,7 @@ export default function ClientDashboardLayout() {
     }, [user]);
 
     useEffect(() => {
-        connectToSignalR();
+        connectForRealtorToSignalR();
         getRealtors();
     }, []);
     useEffect(() => {

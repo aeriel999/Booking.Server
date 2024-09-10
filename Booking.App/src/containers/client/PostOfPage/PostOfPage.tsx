@@ -28,7 +28,10 @@ import { cutNumber } from "../../../utils/data";
 import { unwrapResult } from "@reduxjs/toolkit";
 import ErrorHandler from "../../../components/common/ErrorHandler";
 import OutlinedErrorAlert from "../../../components/common/ErrorAlert";
-import { joinNewPostChatByUser, connectToSignalR } from "../../../SignalR";
+import {
+    joinNewPostChatByUser,
+  
+} from "../../../SignalR";
 
 export const PostOfPage = () => {
     const navigate = useNavigate();

@@ -21,7 +21,7 @@ namespace Booking.Api.Common.SignalR
 	{
 		//Join for listening of new chats for post.
 		//Add in creating of new post or after notify about creating of new chat by user
-		public async Task JoinPostChanelForNotifyByRealtor(RoomRequest request)
+		public async Task JoinNewChanelOrNewChatRoomForListening(RoomRequest request)
 		{
 			await Groups.AddToGroupAsync(Context.ConnectionId, request.RoomId.ToString());
 		}
