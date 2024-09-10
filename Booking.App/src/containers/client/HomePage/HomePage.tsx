@@ -70,7 +70,7 @@ export const HomePage = () => {
 
                     <div className='places'>
                         {typesOfRest != null ? typesOfRest.map((item) => (
-                            <div key={item.id}>
+                            <div className='place-item' key={item.id} onClick={() => navigate(`posts/post/${item.postId}`)} >
                                 <div className='place-image' style={
                                     {
                                         backgroundImage: `url(${APP_ENV.BASE_URL}/images/posts/${item.image})`,

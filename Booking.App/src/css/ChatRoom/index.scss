@@ -1,0 +1,95 @@
+@import '../variables.scss';
+
+#chat-room {
+    width: 100%;
+    //height: 100%;
+    height: auto;
+    max-height: 80vh;
+    // min-height: 580px;
+    display: flex;
+    flex-direction: column;
+    border-radius: 10px;
+    border: 1px solid #6C6C6C;
+
+    .chat-room-header {
+        width: 100%;
+        display: flex;
+        flex-direction: column;
+        font-style: $primary-font-normal-style;
+        line-height: normal;
+
+        .post {
+            width: 100%;
+            display: flex;
+            column-gap: 28px;
+            padding: 12px 35px;
+            box-sizing: border-box;
+            border-bottom: 1px solid #6C6C6C;
+
+            img {
+                width: 100px;
+                height: 40px;
+            }
+
+            p {
+                font-weight: $normal-font-weight;
+            }
+        }
+
+        .realtor {
+            width: 100%;
+            display: flex;
+            column-gap: 28px;
+            padding: 22px 35px;
+            box-sizing: border-box;
+            border-bottom: 1px solid #6C6C6C;
+
+            img {
+                width: 60px;
+                height: 60px;
+                border-radius: 60px;
+            }
+
+            p {
+                font-size: $small-font-size;
+                font-weight: $bold-font-weight;
+            }
+        }
+    }
+
+    .chat-room-messages {
+        height: 80%;
+        display: flex;
+        flex-direction: column;
+        row-gap: 10px;
+        box-sizing: border-box;
+        padding: 12px 25px;
+
+        .messages {
+            max-height: 80%;
+
+            display: flex;
+            flex-direction: column;
+            row-gap: 12px;
+            overflow-y: auto;
+            padding-right: 5px;
+
+            &::-webkit-scrollbar {
+                margin-left: 10px;
+                width: 13px;
+            }
+
+            &::-webkit-scrollbar-thumb {
+                border: 3px solid rgba(0, 0, 0, 0);
+                background-clip: padding-box;
+                border-radius: 30px;
+                background-color: $primary-style-color;
+            }
+        }
+
+        .send-message {
+            height: 20%;
+            margin-top: 10px;
+        }
+    }
+}

@@ -309,12 +309,12 @@ export interface IPostEdit {
     editRooms: IEditRoom[] | null;
 }
 
-export interface IEditRoom{
+export interface IEditRoom {
     id: string;
     numberOfGuests: number | null;
-    numberOfRooms: number  | null;
+    numberOfRooms: number | null;
     discount: number | null;
-    price: number  | null;
+    price: number | null;
     mainImage: File | null;
 }
 
@@ -340,8 +340,7 @@ export interface IGetTypeOfRestWithImage {
     id: string,
     name: string,
     image: string
-    id: string;
-    name: string;
+    postId: string;
 }
 export interface IGetFeedbacksRequest {
     id: string;

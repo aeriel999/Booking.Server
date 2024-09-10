@@ -200,7 +200,8 @@ public class PostMapping : IRegister
         config.NewConfig<PostTypeOfRest, GetTypeOfRestResponse>()
 			.Map(desp => desp.Id, src => src.Id)
 			.Map(desp => desp.Name, src => src.Name)
-			.Map(desp => desp.Image, src => src.PostPostTypesOfRest!.FirstOrDefault()!.Post!.ImagesPost!.FirstOrDefault(img => img.Priority == 1)!.Name);
+			.Map(desp => desp.Image, src => src.PostPostTypesOfRest!.FirstOrDefault()!.Post!.ImagesPost!.FirstOrDefault(img => img.Priority == 1)!.Name)
+			.Map(desp => desp.PostId, src => src.PostPostTypesOfRest!.FirstOrDefault()!.Post!.Id);
 
 
         config.NewConfig<(GetFilteredListRequest request,string name),
