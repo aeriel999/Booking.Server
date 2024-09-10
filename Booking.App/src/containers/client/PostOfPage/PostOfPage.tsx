@@ -15,7 +15,7 @@ import { Rating } from "../../../components/common/Rating/Rating";
 import { Feedback } from "../../../components/common/Feedback/Feedback";
 import { IGetFeedbacksRequest, ISendFeedback } from "../../../interfaces/post";
 import { Pagination } from "../../../components/common/Pagination/Pagination";
-import { TextArea } from "../../../components/common/TextArea/TextArea";
+import { FeedbackTextArea } from "../../../components/common/FeedbackTextArea/FeedbackTextArea";
 import { savePath } from "../../../store/settings/settings.slice";
 import { RoomCard } from "../../../components/common/RoomCard/RoomCard";
 import { setIdOfSelectedFeedback } from "../../../store/post/post.slice";
@@ -50,7 +50,13 @@ export const PostOfPage = () => {
 
 
     const getPost = async (id: string) => {
-        await dispatch(getPostById(id));
+        try {
+            var result = await dispatch(getPostById(id));
+            unwrapResult(result);
+        } catch (error) {
+            setErrorMessage(ErrorHandler(error))
+        }
+
     }
     const getFeedbacks = async () => {
         const response: IGetFeedbacksRequest = {
@@ -58,13 +64,25 @@ export const PostOfPage = () => {
             page: pageOfFeedbacks,
             sizeOfPage: 2
         }
-        await dispatch(getFeedbacksByPost(response));
+
+        try {
+            var result = await dispatch(getFeedbacksByPost(response));
+            unwrapResult(result);
+        } catch (error) {
+            setErrorMessage(ErrorHandler(error))
+        }
     }
     const getFeedbackByPage = async () => {
-        await dispatch(getPageOfSelectedFeedback({
-            feedbackId: selectedFeedback!,
-            postId: postId!
-        }));
+
+        try {
+            var result = await dispatch(getPageOfSelectedFeedback({
+                feedbackId: selectedFeedback!,
+                postId: postId!
+            }));
+            unwrapResult(result);
+        } catch (error) {
+            setErrorMessage(ErrorHandler(error))
+        }
     }
     useEffect(() => {
         getPost(postId!);
@@ -250,7 +268,7 @@ export const PostOfPage = () => {
                                                 </div> : ""}
                                             </div>
                                             <div className="send-feedback-text-area">
-                                                <TextArea
+                                                <FeedbackTextArea
                                                     maxLength={300}
                                                     //setText={setFeedbackMessage}
                                                     onClickSend={sendFeedbackAsync} />

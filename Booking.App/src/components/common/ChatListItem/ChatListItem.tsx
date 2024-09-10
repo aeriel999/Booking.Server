@@ -2,7 +2,7 @@ import chewronTop from "../../../assets/Icons/chevron-top.svg";
 import chewronDown from "../../../assets/Icons/chevron-down.svg";
 import { Avatar } from "../Avatar/Avatar";
 import '../../../css/ChatListItem/index.scss';
-import { useEffect, useState } from "react";
+import { useState } from "react";
 
 interface IChatListItem {
     chatItem: {

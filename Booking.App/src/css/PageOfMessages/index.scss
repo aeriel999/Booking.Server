@@ -1,32 +1,118 @@
+@import '../variables.scss';
+
 .page-of-messages-container {
     width: 100%;
     display: grid;
-    grid-template-columns: 40% 60%;
+    grid-template-columns: minmax(320px, 30%) 70%;
+
     grid-template-rows: auto;
     column-gap: 22px;
+    max-height: 95%;
+    //overflow: hidden;
 
     .first-container {
         width: 100%;
-        height: auto;
-
+        height: 100%;
+        //min-width: 320px;
+        //height: auto;
+        //max-height: 95vh;
+        /*max-height: 625px;
         border: 1px solid black;
         border-radius: 10px;
         box-sizing: border-box;
         padding: 10px;
         padding-left: 0px;
-        overflow: hidden;
+        overflow: hidden;*/
 
         .chat-list {
             height: auto;
             max-height: 625px;
-
+            border: 1px solid black;
+            border-radius: 10px;
             display: flex;
             flex-direction: column;
             overflow-y: auto;
+            position: relative;
 
+            &::-webkit-scrollbar {
+
+                width: 13px;
+
+            }
+
+            &::-webkit-scrollbar-thumb {
+
+                border: 3px solid rgba(0, 0, 0, 0);
+                background-clip: padding-box;
+                border-radius: 30px;
+                background-color: $primary-style-color;
+            }
         }
     }
 
+    .chatContainer {
+        width: 100%;
+        //max-width: 100%;
+        height: 98%;
+        flex-shrink: 0;
 
+        //  border: 1px solid $menu-border-color;
+        background: #fdfdff;
+        display: flex;
+        flex-direction: column;
+        padding-bottom: 10px;
+
+        .chatHeader {
+            display: flex;
+            //  height: 10%;
+            min-height: 130px;
+            //  background-color: #8e3838;
+            flex-shrink: 0;
+            // border-radius: 10px 10px 0px 0px;
+            //  border: 1px solid #6C6C6C;
+            flex-direction: column;
+            gap: 5px;
+
+            .chatGroupName {
+                display: flex;
+                justify-content: flex-start;
+                align-items: center;
+                //   background-color: #4a2289;
+                height: 40%;
+                min-height: 45px;
+                padding-left: 10px;
+                gap: 10px;
+
+                img {
+                    height: 40px;
+                }
+
+                p {
+                    font-weight: 500;
+                }
+            }
+
+            .chatInfo {
+                display: flex;
+                width: 100%;
+                //justify-content: space-between;
+                border-radius: 10px;
+                border: 1px solid $menu-border-color;
+
+                .userInfo {
+                    display: flex;
+                    gap: 15px;
+                    align-items: center;
+                    //   background-color: #30b175;
+                    padding-left: 10px;
+                }
+
+                .deleteButton {
+
+                    margin-left: auto;
+                }
+            }
+        }
+    }
 
 }

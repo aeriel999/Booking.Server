@@ -1,9 +1,9 @@
 import { useRef, useState } from 'react';
-import '../../../css/TextAreaClasses/index.scss';
+import '../../../css/FeedbackTextAreaClasses/index.scss';
 import sendMessage from '../../../assets/Icons/send.svg';
 import { SubmitHandler, useForm } from "react-hook-form";
 
-interface ITextArea {
+interface IFeedbackTextArea {
 
     maxLength: number,
     //setText: React.Dispatch<React.SetStateAction<string | null>>,
@@ -12,7 +12,7 @@ interface ITextArea {
 type FeedbackForm = {
     feedbackText: string
 };
-export const TextArea = (info: ITextArea) => {
+export const FeedbackTextArea = (info: IFeedbackTextArea) => {
 
     const [textLength, setTextLength] = useState<number>(0);
     const buttonCounterRef = useRef<HTMLDivElement>(null);

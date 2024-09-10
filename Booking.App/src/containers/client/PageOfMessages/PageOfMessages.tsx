@@ -5,15 +5,30 @@ import { AppDispatch, RootState } from '../../../store';
 import { useAppSelector } from '../../../hooks/redux';
 import { useEffect } from 'react';
 import { getListOfChatRoomsForClient } from '../../../store/chat/chat.action';
+import { IChatRoom, IUserMessage } from '../../../interfaces/chat';
+
+import { styled } from "@mui/system";
+import Paper from "@mui/material/Paper";
+import { Avatar, Button } from "@mui/material";
+import { MessageLeft, MessageRight } from "../../../components/chat/Message";
+import { ChatTextInput } from "../../../components/chat/ChatTextInput";
+import UAvatar from "../../../assets/Templates/Rectangle-50.webp";
+import { deepOrange } from "@mui/material/colors";
+import "../../../css/DashBoardRealtorClasses/index.scss";
+import { ChatRoom } from '../ChatRoom/ChatRoom';
+
+
+
 
 export const PageOfMessages = () => {
 
-    const listOfChatRoomsForClient = useAppSelector((state: RootState) => state.chat.charRoomsForClient);
+    //const listOfChatRoomsForClient = useAppSelector((state: RootState) => state.chat.charRoomsForClient);
+    const { user } = useAppSelector((state) => state.account);
     const dispatch = useDispatch<AppDispatch>();
 
-    const getChats = async () => {
+    /*const getChats = async () => {
         await dispatch(getListOfChatRoomsForClient());
-    }
+    }*/
     useEffect(() => {
 
     }, [])
@@ -63,10 +78,51 @@ export const PageOfMessages = () => {
                         }
                         countOfUnreadMessages={3}
                     />
-
-
                 </div>
+
             </div>
+            <ChatRoom
+                postImage='https://cf.bstatic.com/xdata/images/hotel/max1024x768/585364794.jpg?k=9efa57e0a316aa1c4a0661edd8103e5f670b8af21cd17b851c75d0ce21e74a1c&o=&hp=1'
+                postName='Атлас Делюкс Готель'
+                realtorAvatar='https://cdn-icons-png.flaticon.com/512/3177/3177440.png'
+                realtorName='Zubar Maxim' />
 
         </div>)
 }
+/*
+<div className="chatContainer">
+                <div className="chatHeader">
+                    <div className="chatGroupName">
+                        <img src={props.postImage} alt="post" />
+                        <p>{props.postName}</p>
+                    </div>
+                    <div className="chatInfo">
+                        <div className="userInfo">
+                            <StyledAvatar
+                                alt={props.sendUserName}
+                                src={
+                                    props.sendUserAvatar == null
+                                        ? UAvatar
+                                        : props.sendUserAvatar
+                                }
+                            />
+                            <p>{props.sendUserName}</p>
+                        </div>
+                        <Button className='deleteButton'>Delete chat</Button>
+                    </div>
+                </div>
+                
+                <StyledPaper elevation={2} style={{ maxHeight: 650 }}>
+                    <MessagesBody id="style-1" style={{ flex: 1 }}>
+                        {props.userMessages.map((msg, index) =>
+                            msg.userId === user?.id ? (
+                                <MessageRight key={index} {...msg} />
+                            ) : (
+                                <MessageLeft key={index} {...msg} />
+                            )
+                        )}
+                    </MessagesBody>
+                    <ChatTextInput></ChatTextInput>
+                </StyledPaper>
+            </div>
+*/
