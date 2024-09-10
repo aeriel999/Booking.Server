@@ -4,9 +4,11 @@ using ErrorOr;
 using MediatR;
 
 namespace Booking.Application.Posts.GetPostListByRealtorId;
-    public class GetPostListByRealtorIdQueryHandler(IPostRepository repository) : IRequestHandler<GetPostListByRealtorIdQuery, ErrorOr<List<Post>>>
+    public class GetPostListByRealtorIdQueryHandler(IPostRepository repository) 
+    : IRequestHandler<GetPostListByRealtorIdQuery, ErrorOr<List<Post>>>
 {
-    public async Task<ErrorOr<List<Post>>> Handle(GetPostListByRealtorIdQuery request, CancellationToken cancellationToken)
+    public async Task<ErrorOr<List<Post>>> Handle(
+        GetPostListByRealtorIdQuery request, CancellationToken cancellationToken)
     {
         var response = await repository.GetListPostByRealtorIdAsync(request.Id);
 

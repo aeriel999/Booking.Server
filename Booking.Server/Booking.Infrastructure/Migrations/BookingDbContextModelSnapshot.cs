@@ -31,6 +31,9 @@ namespace Booking.Infrastructure.Migrations
                     b.Property<Guid>("ClientId")
                         .HasColumnType("uuid");
 
+                    b.Property<int>("NumberOfUnreadMessages")
+                        .HasColumnType("integer");
+
                     b.Property<Guid>("PostId")
                         .HasColumnType("uuid");
 

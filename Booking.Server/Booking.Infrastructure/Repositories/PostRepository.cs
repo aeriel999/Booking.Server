@@ -70,20 +70,6 @@ public class PostRepository(BookingDbContext context) : IPostRepository
         return posts.OrderByDescending(item => item.PostAt).ToList();
     }
 
-
- //  public async Task<List<Post>> GetPostByNameAsync(
-	//   Guid? category, Guid? country, Guid? city, Guid? realtor, string name)
- //   {
- //       var posts = await Filter(category, country, city, realtor);
-
-	//	Guid postId = posts.Where(p => p.Name.ToLower().Equals(name.ToLower()))
-	//				.Select(p => p.Id).FirstOrDefault();
-
-	//	if (postId == Guid.Empty) return Guid.Empty;
-
- //       return postId;
-	//}
-
 	public async Task<List<string>> GetNameOfPostAsync(
 		Guid? category, Guid? country, Guid? city, Guid? realtor, string name)
 	{
@@ -152,7 +138,6 @@ public class PostRepository(BookingDbContext context) : IPostRepository
 			.ToListAsync();
 	}
 
-
 	public async Task UpdatePostAsync(Post post)
 	{
 		await Task.Run
@@ -182,15 +167,12 @@ public class PostRepository(BookingDbContext context) : IPostRepository
 			{
 				_dbSet.Remove(post);
 			});
-
-		//await context.SaveChangesAsync();
 	}
 
 
 	public async Task<Post?> GetPostByIdAsync(Guid postId)
 	{
 		return await _dbSet.Where(p => p.Id == postId)
-			//.Include(post => post.ImagesPost)
 			.FirstOrDefaultAsync();
 	}
 
@@ -254,5 +236,13 @@ public class PostRepository(BookingDbContext context) : IPostRepository
 		if (postId == Guid.Empty) return Guid.Empty;
 
 		return postId;
+	}
+
+	public async Task<List<Guid>?> GetListOfPostIdForRealtor(Guid userId)
+	{
+		return await _dbSet
+	   .Where(p => p.UserId == userId)
+	   .Select(i => i.Id)
+	   .ToListAsync();
 	}
 }

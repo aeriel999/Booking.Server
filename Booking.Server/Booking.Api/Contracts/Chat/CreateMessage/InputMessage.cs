@@ -5,7 +5,7 @@ namespace Booking.Api.Contracts.Chat.CreateMessage;
 public record InputMessage
 {
 	[Required(ErrorMessage = "{PropertyName} must not be empty")]
-	[Length(2, 5000)]
+	[Length(2, 4000)]
 	public required string Message { get; init; }
 
 

@@ -1,4 +1,6 @@
+ 
 import { IListForCombobox } from "../post";
+
 
 export interface IDashboardState {
     currentBreadcrumbsItem: string;
@@ -23,6 +25,7 @@ export interface IDashboardMenuItem {
     image: string;
     activeImage: string;
     link: string;
+    counterOfMsg?:   boolean
 }
 
 export interface ComboBoxProps {

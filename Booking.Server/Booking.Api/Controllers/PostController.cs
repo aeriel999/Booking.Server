@@ -61,6 +61,7 @@ using Booking.Api.Contracts.Post.GetHistoryOfFeedbacks;
 using Booking.Api.Contracts.Post.GetPageOfSelectedFeedback;
 using Booking.Api.Contracts.Post.EditRoom;
 using Booking.Application.Posts.EditRoom;
+using Booking.Application.Posts.GetListOfFeedbackForRealtor;
 
 namespace Booking.Api.Controllers;
 
@@ -132,6 +133,7 @@ public class PostController(ISender mediatr, IMapper mapper) : ApiController
 			errors => Problem(errors));
 	}
 
+
 	[AllowAnonymous]
 	[HttpGet("get-list-of-post")]
     public async Task<IActionResult> GetListOfPostAsync([FromQuery]int page, int sizeOfPage)
@@ -193,6 +195,7 @@ public class PostController(ISender mediatr, IMapper mapper) : ApiController
             errors => Problem(errors));
     }
 
+
     [AllowAnonymous]
     [HttpGet("get-categories-list")]
 	public async Task<IActionResult> GetCategoriesListAsync()
@@ -203,7 +206,9 @@ public class PostController(ISender mediatr, IMapper mapper) : ApiController
 			getCategoriesListResult => Ok(mapper.Map<List<GetCategoryResponse>>(getCategoriesListResult)),
 			errors => Problem(errors));
 	}
-    [AllowAnonymous]
+   
+	
+	[AllowAnonymous]
     [HttpGet("get-categories-filtered-list")]
     public async Task<IActionResult> GetCategoriesFilteredListAsync([FromQuery] Guid? Country, Guid? City, Guid? Realtor)
     {
@@ -225,6 +230,7 @@ public class PostController(ISender mediatr, IMapper mapper) : ApiController
 			getCountriesListResult => Ok(mapper.Map <List<GetCountryResponse>> (getCountriesListResult)),
 			errors => Problem(errors));
 	}
+
 
     [AllowAnonymous]
     [HttpGet("get-countries-filtered-list")]
@@ -263,6 +269,7 @@ public class PostController(ISender mediatr, IMapper mapper) : ApiController
 
         return Ok(response);
     }
+
 
     [AllowAnonymous]
     [HttpGet("get-street-list")]
@@ -398,9 +405,9 @@ public class PostController(ISender mediatr, IMapper mapper) : ApiController
 			errors => Problem(errors));
 	}
 
+
 	[AllowAnonymous]
 	[HttpGet("get-types-of-rest")]
-
 	public async Task<IActionResult> GetTypesOfRestAsync()
 	{
 		var typesOfRest = await mediatr.Send(new GetTypesOfRestQuery());
@@ -410,9 +417,9 @@ public class PostController(ISender mediatr, IMapper mapper) : ApiController
 			errors => Problem(errors));
 	}
 
+
     [AllowAnonymous]
     [HttpGet("get-posts-with-most-rating")]
-
     public async Task<IActionResult> GetPostsWithMostRatingAsync()
     {
         var postsWithMostRating = await mediatr.Send(new GetPostsWithMostRatingQuery());
@@ -421,6 +428,7 @@ public class PostController(ISender mediatr, IMapper mapper) : ApiController
             result => Ok(mapper.Map<List<GetPostWithMostRatingResponse>>(result)),
             errors => Problem(errors));
     }
+
 
     [AllowAnonymous]
     [HttpGet("get-posts-with-most-discount")]
@@ -469,17 +477,21 @@ public class PostController(ISender mediatr, IMapper mapper) : ApiController
             errors => Problem(errors));
     }
 
+
     [HttpGet("get-history-of-feedbacks-by-client")]
     public async Task<IActionResult> GetHistoryOfFeedbacksByClientAsync([FromQuery] int page, int sizeOfPage)
     {
 		var clientId = User.Claims.First(u => u.Type == ClaimTypes.NameIdentifier).Value;
 
-        var getHistoryOfFeedbacksResult = await mediatr.Send(mapper.Map<GetHistoryOfFeedbacksByClientQuery>((clientId, page, sizeOfPage)));
+        var getHistoryOfFeedbacksResult = await mediatr.Send(
+			mapper.Map<GetHistoryOfFeedbacksByClientQuery>((clientId, page, sizeOfPage)));
 
         return getHistoryOfFeedbacksResult.Match(
-            getHistoryOfFeedbacksResult => Ok(mapper.Map<PagedList<GetHistoryOfFeedbackByClientResponse>>(getHistoryOfFeedbacksResult)),
+            getHistoryOfFeedbacksResult => Ok(
+				mapper.Map<PagedList<GetHistoryOfFeedbackByClientResponse>>(getHistoryOfFeedbacksResult)),
             errors => Problem(errors));
     }
+
 
     [HttpGet("get-posts-by-user-feedbacks")]
     public async Task<IActionResult> GetPostsByUserFeedbacksAsync()
@@ -492,6 +504,8 @@ public class PostController(ISender mediatr, IMapper mapper) : ApiController
             getPostsResult => Ok(mapper.Map<List<GetPostByUserFeedbackResponse>>(getPostsResult)),
             errors => Problem(errors));
     }
+	
+	
 	[AllowAnonymous]
 	[HttpGet("get-services-list")]
 	public async Task<IActionResult> GetServicesListAsync()
@@ -503,6 +517,7 @@ public class PostController(ISender mediatr, IMapper mapper) : ApiController
 			errors => Problem(errors));
 	}
 
+
 	[HttpGet("get-post-for-edit-by-id-{id}")]
 	public async Task<IActionResult> GetPostForEditByIdAsync([FromRoute] Guid id)
 	{
@@ -512,6 +527,7 @@ public class PostController(ISender mediatr, IMapper mapper) : ApiController
 			getPostResult => Ok(mapper.Map<GetPostForEditResponse>(getPostForEditResult.Value)),
 			errors => Problem(errors));
 	}
+
 
 	[HttpPost("edit-room")]
 	public async Task<IActionResult> EditRoomAsync([FromForm] EditRoomRequest request)
@@ -548,4 +564,20 @@ public class PostController(ISender mediatr, IMapper mapper) : ApiController
             getPageOfSelectedFeedback => Ok(getPageOfSelectedFeedback),
             errors => Problem(errors));
     }
+
+
+	[HttpGet("get-list-of-feedback-for-realtor")]
+	public async Task<IActionResult> GetListOfFeedbackForRealtorAsync([FromQuery] int page, int sizeOfPage)
+	{
+		var userId = User.Claims.First(u => u.Type == ClaimTypes.NameIdentifier).Value;
+
+		var getHistoryOfFeedbacksResult = await mediatr.Send(
+			new GetListOfFeedbackForRealtorQuery(Guid.Parse(userId), page, sizeOfPage));
+
+		return getHistoryOfFeedbacksResult.Match(
+			getHistoryOfFeedbacksResult => Ok(
+				mapper.Map<PagedList<GetListOfFeedbackForRealtorResponse>>(getHistoryOfFeedbacksResult)),
+			errors => Problem(errors));
+	}
+
 }

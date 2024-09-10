@@ -15,9 +15,10 @@ public class ChatRoom
 
 	public required string PostName { get; set; }	
 
-
 	[ForeignKey(nameof(PostId))]
 	public Post? Post { get; set; }
 
 	public ICollection<UserMessage>? UserMessages { get; set; }
+
+	public required int NumberOfUnreadMessages { get; set; }
 }

@@ -5,17 +5,18 @@ import { SxProps, Theme } from "@mui/system";
 import { OutlinedAlertsProps } from "../../utils/types";
 
 const OutlinedErrorAlert = forwardRef<HTMLDivElement, OutlinedAlertsProps>(
-    ({ message, textColor = "#000" }) => {
-        const alertRef = useRef<HTMLDivElement>(null);//Ref for focuse
+    ({ message, textColor = "#000" }, ref) => {
+        // Add the 'ref' parameter here
+        const alertRef = useRef<HTMLDivElement>(null); // Ref for focus
 
-        //Set ref for focuse
+        // Set ref for focus
         useEffect(() => {
             if (message && alertRef.current) {
                 alertRef.current.focus();
             }
         }, [message]);
 
-        //Set Style
+        // Set Style
         const alertStyle: SxProps<Theme> = {
             backgroundColor: "rgba(255, 255, 255, 0.33)",
             borderColor: "#f5c2c7",
@@ -27,9 +28,7 @@ const OutlinedErrorAlert = forwardRef<HTMLDivElement, OutlinedAlertsProps>(
             fontStyle: "normal",
             fontWeight: 300,
             lineHeight: "normal",
-            "&:focus": {
-                outlineOffset: "2px",
-            },
+            marginBottom: "20px",
         };
 
         return (
@@ -38,7 +37,7 @@ const OutlinedErrorAlert = forwardRef<HTMLDivElement, OutlinedAlertsProps>(
                     variant="outlined"
                     severity="error"
                     sx={alertStyle}
-                    ref={alertRef} // Forward the ref to Alert component
+                    ref={ref || alertRef} // Pass the ref received from forwardRef or use the local ref
                     tabIndex={-1} // Ensure it can be focused
                 >
                     {message}

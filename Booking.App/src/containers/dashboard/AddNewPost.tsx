@@ -30,12 +30,13 @@ import InputField from "../../components/common/InputField.tsx";
 import { useForm } from "react-hook-form";
 import "../../css/DashBoardRealtorClasses/index.scss";
 import ImageUploader from "../../components/realtorDashboard/ImageUploader.tsx";
- 
+
 import ListImageUploader from "../../components/realtorDashboard/ListImagesUploader.tsx";
 import CheckboxList from "../../components/realtorDashboard/CheckBoxList.tsx";
 import { changeDashboardMenuItem } from "../../store/settings/settings.slice.ts";
 import Room from "../../components/realtorDashboard/Room.tsx";
 import Plus from "../../assets/DashboardIcons/iconamoon_sign-plus-fill.svg";
+import { updateListOfPostIdForListening } from "../../store/chat/chat.slice.ts";
 
 export function AddNewPost() {
     const dispatch = useAppDispatch();
@@ -211,27 +212,27 @@ export function AddNewPost() {
         if (!category) {
             setIsCategoryValid(false);
             return;
-        }//set error if category doesnt choosen
+        } //set error if category doesnt choosen
 
         if (!country) {
             setIsCountryValid(false);
             return;
-        }//set error if country doesnt choosen
+        } //set error if country doesnt choosen
 
         if (!city && !isCityExist) {
             setIsCityValid(false);
             return;
-        }//set error if city doesnt choosen and doesnt type in textinput
+        } //set error if city doesnt choosen and doesnt type in textinput
 
         if (!street && !isStreetExist) {
             setIsStreetValid(false);
             return;
-        }//set error if street doesnt choosen and doesnt type in textinput
+        } //set error if street doesnt choosen and doesnt type in textinput
 
         if (images.length < 6) {
             setErrorMessage(ErrorHandler("You must add at least 6 images"));
             return;
-        }//set error if choosen less than 7 images
+        } //set error if choosen less than 7 images
 
         if (
             isCategoryValid &&
@@ -243,22 +244,15 @@ export function AddNewPost() {
                 ...data,
                 categoryId: category?.id!,
                 countryId: country?.id!,
-                cityId: 
-                        city === undefined || city === null 
-                            ? null 
-                            : city.id,
-                cityName: 
-                        city === undefined || city === null 
-                            ? data.cityName 
-                            : null,
+                cityId: city === undefined || city === null ? null : city.id,
+                cityName:
+                    city === undefined || city === null ? data.cityName : null,
                 streetId:
-                        street === undefined || street === null
-                            ? null
-                            : street.id,
+                    street === undefined || street === null ? null : street.id,
                 streetName:
-                        street === undefined || street === null
-                            ? data.streetName
-                            : null,
+                    street === undefined || street === null
+                        ? data.streetName
+                        : null,
                 mainImage: mainImage!,
                 images: images,
                 postTypesOfRest: typeOfRest,
@@ -287,8 +281,12 @@ export function AddNewPost() {
                     }
                 }
 
-                // await joinForPostListening(response.payload.id);
-                dispatch(changeDashboardMenuItem("All Posts"));//set menu item
+                //join chanel for listening of creating of new chatrooms
+                //update list of posts id for reconection for listening
+                dispatch(updateListOfPostIdForListening(response.payload.id));
+                await joinForPostListening(response.payload.id);
+
+                dispatch(changeDashboardMenuItem("All Posts")); //set menu item
                 navigate("/dashboard/show-all-post");
             } catch (error) {
                 setErrorMessage(ErrorHandler(error));
@@ -584,7 +582,7 @@ export function AddNewPost() {
                         label="image-upload"
                     />
 
-                {/* list of other images */}
+                    {/* list of other images */}
                     <ListImageUploader
                         images={images}
                         setImages={setImages}
@@ -629,4 +627,7 @@ export function AddNewPost() {
             </button>
         </div>
     );
+}
+function joinForPostListening(id: any) {
+    throw new Error("Function not implemented.");
 }

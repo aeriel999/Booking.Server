@@ -12,11 +12,10 @@ import { useNavigate } from "react-router-dom";
 import { jwtDecode } from "jwt-decode";
 import { loginResolver } from "../../../validations/account";
 import { CredentialResponse, GoogleLogin } from "@react-oauth/google";
-import { startListening } from "../../../SignalR";
-import { getListOfChatRooms } from "../../../store/chat/chat.action.ts";
 import Header from "../../../components/authentification/Header.tsx";
 import { changeDashboardMenuItem } from "../../../store/settings/settings.slice.ts";
 import { RootState } from "../../../store/index.ts";
+import { getNumberOfUnleastMessages, getPostIdListForListeningChatsByRealtor } from "../../../store/chat/chat.action.ts";
 
 export default function SignInPage() {
     const dispatch = useAppDispatch();
@@ -27,7 +26,7 @@ export default function SignInPage() {
         undefined
     );
     const navigate = useNavigate();
-
+ 
     const {
         register,
         handleSubmit,
@@ -59,7 +58,6 @@ export default function SignInPage() {
     };
 
     const afterLogin = async (token: string) => {
-        await startListening();
 
         const decodedToken: { [key: string]: string } = jwtDecode(token);
 
@@ -79,14 +77,16 @@ export default function SignInPage() {
             navigate("/#");
         }
 
+       await dispatch(getPostIdListForListeningChatsByRealtor());
+    
         try {
-            const response = await dispatch(getListOfChatRooms());
+            const response = await dispatch(getNumberOfUnleastMessages());
             unwrapResult(response);
         } catch (error) {
             setErrorMessage(ErrorHandler(error));
         }
     };
-
+ 
     return (
         <div className="content">
             <Header />

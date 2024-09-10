@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import OutlinedErrorAlert from "./ErrorAlert.tsx";
-import UserAvatar from "../../assets/Auth/image 20.svg";
+import UserAvatar from "../../assets/Auth/image20.svg";
 import "../../css/AuthenticationClasses/index.scss"
 
 type AvatarUploadProps = {

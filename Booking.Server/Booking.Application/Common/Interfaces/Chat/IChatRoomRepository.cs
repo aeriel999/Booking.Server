@@ -14,10 +14,10 @@ public interface IChatRoomRepository
 	Task<ChatRoom?> GetChatRoomByIdAsync(Guid roomId);
 
 
-	Task<List<ChatRoom>> GetChatRoomListWithPostsByRealtorIdAsync(Guid realtorId);
+	Task<List<ChatRoom>> GetChatRoomListWithMessagesByRealtorIdAsync(Guid realtorId);
 
 
-	Task<List<ChatRoom>> GetChatRoomListWithPostByUserIdAsync(Guid userId);
+	Task<List<ChatRoom>> GetChatRoomListWithMessagesByUserIdAsync(Guid userId);
 
 
 	Task<ChatRoom?> GetChatRoomForUserIdAndPostIdAsync(Guid userId, Guid postId);
@@ -25,7 +25,21 @@ public interface IChatRoomRepository
 
 	Task<List<ChatRoom>?> GetChatRoomListByPostId(Guid postId);
 
+
 	Task<List<Guid>> GetRealtorChatRoomsIdByClient(Guid clientId);
 
+
 	Task<List<ChatRoomForClient>> GetListOfChatRoomsForClientByRealtorId(Guid realtorId);
+
+
+	Task<List<ChatRoom>> GetChatRoomListByRealtorIdAsync(Guid realtorId);
+
+
+	Task<ChatRoom?> GetChatRoomByPostIdAndUserIdAsync(Guid userId, Guid postId);
+
+
+	Task<List<Guid>?> GetChatRoomIdListByRealtorIdAsync(Guid realtorId);
+
+
+	Task<List<Guid>?> GetChatRoomIdListByUserIdAsync(Guid userId);
 }

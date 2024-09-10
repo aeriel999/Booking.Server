@@ -45,6 +45,10 @@ import EditImageUploader from "../../components/realtorDashboard/EditImageUpload
 import EditListImagesUploader from "../../components/realtorDashboard/EditListImagesUploader.tsx";
 import EditRoom from "../../components/realtorDashboard/EditRoom.tsx";
 import { changeDashboardMenuItem } from "../../store/settings/settings.slice.ts";
+import {
+    joinForPostListening,
+    connectForRealtorToSignalR,
+} from "../../SignalR/index.ts";
 
 export function EditPost() {
     const { postId } = useParams();
@@ -411,8 +415,8 @@ export function EditPost() {
 
                 unwrapResult(response);
 
-                 //Create rooms if it existing
-                 if (rooms) {
+                //Create rooms if it existing
+                if (rooms) {
                     for (const room of rooms) {
                         try {
                             const newRoom: IRoom = {
@@ -427,7 +431,7 @@ export function EditPost() {
                     }
                 }
 
-                if(editRooms){
+                if (editRooms) {
                     for (const room of editRooms) {
                         try {
                             await dispatch(editRoom(room));
@@ -437,8 +441,7 @@ export function EditPost() {
                     }
                 }
 
-                // await joinForPostListening(response.payload.id);
-                dispatch(changeDashboardMenuItem("All Posts"));//set menu item
+                dispatch(changeDashboardMenuItem("All Posts")); //set menu item
                 navigate("/dashboard/show-all-post");
             } catch (error) {
                 setErrorMessage(ErrorHandler(error));

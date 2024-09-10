@@ -11,10 +11,14 @@ namespace Booking.Infrastructure.Repositories;
 public class PostFeedbackRepository(BookingDbContext context,UserManager<User> userManager) : IPostFeedbackRepository
 {
     private readonly DbSet<Feedback> _dbSet = context.Set<Feedback>();
+
+
     public async Task CreateAsync(Feedback feedback)
     {
         await _dbSet.AddAsync(feedback);
     }
+
+
     public async  Task<List<Feedback>> GetFeedbacksAsync(Guid id)
     {
             return await _dbSet
@@ -22,11 +26,13 @@ public class PostFeedbackRepository(BookingDbContext context,UserManager<User> u
             .OrderByDescending(f => f.FeedbackAt)
             .Include(f => f.Client)
             .ToListAsync();
-
     }
+
+
     public async Task DeleteAllFeedbacksAsync(string id)
     {
         var user = await userManager.FindByIdAsync(id);
+
         if (await userManager.IsInRoleAsync(user, Roles.User))
         {
            var feedbacks = await _dbSet.Where(f => f.ClientId == user.Id).ToListAsync();
@@ -34,6 +40,7 @@ public class PostFeedbackRepository(BookingDbContext context,UserManager<User> u
         }
        await context.SaveChangesAsync();
     }
+
 
     public async Task<List<Post>> GetPostsByUserFeedbacksAsync(Guid id)
     {
@@ -47,6 +54,7 @@ public class PostFeedbackRepository(BookingDbContext context,UserManager<User> u
 
         return res!;
     }
+
 
     public async Task<List<Feedback>> GetHistoryOfFeedbacksByUserAsync(Guid id)
     {
@@ -70,9 +78,18 @@ public class PostFeedbackRepository(BookingDbContext context,UserManager<User> u
         var index = Array.IndexOf(feedbacks, FeedbackId) + 1;
         if (index == 0) return null;
 
-
         return (int)Math.Ceiling(index / (decimal)2); 
-
     }
+
+	public async Task<List<Feedback>?> GetFeedbacksWhithIncludesForPostIdAsync(Guid postId)
+	{
+		return await _dbSet
+		.Where(f => f.PostId == postId)
+		.OrderByDescending(f => f.FeedbackAt)
+		.Include(f => f.Client)
+		.Include(f => f.Post!.Street!.City!.Country)
+		.Include(f => f.Post!.ImagesPost)
+		.ToListAsync();
+	}
 }
 

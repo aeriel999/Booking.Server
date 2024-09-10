@@ -24,27 +24,39 @@ public class CreateChatCommandHandler(
 			return userOrError.Errors;
 
 		//Get Post
-		var post = await postRepositories.GetPostWithIncludesByIdAsync(request.PostId);
+		var post = await postRepositories.GetPostByIdAsync(request.PostId);
 
 		if (post == null)
 			return Error.NotFound("Post is not found");
 
-		//CreatePostPostTypeOfRestAsync chatRoom
-		var chatRoom = new ChatRoom
+		//Check chatRoom for existing
+		var chatRoom = await chatRoomRepositories.GetChatRoomByPostIdAndUserIdAsync(
+			request.UserId, request.PostId);
+
+		if (chatRoom != null) return chatRoom.ChatRoomId;
+
+		else
 		{
-			ChatRoomId = Guid.NewGuid(),
-			ClientId = request.UserId,
-			RealtorId = request.UserId,
-			PostId = request.PostId,
-			PostName = post.Name
-		};
+			//Create chatRoom
+			var newChatRoom = new ChatRoom
+			{
+				ChatRoomId = Guid.NewGuid(),
+				ClientId = request.UserId,
+				RealtorId = post.UserId,
+				PostId = request.PostId,
+				PostName = post.Name,
+				NumberOfUnreadMessages = 0
+			};
 
-		await chatRoomRepositories.CreateChatRoomAsync(chatRoom);
+			await chatRoomRepositories.CreateChatRoomAsync(newChatRoom);
 
-		await chatRoomRepositories.SaveChatRoomAsync();
+			await chatRoomRepositories.SaveChatRoomAsync();
 
-		chatRegystryService.CreateRoom(chatRoom.ChatRoomId);
+			//register chatroom
+			chatRegystryService.CreateRoom(newChatRoom.ChatRoomId);
 
-		return chatRoom.ChatRoomId;
+			return newChatRoom.ChatRoomId;
+		}
+	
 	}
 }

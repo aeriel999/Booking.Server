@@ -65,3 +65,16 @@ export type EditListImagesUploaderProps = {
     onImageDelete: (deletedImages: IDeleteImage[]) => void;
     validator: (value: File[]) => string | false | undefined;
 };
+
+export type ReviewCardProps = {
+    postName: string;
+    countryName: string;
+    cityName: string;
+    postRaiting: number;
+    postImage: string;
+    userName: string;
+    avatar: string | null;
+    date: string;
+    givenRate: number;
+    reviewText: string;
+};

@@ -1,12 +1,23 @@
-import { AnyAction, createSlice } from "@reduxjs/toolkit";
+import { AnyAction, createSlice, PayloadAction } from "@reduxjs/toolkit";
 import { RejectedAction } from "../../utils/types";
 import { Status } from "../../utils/enum";
 import { IChatState } from "../../interfaces/chat";
-import { getListOfChatRooms, getListOfChatRoomsForClient } from "./chat.action.ts";
-
+import {
+    getChatIdList,
+    getListOfChatRooms,
+    getListOfChatRoomsForClient,
+    getNumberOfUnleastMessages,
+    getPostIdListForListeningChatsByRealtor,
+} from "./chat.action.ts";
+import {
+    addlistToLocalStorage,
+    addLocalStorage,
+    getListFromLocalStorage,
+    getLocalStorage,
+} from "../../utils/storage/localStorageUtils.ts";
 
 function isRejectedAction(action: AnyAction): action is RejectedAction {
-    return action.type.endsWith('/rejected');
+    return action.type.endsWith("/rejected");
 }
 
 const initialState: IChatState = {
@@ -14,10 +25,24 @@ const initialState: IChatState = {
     charRoomsForClient: null,
     hasNewPosts: false,
     status: Status.IDLE,
+    generalNumberOfUnreadMessages: getLocalStorage(
+        "generalNumberOfUnreadMessages"
+    )
+        ? parseInt(
+              getLocalStorage("generalNumberOfUnreadMessages") as string,
+              10
+          )
+        : 0,
+    listOfPostIdForListening: getListFromLocalStorage(
+        "updateListOfIdForListening"
+    ),
+    listOfChatsIdForListening: getListFromLocalStorage(
+        "listOfChatsIdForListening"
+    ),
 };
 
 export const chatSlice = createSlice({
-    name: 'chat',
+    name: "chat",
     initialState,
     reducers: {
         addNewPostState: (state: IChatState) => {
@@ -25,7 +50,47 @@ export const chatSlice = createSlice({
         },
         deleteNewPostState: (state: IChatState) => {
             state.hasNewPosts = false;
-        }
+        },
+        changeGeneralNumberOfUnreadMessages: (
+            state: IChatState,
+            action: PayloadAction<number>
+        ) => {
+            state.generalNumberOfUnreadMessages = action.payload;
+            addLocalStorage(
+                "generalNumberOfUnreadMessages",
+                state.generalNumberOfUnreadMessages.toString()
+            );
+        },
+        addNewMessageInGeneralCount: (state: IChatState) => {
+            console.log("send_notify", state.generalNumberOfUnreadMessages)
+
+            state.generalNumberOfUnreadMessages =
+                state.generalNumberOfUnreadMessages + 1;
+            addLocalStorage(
+                "generalNumberOfUnreadMessages",
+                state.generalNumberOfUnreadMessages.toString()
+            );
+        },
+        updateListOfPostIdForListening: (
+            state: IChatState,
+            action: PayloadAction<string>
+        ) => {
+            state.listOfPostIdForListening!.push(action.payload);
+            addlistToLocalStorage(
+                "updateListOfIdForListening",
+                state.listOfPostIdForListening!
+            );
+        },
+        updateListOfChatIdForListening: (
+            state: IChatState,
+            action: PayloadAction<string>
+        ) => {
+            state.listOfChatsIdForListening!.push(action.payload);
+            addlistToLocalStorage(
+                "listOfChatsIdForListening",
+                state.listOfChatsIdForListening!
+            );
+        },
     },
     extraReducers: (builder) => {
         builder
@@ -46,11 +111,58 @@ export const chatSlice = createSlice({
             .addCase(getListOfChatRoomsForClient.pending, (state) => {
                 state.status = Status.LOADING;
             })
+            .addCase(getNumberOfUnleastMessages.fulfilled, (state, action) => {
+                state.generalNumberOfUnreadMessages = action.payload;
+                addLocalStorage(
+                    "generalNumberOfUnreadMessages",
+                    state.generalNumberOfUnreadMessages.toString()
+                );
+                state.status = Status.SUCCESS;
+            })
+            .addCase(getNumberOfUnleastMessages.pending, (state) => {
+                state.status = Status.LOADING;
+            })
+            .addCase(
+                getPostIdListForListeningChatsByRealtor.fulfilled,
+                (state, action) => {
+                    state.listOfPostIdForListening = action.payload.$values;
+                    addlistToLocalStorage(
+                        "updateListOfIdForListening",
+                        state.listOfPostIdForListening!
+                    );
+                    state.status = Status.SUCCESS;
+                }
+            )
+            .addCase(
+                getPostIdListForListeningChatsByRealtor.pending,
+                (state) => {
+                    state.status = Status.LOADING;
+                }
+            )
+            .addCase(getChatIdList.fulfilled, (state, action) => {
+                state.listOfChatsIdForListening = action.payload.$values;
+                addlistToLocalStorage(
+                    "listOfChatsIdForListening",
+                    state.listOfChatsIdForListening!
+                );
+                state.status = Status.SUCCESS;
+            })
+            .addCase(getChatIdList.pending, (state) => {
+                state.status = Status.LOADING;
+            })
+            //getChatIdList
             .addMatcher(isRejectedAction, (state) => {
                 state.status = Status.ERROR;
             });
     },
 });
 
-export const { addNewPostState, deleteNewPostState } = chatSlice.actions;
+export const {
+    addNewPostState,
+    deleteNewPostState,
+    changeGeneralNumberOfUnreadMessages,
+    updateListOfPostIdForListening,
+    addNewMessageInGeneralCount,
+    updateListOfChatIdForListening,
+} = chatSlice.actions;
 export default chatSlice.reducer;
