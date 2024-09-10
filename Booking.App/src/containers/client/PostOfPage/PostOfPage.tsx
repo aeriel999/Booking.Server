@@ -1,21 +1,16 @@
 import { useEffect, useState } from "react";
 import { useDispatch } from "react-redux";
-import { useLocation, useNavigate, useParams } from "react-router-dom";
+import { useLocation, useNavigate, useParams } from "react-router-dom"
 import { AppDispatch, RootState } from "../../../store";
-import {
-    getFeedbacksByPost,
-    getPageOfSelectedFeedback,
-    getPostById,
-    sendFeedback,
-} from "../../../store/post/post.actions";
+import { getFeedbacksByPost, getPageOfSelectedFeedback, getPostById, sendFeedback } from "../../../store/post/post.actions";
 import { useAppSelector } from "../../../hooks/redux";
-import "../../../css/PostOfPageClasses/index.scss";
+import '../../../css/PostOfPageClasses/index.scss';
 import { Loading } from "../../../components/common/Loading/Loading";
 import { APP_ENV } from "../../../env";
 import { PageOfImages } from "../../../components/common/PageOfImages/PageOfImages";
-import heart from "../../../assets/Icons/heart.svg";
-import light_shair from "../../../assets/Icons/material-symbols-light_share-outline.svg";
-import marker from "../../../assets/Icons/marker-02.svg";
+import heart from '../../../assets/Icons/heart.svg';
+import light_shair from '../../../assets/Icons/material-symbols-light_share-outline.svg';
+import marker from '../../../assets/Icons/marker-02.svg';
 import { Rating } from "../../../components/common/Rating/Rating";
 import { Feedback } from "../../../components/common/Feedback/Feedback";
 import { IGetFeedbacksRequest, ISendFeedback } from "../../../interfaces/post";
@@ -28,41 +23,31 @@ import { cutNumber } from "../../../utils/data";
 import { unwrapResult } from "@reduxjs/toolkit";
 import ErrorHandler from "../../../components/common/ErrorHandler";
 import OutlinedErrorAlert from "../../../components/common/ErrorAlert";
-import {
-    joinNewPostChatByUser,
-  
-} from "../../../SignalR";
+
 
 export const PostOfPage = () => {
+
     const navigate = useNavigate();
     const location = useLocation();
     const dispatch = useDispatch<AppDispatch>();
 
     const post = useAppSelector((state: RootState) => state.post.post);
-    const feedbacks = useAppSelector(
-        (state: RootState) => state.post.feedbacks
-    );
+    const feedbacks = useAppSelector((state: RootState) => state.post.feedbacks);
     const isLogin = useAppSelector((state: RootState) => state.account.isLogin);
-    const selectedFeedback = useAppSelector(
-        (state: RootState) => state.post.idOfSelectedFeedback
-    );
-    const pageOfSelectedFeedback = useAppSelector(
-        (state: RootState) => state.post.pageOfSelectedFeedback
-    );
-    const searchingPost = useAppSelector(
-        (state: RootState) => state.post.searchingPost
-    );
+    const selectedFeedback = useAppSelector((state: RootState) => state.post.idOfSelectedFeedback);
+    const pageOfSelectedFeedback = useAppSelector((state: RootState) => state.post.pageOfSelectedFeedback);
+    const searchingPost = useAppSelector((state: RootState) => state.post.searchingPost);
 
     const { postId } = useParams<string>();
     const [isLoading, setIsLoading] = useState<boolean>(true);
-    const [isOpenPageOfImages, setIsOpenPageOfImages] =
-        useState<boolean>(false);
+    const [isOpenPageOfImages, setIsOpenPageOfImages] = useState<boolean>(false);
     const [isFeedbacksLoading, setIsFeedbacksLoading] = useState<boolean>(true);
     const [pageOfFeedbacks, setPageOfFeedbacks] = useState<number>(1);
     const [selectedRating, setSelectedRating] = useState<number | null>(null);
     const [error, setError] = useState<string | null>(null);
     const [errorMessage, setErrorMessage] = useState<string | null>(null);
     const [postImages, setPostImages] = useState<string[]>([]);
+
 
     const getPost = async (id: string) => {
         try {
@@ -106,10 +91,11 @@ export const PostOfPage = () => {
             dispatch(setIdOfSelectedFeedback(null));
         }
         //getFeedbacks();
-    }, []);
+    }, [])
     useEffect(() => {
         setPageOfFeedbacks(pageOfSelectedFeedback);
-    }, [pageOfSelectedFeedback]);
+
+    }, [pageOfSelectedFeedback])
 
     useEffect(() => {
         console.log(post);
@@ -118,38 +104,35 @@ export const PostOfPage = () => {
             setPostImages(post!.imagePostList!.$values!);
             if (post.categoryName == "Hotel") {
                 post.roomList?.$values!.forEach((item) => {
-                    setPostImages((prevImages) => [
-                        ...prevImages,
-                        item.mainImage,
-                    ]);
+                    setPostImages(prevImages => [...prevImages, item.mainImage]);
                 });
             }
         }
-    }, [post]);
+    }, [post])
     useEffect(() => {
         if (feedbacks != null) {
             setIsFeedbacksLoading(false);
         }
-    }, [feedbacks]);
+    }, [feedbacks])
     useEffect(() => {
         getFeedbacks();
         setIsFeedbacksLoading(true);
-    }, [pageOfFeedbacks]);
+    }, [pageOfFeedbacks])
     useEffect(() => {
         if (error) {
             setError(null);
         }
-    }, [selectedRating]);
+    }, [selectedRating])
 
     const sendFeedbackAsync = async (text: string) => {
-        if (selectedRating == null) setError("Choose a rating from 1 to 5!");
+        if (selectedRating == null) setError("Choose a rating from 1 to 5!")
         else {
             try {
                 const payload: ISendFeedback = {
                     text: text,
                     rating: selectedRating!,
-                    postId: postId!,
-                };
+                    postId: postId!
+                }
                 console.log(payload);
                 const response = await dispatch(sendFeedback(payload));
                 unwrapResult(response);
@@ -160,96 +143,75 @@ export const PostOfPage = () => {
                 setErrorMessage(ErrorHandler(error));
             }
         }
-    };
+
+
+
+    }
     useEffect(() => {
         if (searchingPost != null) {
             setIsLoading(true);
             navigate(`/posts/post/${searchingPost}`);
         }
-    }, [searchingPost]);
+    }, [searchingPost])
     useEffect(() => {
         if (postId != null) {
             getPost(postId!);
         }
-    }, [postId]);
+    }, [postId])
 
     return (
         <>
             <div id="post-page-container">
-                {isOpenPageOfImages ? (
-                    <PageOfImages
-                        setIsOpen={setIsOpenPageOfImages}
-                        images={postImages}
-                    />
-                ) : (
+                {isOpenPageOfImages ?
+                    <PageOfImages setIsOpen={setIsOpenPageOfImages} images={postImages} />
+                    :
                     ""
-                )}
-                {isLoading ? (
+                }
+                {isLoading ?
                     <Loading />
-                ) : (
+                    :
                     <>
                         <div className="navigation">
                             <a onClick={() => navigate("/")}>Home Page / </a>
-                            <a onClick={() => navigate("/posts/")}>
-                                View Accommodation /{" "}
-                            </a>
+                            <a onClick={() => navigate("/posts/")}>View Accommodation / </a>
                             <p>{post?.name}</p>
                         </div>
-                        {errorMessage && (
-                            <OutlinedErrorAlert message={errorMessage} />
-                        )}
+                        {errorMessage && <OutlinedErrorAlert message={errorMessage} />}
                         <div className="post-page-container-image-list">
-                            {postImages.length < 7
-                                ? postImages.map((item, index) => (
-                                      <div key={index}>
-                                          <img
-                                              src={`${APP_ENV.BASE_URL}/images/posts/${item}`}
-                                              alt={item}
-                                          />
-                                      </div>
-                                  ))
-                                : postImages.slice(0, 7).map((item, index) =>
-                                      index === 6 ? (
-                                          <div
-                                              className="morePhoto"
-                                              onClick={() =>
-                                                  setIsOpenPageOfImages(
-                                                      !isOpenPageOfImages
-                                                  )
-                                              }
-                                              key={index}
-                                          >
-                                              <img
-                                                  src={`${APP_ENV.BASE_URL}/images/posts/${item}`}
-                                                  alt={item}
-                                              />
-                                              <div>
-                                                  + {postImages.length - 6}{" "}
-                                                  photo
-                                              </div>
-                                          </div>
-                                      ) : (
-                                          <div key={index}>
-                                              <img
-                                                  src={`${APP_ENV.BASE_URL}/images/posts/${item}`}
-                                                  alt={item}
-                                              />
-                                          </div>
-                                      )
-                                  )}
+                            {postImages.length < 7 ? (
+                                postImages.map((item, index) => (
+                                    <div key={index}>
+                                        <img src={`${APP_ENV.BASE_URL}/images/posts/${item}`} alt={item} />
+                                    </div>
+                                ))
+                            ) : (
+                                postImages.slice(0, 7).map((item, index) => (
+                                    index === 6 ? (
+                                        <div
+                                            className="morePhoto"
+                                            onClick={() => setIsOpenPageOfImages(!isOpenPageOfImages)}
+                                            key={index}
+                                        >
+                                            <img src={`${APP_ENV.BASE_URL}/images/posts/${item}`} alt={item} />
+                                            <div>
+                                                + {postImages.length - 6} photo
+                                            </div>
+                                        </div>
+                                    ) : (
+                                        <div key={index}>
+                                            <img src={`${APP_ENV.BASE_URL}/images/posts/${item}`} alt={item} />
+                                        </div>
+                                    )
+                                ))
+                            )}
                         </div>
                         <div className="post-page-conatainer-central">
                             <div className="booking-and-feedbacks">
                                 <div className="booking">
-                                    <div className="booking-post-name">
-                                        {post?.name}
-                                    </div>
+                                    <div className="booking-post-name">{post?.name}</div>
                                     <div className="booking-icons">
                                         <img src={heart} alt="Heart" />
-                                        <img
-                                            src={light_shair}
-                                            alt="Light Shair"
-                                        />
+                                        <img src={light_shair} alt="Light Shair" />
                                     </div>
                                     <div className="booking-rating">
                                         <Rating
@@ -257,26 +219,12 @@ export const PostOfPage = () => {
                                             isSelecting={false}
                                             selectedRating={null}
                                         />
+
                                     </div>
-                                    {post?.categoryName != "Hotel" ? (
-                                        <button
-                                            onClick={async () => {
-                                                await joinNewPostChatByUser(
-                                                    postId!
-                                                );
-                                            }}
-                                        >
-                                            Booking
-                                        </button>
-                                    ) : (
-                                        <div></div>
-                                    )}
+                                    {post?.categoryName != "Hotel" ? <button>Booking</button> : <div></div>}
                                     <div className="booking-location">
                                         <img src={marker} alt="Marker" />
-                                        <p>
-                                            {post?.streetName}, {post?.cityName}
-                                            , {post?.countryName}
-                                        </p>
+                                        <p>{post?.streetName}, {post?.cityName}, {post?.countryName}</p>
                                     </div>
                                 </div>
                                 <div className="feedbacks">
@@ -285,45 +233,24 @@ export const PostOfPage = () => {
                                         <p>{feedbacks?.totalCount} feedbacks</p>
                                     </div>
                                     <div className="feedbacks-list">
-                                        {isFeedbacksLoading == true ? (
-                                            <Loading />
-                                        ) : (
-                                            feedbacks?.items.$values.map(
-                                                (item, index) => (
-                                                    <Feedback
-                                                        key={index}
-                                                        userName={item.client}
-                                                        rating={item.rating}
-                                                        message={item.text}
-                                                        date={
-                                                            new Date(
-                                                                item.feedbackAt
-                                                            )
-                                                        }
-                                                        avatar={
-                                                            item.clientAvatar
-                                                        }
-                                                    ></Feedback>
-                                                )
-                                            )
-                                        )}
-                                        {feedbacks?.totalCount != null &&
-                                        feedbacks?.totalCount > 2 ? (
+                                        {isFeedbacksLoading == true ? <Loading /> :
+                                            feedbacks?.items.$values.map((item, index) => (
+                                                <Feedback
+                                                    key={index}
+                                                    userName={item.client}
+                                                    rating={item.rating}
+                                                    message={item.text}
+                                                    date={new Date(item.feedbackAt)}
+                                                    avatar={item.clientAvatar}
+                                                ></Feedback>
+                                            ))}
+                                        {feedbacks?.totalCount != null && feedbacks?.totalCount > 2 ? (
                                             <Pagination
                                                 page={pageOfFeedbacks}
-                                                sizeOfPage={
-                                                    feedbacks!.sizeOfPage
-                                                }
-                                                countOfPosts={
-                                                    feedbacks!.totalCount!
-                                                }
+                                                sizeOfPage={feedbacks!.sizeOfPage}
+                                                countOfPosts={feedbacks!.totalCount!}
                                                 changePage={setPageOfFeedbacks}
-                                            />
-                                        ) : (
-                                            <div className="leave-a-feedback">
-                                                Leave a feedback
-                                            </div>
-                                        )}
+                                            />) : <div className="leave-a-feedback">Leave a feedback</div>}
                                     </div>
                                     <div className="send-feedback">
                                         {isLogin ? <>
@@ -350,124 +277,79 @@ export const PostOfPage = () => {
                                             :
                                             <>
                                                 <p>
-                                                    To write a feedback, you
-                                                    must log in or register
+                                                    To write a feedback, you must log in or register
                                                 </p>
                                                 <div className="buttons">
-                                                    <button
-                                                        onClick={() => {
-                                                            dispatch(
-                                                                savePath(
-                                                                    location.pathname
-                                                                )
-                                                            );
-                                                            navigate(
-                                                                "/authentication/login"
-                                                            );
-                                                        }}
-                                                    >
+                                                    <button onClick={() => {
+                                                        dispatch(savePath(location.pathname))
+                                                        navigate("/authentication/login")
+
+                                                    }}>
                                                         Login
                                                     </button>
-                                                    <button
-                                                        onClick={() =>
-                                                            navigate(
-                                                                "/authentication/user-register"
-                                                            )
-                                                        }
-                                                    >
+                                                    <button onClick={() => navigate("/authentication/user-register")}>
                                                         Register
                                                     </button>
                                                 </div>
                                             </>
-                                        )}
+                                        }
+
                                     </div>
                                 </div>
                             </div>
                             <div className="more-information">
                                 <div className="more-information-rating">
-                                    <p>
-                                        {cutNumber(post?.rate ? post.rate : 0)}
-                                        /5{" "}
-                                        {post?.rate == 5
-                                            ? "Excelent"
-                                            : post?.rate! >= 3 &&
-                                              post?.rate! < 5
-                                            ? "Good"
-                                            : "Bad"}
-                                    </p>
-                                    <p>
-                                        Based on {post?.countOfFeedbacks}{" "}
-                                        verified feedbacks
-                                    </p>
+                                    <p>{cutNumber(post?.rate ? post.rate : 0)}/5 {post?.rate == 5 ? "Excelent" : (post?.rate! >= 3 && post?.rate! < 5) ? "Good" : "Bad"}</p>
+                                    <p>Based on {post?.countOfFeedbacks} verified feedbacks</p>
                                 </div>
                                 <div className="more-information-services">
                                     <p>Services</p>
-                                    {post && post.services
-                                        ? post.services.$values.map(
-                                              (item, index) => (
-                                                  <div
-                                                      className="service-card"
-                                                      key={`service-${index}`}
-                                                  >
-                                                      <img
-                                                          src={`${APP_ENV.BASE_URL}/images/icons/${item.icon}`}
-                                                          alt="Icon"
-                                                      />
-                                                      <p>{item.name}</p>
-                                                  </div>
-                                              )
-                                          )
-                                        : ""}
+                                    {post && post.services ? post.services.$values.map((item, index) => (
+                                        <div className="service-card" key={`service-${index}`}>
+                                            <img src={`${APP_ENV.BASE_URL}/images/icons/${item.icon}`} alt="Icon" />
+                                            <p>{item.name}</p>
+                                        </div>
+                                    )) : ""}
+
                                 </div>
                                 <div className="more-information-details">
                                     <p>Details</p>
                                     <div className="details">
+
                                         <p>Realtor : </p>
                                         <p
                                             id="hovered"
-                                            onClick={() =>
-                                                navigate(
-                                                    `/posts/realtor/${post?.userId!}`
-                                                )
-                                            }
-                                        >
+                                            onClick={() => navigate(`/posts/realtor/${post?.userId!}`)}>
                                             {post?.userName}
                                         </p>
-                                        {post?.categoryName == "Hotel" ? (
-                                            ""
-                                        ) : (
+                                        {post?.categoryName == "Hotel" ? ""
+                                            :
                                             <>
                                                 <p>Price : </p>
                                                 <p>{post?.price} UAH</p>
                                                 <p>Number of guests:</p>
                                                 <p>{post?.numberOfGuests}</p>
-                                                {post?.discount ? (
+                                                {post?.discount ?
                                                     <>
                                                         <p>Discount:</p>
-                                                        <p>
-                                                            {post?.discount} %
-                                                        </p>
+                                                        <p>{post?.discount} %</p>
                                                     </>
-                                                ) : (
-                                                    ""
-                                                )}
+                                                    :
+                                                    ""}
+
                                             </>
-                                        )}
+                                        }
                                         <p>Category:</p>
                                         <p>{post?.categoryName}</p>
                                     </div>
                                     <div className="important">
-                                        Please inform {post?.name} of your
-                                        expected arrival time in advance. To do
-                                        this, you can use the special requests
-                                        box when booking. Bachelorette parties,
-                                        hen parties and similar parties are not
-                                        allowed in this property.
+                                        Please inform {post?.name} of your expected arrival time in advance. To do this, you can use the special requests box when booking. Bachelorette parties, hen parties and similar parties are not allowed in this property.
                                     </div>
                                 </div>
                             </div>
+
                         </div>
-                        {post?.categoryName == "Hotel" ? (
+                        {post?.categoryName == "Hotel" ?
                             <div className="post-page-room-list">
                                 {post.roomList?.$values.map((item) => (
                                     <RoomCard
@@ -480,16 +362,16 @@ export const PostOfPage = () => {
                                         numberOfRooms={item.numberOfRooms}
                                     />
                                 ))}
+
                             </div>
-                        ) : (
-                            ""
-                        )}
+                            : ""}
+
                     </>
-                )}
+                }
+
             </div>
-        </>
-    );
-};
+        </>)
+}
 /*
 <div className="service-card">
                                         <img src={`${APP_ENV.BASE_URL}/images/icons/wi-fi.svg`} alt="Icon" />
