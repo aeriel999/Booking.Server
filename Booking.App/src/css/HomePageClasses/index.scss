@@ -111,7 +111,7 @@ main {
             column-gap: 1.3%;
             justify-content: center;
 
-            div {
+            .place-item {
                 display: flex;
                 flex-direction: column;
                 border-radius: 5px;
@@ -120,6 +120,12 @@ main {
                 width: 181px;
                 height: 181px;
                 overflow: hidden;
+                cursor: pointer;
+
+                &:hover {
+                    border-color: $primary-style-color;
+                }
+
 
                 .place-image {
                     height: 145px;
@@ -188,8 +194,13 @@ main {
                     padding: 10px 15px;
                     border-radius: 10px;
                     background: $background-color;
-                    border: none;
+                    border: 1px solid transparent;
                     outline: none;
+                    cursor: pointer;
+
+                    &:hover {
+                        border-color: $primary-font-color;
+                    }
                 }
             }
 
@@ -388,8 +399,13 @@ main {
                 padding: 10px 15px;
                 border-radius: 7px;
                 outline: none;
-                border: none;
+                border: 1px solid transparent;
                 margin: auto;
+                cursor: pointer;
+
+                &:hover {
+                    border-color: $primary-style-color;
+                }
 
                 &:first-of-type {
                     background: $primary-font-color;

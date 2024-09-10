@@ -10,6 +10,8 @@ import { getRealtorById } from "../../../store/users/user.action";
 import HeaderImg from "../../../assets/Templates/Rectangle-50.webp";
 import { Status } from "../../../utils/enum";
 import { Loading } from "../../../components/common/Loading/Loading";
+import { unwrapResult } from "@reduxjs/toolkit";
+import ErrorHandler from "../../../components/common/ErrorHandler";
 
 export const RealtorPageForClient = () => {
     const { realtorId } = useParams();
@@ -20,13 +22,18 @@ export const RealtorPageForClient = () => {
     const [avatarUrl, setAvatarUrl] = useState<string>();
     // const navigate = useNavigate();
     const dispatch = useAppDispatch();
-    //const [image, setImage] = useState<File | null>(null);
     const [headerUrl, setHeaderUrl] = useState<string | null>(null);
     const [errorMessage, setErrorMessage] = useState<string | undefined>(
         undefined
     );
     const getRealtor = async () => {
-        await dispatch(getRealtorById(realtorId!));
+        try {
+            var response = await dispatch(getRealtorById(realtorId!));
+            unwrapResult(response);
+        } catch (error) {
+            setErrorMessage(ErrorHandler(error));
+        }
+
     }
     useEffect(() => {
         getRealtor();

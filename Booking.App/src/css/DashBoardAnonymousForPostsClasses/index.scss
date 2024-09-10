@@ -43,7 +43,7 @@
                 cursor: pointer;
 
                 &:hover {
-                    border-color: $primary-font-color;
+                    border-color: $primary-style-color;
                 }
             }
 
@@ -108,7 +108,7 @@
                     cursor: pointer;
 
                     &:hover {
-                        border-color: #363838;
+                        border-color: $primary-font-color;
                     }
 
                     &::before {
