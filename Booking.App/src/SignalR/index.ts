@@ -1,81 +1,21 @@
-import { useDispatch } from "react-redux";
 import { APP_ENV } from "../env";
-import { useAppDispatch } from "../hooks/redux/index.ts";
-import {
-    addNewMessageInGeneralCount,
-    updateListOfChatIdForListening,
-} from "../store/chat/chat.slice.ts";
 import { getLocalStorage } from "../utils/storage/localStorageUtils.ts";
 import * as signalR from "@microsoft/signalr";
-import { AppDispatch } from "../store/index.ts";
 
 //Connection build
-const connection = new signalR.HubConnectionBuilder()
+export const connection = new signalR.HubConnectionBuilder()
     .withUrl(APP_ENV.BASE_URL + "/chat", {
         accessTokenFactory: () => getLocalStorage("authToken") as string,
     })
     .withAutomaticReconnect([0, 2000, 10000, 30000])
     .build();
 
-//Connection for listening chanels for all posts and new chatrooms
-export const connectionForRealtorToSignalR = async (list: string[]) => {
-    if (connection.state === signalR.HubConnectionState.Disconnected) {
-        await connection
-            .start()
-            .then(async () => {
-                if (list) {
-                    await Promise.all(list.map((id) => startListeningPost(id)));
-                }
-            })
-            .catch((err) => console.error("Connection failed: ", err));
-    }
-
-    connection.onreconnected(async () => {
-        if (list) {
-            await Promise.all(list.map((id) => startListeningPost(id)));
-        }
-    });
-};
-
-//join post channel for new chat Rooms appearance
-const startListeningPost = async (roomId: string) => {
-    if (connection.state === signalR.HubConnectionState.Connected) {
-        await connection
-            .invoke("JoinNewChanelOrNewChatRoomForListening", { roomId })
-            .then(() => {
-                console.log("roomId", roomId);
-                connection.on("send_notify", (m) => joinForChatListening(m));
-                
-            });
-    }
-};
-const test = async (roomId : string) => {
-    console.log("test ", roomId);
-
-    const dispatch = useDispatch<AppDispatch>();
-
-                    await  dispatch(addNewMessageInGeneralCount());
-                    await dispatch(updateListOfChatIdForListening(roomId));
-                };
-
-//join new chatRooms
-const joinForChatListening = async (roomId: string) => {
-    if (connection.state === signalR.HubConnectionState.Connected) {
-        await connection
-            .invoke("JoinNewChanelOrNewChatRoomForListening", { roomId })
-            .then(() => {
-               
-                console.log("send_notify", roomId);
-                 test(roomId);
-            });
-    }
-};
 
 
 //create new chatRoom and choin it for listening
-export const joinNewPostChatByUser = (roomId: string) => {
+export const joinNewPostChatByUser = async (roomId: string) => {
     if (connection.state === signalR.HubConnectionState.Connected) {
-        connection
+        await connection
             .invoke("JoinNewPostChatByUser", { roomId })
             .then((history) => {
                 console.log("JoinNewPostChatByUser history", history);

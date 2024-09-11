@@ -40,13 +40,19 @@ import { ClientProfileEditPage } from "./containers/client/ClientProfileEditPage
 import { HistoryOfFeedbacksPage } from "./containers/client/HistoryOfFeedbacksPage/HistoryOfFeedbacksPage.tsx";
 import { RealtorPageForClient } from "./containers/client/RealtorPageForClient/RealtorPageForClient.tsx";
 import { PageOfMessages } from "./containers/client/PageOfMessages/PageOfMessages.tsx";
-import { connectionForRealtorToSignalR } from "./SignalR/index.ts";
+import { connection } from "./SignalR/index.ts";
+import * as signalR from "@microsoft/signalr";
+import { useDispatch } from "react-redux";
+import { AppDispatch } from "./store/index.ts";
+import { addNewMessageInGeneralCount, updateListOfChatIdForListening } from "./store/chat/chat.slice.ts";
+
+ 
 
 export const App: React.FC = () => {
     const { isLogin, user } = useAppSelector((state) => state.account);
-    const { listOfPostIdForListening: listOfIdForListening } = useAppSelector(
-        (state) => state.chat
-    );
+    const { listOfPostIdForListening } = useAppSelector((state) => state.chat);
+    const { listOfChatsIdForListening } = useAppSelector((state) => state.chat);
+    const dispatch = useDispatch<AppDispatch>();
 
     const role = () => {
         if (user?.role.toLowerCase().includes("realtor")) {
@@ -58,12 +64,67 @@ export const App: React.FC = () => {
         }
     };
 
-    if (isLogin) {
-        connectionForRealtorToSignalR(listOfIdForListening!);
+    const startConnection = async () => {
+        if (connection.state === signalR.HubConnectionState.Disconnected) {
+            await connection
+                .start()
+                .then(async () => {
+                    if (listOfPostIdForListening) {
+                        await connectionForRealtorToSignalR(listOfPostIdForListening);
+                    }
+                    if(listOfChatsIdForListening){
+                        
+                    }
 
-        // if(role() === "realtor" && listOfIdForListening){
-        //     startListeningPostChanelsForJoiningToNewChats(listOfIdForListening);
-        // }
+                })
+                .catch((err) => console.error("Connection failed: ", err));
+        }
+        connection.onreconnected(async () => {
+            if (listOfPostIdForListening) {
+                await connectionForRealtorToSignalR(listOfPostIdForListening);
+            }
+        });
+    };
+    
+    // //Connection for listening chanels for all posts and new chatrooms
+    const connectionForRealtorToSignalR = async (list: string[]) => {
+        if (connection.state === signalR.HubConnectionState.Connected) {
+            await Promise.all(list.map((id) => startListeningPost(id)));
+        }
+    };
+    
+    const startListeningPost = async (roomId: string) => {
+        if (connection.state === signalR.HubConnectionState.Connected) {
+            await connection
+                .invoke("JoinNewChanelOrNewChatRoomForListening", { roomId })
+                .then(async () => {
+                    console.log("roomId", roomId);
+                    // Remove any previous listener before adding a new one
+                    connection.off("send_notify");
+                    // Add the new listener
+                    connection.on("send_notify", async (m) => {
+                        console.log("Received notify:", m);
+                        await joinForChatListening(m);
+                    });
+                });
+        }
+    };
+    
+    //join new chatRooms
+    const joinForChatListening = async (roomId: string) => {
+        if (connection.state === signalR.HubConnectionState.Connected) {
+            await connection
+                .invoke("JoinNewChanelOrNewChatRoomForListening", { roomId })
+                .then( () => {
+                     console.log("send_notify",  roomId);
+                      dispatch(addNewMessageInGeneralCount());
+                      dispatch(updateListOfChatIdForListening(roomId));
+                });
+        }
+    };
+    
+    if (isLogin) {
+        startConnection();
     }
 
     return (

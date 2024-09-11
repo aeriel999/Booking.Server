@@ -85,11 +85,16 @@ export const chatSlice = createSlice({
             state: IChatState,
             action: PayloadAction<string>
         ) => {
+            console.log("action.payload", action.payload)
+
             state.listOfChatsIdForListening!.push(action.payload);
             addlistToLocalStorage(
                 "listOfChatsIdForListening",
                 state.listOfChatsIdForListening!
             );
+
+            console.log("state.listOfChatsIdForListening",state.listOfChatsIdForListening)
+
         },
     },
     extraReducers: (builder) => {

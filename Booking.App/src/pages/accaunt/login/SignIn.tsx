@@ -15,7 +15,7 @@ import { CredentialResponse, GoogleLogin } from "@react-oauth/google";
 import Header from "../../../components/authentification/Header.tsx";
 import { changeDashboardMenuItem } from "../../../store/settings/settings.slice.ts";
 import { RootState } from "../../../store/index.ts";
-import { getNumberOfUnleastMessages, getPostIdListForListeningChatsByRealtor } from "../../../store/chat/chat.action.ts";
+import { getChatIdList, getNumberOfUnleastMessages, getPostIdListForListeningChatsByRealtor } from "../../../store/chat/chat.action.ts";
 
 export default function SignInPage() {
     const dispatch = useAppDispatch();
@@ -76,12 +76,13 @@ export default function SignInPage() {
         } else {
             navigate("/#");
         }
-
-       await dispatch(getPostIdListForListeningChatsByRealtor());
     
         try {
-            const response = await dispatch(getNumberOfUnleastMessages());
-            unwrapResult(response);
+            //Get number of new messages
+            await dispatch(getNumberOfUnleastMessages());
+             //Get list of Id for listening chats
+            await dispatch(getPostIdListForListeningChatsByRealtor());
+            await dispatch(getChatIdList());
         } catch (error) {
             setErrorMessage(ErrorHandler(error));
         }
