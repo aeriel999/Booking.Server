@@ -1,5 +1,5 @@
 import { styled } from "@mui/system";
-import { IChatRoom, IUserMessage } from "../../interfaces/chat";
+import { IChatRoom, IPostChatItem, IUserMessage } from "../../interfaces/chat";
 import { Avatar, Button } from "@mui/material";
 import { useAppSelector } from "../../hooks/redux";
 import { MessageLeft, MessageRight } from "./Message";
@@ -8,6 +8,13 @@ import UAvatar from "../../assets/Templates/Rectangle-50.webp";
 import "../../css/DashBoardAnonymousClasses/index.scss";
 import { ChatPostList } from "./ChatPostList";
 import Trash from "../../assets/DashboardIcons/mdi_trash-outline.svg";
+import { useDispatch } from "react-redux";
+import { AppDispatch } from "../../store";
+import { useEffect, useState } from "react";
+import ErrorHandler from "../common/ErrorHandler";
+import { getListOfPostInfoForChatsForRealtor } from "../../store/chat/chat.action";
+import { unwrapResult } from "@reduxjs/toolkit";
+import { APP_ENV } from "../../env";
 
 const StyledAvatar = styled(Avatar)({
     color: "#fff",
@@ -102,6 +109,32 @@ const props: IChatRoom = {
 export default function ChatRoom() {
     //  const { roomId } = useParams();
     const { user } = useAppSelector((state) => state.account);
+    const dispatch = useDispatch<AppDispatch>();
+    const [errorMessage, setErrorMessage] = useState<string | undefined>(
+        undefined
+    );
+    const [postChatList, setPostChatList] = useState<IPostChatItem[]>([]);
+    const getChatList = async () => {
+        try {
+            const response = await dispatch(
+                getListOfPostInfoForChatsForRealtor()
+            );
+            unwrapResult(response);
+            return response;
+        } catch (error) {
+            setErrorMessage(ErrorHandler(error));
+        }
+    };
+
+    useEffect(() => {
+        getChatList().then((data) => {
+            console.log("(data?.payload", data?.payload.$values)
+            if (data?.payload.$values) {
+                
+                setPostChatList(data.payload.$values);
+            }
+        });
+    }, []);
 
     function deleteChat(): void {
         throw new Error("Function not implemented.");
@@ -110,57 +143,16 @@ export default function ChatRoom() {
     return (
         <div className="chatRoom">
             <div className="chatList">
+            {postChatList && postChatList.map((item, id) => (
                 <ChatPostList
-                    postChatItem={{
-                        name: "Luxury Villas with Beach Access by VB Homes",
-                        mainImage:
-                            "https://cf.bstatic.com/xdata/images/hotel/max1024x768/518332246.jpg?k=852d9e83009ac082a7bb8366d5e27fb1f21801ea9cb6dde9c14e1aa99c49ea63&o=&hp=1",
-                        chats: [
-                            {
-                                clientName:
-                                    "Hotel Boulevard, Autograph Collection",
-                                avatar: "https://cf.bstatic.com/xdata/images/hotel/max1024x768/518332246.jpg?k=852d9e83009ac082a7bb8366d5e27fb1f21801ea9cb6dde9c14e1aa99c49ea63&o=&hp=1",
-                                countOfUnreadMessages: null,
-                                chatId: "",
-                            },
-                            {
-                                clientName: "Атлас Делюкс Готель",
-                                avatar: "https://cf.bstatic.com/xdata/images/hotel/max1024x768/585364794.jpg?k=9efa57e0a316aa1c4a0661edd8103e5f670b8af21cd17b851c75d0ce21e74a1c&o=&hp=1",
-                                countOfUnreadMessages: null,
-                                chatId: "",
-                            },
-                            {
-                                clientName: "Carinya Park",
-                                avatar: "https://cf.bstatic.com/xdata/images/hotel/max1024x768/154543781.jpg?k=868ff54aa25ef6a79bf336d10a70cbb0460e9200740fc7686e3f5b050bd41af0&o=&hp=1",
-                                countOfUnreadMessages: null,
-                                chatId: "",
-                            },
-                        ],
-                    }}
-                    countOfUnreadMessages={null}
+                    key={id} 
+                    postId={item.postId}
+                    postName={item.postName}
+                    image={APP_ENV.BASE_URL + "/images/posts/" + item.image}
+                    numberOfUnreadMessages={item.numberOfUnreadMessages}
                 />
-                <ChatPostList
-                    postChatItem={{
-                        name: "Luxury Villas with Beach Access by VB Homes",
-                        mainImage:
-                            "https://cdn-icons-png.flaticon.com/512/149/149071.png",
-                        chats: [
-                            {
-                                clientName: "Harbor View",
-                                avatar: "https://cf.bstatic.com/xdata/images/hotel/max1024x768/261566046.jpg?k=4cfe859b080369303ee8124fece054c1012ff0e1b7a2850c7aa462a3f0827ba1&o=&hp=1",
-                                countOfUnreadMessages: 2,
-                                chatId: "",
-                            },
-                            {
-                                clientName: "Готель Україна",
-                                avatar: "https://cf.bstatic.com/xdata/images/hotel/max1024x768/579719496.jpg?k=1d8db7b66c669227f9efa5ecc1643a15d52974dccb920ae11090cd29bbab1963&o=&hp=1",
-                                countOfUnreadMessages: 1,
-                                chatId: "",
-                            },
-                        ],
-                    }}
-                    countOfUnreadMessages={3}
-                />
+            ))}
+
             </div>
 
             <div className="chatContainer">

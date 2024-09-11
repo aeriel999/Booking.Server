@@ -21,7 +21,7 @@ public class GetNumberOfUnleastMessagesQueryHandler(
 		//Get chatRoom list
 		var chatRoomList = await chatRoomRepository.GetChatRoomListByRealtorIdAsync(request.UserId);
 
-		var numberOfUnleastMessages = 3;
+		var numberOfUnleastMessages = 0;
 
 		if (chatRoomList != null)
 		{

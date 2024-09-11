@@ -818,6 +818,8 @@
 .chatMainItem {
     display: flex;
     flex-direction: column;
+    justify-content: stretch;
+    width: 100%;
 }
 
 @mixin listPostItem {
@@ -834,6 +836,7 @@
     user-select: none;
     cursor: pointer;
     border-bottom: 1px solid $menu-border-color;
+    
 
     #postImage {
         width: 50px;
@@ -873,7 +876,7 @@
     @include listPostItem;
     background-color: #ececec;
     border-radius: 10px;
-
+     
     #chewron {
         width: 30px;
         height: 30px;

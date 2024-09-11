@@ -79,10 +79,17 @@ export default function SignInPage() {
     
         try {
             //Get number of new messages
-            await dispatch(getNumberOfUnleastMessages());
+           const getNumberOfUnleastMessagesResult = await dispatch(getNumberOfUnleastMessages());
+           unwrapResult(getNumberOfUnleastMessagesResult);
+
+             //Get list of Id for listening posts
+           const getPostIdListForListeningChatsByRealtorResult =  
+                                await dispatch(getPostIdListForListeningChatsByRealtor());
+            unwrapResult(getPostIdListForListeningChatsByRealtorResult);
+
              //Get list of Id for listening chats
-            await dispatch(getPostIdListForListeningChatsByRealtor());
-            await dispatch(getChatIdList());
+           const getChatIdListResult =  await dispatch(getChatIdList());
+           unwrapResult(getChatIdListResult);
         } catch (error) {
             setErrorMessage(ErrorHandler(error));
         }

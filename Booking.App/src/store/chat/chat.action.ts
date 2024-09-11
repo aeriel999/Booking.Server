@@ -59,12 +59,27 @@ export const getPostIdListForListeningChatsByRealtor = createAsyncThunk(
         }
     }
 );
+
 export const getChatIdList = createAsyncThunk(
     "chat/get-chat-id-list",
     async (_, { rejectWithValue }) => {
         try {
             const response = await apiClient.get(
                 "/api/Chat/get-chat-id-list"
+            );
+            return response.data;
+        } catch (error) {
+            return rejectWithValue(handleAxiosError(error, "Network error"));
+        }
+    }
+);
+
+export const getListOfPostInfoForChatsForRealtor = createAsyncThunk(
+    "chat/get-list-of-postinfo-for-chats-for-realtor",
+    async (_, { rejectWithValue }) => {
+        try {
+            const response = await apiClient.get(
+                "/api/Chat/get-list-of-postinfo-for-chats-for-realtor"
             );
             return response.data;
         } catch (error) {

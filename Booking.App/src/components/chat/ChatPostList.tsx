@@ -1,24 +1,10 @@
 import chewronTop from "../../assets/Icons/chevron-top.svg";
 import chewronDown from "../../assets/Icons/chevron-down.svg";
 import "../../css/DashBoardAnonymousClasses/index.scss";
-import { useEffect, useState } from "react";
-import { Avatar } from "../common/Avatar/Avatar";
+import { useState } from "react";
+import {IPostChatItem } from "../../interfaces/chat";
 
-interface IChatPostList {
-    postChatItem: {
-        name: string;
-        mainImage: string;
-        chats: {
-            chatId: string;
-            clientName: string;
-            avatar: string;
-            countOfUnreadMessages: number | null;
-        }[];
-    };
-    countOfUnreadMessages: number | null;
-}
-
-export const ChatPostList = (info: IChatPostList) => {
+export const ChatPostList = (info: IPostChatItem) => {
     const [isOpen, setIsOpen] = useState<boolean>(false);
 
     return (
@@ -29,17 +15,13 @@ export const ChatPostList = (info: IChatPostList) => {
                     setIsOpen(!isOpen);
                 }}
             >
-                    <img
-                        id="postImage"
-                        src={info.postChatItem.mainImage}
-                        alt=""
-                    />
+                <img id="postImage" src={info.image} alt="" />
 
-                <div className="postName">{info.postChatItem.name}</div>
+                <div className="postName">{info.postName}</div>
 
-                {info.countOfUnreadMessages ? (
+                {info.numberOfUnreadMessages ? (
                     <div className="countOfUnreadMessages">
-                        <div>{info.countOfUnreadMessages}</div>
+                        <div>{info.numberOfUnreadMessages}</div>
                     </div>
                 ) : (
                     ""
@@ -58,13 +40,9 @@ export const ChatPostList = (info: IChatPostList) => {
                     boxSizing: "border-box",
                 }}
             >
-                {info.postChatItem.chats.map((item) => (
+                {/* {info.postChatItem.chats.map((item) => (
                     <div className="chatUseritem">
-                        <img
-                            id="postImage"
-                            src={item.avatar}
-                            alt=""
-                        />
+                        <img id="postImage" src={item.avatar} alt="" />
 
                         <div className="postName">{item.clientName}</div>
                         {item.countOfUnreadMessages ? (
@@ -75,7 +53,7 @@ export const ChatPostList = (info: IChatPostList) => {
                             ""
                         )}
                     </div>
-                ))}
+                ))} */}
             </div>
         </div>
     );
