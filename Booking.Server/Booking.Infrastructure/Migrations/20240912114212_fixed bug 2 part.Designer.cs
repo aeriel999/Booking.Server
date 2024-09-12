@@ -12,8 +12,8 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace Booking.Infrastructure.Migrations
 {
     [DbContext(typeof(BookingDbContext))]
-    [Migration("20240912085904_Fix UserMessage tbl")]
-    partial class FixUserMessagetbl
+    [Migration("20240912114212_fixed bug 2 part")]
+    partial class fixedbug2part
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -79,10 +79,6 @@ namespace Booking.Infrastructure.Migrations
 
                     b.Property<Guid>("UserId")
                         .HasColumnType("uuid");
-
-                    b.Property<string>("UserName")
-                        .IsRequired()
-                        .HasColumnType("text");
 
                     b.HasKey("Id");
 

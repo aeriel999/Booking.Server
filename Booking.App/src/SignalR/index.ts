@@ -21,12 +21,7 @@ export const joinNewPostChatByUser = async (roomId: string) => {
             });
     }
 };
-
-export type IListeningChat = {
-    roomId: string;
-    setMessages: (args: IChatMessageInfo[]) => void
-}
-
+ 
 export const startListeningPost = async (roomId: string) => {
     if (connection.state === signalR.HubConnectionState.Connected) {
         await connection
@@ -59,9 +54,7 @@ export const endListening = () =>
 
 //         });
 
-// export const send = (message: string, roomId : string) =>
-//     connection.send('SendMessage', {message, roomId})
-//
+
 //
 // export const joinForPostListening = (roomId: string) => connection.invoke("JoinRoomForListening", {roomId})
 

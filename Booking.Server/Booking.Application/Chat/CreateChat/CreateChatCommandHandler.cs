@@ -53,7 +53,7 @@ public class CreateChatCommandHandler(
 			await chatRoomRepositories.SaveChatRoomAsync();
 
 			//register chatroom
-			//chatRegystryService.CreateRoom(newChatRoom.ChatRoomId);
+			chatRegystryService.CreateRoom(newChatRoom.ChatRoomId);
 
 			return newChatRoom.ChatRoomId;
 		}

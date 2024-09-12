@@ -86,6 +86,7 @@ export interface IChatInfo{
     userAvatar: string;
     userName: string;
     chatMessages: IChatMessageInfo[] | null;
+    
 }
 
 export interface IChatMessageInfo{

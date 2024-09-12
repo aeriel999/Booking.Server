@@ -1,21 +1,22 @@
-﻿using Microsoft.EntityFrameworkCore.Migrations;
+﻿using System;
+using Microsoft.EntityFrameworkCore.Migrations;
 
 #nullable disable
 
 namespace Booking.Infrastructure.Migrations
 {
     /// <inheritdoc />
-    public partial class FixUserMessagetbl : Migration
+    public partial class fixedbug2part : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
         {
-            migrationBuilder.AddColumn<string>(
+            migrationBuilder.AddColumn<Guid>(
                 name: "UserId",
                 table: "UserMessages",
-                type: "text",
+                type: "uuid",
                 nullable: false,
-                defaultValue: "");
+                defaultValue: new Guid("00000000-0000-0000-0000-000000000000"));
         }
 
         /// <inheritdoc />

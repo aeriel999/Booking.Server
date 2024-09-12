@@ -1,5 +1,12 @@
 import { styled } from "@mui/system";
-import { IChatRoom, IChatItem, IUserMessage, IChatInfo } from "../../interfaces/chat";
+import {
+ 
+    IChatItem,
+ 
+    IChatInfo,
+    IChatMessageInfo,
+    ISendMessage,
+} from "../../interfaces/chat";
 import { Avatar, Button } from "@mui/material";
 import { useAppSelector } from "../../hooks/redux";
 import { MessageLeft, MessageRight } from "./Message";
@@ -15,6 +22,8 @@ import ErrorHandler from "../common/ErrorHandler";
 import { getListOfPostInfoForChatsForRealtor } from "../../store/chat/chat.action";
 import { unwrapResult } from "@reduxjs/toolkit";
 import { APP_ENV } from "../../env";
+import { connection } from "../../SignalR";
+import * as signalR from "@microsoft/signalr";
 
 const StyledAvatar = styled(Avatar)({
     color: "#fff",
@@ -22,89 +31,6 @@ const StyledAvatar = styled(Avatar)({
     width: "32px",
     height: "32px",
 });
-
-const testMsg: IUserMessage[] = [
-    {
-        id: "test1",
-        userId: "test1",
-        message:
-            "Situated in Puerto de la Cruz, 1.2 km from San Telmo Beach, Hotel Tigaiga features accommodation with an outdoor swimming pool, private parking, a garden and a shared lounge. With free WiFi, this 4-star hotel offers room service and a 24-hour front desk. The hotel has a terrace and sea views, and guests can enjoy a meal at the restaurant or a drink at the bar.",
-        chatRoomId: "testRoom1",
-        sentAt: "2024-05-22T10:00:00Z",
-        isRead: true,
-    },
-    {
-        id: "test2",
-        userId: "4919263b-1da2-49e7-b7c8-ea84a64005db",
-        message: "test message 2",
-        chatRoomId: "testRoom2",
-        sentAt: "2024-05-22T10:05:00Z",
-        isRead: true,
-    },
-    {
-        id: "test1",
-        userId: "test1",
-        message:
-            "Situated in Puerto de la Cruz, 1.2 km from San Telmo Beach, Hotel Tigaiga features accommodation with an outdoor swimming pool, private parking, a garden and a shared lounge. With free WiFi, this 4-star hotel offers room service and a 24-hour front desk. The hotel has a terrace and sea views, and guests can enjoy a meal at the restaurant or a drink at the bar.",
-        chatRoomId: "testRoom1",
-        sentAt: "2024-05-22T10:00:00Z",
-        isRead: true,
-    },
-    {
-        id: "test2",
-        userId: "4919263b-1da2-49e7-b7c8-ea84a64005db",
-        message: "test message 2",
-        chatRoomId: "testRoom2",
-        sentAt: "2024-05-22T10:05:00Z",
-        isRead: true,
-    },
-    {
-        id: "test1",
-        userId: "test1",
-        message:
-            "Situated in Puerto de la Cruz, 1.2 km from San Telmo Beach, Hotel Tigaiga features accommodation with an outdoor swimming pool, private parking, a garden and a shared lounge. With free WiFi, this 4-star hotel offers room service and a 24-hour front desk. The hotel has a terrace and sea views, and guests can enjoy a meal at the restaurant or a drink at the bar.",
-        chatRoomId: "testRoom1",
-        sentAt: "2024-05-22T10:00:00Z",
-        isRead: true,
-    },
-    {
-        id: "test2",
-        userId: "4919263b-1da2-49e7-b7c8-ea84a64005db",
-        message: "test message 2",
-        chatRoomId: "testRoom2",
-        sentAt: "2024-05-22T10:05:00Z",
-        isRead: true,
-    },
-    {
-        id: "test1",
-        userId: "test1",
-        message:
-            "Situated in Puerto de la Cruz, 1.2 km from San Telmo Beach, Hotel Tigaiga features accommodation with an outdoor swimming pool, private parking, a garden and a shared lounge. With free WiFi, this 4-star hotel offers room service and a 24-hour front desk. The hotel has a terrace and sea views, and guests can enjoy a meal at the restaurant or a drink at the bar.",
-        chatRoomId: "testRoom1",
-        sentAt: "2024-05-22T10:00:00Z",
-        isRead: false,
-    },
-    {
-        id: "test2",
-        userId: "4919263b-1da2-49e7-b7c8-ea84a64005db",
-        message: "test message 2",
-        chatRoomId: "testRoom2",
-        sentAt: "2024-05-22T10:05:00Z",
-        isRead: false,
-    },
-];
-
-const props: IChatRoom = {
-    chatRoomId: "test",
-    clientId: "test",
-    realtorId: "test",
-    postId: "test",
-    postName: "Luxury Villas with Beach Access by VB Homes",
-    postImage: UAvatar,
-    sendUserName: "test1",
-    sendUserAvatar: "test1",
-    userMessages: testMsg,
-};
 
 export default function ChatRoom() {
     //  const { roomId } = useParams();
@@ -114,8 +40,10 @@ export default function ChatRoom() {
         undefined
     );
     const [postChatList, setPostChatList] = useState<IChatItem[]>([]);
-    const[chatInfo, setChatInfo] = useState<IChatInfo | null>(null);
-
+    const [chatInfo, setChatInfo] = useState<IChatInfo | null>(null);
+    const [messages, setMessages] = useState<IChatMessageInfo[]>([]);
+    const [message, setMessage] = useState<IChatMessageInfo>();
+    const [textMessage, setTextMessage] = useState<ISendMessage>();
 
     const getChatList = async () => {
         try {
@@ -142,6 +70,47 @@ export default function ChatRoom() {
         throw new Error("Function not implemented.");
     }
 
+    const startListeningPost = async (roomId: string) => {
+        if (connection.state === signalR.HubConnectionState.Connected) {
+            await connection
+                .invoke("JoinRoomForListening", { roomId })
+                .then(async (data) => {
+                    console.log("JoinRoomForListening", roomId);
+                    console.log("send_message", data);
+                    setMessages(data);
+                    // Remove any previous listener before adding a new one
+                    connection.off("send_notify");
+                    // Add the new listener
+                    connection.on("send_message", async (m) => {
+                        console.log("send_message", m);
+                        // setMessages(m)
+                    });
+                });
+        } else {
+            await connection.start().then(() => {
+                connection
+                    .invoke("JoinRoomForListening", { roomId })
+                    .then(async (data) => {
+                        console.log("roomId", roomId);
+                        setMessages(data);
+                        // Remove any previous listener before adding a new one
+                        connection.off("send_notify");
+                        // Add the new listener
+                        connection.on("send_message", async (m) => {
+                            console.log("send_message", m);
+                            // setMessages(m)
+                        });
+                    });
+            });
+        }
+    };
+
+    useEffect(() => {
+        startListeningPost(chatInfo?.chatId!);
+    }, [chatInfo]);
+
+
+  
     return (
         <div className="chatRoom">
             <div className="chatList">
@@ -161,42 +130,51 @@ export default function ChatRoom() {
             </div>
 
             <div className="chatContainer">
-             {chatInfo !== null ? (<>
-                <div className="chatGroupName">
-                    <img src={chatInfo!.postImage} alt="post" />
-                    <p>{chatInfo!.postName}</p>
-                </div>
-                <div className="chatUserContainer">
-                    <div className="chatInfo">
-                        <div className="userInfo">
-                            <StyledAvatar
-                                alt={chatInfo!.userAvatar}
-                                src={
-                                    chatInfo!.userAvatar == null
-                                        ? UAvatar
-                                        : chatInfo!.userAvatar
-                                }
-                            />
-                            <p>{chatInfo!.userName}</p>
+                {chatInfo !== null ? (
+                    <>
+                        <div className="chatGroupName">
+                            <img src={chatInfo!.postImage} alt="post" />
+                            <p>{chatInfo!.postName}</p>
                         </div>
-                        <Button onClick={deleteChat}>
-                            <img src={Trash} alt="delete" />
-                        </Button>
-                    </div>
-                    <div className="messageContainer">
-                        <div className="messages">
-                            {chatInfo!.chatMessages?.map((msg, index) =>
-                                msg.userId === user?.id ? (
-                                    <MessageRight key={index} {...msg} />
-                                ) : (
-                                    <MessageLeft key={index} {...msg} />
-                                )
-                            )}
+                        <div className="chatUserContainer">
+                            <div className="chatInfo">
+                                <div className="userInfo">
+                                    <StyledAvatar
+                                        alt={chatInfo!.userAvatar}
+                                        src={
+                                            chatInfo!.userAvatar == null
+                                                ? UAvatar
+                                                : chatInfo!.userAvatar
+                                        }
+                                    />
+                                    <p>{chatInfo!.userName}</p>
+                                </div>
+                                <Button onClick={deleteChat}>
+                                    <img src={Trash} alt="delete" />
+                                </Button>
+                            </div>
+                            <div className="messageContainer">
+                                <div className="messages">
+                                    {chatInfo!.chatMessages?.map((msg, index) =>
+                                        msg.userId === user?.id ? (
+                                            <MessageRight
+                                                key={index}
+                                                {...msg}
+                                            />
+                                        ) : (
+                                            <MessageLeft key={index} {...msg} />
+                                        )
+                                    )}
+                                </div>
+                                <ChatTextInput 
+                                    roomId={chatInfo?.chatId!} 
+                                    setMessage={setTextMessage} />
+                            </div>
                         </div>
-                        <ChatTextInput roomId={""} />
-                    </div>
-                </div>
-             </>) : (<>Please Coose Chat </>)}
+                    </>
+                ) : (
+                    <>Please Coose Chat </>
+                )}
             </div>
         </div>
     );

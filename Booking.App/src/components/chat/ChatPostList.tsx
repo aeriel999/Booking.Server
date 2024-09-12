@@ -7,9 +7,6 @@ import { useAppDispatch } from "../../hooks/redux";
 import { getListOfChatsByPostInfoForRealtor } from "../../store/chat/chat.action";
 import { unwrapResult } from "@reduxjs/toolkit";
 import ErrorHandler from "../common/ErrorHandler";
-import { connection, IListeningChat } from "../../SignalR";
-import * as signalR from "@microsoft/signalr";
-
 
 export const ChatPostList = (info: IChatItem) => {
     const [isOpen, setIsOpen] = useState<boolean>(false);
@@ -18,7 +15,6 @@ export const ChatPostList = (info: IChatItem) => {
         undefined
     );
     const [chatList, setChatList] = useState<IChatItem[]>([]);
-    const [messages, setMessages] = useState<IChatMessageInfo[]>([]);
 
     const getChatList = async (postId: string) => {
         try {
@@ -38,42 +34,6 @@ export const ChatPostList = (info: IChatItem) => {
         });
     }
 
-    
- const startListeningPost = async (roomId: string) => {
-    if (connection.state === signalR.HubConnectionState.Connected) {
-        await connection
-            .invoke("JoinRoomForListening", {roomId})
-            .then(async (data) => {
-                console.log("JoinRoomForListening", roomId);
-                console.log("send_message", data);
-
-                // Remove any previous listener before adding a new one
-                connection.off("send_notify");
-                // Add the new listener
-                connection.on("send_message", async (m) => {
-                    console.log("send_message", m);
-                   // setMessages(m)
-                });
-            });
-    }else{
-        await connection
-        .start()
-        .then(()=>{
-            connection
-            .invoke("JoinRoomForListening", {roomId})
-            .then(async () => {
-                console.log("roomId", roomId);
-                // Remove any previous listener before adding a new one
-                connection.off("send_notify");
-                // Add the new listener
-                connection.on("send_message", async (m) => {
-                    console.log("send_message", m);
-                   // setMessages(m)
-                });
-            });
-        })
-    }
-};
     return (
         <div className="chatMainItem">
             <div
@@ -112,21 +72,14 @@ export const ChatPostList = (info: IChatItem) => {
                     <div
                         className="chatUseritem"
                         key={item.id || index}
-                        onClick={async () => {
-                            const startListeningProps: IListeningChat = {
-                                roomId: info.id,
-                                setMessages: setMessages,
-                            };
-
-                            await startListeningPost(info.id,);
-
+                        onClick={() => {
                             const chatInfo: IChatInfo = {
-                                chatId: info.id,
+                                chatId: item.id,
                                 postImage: info.image,
                                 postName: info.name,
                                 userAvatar: item.image,
                                 userName: item.name,
-                                chatMessages: messages,
+                                chatMessages: null
                             };
 
                             info.setChatInfo(chatInfo);

@@ -23,6 +23,7 @@ public class ChatRoom
 
 	public required int NumberOfUnreadMessages { get; set; }
 
+
 	[ForeignKey(nameof(ClientId))]
 	public User? Client { get; set; } // Navigation property for the client
 
