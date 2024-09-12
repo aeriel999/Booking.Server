@@ -71,22 +71,26 @@ export interface IChatRoomForClient {
     unreadMessages: number | null;
 }
 
-export interface IChatPostList {
-    postChatItem: {
-       
-
-        chats: {
-            chatId: string;
-            clientName: string;
-            avatar: string;
-            countOfUnreadMessages: number | null;
-        }[];
-    };
-}
-
-export interface IPostChatItem{
-    postId: string;
-    postName: string;
+export interface IChatItem {
+    id: string;
+    name: string;
     image: string;
     numberOfUnreadMessages: number | null;
+    setChatInfo: (arg: IChatInfo) => void;
+}
+
+export interface IChatInfo{
+    chatId: string;
+    postImage: string;
+    postName: string;
+    userAvatar: string;
+    userName: string;
+    chatMessages: IChatMessageInfo[] | null;
+}
+
+export interface IChatMessageInfo{
+    userId: string;
+    sendAt: string;
+    text: string;
+    isUnread: boolean;
 }

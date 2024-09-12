@@ -2,10 +2,10 @@
 
 public record GetListOfChatsByPostInfoForRealtorResponse
 {
-    public required Guid ChatId { get; set; }
+    public required Guid Id { get; set; }
 
 
-    public required string ChatName { get; set; }
+    public required string Name { get; set; }
 
 
 	public required string Image { get; set; }

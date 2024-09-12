@@ -15,8 +15,8 @@ public class ChatMapping : IRegister
 	public void Register(TypeAdapterConfig config)
 	{
 		config.NewConfig<Post, GetListOfPostInfoForChatsForRealtorResponse>()
-		   .Map(desp => desp.PostId, src => src.Id)
-		   .Map(desp => desp.PostName, src => src.Name)
+		   .Map(desp => desp.Id, src => src.Id)
+		   .Map(desp => desp.Name, src => src.Name)
 		   .Map(desp => desp.Image, src => src.ImagesPost!.FirstOrDefault(i => i.Priority == 1)!.Name)
 		   .Map(desp => desp.NumberOfUnreadMessages,
 				src => src.ChatRooms!.Sum(c => c.NumberOfUnreadMessages));
@@ -29,10 +29,10 @@ public class ChatMapping : IRegister
 			 .Map(dest => dest, src => src.request);
 
 		config.NewConfig<ChatRoom, GetListOfChatsByPostInfoForRealtorResponse>()
-		   .Map(desp => desp.ChatId, src => src.ChatRoomId)
+		   .Map(desp => desp.Id, src => src.ChatRoomId)
 		   .Map(desp => desp.NumberOfUnreadMessages, src => src.NumberOfUnreadMessages)
 		   .Map(desp => desp.Image, src => src.Client!.Avatar)
-		   .Map(desp => desp.ChatName, src => src.Client!.UserName);
+		   .Map(desp => desp.Name, src => src.Client!.UserName);
 
 		config.NewConfig<List<ChatRoom>, List<GetListOfChatsByPostInfoForRealtorResponse>>();
 	}

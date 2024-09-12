@@ -2,9 +2,9 @@
 
 public record GetListOfPostInfoForChatsForRealtorResponse
 {
-    public required Guid PostId { get; set; }
+    public required Guid Id { get; set; }
 
-    public required string PostName { get; set; }
+    public required string Name { get; set; }
 
 	public required string Image { get; set; }
 

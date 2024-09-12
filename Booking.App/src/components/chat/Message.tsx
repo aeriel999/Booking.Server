@@ -1,7 +1,7 @@
 //import { Avatar } from "@mui/material";
 import { styled } from "@mui/system";
 
-import { IUserMessage } from "../../interfaces/chat";
+import { IChatMessageInfo, IUserMessage } from "../../interfaces/chat";
 const MessageRow = styled("div")({
     display: "flex",
     flexDirection: "column",
@@ -115,28 +115,28 @@ const MessageTimeStampLeft = styled("div")({
  
 
 // MessageLeft component
-export const MessageLeft = (userMsg: IUserMessage) => {
+export const MessageLeft = (userMsg: IChatMessageInfo) => {
     return (
         <MessageRow>
             <MessageBlue>
-                <MessageContent>{userMsg.message}</MessageContent>
+                <MessageContent>{userMsg.text}</MessageContent>
             </MessageBlue>
 
-             <MessageTimeStampRight>{userMsg.sentAt}</MessageTimeStampRight>
+             <MessageTimeStampRight>{userMsg.sendAt}</MessageTimeStampRight>
         </MessageRow>
     );
 };
 
 // MessageRight component
-export const MessageRight = (userMsg: IUserMessage) => {
+export const MessageRight = (userMsg: IChatMessageInfo) => {
     return (
         <MessageRowRight>
            
             <MessageOrange>
-                <MessageContent>{userMsg.message}</MessageContent>
+                <MessageContent>{userMsg.text}</MessageContent>
             </MessageOrange>
 
-            <MessageTimeStampLeft>{userMsg.sentAt}</MessageTimeStampLeft>
+            <MessageTimeStampLeft>{userMsg.sendAt}</MessageTimeStampLeft>
 
         </MessageRowRight>
     );

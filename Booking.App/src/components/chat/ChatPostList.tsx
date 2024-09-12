@@ -2,16 +2,19 @@ import chewronTop from "../../assets/Icons/chevron-top.svg";
 import chewronDown from "../../assets/Icons/chevron-down.svg";
 import "../../css/DashBoardAnonymousClasses/index.scss";
 import { useState } from "react";
-import { IPostChatItem } from "../../interfaces/chat";
+import { IChatInfo, IChatItem } from "../../interfaces/chat";
 import { useAppDispatch } from "../../hooks/redux";
 import { getListOfChatsByPostInfoForRealtor } from "../../store/chat/chat.action";
 import { unwrapResult } from "@reduxjs/toolkit";
 import ErrorHandler from "../common/ErrorHandler";
 
-export const ChatPostList = (info: IPostChatItem) => {
+export const ChatPostList = (info: IChatItem) => {
     const [isOpen, setIsOpen] = useState<boolean>(false);
     const dispatch = useAppDispatch();
-    const [errorMessage, setErrorMessage] = useState<string | undefined>(undefined);
+    const [errorMessage, setErrorMessage] = useState<string | undefined>(
+        undefined
+    );
+    const [chatList, setChatList] = useState<IChatItem[]>([]);
 
     const getChatList = async (postId: string) => {
         try {
@@ -25,9 +28,9 @@ export const ChatPostList = (info: IPostChatItem) => {
         }
     };
     function handleCllick(postId: string) {
-        getChatList(postId).then((data)=>{
-            console.log("getChatList", data)
-        })
+        getChatList(postId).then((data) => {
+            setChatList(data);
+        });
     }
 
     return (
@@ -36,12 +39,12 @@ export const ChatPostList = (info: IPostChatItem) => {
                 className="chatListItem"
                 onClick={() => {
                     setIsOpen(!isOpen);
-                    handleCllick(info.postId)
+                    handleCllick(info.id);
                 }}
             >
                 <img id="postImage" src={info.image} alt="" />
 
-                <div className="postName">{info.postName}</div>
+                <div className="postName">{info.name}</div>
 
                 {info.numberOfUnreadMessages ? (
                     <div className="countOfUnreadMessages">
@@ -64,20 +67,34 @@ export const ChatPostList = (info: IPostChatItem) => {
                     boxSizing: "border-box",
                 }}
             >
-                {/* {info.postChatItem.chats.map((item) => (
-                    <div className="chatUseritem">
-                        <img id="postImage" src={item.avatar} alt="" />
+                {chatList.map((item, index) => (
+                    <div
+                        className="chatUseritem"
+                        key={item.id || index}
+                        onClick={() => {
+                            const chatInfo: IChatInfo = {
+                                chatId: info.id,
+                                postImage: info.image,
+                                postName: info.name,
+                                userAvatar: item.image,
+                                userName: item.name,
+                                chatMessages: null,
+                            };
+                            info.setChatInfo(chatInfo);
+                        }}
+                    >
+                        <img id="postImage" src={item.image} alt="" />
 
-                        <div className="postName">{item.clientName}</div>
-                        {item.countOfUnreadMessages ? (
+                        <div className="postName">{item.name}</div>
+                        {item.numberOfUnreadMessages ? (
                             <div className="countOfUnreadMessages">
-                                <div>{item.countOfUnreadMessages}</div>
+                                <div>{item.numberOfUnreadMessages}</div>
                             </div>
                         ) : (
                             ""
                         )}
                     </div>
-                ))} */}
+                ))}
             </div>
         </div>
     );

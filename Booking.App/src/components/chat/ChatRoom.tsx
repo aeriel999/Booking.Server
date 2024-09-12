@@ -1,5 +1,5 @@
 import { styled } from "@mui/system";
-import { IChatRoom, IPostChatItem, IUserMessage } from "../../interfaces/chat";
+import { IChatRoom, IChatItem, IUserMessage, IChatInfo } from "../../interfaces/chat";
 import { Avatar, Button } from "@mui/material";
 import { useAppSelector } from "../../hooks/redux";
 import { MessageLeft, MessageRight } from "./Message";
@@ -113,7 +113,10 @@ export default function ChatRoom() {
     const [errorMessage, setErrorMessage] = useState<string | undefined>(
         undefined
     );
-    const [postChatList, setPostChatList] = useState<IPostChatItem[]>([]);
+    const [postChatList, setPostChatList] = useState<IChatItem[]>([]);
+    const[chatInfo, setChatInfo] = useState<IChatInfo | null>(null);
+
+
     const getChatList = async () => {
         try {
             const response = await dispatch(
@@ -128,9 +131,8 @@ export default function ChatRoom() {
 
     useEffect(() => {
         getChatList().then((data) => {
-            console.log("(data?.payload", data?.payload.$values)
+            console.log("(data?.payload", data?.payload.$values);
             if (data?.payload.$values) {
-                
                 setPostChatList(data.payload.$values);
             }
         });
@@ -143,35 +145,39 @@ export default function ChatRoom() {
     return (
         <div className="chatRoom">
             <div className="chatList">
-            {postChatList && postChatList.map((item, id) => (
-                <ChatPostList
-                    key={id} 
-                    postId={item.postId}
-                    postName={item.postName}
-                    image={APP_ENV.BASE_URL + "/images/posts/" + item.image}
-                    numberOfUnreadMessages={item.numberOfUnreadMessages}
-                />
-            ))}
-
+                {postChatList &&
+                    postChatList.map((item, id) => (
+                        <ChatPostList
+                            key={id}
+                            id={item.id}
+                            name={item.name}
+                            image={
+                                APP_ENV.BASE_URL + "/images/posts/" + item.image
+                            }
+                            numberOfUnreadMessages={item.numberOfUnreadMessages}
+                            setChatInfo={setChatInfo}
+                        />
+                    ))}
             </div>
 
             <div className="chatContainer">
+             {chatInfo !== null ? (<>
                 <div className="chatGroupName">
-                    <img src={props.postImage} alt="post" />
-                    <p>{props.postName}</p>
+                    <img src={chatInfo!.postImage} alt="post" />
+                    <p>{chatInfo!.postName}</p>
                 </div>
                 <div className="chatUserContainer">
                     <div className="chatInfo">
                         <div className="userInfo">
                             <StyledAvatar
-                                alt={props.sendUserName}
+                                alt={chatInfo!.userAvatar}
                                 src={
-                                    props.sendUserAvatar == null
+                                    chatInfo!.userAvatar == null
                                         ? UAvatar
-                                        : props.sendUserAvatar
+                                        : chatInfo!.userAvatar
                                 }
                             />
-                            <p>{props.sendUserName}</p>
+                            <p>{chatInfo!.userName}</p>
                         </div>
                         <Button onClick={deleteChat}>
                             <img src={Trash} alt="delete" />
@@ -179,7 +185,7 @@ export default function ChatRoom() {
                     </div>
                     <div className="messageContainer">
                         <div className="messages">
-                            {props.userMessages.map((msg, index) =>
+                            {chatInfo!.chatMessages?.map((msg, index) =>
                                 msg.userId === user?.id ? (
                                     <MessageRight key={index} {...msg} />
                                 ) : (
@@ -190,6 +196,7 @@ export default function ChatRoom() {
                         <ChatTextInput roomId={""} />
                     </div>
                 </div>
+             </>) : (<>Please Coose Chat </>)}
             </div>
         </div>
     );
