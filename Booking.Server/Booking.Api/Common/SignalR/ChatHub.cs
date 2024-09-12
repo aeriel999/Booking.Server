@@ -1,5 +1,6 @@
 ﻿using Booking.Api.Contracts.Chat;
 using Booking.Api.Contracts.Chat.CreateMessage;
+using Booking.Api.Contracts.Chat.GetChatMessageInfo;
 using Booking.Application.Chat.CreateChat;
 using Booking.Application.Chat.CreateMessage;
 using Booking.Application.Common.Interfaces.Chat;
@@ -56,12 +57,16 @@ namespace Booking.Api.Common.SignalR
 
 		//ToDo test for needing this ability
 		//If join if chatRoom is in disconnect state
-		public async Task<string> JoinRoomForListening(RoomRequest request)
+		public async Task<List<GetChatMessageInfoResponse>?> JoinRoomForListening(RoomRequest request)
 		{
 			await Groups.AddToGroupAsync(Context.ConnectionId, request.RoomId.ToString());
 
-			//return await userMessageRepository.GetUserMessagesByChatRoomIdAsync(request.RoomId);
-			return "Hello";
+			var messageList = await userMessageRepository.GetUserMessagesByChatRoomIdAsync(request.RoomId);
+
+			if (messageList == null)
+				return null;
+
+			return mapper.Map<List<GetChatMessageInfoResponse>>(messageList);
 		}
 
 		//Live room in deleting of chat or post

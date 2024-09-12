@@ -1,4 +1,5 @@
 ﻿using Booking.Api.Contracts.Chat.CreateChat;
+using Booking.Api.Contracts.Chat.GetChatMessageInfo;
 using Booking.Api.Contracts.Chat.GetListOfChatsByPostInfoForRealtor;
 using Booking.Api.Contracts.Chat.GetListOfPostInfoForChatsForRealtor;
 using Booking.Api.Contracts.Post.CreatePost;
@@ -35,5 +36,13 @@ public class ChatMapping : IRegister
 		   .Map(desp => desp.Name, src => src.Client!.UserName);
 
 		config.NewConfig<List<ChatRoom>, List<GetListOfChatsByPostInfoForRealtorResponse>>();
+
+		config.NewConfig<UserMessage, GetChatMessageInfoResponse>()
+		   .Map(desp => desp.UserId, src => src.UserId)
+		   .Map(desp => desp.SentAt, src => src.SentAt.ToUniversalTime())
+		   .Map(desp => desp.Text, src => src.Message)
+		   .Map(desp => desp.IsRead, src => src.IsRead);
+
+		config.NewConfig<List<UserMessage>, List<GetChatMessageInfoResponse>>();
 	}
 }
