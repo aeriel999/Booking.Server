@@ -4,13 +4,10 @@ using Booking.Api.Contracts.Chat.CreateMessage;
 using Booking.Api.Contracts.Chat.GetChatMessageInfo;
 using Booking.Api.Contracts.Chat.GetListOfChatsByPostInfoForRealtor;
 using Booking.Api.Contracts.Chat.GetListOfPostInfoForChatsForRealtor;
-using Booking.Api.Contracts.Post.CreatePost;
 using Booking.Application.Chat.CreateMessage;
 using Booking.Application.Chat.GetListOfChatsByPostInfoForRealtor;
-using Booking.Application.Posts.CreatePost;
 using Booking.Domain.Chat;
 using Booking.Domain.Posts;
-using Booking.Domain.Chat;
 using Mapster;
 
 namespace Booking.Api.Common.Mapping;
@@ -54,7 +51,7 @@ public class ChatMapping : IRegister
 			 .Map(desp => desp.UserId, src => src.UserId)
 			 .Map(dest => dest, src => src.request);
 
-	}
+
 		config.NewConfig<(InputMessage inputMessage, Guid UserId), CreateMessageCommand>()
 		.Map(dest => dest.UserId, src => src.UserId)
 		.Map(dest => dest, src => src.inputMessage);
