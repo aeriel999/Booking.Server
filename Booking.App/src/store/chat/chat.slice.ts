@@ -6,6 +6,7 @@ import {
     getChatIdList,
     getListOfChatRooms,
     getListOfChatRoomsForClient,
+    getListOfChatsByPostInfoForRealtor,
     getListOfPostInfoForChatsForRealtor,
     getNumberOfUnleastMessages,
     getPostIdListForListeningChatsByRealtor,
@@ -162,8 +163,14 @@ export const chatSlice = createSlice({
             .addCase(getListOfPostInfoForChatsForRealtor.pending, (state) => {
                 state.status = Status.LOADING;
             })
+            .addCase(getListOfChatsByPostInfoForRealtor.fulfilled, (state) => {
+                state.status = Status.SUCCESS;
+            })
+            .addCase(getListOfChatsByPostInfoForRealtor.pending, (state) => {
+                state.status = Status.LOADING;
+            })
             
-            //getListOfPostInfoForChatsForRealtor
+            //getListOfChatsByPostInfoForRealtor
             .addMatcher(isRejectedAction, (state) => {
                 state.status = Status.ERROR;
             });

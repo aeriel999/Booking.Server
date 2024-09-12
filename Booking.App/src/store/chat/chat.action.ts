@@ -87,3 +87,17 @@ export const getListOfPostInfoForChatsForRealtor = createAsyncThunk(
         }
     }
 );
+
+export const getListOfChatsByPostInfoForRealtor = createAsyncThunk(
+    "chat/get-list-of-chats-by-post-for-realtor",
+    async (postId: string, { rejectWithValue }) => {
+        try {
+            const response = await apiClient.get(`/api/Chat/get-list-of-chats-by-post-for-realtor`, {
+                params: { postId } // Pass postId as a query parameter
+            });
+            return response.data;
+        } catch (error) {
+            return rejectWithValue(handleAxiosError(error, "Network error"));
+        }
+    }
+);

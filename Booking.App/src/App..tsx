@@ -1,7 +1,7 @@
 import { Routes, Route } from "react-router-dom";
 import NotFound from "./pages/errors/NotFound.tsx";
 import RealtorRegisterPage from "./pages/accaunt/register/RealtorRegisterPage.tsx";
-import { useAppSelector } from "./hooks/redux/index.ts";
+import { useAppDispatch, useAppSelector } from "./hooks/redux/index.ts";
 import ChangeEmailPage from "./pages/accaunt/change-email/ChangeEmailPage.tsx";
 import UserRegisterPage from "./pages/accaunt/register/UserRegisterPage.tsx";
 import InformationAfterConfirmationEmail from "./pages/accaunt/instruction/InformationAfterConfirmationEmail.tsx";
@@ -42,8 +42,6 @@ import { RealtorPageForClient } from "./containers/client/RealtorPageForClient/R
 import { PageOfMessages } from "./containers/client/PageOfMessages/PageOfMessages.tsx";
 import { connection } from "./SignalR/index.ts";
 import * as signalR from "@microsoft/signalr";
-import { useDispatch } from "react-redux";
-import { AppDispatch } from "./store/index.ts";
 import { addNewMessageInGeneralCount, updateListOfChatIdForListening } from "./store/chat/chat.slice.ts";
 
  
@@ -52,7 +50,7 @@ export const App: React.FC = () => {
     const { isLogin, user } = useAppSelector((state) => state.account);
     const { listOfPostIdForListening } = useAppSelector((state) => state.chat);
     const { listOfChatsIdForListening } = useAppSelector((state) => state.chat);
-    const dispatch = useDispatch<AppDispatch>();
+    const dispatch = useAppDispatch();
 
     const role = () => {
         if (user?.role.toLowerCase().includes("realtor")) {
@@ -73,7 +71,7 @@ export const App: React.FC = () => {
                         await connectionForRealtorToSignalR(listOfPostIdForListening);
                     }
                     if(listOfChatsIdForListening){
-                        
+
                     }
 
                 })
