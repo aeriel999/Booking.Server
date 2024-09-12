@@ -3,6 +3,7 @@ using Booking.Application.Chat.GetChatRoomsListForClient;
 using Booking.Application.Common.Interfaces.Chat;
 using Booking.Domain.Chat;
 using Booking.Infrastructure.Common.Persistence;
+using ErrorOr;
 using Microsoft.EntityFrameworkCore;
 
 namespace Booking.Infrastructure.Repositories;
@@ -95,7 +96,11 @@ public class ChatRoomRepository(BookingDbContext context) : IChatRoomRepository
 
 	public async Task<ChatRoom?> GetChatRoomByPostIdAndUserIdAsync(Guid userId, Guid postId)
 	{
-		return await _dbSet.Where(c => c.ClientId == userId && c.PostId == postId).FirstOrDefaultAsync();
+		return await _dbSet
+			.Where(c => c.ClientId == userId && c.PostId == postId)
+			.Include(c => c!.Post!.User)
+			.Include(c => c!.Post!.ImagesPost)
+			.FirstOrDefaultAsync();
 	}
 
 	public async Task<List<Guid>?> GetChatRoomIdListByRealtorIdAsync(Guid realtorId)
@@ -114,5 +119,15 @@ public class ChatRoomRepository(BookingDbContext context) : IChatRoomRepository
 			.ToListAsync();
 
 		return list.Select(c => c.ChatRoomId).ToList();
+	}
+	public async Task<bool> CheckChatForClientIsExist(Guid userId, Guid postId)
+	{
+		var response = false;
+
+		var chatRoom = await _dbSet.FirstOrDefaultAsync(c => c.ClientId == userId && c.PostId == postId);
+
+		if (chatRoom != null) response = true;
+
+		return response;
 	}
 }
