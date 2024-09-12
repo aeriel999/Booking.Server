@@ -3,18 +3,22 @@ using Booking.Api.Contracts.Chat.GetListOfChatsByPostInfoForRealtor;
 using Booking.Api.Contracts.Chat.GetListOfPostInfoForChatsForRealtor;
 using Booking.Api.Contracts.Post.GetCities;
 using Booking.Api.Infrastructure;
+using Booking.Application.Chat.CheckChatForClientIsExist;
 using Booking.Application.Chat.GetChatIdList;
+using Booking.Application.Chat.GetChatRoomForClientByPostId;
 using Booking.Application.Chat.GetChatRoomsList;
 using Booking.Application.Chat.GetChatRoomsListForClient;
 using Booking.Application.Chat.GetListOfChatsByPostInfoForRealtor;
 using Booking.Application.Chat.GetListOfPostInfoForChatsForRealtor;
 using Booking.Application.Chat.GetNumberOfUnleastMessages;
+using Booking.Application.Posts.GetListOfFeedbackForRealtor;
 using Booking.Application.Posts.GetPostIdListForRealtor;
 using MapsterMapper;
 using MediatR;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.RazorPages;
 using System.Security.Claims;
 
 namespace Booking.Api.Controllers;
@@ -125,4 +129,31 @@ public class ChatController(ISender mediatr, IMapper mapper) : ApiController
 				mapper.Map<List<GetListOfChatsByPostInfoForRealtorResponse>>(getListOfChatsByPostInfoForRealtorResult)),
 			errors => Problem(errors));
 	}
+
+
+    [HttpGet("check-chat-for-client-is-exist")]
+    public async Task<IActionResult> CheckChatForClientIsExist([FromQuery] Guid postId)
+    {
+        var userId = User.Claims.First(u => u.Type == ClaimTypes.NameIdentifier).Value;
+
+        var chatIsExist = await mediatr.Send(new CheckChatForClientIsExistQuery(Guid.Parse(userId), postId));
+
+        return chatIsExist.Match(
+            chatIsExist => Ok(
+                chatIsExist),
+            errors => Problem(errors));
+    }
+    [HttpGet("get-chat-room-for-client-by-post-id")]
+    public async Task<IActionResult> GetChatRoomForClientByPostIdAsync([FromQuery] Guid postId)
+    {
+        var userId = User.Claims.First(u => u.Type == ClaimTypes.NameIdentifier).Value;
+
+        var getChatRoomForClient = await mediatr.Send(
+            new GetChatRoomForClientByPostIdQuery(postId,Guid.Parse(userId)));
+
+        return getChatRoomForClient.Match(
+            getChatRoomForClient => Ok(
+                mapper.Map<ChatRoomForClient>(getChatRoomForClient)),
+            errors => Problem(errors));
+    }
 }

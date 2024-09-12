@@ -2,7 +2,10 @@ import { Status } from "../../utils/enum";
 
 export interface IChatState {
     chatRooms: IChatRoom[] | null;
-    charRoomsForClient: IChatRoomListForClient[] | null;
+    charRoomsForClient: {
+        $id: string,
+        $values: IChatRoomListForClient[];
+    } | null
     hasNewPosts: boolean;
     status: Status;
     generalNumberOfUnreadMessages: number;

@@ -22,21 +22,50 @@ import { ChatRoom } from '../ChatRoom/ChatRoom';
 
 export const PageOfMessages = () => {
 
-    //const listOfChatRoomsForClient = useAppSelector((state: RootState) => state.chat.charRoomsForClient);
+    const listOfChatRoomsForClient = useAppSelector((state: RootState) => state.chat.charRoomsForClient);
     const { user } = useAppSelector((state) => state.account);
     const dispatch = useDispatch<AppDispatch>();
 
-    /*const getChats = async () => {
+    const getChats = async () => {
         await dispatch(getListOfChatRoomsForClient());
-    }*/
-    useEffect(() => {
+    }
 
+    useEffect(() => {
+        getChats();
     }, [])
+    useEffect(() => {
+        console.log(listOfChatRoomsForClient);
+    }, [listOfChatRoomsForClient])
     return (
         <div className="page-of-messages-container">
             <div className='first-container'>
                 <div className="chat-list" >
-                    <ChatListItem
+                    {listOfChatRoomsForClient ?
+                        listOfChatRoomsForClient.$values.map((item) => (
+                            <ChatListItem
+                                countOfUnreadMessages={item.unreadMessages}
+                                chatItem={
+                                    {
+                                        name: item.realtorName,
+                                        avatar: item.realtorAvatar,
+                                        chats: item.chatsForClient
+                                    }
+                                }
+                            />
+                        )) : ""}
+                </div>
+
+            </div>
+            <ChatRoom
+                postImage='https://cf.bstatic.com/xdata/images/hotel/max1024x768/585364794.jpg?k=9efa57e0a316aa1c4a0661edd8103e5f670b8af21cd17b851c75d0ce21e74a1c&o=&hp=1'
+                postName='Атлас Делюкс Готель'
+                realtorAvatar='https://cdn-icons-png.flaticon.com/512/3177/3177440.png'
+                realtorName='Zubar Maxim' />
+
+        </div>)
+}
+/*
+ <ChatListItem
                         chatItem={
                             {
                                 name: "Zubar Maxim",
@@ -78,18 +107,8 @@ export const PageOfMessages = () => {
                         }
                         countOfUnreadMessages={3}
                     />
-                </div>
 
-            </div>
-            <ChatRoom
-                postImage='https://cf.bstatic.com/xdata/images/hotel/max1024x768/585364794.jpg?k=9efa57e0a316aa1c4a0661edd8103e5f670b8af21cd17b851c75d0ce21e74a1c&o=&hp=1'
-                postName='Атлас Делюкс Готель'
-                realtorAvatar='https://cdn-icons-png.flaticon.com/512/3177/3177440.png'
-                realtorName='Zubar Maxim' />
 
-        </div>)
-}
-/*
 <div className="chatContainer">
                 <div className="chatHeader">
                     <div className="chatGroupName">

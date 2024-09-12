@@ -42,4 +42,6 @@ public interface IChatRoomRepository
 
 
 	Task<List<Guid>?> GetChatRoomIdListByUserIdAsync(Guid userId);
+
+	Task<bool> CheckChatForClientIsExist(Guid userId, Guid postId);
 }
