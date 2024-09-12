@@ -1,4 +1,5 @@
 import { APP_ENV } from "../env";
+import { IChatMessageInfo } from "../interfaces/chat/index.ts";
 import { getLocalStorage } from "../utils/storage/localStorageUtils.ts";
 import * as signalR from "@microsoft/signalr";
 
@@ -10,8 +11,6 @@ export const connection = new signalR.HubConnectionBuilder()
     .withAutomaticReconnect([0, 2000, 10000, 30000])
     .build();
 
-
-
 //create new chatRoom and choin it for listening
 export const joinNewPostChatByUser = async (roomId: string) => {
     if (connection.state === signalR.HubConnectionState.Connected) {
@@ -22,6 +21,29 @@ export const joinNewPostChatByUser = async (roomId: string) => {
             });
     }
 };
+
+export type IListeningChat = {
+    roomId: string;
+    setMessages: (args: IChatMessageInfo[]) => void
+}
+
+export const startListeningPost = async (roomId: string) => {
+    if (connection.state === signalR.HubConnectionState.Connected) {
+        await connection
+            .invoke("JoinRoomForListening", {roomId})
+            .then(async () => {
+                console.log("roomId", roomId);
+                // Remove any previous listener before adding a new one
+                connection.off("send_notify");
+                // Add the new listener
+                connection.on("send_message", async (m) => {
+                    console.log("send_message", m);
+                  //  props.setMessages(m)
+                });
+            });
+    }
+};
+
 
 //end connection
 export const endListening = () =>

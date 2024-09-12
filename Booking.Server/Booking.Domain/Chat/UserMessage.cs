@@ -21,13 +21,3 @@ public class UserMessage
 }
 
 
-
-;
-
-//public record OutputMessage(
-//	string Message,
-//	string UserName,
-//	Guid RoomId,
-//	DateTimeOffset SentAt
-//);
-

@@ -56,11 +56,12 @@ namespace Booking.Api.Common.SignalR
 
 		//ToDo test for needing this ability
 		//If join if chatRoom is in disconnect state
-		public async Task<List<UserMessage>?> JoinRoomForListening(RoomRequest request)
+		public async Task<string> JoinRoomForListening(RoomRequest request)
 		{
 			await Groups.AddToGroupAsync(Context.ConnectionId, request.RoomId.ToString());
 
-			return await userMessageRepository.GetUserMessagesByChatRoomIdAsync(request.RoomId);
+			//return await userMessageRepository.GetUserMessagesByChatRoomIdAsync(request.RoomId);
+			return "Hello";
 		}
 
 		//Live room in deleting of chat or post
