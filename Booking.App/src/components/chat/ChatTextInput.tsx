@@ -22,6 +22,7 @@ export const ChatTextInput = (props: ChatTextInputProps) => {
     
     const onSubmit = async (data: ISendMessage) => {
        await sendMessageSignalR(data.message, props.roomId)
+       
     };
 
     return (
