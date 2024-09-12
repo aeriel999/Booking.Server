@@ -1,25 +1,38 @@
 import chewronTop from "../../assets/Icons/chevron-top.svg";
 import chewronDown from "../../assets/Icons/chevron-down.svg";
 import "../../css/DashBoardAnonymousClasses/index.scss";
-import { useEffect, useState } from "react";
-import { Avatar } from "../common/Avatar/Avatar";
+import { useState } from "react";
+import { IChatInfo, IChatItem, IChatMessageInfo } from "../../interfaces/chat";
+import { useAppDispatch } from "../../hooks/redux";
+import { getListOfChatsByPostInfoForRealtor } from "../../store/chat/chat.action";
+import { unwrapResult } from "@reduxjs/toolkit";
+import ErrorHandler from "../common/ErrorHandler";
 
-interface IChatPostList {
-    postChatItem: {
-        name: string;
-        mainImage: string;
-        chats: {
-            chatId: string;
-            clientName: string;
-            avatar: string;
-            countOfUnreadMessages: number | null;
-        }[];
-    };
-    countOfUnreadMessages: number | null;
-}
-
-export const ChatPostList = (info: IChatPostList) => {
+export const ChatPostList = (info: IChatItem) => {
     const [isOpen, setIsOpen] = useState<boolean>(false);
+    const dispatch = useAppDispatch();
+    const [errorMessage, setErrorMessage] = useState<string | undefined>(
+        undefined
+    );
+    const [chatList, setChatList] = useState<IChatItem[]>([]);
+
+    const getChatList = async (postId: string) => {
+        try {
+            const response = await dispatch(
+                getListOfChatsByPostInfoForRealtor(postId)
+            );
+            unwrapResult(response);
+            return response.payload.$values;
+        } catch (error) {
+            setErrorMessage(ErrorHandler(error));
+        }
+    };
+
+    function handleCllick(postId: string) {
+        getChatList(postId).then((data) => {
+            setChatList(data);
+        });
+    }
 
     return (
         <div className="chatMainItem">
@@ -27,19 +40,16 @@ export const ChatPostList = (info: IChatPostList) => {
                 className="chatListItem"
                 onClick={() => {
                     setIsOpen(!isOpen);
+                    handleCllick(info.id);
                 }}
             >
-                    <img
-                        id="postImage"
-                        src={info.postChatItem.mainImage}
-                        alt=""
-                    />
+                <img id="postImage" src={info.image} alt="" />
 
-                <div className="postName">{info.postChatItem.name}</div>
+                <div className="postName">{info.name}</div>
 
-                {info.countOfUnreadMessages ? (
+                {info.numberOfUnreadMessages ? (
                     <div className="countOfUnreadMessages">
-                        <div>{info.countOfUnreadMessages}</div>
+                        <div>{info.numberOfUnreadMessages}</div>
                     </div>
                 ) : (
                     ""
@@ -58,18 +68,29 @@ export const ChatPostList = (info: IChatPostList) => {
                     boxSizing: "border-box",
                 }}
             >
-                {info.postChatItem.chats.map((item) => (
-                    <div className="chatUseritem">
-                        <img
-                            id="postImage"
-                            src={item.avatar}
-                            alt=""
-                        />
+                {chatList.map((item, index) => (
+                    <div
+                        className="chatUseritem"
+                        key={item.id || index}
+                        onClick={() => {
+                            const chatInfo: IChatInfo = {
+                                chatId: item.id,
+                                postImage: info.image,
+                                postName: info.name,
+                                userAvatar: item.image,
+                                userName: item.name,
+                                chatMessages: null
+                            };
 
-                        <div className="postName">{item.clientName}</div>
-                        {item.countOfUnreadMessages ? (
+                            info.setChatInfo(chatInfo);
+                        }}
+                    >
+                        <img id="postImage" src={item.image} alt="" />
+
+                        <div className="postName">{item.name}</div>
+                        {item.numberOfUnreadMessages ? (
                             <div className="countOfUnreadMessages">
-                                <div>{item.countOfUnreadMessages}</div>
+                                <div>{item.numberOfUnreadMessages}</div>
                             </div>
                         ) : (
                             ""

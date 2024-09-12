@@ -23,6 +23,7 @@ import { cutNumber } from "../../../utils/data";
 import { unwrapResult } from "@reduxjs/toolkit";
 import ErrorHandler from "../../../components/common/ErrorHandler";
 import OutlinedErrorAlert from "../../../components/common/ErrorAlert";
+import { joinNewPostChatByUser } from "../../../SignalR";
 
 
 export const PostOfPage = () => {
@@ -221,7 +222,9 @@ export const PostOfPage = () => {
                                         />
 
                                     </div>
-                                    {post?.categoryName != "Hotel" ? <button>Booking</button> : <div></div>}
+                                    {post?.categoryName != "Hotel" ? <button
+                                    onClick={async() => (await joinNewPostChatByUser(postId!))}
+                                    >Booking</button> : <div></div>}
                                     <div className="booking-location">
                                         <img src={marker} alt="Marker" />
                                         <p>{post?.streetName}, {post?.cityName}, {post?.countryName}</p>

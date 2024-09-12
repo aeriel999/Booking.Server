@@ -12,22 +12,13 @@ public class UserMessage
 
 	public Guid ChatRoomId { get; set; }
 
+
 	[ForeignKey(nameof(ChatRoomId))]
-	public required ChatRoom ChatRoom { get; set; }
+	public ChatRoom? ChatRoom { get; set; }
 
 	public required DateTime SentAt { get; set; }
  
 	public bool IsRead { get; set; }
 }
 
-
-
-;
-
-//public record OutputMessage(
-//	string Message,
-//	string UserName,
-//	Guid RoomId,
-//	DateTimeOffset SentAt
-//);
 

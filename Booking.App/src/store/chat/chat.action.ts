@@ -59,6 +59,7 @@ export const getPostIdListForListeningChatsByRealtor = createAsyncThunk(
         }
     }
 );
+
 export const getChatIdList = createAsyncThunk(
     "chat/get-chat-id-list",
     async (_, { rejectWithValue }) => {
@@ -66,6 +67,34 @@ export const getChatIdList = createAsyncThunk(
             const response = await apiClient.get(
                 "/api/Chat/get-chat-id-list"
             );
+            return response.data;
+        } catch (error) {
+            return rejectWithValue(handleAxiosError(error, "Network error"));
+        }
+    }
+);
+
+export const getListOfPostInfoForChatsForRealtor = createAsyncThunk(
+    "chat/get-list-of-postinfo-for-chats-for-realtor",
+    async (_, { rejectWithValue }) => {
+        try {
+            const response = await apiClient.get(
+                "/api/Chat/get-list-of-postinfo-for-chats-for-realtor"
+            );
+            return response.data;
+        } catch (error) {
+            return rejectWithValue(handleAxiosError(error, "Network error"));
+        }
+    }
+);
+
+export const getListOfChatsByPostInfoForRealtor = createAsyncThunk(
+    "chat/get-list-of-chats-by-post-for-realtor",
+    async (postId: string, { rejectWithValue }) => {
+        try {
+            const response = await apiClient.get(`/api/Chat/get-list-of-chats-by-post-for-realtor`, {
+                params: { postId } // Pass postId as a query parameter
+            });
             return response.data;
         } catch (error) {
             return rejectWithValue(handleAxiosError(error, "Network error"));

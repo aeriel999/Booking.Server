@@ -1,5 +1,6 @@
 ﻿using Booking.Api.Contracts.Chat;
 using Booking.Api.Contracts.Chat.CreateMessage;
+using Booking.Api.Contracts.Chat.GetChatMessageInfo;
 using Booking.Application.Chat.CreateChat;
 using Booking.Application.Chat.CreateMessage;
 using Booking.Application.Common.Interfaces.Chat;
@@ -21,9 +22,11 @@ namespace Booking.Api.Common.SignalR
 	{
 		//Join for listening of new chats for post.
 		//Add in creating of new post or after notify about creating of new chat by user
-		public async Task JoinNewChanelOrNewChatRoomForListening(RoomRequest request)
+		public async Task<string> JoinNewChanelOrNewChatRoomForListening(RoomRequest request)
 		{
 			await Groups.AddToGroupAsync(Context.ConnectionId, request.RoomId.ToString());
+
+			return request.RoomId.ToString();
 		}
 
 		//Create new chatroom and join it by client send notify for realtor about new chat
@@ -54,11 +57,16 @@ namespace Booking.Api.Common.SignalR
 
 		//ToDo test for needing this ability
 		//If join if chatRoom is in disconnect state
-		public async Task<List<UserMessage>?> JoinRoomForListening(RoomRequest request)
+		public async Task<List<GetChatMessageInfoResponse>?> JoinRoomForListening(RoomRequest request)
 		{
 			await Groups.AddToGroupAsync(Context.ConnectionId, request.RoomId.ToString());
 
-			return await userMessageRepository.GetUserMessagesByChatRoomIdAsync(request.RoomId);
+			var messageList = await userMessageRepository.GetUserMessagesByChatRoomIdAsync(request.RoomId);
+
+			if (messageList == null)
+				return null;
+
+			return mapper.Map<List<GetChatMessageInfoResponse>>(messageList);
 		}
 
 		//Live room in deleting of chat or post
@@ -75,7 +83,7 @@ namespace Booking.Api.Common.SignalR
 
 			//Save message in DB
 			var saveUserMessageResult = await mediatr.Send(mapper.Map<CreateMessageCommand>(
-				(message, Guid.Parse(userId))));
+				(Guid.Parse(userId), message)));
 
 			//send message in real time
 			await Clients.GroupExcept(message.RoomId.ToString(), new[] { Context.ConnectionId })

@@ -1,9 +1,15 @@
-﻿using Booking.Api.Infrastructure;
+﻿using Booking.Api.Contracts.Chat.CreateChat;
+using Booking.Api.Contracts.Chat.GetListOfChatsByPostInfoForRealtor;
+using Booking.Api.Contracts.Chat.GetListOfPostInfoForChatsForRealtor;
+using Booking.Api.Contracts.Post.GetCities;
+using Booking.Api.Infrastructure;
 using Booking.Application.Chat.CheckChatForClientIsExist;
 using Booking.Application.Chat.GetChatIdList;
 using Booking.Application.Chat.GetChatRoomForClientByPostId;
 using Booking.Application.Chat.GetChatRoomsList;
 using Booking.Application.Chat.GetChatRoomsListForClient;
+using Booking.Application.Chat.GetListOfChatsByPostInfoForRealtor;
+using Booking.Application.Chat.GetListOfPostInfoForChatsForRealtor;
 using Booking.Application.Chat.GetNumberOfUnleastMessages;
 using Booking.Application.Posts.GetListOfFeedbackForRealtor;
 using Booking.Application.Posts.GetPostIdListForRealtor;
@@ -22,19 +28,6 @@ namespace Booking.Api.Controllers;
 [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
 public class ChatController(ISender mediatr, IMapper mapper) : ApiController
 {
-
-	//[HttpPost("create")]
-	//public async Task<IActionResult> CreateChatAsync(CreateChatRequest request)
-	//{
-	//	string userId = UserName.Claims.First(u => u.Type == ClaimTypes.NameIdentifier).Value;
-
-	//	var createChatResult = await mediatr.Send(mapper.Map<CreateChatCommand>((request, userId)));
-
-	//	return createChatResult.Match(
-	//		createChatResult => Ok(createChatResult),
-	//		errors => Problem(errors));
-	//}
-
 	[HttpGet("chat-list")]
 	public async Task<IActionResult> GetListOfChatsAsync()
 	{
@@ -105,6 +98,35 @@ public class ChatController(ISender mediatr, IMapper mapper) : ApiController
 		return getChatIdListResult.Match(
 			getChatIdListResult => Ok(
 				getChatIdListResult),
+			errors => Problem(errors));
+	}
+
+	[HttpGet("get-list-of-postinfo-for-chats-for-realtor")]
+	public async Task<IActionResult> GetListOfPostInfoForChatsForRealtorAsync()
+	{
+		var userId = User.Claims.First(u => u.Type == ClaimTypes.NameIdentifier).Value;
+
+		var getPostIdListForRealtorResult = await mediatr.Send(
+			new GetListOfPostInfoForChatsForRealtorQuery(Guid.Parse(userId)));
+
+		return getPostIdListForRealtorResult.Match(
+			getPostIdListForRealtorResult => Ok(
+				mapper.Map<List<GetListOfPostInfoForChatsForRealtorResponse>>(getPostIdListForRealtorResult)),
+			errors => Problem(errors));
+	}
+
+
+	[HttpGet("get-list-of-chats-by-post-for-realtor")]
+	public async Task<IActionResult> GetListOfChatsByPostInfoForRealtorAsync([FromQuery] CreateChatRequest request)
+	{
+		var userId = User.Claims.First(u => u.Type == ClaimTypes.NameIdentifier).Value;
+
+		var getListOfChatsByPostInfoForRealtorResult = await mediatr.Send(
+			mapper.Map<GetListOfChatsByPostInfoForRealtorQuery>((Guid.Parse(userId), request)));
+
+		return getListOfChatsByPostInfoForRealtorResult.Match(
+			getListOfChatsByPostInfoForRealtorResult => Ok(
+				mapper.Map<List<GetListOfChatsByPostInfoForRealtorResponse>>(getListOfChatsByPostInfoForRealtorResult)),
 			errors => Problem(errors));
 	}
 

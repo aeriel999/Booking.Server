@@ -36,7 +36,6 @@ public class CreateMessageCommandHandler(
 			UserId = request.UserId,
 			Message = request.Message,
 			ChatRoomId = request.RoomId,
-			ChatRoom = room!,
 			SentAt = DateTime.Now.ToUniversalTime(),
 			IsRead = false,
 		};

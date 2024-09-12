@@ -245,4 +245,13 @@ public class PostRepository(BookingDbContext context) : IPostRepository
 	   .Select(i => i.Id)
 	   .ToListAsync();
 	}
+
+	public async Task<List<Post>?> GetListOfPostWithChatRooms(Guid realtorId)
+	{
+		return await _dbSet
+					.Include(post => post.ChatRooms)
+					.Include(post => post.ImagesPost)
+					.Where(post => post.ChatRooms!.Count > 0)
+					.ToListAsync();
+	}
 }

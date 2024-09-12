@@ -2,21 +2,29 @@ import SendIcon from "../../assets/DashboardIcons/send.svg";
 import { ISendMessage } from "../../interfaces/chat";
 import { useForm } from "react-hook-form";
 import { sendMessageResolver } from "../../validations/chat";
-import { useState } from "react";
+import { connection } from "../../SignalR";
 
 export type ChatTextInputProps = {
     roomId: string;
+    setMessage: (arg: ISendMessage) => void;
 };
 
 export const ChatTextInput = (props: ChatTextInputProps) => {
-    const [msg, setMsg] = useState<string>("");
     const {
         register,
         handleSubmit,
         formState: { errors },
         setValue,
     } = useForm<ISendMessage>({ resolver: sendMessageResolver });
-    const onSubmit = async (data: ISendMessage) => {};
+
+    const sendMessageSignalR = (message: string, roomId : string) =>
+        connection.send('SendMessage', {message, roomId})
+    
+    const onSubmit = async (data: ISendMessage) => {
+       await sendMessageSignalR(data.message, props.roomId)
+       
+    };
+
     return (
         <form
             onSubmit={handleSubmit(onSubmit)}

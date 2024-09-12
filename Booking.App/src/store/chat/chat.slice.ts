@@ -6,6 +6,8 @@ import {
     getChatIdList,
     getListOfChatRooms,
     getListOfChatRoomsForClient,
+    getListOfChatsByPostInfoForRealtor,
+    getListOfPostInfoForChatsForRealtor,
     getNumberOfUnleastMessages,
     getPostIdListForListeningChatsByRealtor,
 } from "./chat.action.ts";
@@ -85,11 +87,16 @@ export const chatSlice = createSlice({
             state: IChatState,
             action: PayloadAction<string>
         ) => {
+            console.log("action.payload", action.payload)
+
             state.listOfChatsIdForListening!.push(action.payload);
             addlistToLocalStorage(
                 "listOfChatsIdForListening",
                 state.listOfChatsIdForListening!
             );
+
+            console.log("state.listOfChatsIdForListening",state.listOfChatsIdForListening)
+
         },
     },
     extraReducers: (builder) => {
@@ -150,7 +157,20 @@ export const chatSlice = createSlice({
             .addCase(getChatIdList.pending, (state) => {
                 state.status = Status.LOADING;
             })
-            //getChatIdList
+            .addCase(getListOfPostInfoForChatsForRealtor.fulfilled, (state) => {
+                state.status = Status.SUCCESS;
+            })
+            .addCase(getListOfPostInfoForChatsForRealtor.pending, (state) => {
+                state.status = Status.LOADING;
+            })
+            .addCase(getListOfChatsByPostInfoForRealtor.fulfilled, (state) => {
+                state.status = Status.SUCCESS;
+            })
+            .addCase(getListOfChatsByPostInfoForRealtor.pending, (state) => {
+                state.status = Status.LOADING;
+            })
+            
+            //getListOfChatsByPostInfoForRealtor
             .addMatcher(isRejectedAction, (state) => {
                 state.status = Status.ERROR;
             });

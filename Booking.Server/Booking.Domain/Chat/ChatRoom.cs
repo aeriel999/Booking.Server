@@ -1,4 +1,5 @@
 ﻿using Booking.Domain.Posts;
+using Booking.Domain.Users;
 using System.ComponentModel.DataAnnotations.Schema;
 
 namespace Booking.Domain.Chat;
@@ -21,4 +22,12 @@ public class ChatRoom
 	public ICollection<UserMessage>? UserMessages { get; set; }
 
 	public required int NumberOfUnreadMessages { get; set; }
+
+
+	[ForeignKey(nameof(ClientId))]
+	public User? Client { get; set; } // Navigation property for the client
+
+
+	[ForeignKey(nameof(RealtorId))]
+	public User? Realtor { get; set; } // Navigation property for the realtor
 }

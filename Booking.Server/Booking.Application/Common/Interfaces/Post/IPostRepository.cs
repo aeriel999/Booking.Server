@@ -64,4 +64,7 @@ public interface IPostRepository
 
 
 	Task<List<Guid>?> GetListOfPostIdForRealtor(Guid userId);
+
+
+	Task<List<Post>?> GetListOfPostWithChatRooms(Guid realtorId);
 }

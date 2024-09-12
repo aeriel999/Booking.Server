@@ -63,7 +63,7 @@ public class ChatRoomRepository(BookingDbContext context) : IChatRoomRepository
 	{
 		return await _dbSet
 			.Where(c => c.PostId == postId)
-			.Include(c => c.UserMessages)
+			.Include(c => c.Client)
 			.ToListAsync();
 	}
 
