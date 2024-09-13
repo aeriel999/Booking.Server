@@ -24,8 +24,8 @@ const MessageBlue = styled("div")({
     font: "400 .9em 'Open Sans', sans-serif",
     border: "1px solid #97C6E3",
     borderRadius: "10px",
-    
-    color:"#ffff",
+
+    color: "#ffff",
     "&:after": {
         content: '""',
         position: "absolute",
@@ -52,7 +52,7 @@ const MessageBlue = styled("div")({
 
 const MessageOrange = styled("div")({
     position: "relative",
-    alignSelf:"end",
+    alignSelf: "end",
     marginRight: "20px",
     marginBottom: "10px",
     padding: "10px",
@@ -92,8 +92,8 @@ const MessageContent = styled("p")({
 });
 
 const MessageTimeStampRight = styled("div")({
- //  position: "absolute",
-    alignSelf:"start",
+    //  position: "absolute",
+    alignSelf: "start",
     fontSize: ".85em",
     fontWeight: "300",
     marginTop: "10px",
@@ -102,8 +102,8 @@ const MessageTimeStampRight = styled("div")({
     right: "5px",
 });
 const MessageTimeStampLeft = styled("div")({
- //  position: "absolute",
-    alignSelf:"end",
+    //  position: "absolute",
+    alignSelf: "end",
     fontSize: ".85em",
     fontWeight: "300",
     marginTop: "10px",
@@ -111,8 +111,6 @@ const MessageTimeStampLeft = styled("div")({
     bottom: "-3px",
     right: "5px",
 });
-
- 
 
 // MessageLeft component
 export const MessageLeft = (userMsg: IChatMessageInfo) => {
@@ -122,7 +120,7 @@ export const MessageLeft = (userMsg: IChatMessageInfo) => {
                 <MessageContent>{userMsg.text}</MessageContent>
             </MessageBlue>
 
-             <MessageTimeStampRight>{userMsg.sendAt}</MessageTimeStampRight>
+            <MessageTimeStampRight>{userMsg.sentAt}</MessageTimeStampRight>
         </MessageRow>
     );
 };
@@ -131,13 +129,11 @@ export const MessageLeft = (userMsg: IChatMessageInfo) => {
 export const MessageRight = (userMsg: IChatMessageInfo) => {
     return (
         <MessageRowRight>
-           
             <MessageOrange>
                 <MessageContent>{userMsg.text}</MessageContent>
             </MessageOrange>
 
-            <MessageTimeStampLeft>{userMsg.sendAt}</MessageTimeStampLeft>
-
+            <MessageTimeStampLeft>{userMsg.sentAt}</MessageTimeStampLeft>
         </MessageRowRight>
     );
 };

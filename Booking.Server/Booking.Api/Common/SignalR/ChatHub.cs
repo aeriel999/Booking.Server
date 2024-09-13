@@ -22,11 +22,9 @@ namespace Booking.Api.Common.SignalR
 	{
 		//Join for listening of new chats for post.
 		//Add in creating of new post or after notify about creating of new chat by user
-		public async Task<string> JoinNewChanelOrNewChatRoomForListening(RoomRequest request)
+		public async Task JoinNewChanelOrNewChatRoomForListening(RoomRequest request)
 		{
 			await Groups.AddToGroupAsync(Context.ConnectionId, request.RoomId.ToString());
-
-			return request.RoomId.ToString();
 		}
 
 		//Create new chatroom and join it by client send notify for realtor about new chat
@@ -83,7 +81,7 @@ namespace Booking.Api.Common.SignalR
 
 			//Save message in DB
 			var saveUserMessageResult = await mediatr.Send(mapper.Map<CreateMessageCommand>(
-				(Guid.Parse(userId), message)));
+				(message, Guid.Parse(userId))));
 
 			//send message in real time
 			await Clients.GroupExcept(message.RoomId.ToString(), new[] { Context.ConnectionId })

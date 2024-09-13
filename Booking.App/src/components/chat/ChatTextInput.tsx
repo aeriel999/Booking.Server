@@ -1,12 +1,13 @@
 import SendIcon from "../../assets/DashboardIcons/send.svg";
-import { ISendMessage } from "../../interfaces/chat";
+import { IChatMessageInfo, ISendMessage } from "../../interfaces/chat";
 import { useForm } from "react-hook-form";
 import { sendMessageResolver } from "../../validations/chat";
 import { connection } from "../../SignalR";
 
 export type ChatTextInputProps = {
     roomId: string;
-    setMessage: (arg: ISendMessage) => void;
+    userId: string;
+    setMessage: (arg: IChatMessageInfo) => void;
 };
 
 export const ChatTextInput = (props: ChatTextInputProps) => {
@@ -23,6 +24,14 @@ export const ChatTextInput = (props: ChatTextInputProps) => {
     const onSubmit = async (data: ISendMessage) => {
        await sendMessageSignalR(data.message, props.roomId)
        
+       const messageInfo = {
+            sentAt: new Date().toString(),
+            text: data.message,
+            isRead: true,
+            userId: props.userId
+       }
+
+       props.setMessage(messageInfo)
     };
 
     return (

@@ -3,9 +3,9 @@ import { Status } from "../../utils/enum";
 export interface IChatState {
     chatRooms: IChatRoom[] | null;
     charRoomsForClient: {
-        $id: string,
+        $id: string;
         $values: IChatRoomListForClient[];
-    } | null
+    } | null;
     hasNewPosts: boolean;
     status: Status;
     generalNumberOfUnreadMessages: number;
@@ -82,19 +82,18 @@ export interface IChatItem {
     setChatInfo: (arg: IChatInfo) => void;
 }
 
-export interface IChatInfo{
+export interface IChatInfo {
     chatId: string;
     postImage: string;
     postName: string;
     userAvatar: string;
     userName: string;
     chatMessages: IChatMessageInfo[] | null;
-    
 }
 
-export interface IChatMessageInfo{
+export interface IChatMessageInfo {
     userId: string;
-    sendAt: string;
+    sentAt: string;
     text: string;
-    isUnread: boolean;
+    isRead: boolean;
 }

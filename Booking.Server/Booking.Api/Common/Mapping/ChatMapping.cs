@@ -47,14 +47,11 @@ public class ChatMapping : IRegister
 
 		config.NewConfig<List<UserMessage>, List<GetChatMessageInfoResponse>>();
 
-		config.NewConfig<(Guid UserId, InputMessage request), CreateMessageCommand>()
-			 .Map(desp => desp.UserId, src => src.UserId)
-			 .Map(dest => dest, src => src.request);
-
 
 		config.NewConfig<(InputMessage inputMessage, Guid UserId), CreateMessageCommand>()
 		.Map(dest => dest.UserId, src => src.UserId)
 		.Map(dest => dest, src => src.inputMessage);
+
 
 		config.NewConfig<ChatRoom, ChatRoomForClientResponse>()
 		.Map(desp => desp.PostName, src => src.Post!.Name)
