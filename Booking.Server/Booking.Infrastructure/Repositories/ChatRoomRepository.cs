@@ -2,6 +2,7 @@
 using Booking.Application.Chat.GetChatRoomsListForClient;
 using Booking.Application.Common.Interfaces.Chat;
 using Booking.Domain.Chat;
+using Booking.Domain.Posts;
 using Booking.Infrastructure.Common.Persistence;
 using ErrorOr;
 using Microsoft.EntityFrameworkCore;
@@ -129,5 +130,16 @@ public class ChatRoomRepository(BookingDbContext context) : IChatRoomRepository
 		if (chatRoom != null) response = true;
 
 		return response;
+	}
+
+
+	public async Task UpdateChatRoomAsync(ChatRoom chatRoom)
+	{
+		await Task.Run
+		(() =>
+			{
+				_dbSet.Attach(chatRoom);
+				context.Entry(chatRoom).State = EntityState.Modified;
+			});
 	}
 }

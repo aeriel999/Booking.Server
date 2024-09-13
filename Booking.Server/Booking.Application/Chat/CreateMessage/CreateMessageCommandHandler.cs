@@ -21,15 +21,19 @@ public class CreateMessageCommandHandler(
 		if (userOrError.IsError)
 			return Error.NotFound();
 
-		var user = userOrError.Value;
-
-		//Get UserName
-		var userName = await userRepository.GetUserNameByUserAsync(user);
-
+		//Find chatroom
 		var room = await chatRoomRepository.GetChatRoomByIdAsync(request.RoomId);
 
-		//ToDo UpdateChatRoom
-		//CreatePostPostTypeOfRestAsync and save new message
+		if (room == null) return Error.NotFound();
+
+		//update NumberOfUnreadMessages
+		room.NumberOfUnreadMessages += 1;
+
+		await chatRoomRepository.UpdateChatRoomAsync(room);
+
+		await chatRoomRepository.SaveChatRoomAsync();
+
+		//Create and save new message
 		var userMessage = new UserMessage
 		{
 			Id = Guid.NewGuid(),
