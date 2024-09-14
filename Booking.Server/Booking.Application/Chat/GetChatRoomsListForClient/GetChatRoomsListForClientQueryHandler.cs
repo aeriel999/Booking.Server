@@ -31,7 +31,7 @@ public class GetChatRoomsListForClientQueryHandler(
                 RealtorName = $"{currentRealtor.Value.FirstName} {currentRealtor.Value.LastName}",
                 HasUnreadMessages = false,
                 UnreadMessages = null,
-                ChatsForClient = await repositoryChatRoom.GetListOfChatRoomsForClientByRealtorId(item)
+                ChatsForClient = await repositoryChatRoom.GetListOfChatRoomsForClientByRealtorId(item,request.ClientId)
             });
         }
 

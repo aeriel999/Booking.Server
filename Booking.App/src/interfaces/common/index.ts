@@ -1,4 +1,4 @@
- 
+
 import { IListForCombobox } from "../post";
 
 
@@ -7,6 +7,7 @@ export interface IDashboardState {
     currentPaginationPage: number;
     loaderIsLoading: boolean;
     savedPath: string;
+    savedPostIdForChat: string | null;
 }
 
 export interface CustomizedDialogsProps {
@@ -25,7 +26,7 @@ export interface IDashboardMenuItem {
     image: string;
     activeImage: string;
     link: string;
-    counterOfMsg?:   boolean
+    counterOfMsg?: boolean
 }
 
 export interface ComboBoxProps {

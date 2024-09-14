@@ -12,7 +12,8 @@ interface IChatListItem {
         avatar: string | null
         chats: IChatRoomForClient[]
     },
-    countOfUnreadMessages: number | null
+    countOfUnreadMessages: number | null,
+    changeChatRoom: React.Dispatch<React.SetStateAction<string | null>>;
 }
 
 export const ChatListItem = (info: IChatListItem) => {
@@ -34,8 +35,8 @@ export const ChatListItem = (info: IChatListItem) => {
 
             </div>
             <div className="chat" style={{ display: isOpen ? 'inline-block' : 'none', padding: 15, boxSizing: "border-box" }} >
-                {info.chatItem.chats.map((item) => (
-                    <div className="chat-list-lower-item">
+                {info.chatItem.chats.$values.map((item) => (
+                    <div className="chat-list-lower-item" onClick={() => info.changeChatRoom(item.chatRoomId)}>
                         <img id="chat-list-item-avatar" src={`${APP_ENV.BASE_URL}/images/posts/${item.postImage}`} alt="" />
 
                         <p className="chat-list-item-name">{item.postName}</p>

@@ -3,5 +3,5 @@ using ErrorOr;
 using MediatR;
 
 namespace Booking.Application.Chat.GetChatRoomForClientByPostId;
-public record GetChatRoomForClientByPostIdQuery(Guid postId, Guid userId) : IRequest<ErrorOr<ChatRoom>>;
+public record GetChatRoomByIdQuery(Guid ChatRoomId) : IRequest<ErrorOr<ChatRoom>>;
 

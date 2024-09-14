@@ -4,6 +4,7 @@ import { Status } from "../../utils/enum";
 import { IChatState } from "../../interfaces/chat";
 import {
     getChatIdList,
+    getChatRoomById,
     getListOfChatRooms,
     getListOfChatRoomsForClient,
     getListOfChatsByPostInfoForRealtor,
@@ -17,6 +18,7 @@ import {
     getListFromLocalStorage,
     getLocalStorage,
 } from "../../utils/storage/localStorageUtils.ts";
+import { act } from "react";
 
 function isRejectedAction(action: AnyAction): action is RejectedAction {
     return action.type.endsWith("/rejected");
@@ -31,9 +33,9 @@ const initialState: IChatState = {
         "generalNumberOfUnreadMessages"
     )
         ? parseInt(
-              getLocalStorage("generalNumberOfUnreadMessages") as string,
-              10
-          )
+            getLocalStorage("generalNumberOfUnreadMessages") as string,
+            10
+        )
         : 0,
     listOfPostIdForListening: getListFromLocalStorage(
         "updateListOfIdForListening"
@@ -41,6 +43,7 @@ const initialState: IChatState = {
     listOfChatsIdForListening: getListFromLocalStorage(
         "listOfChatsIdForListening"
     ),
+    chatRoomInfoForClient: null
 };
 
 export const chatSlice = createSlice({
@@ -95,7 +98,7 @@ export const chatSlice = createSlice({
                 state.listOfChatsIdForListening!
             );
 
-            console.log("state.listOfChatsIdForListening",state.listOfChatsIdForListening)
+            console.log("state.listOfChatsIdForListening", state.listOfChatsIdForListening)
 
         },
     },
@@ -169,7 +172,14 @@ export const chatSlice = createSlice({
             .addCase(getListOfChatsByPostInfoForRealtor.pending, (state) => {
                 state.status = Status.LOADING;
             })
-            
+            .addCase(getChatRoomById.fulfilled, (state, action) => {
+                state.chatRoomInfoForClient = action.payload;
+                state.status = Status.SUCCESS;
+            })
+            .addCase(getChatRoomById.pending, (state) => {
+                state.status = Status.LOADING;
+            })
+
             //getListOfChatsByPostInfoForRealtor
             .addMatcher(isRejectedAction, (state) => {
                 state.status = Status.ERROR;

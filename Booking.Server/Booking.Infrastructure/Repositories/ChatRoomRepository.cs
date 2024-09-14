@@ -26,8 +26,16 @@ public class ChatRoomRepository(BookingDbContext context) : IChatRoomRepository
 	{
 		return await _dbSet.FindAsync(roomId);
 	}
+    public async Task<ChatRoom?> GetIncludeChatRoomByIdAsync(Guid roomId)
+    {
+        return await _dbSet
+            .Where(c => c.ChatRoomId == roomId)
+			.Include(c => c.Realtor)
+			.Include(c => c.Post!.ImagesPost)
+            .FirstOrDefaultAsync();
+    }
 
-	public async Task<List<ChatRoom>> GetChatRoomListWithMessagesByRealtorIdAsync(Guid realtorId)
+    public async Task<List<ChatRoom>> GetChatRoomListWithMessagesByRealtorIdAsync(Guid realtorId)
 	{
 		return await _dbSet
 			.Where(c => c.RealtorId == realtorId)
@@ -76,10 +84,10 @@ public class ChatRoomRepository(BookingDbContext context) : IChatRoomRepository
 			.ToListAsync();
 	}
 
-    public async Task<List<ChatRoomForClient>> GetListOfChatRoomsForClientByRealtorId(Guid realtorId)
+    public async Task<List<ChatRoomForClient>> GetListOfChatRoomsForClientByRealtorId(Guid realtorId, Guid clientId)
     {
         return await _dbSet
-            .Where(c => c.RealtorId == realtorId)
+            .Where(c => c.RealtorId == realtorId && c.ClientId == clientId)
 			.Include(c => c.Post)
 			.ThenInclude(c => c!.ImagesPost)
             .Select(c => new ChatRoomForClient()
