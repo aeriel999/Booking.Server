@@ -43,7 +43,8 @@ public class ChatMapping : IRegister
 		   .Map(desp => desp.UserId, src => src.UserId)
 		   .Map(desp => desp.SentAt, src => src.SentAt.ToUniversalTime().ToString("R"))
 		   .Map(desp => desp.Text, src => src.Message)
-		   .Map(desp => desp.IsRead, src => src.IsRead);
+		   .Map(desp => desp.IsRead, src => src.IsRead)
+		   .Map(desp => desp.Date, src => src.SentAt);
 
 		config.NewConfig<List<UserMessage>, List<GetChatMessageInfoResponse>>();
 
@@ -56,9 +57,9 @@ public class ChatMapping : IRegister
 		config.NewConfig<ChatRoom, ChatRoomForClientResponse>()
 		.Map(desp => desp.PostName, src => src.Post!.Name)
 		.Map(desp => desp.PostImage, src => src.Post!.ImagesPost!.FirstOrDefault(i => i.Priority == 1)!.Name)
-		.Map(desp => desp.RealtorName, src => $"{src!.Post!.User!.FirstName} {src!.Post!.User!.LastName}")
-		.Map(desp => desp.RealtorAvatar, src => src!.Post!.User!.Avatar)
-		.Map(desp => desp.ListOfMessages, src => src.UserMessages);
+		.Map(desp => desp.RealtorName, src => $"{src!.Realtor!.FirstName} {src!.Realtor!.LastName}")
+		.Map(desp => desp.RealtorAvatar, src => src!.Realtor!.Avatar);
+		//.Map(desp => desp.ListOfMessages, src => src.UserMessages != null ? src.UserMessages : new List<UserMessage>());
 
     }
 }

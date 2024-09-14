@@ -18,7 +18,11 @@ const initialState: ISettingsState = {
     savedPath:
         getLocalStorage("savedPath") === null
             ? "/dashboard/profile"
-            : getLocalStorage("savedPath")!
+            : getLocalStorage("savedPath")!,
+    savedPostIdForChat:
+        getLocalStorage("savedPostIdForChat") === null || getLocalStorage("savedPostIdForChat") === ""
+            ? ""
+            : getLocalStorage("savedPostIdForChat")!
 
 };
 
@@ -52,9 +56,16 @@ export const settingsSlice = createSlice({
         ) => {
             state.savedPath = action.payload;
             addLocalStorage("savedPath", action.payload);
+        },
+        savePostIdForChat: (
+            state,
+            action: PayloadAction<string>
+        ) => {
+            state.savedPostIdForChat = action.payload;
+            addLocalStorage("savedPostIdForChat", action.payload);
         }
     },
 });
 
-export const { changeDashboardMenuItem, changePaginationPage, changeLoaderIsLoading, savePath } = settingsSlice.actions;
+export const { changeDashboardMenuItem, changePaginationPage, changeLoaderIsLoading, savePath, savePostIdForChat } = settingsSlice.actions;
 export default settingsSlice.reducer;

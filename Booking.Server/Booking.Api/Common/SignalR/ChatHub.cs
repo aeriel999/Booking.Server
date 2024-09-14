@@ -1,10 +1,12 @@
 ﻿using Booking.Api.Contracts.Chat;
 using Booking.Api.Contracts.Chat.CreateMessage;
 using Booking.Api.Contracts.Chat.GetChatMessageInfo;
+using Booking.Application.Chat.CheckChatForClientIsExist;
 using Booking.Application.Chat.CreateChat;
 using Booking.Application.Chat.CreateMessage;
 using Booking.Application.Common.Interfaces.Chat;
 using Booking.Domain.Chat;
+using Booking.Domain.Posts;
 using MapsterMapper;
 using MediatR;
 using Microsoft.AspNetCore.Authorization;
@@ -31,10 +33,10 @@ namespace Booking.Api.Common.SignalR
 		public async Task<string> JoinNewPostChatByUser(RoomRequest request)
 		{
 			var userId = Context.User!.Claims.FirstOrDefault(
-				x => x.Type == ClaimTypes.NameIdentifier)!.Value;
+            x => x.Type == ClaimTypes.NameIdentifier)!.Value;
 
-			//Create and save chatRoom in DB
-			var createChatResult = await mediatr
+            //Create and save chatRoom in DB
+            var createChatResult = await mediatr
 					.Send(new CreateChatCommand(request.RoomId, Guid.Parse(userId)));
 
 			string roomName = "";

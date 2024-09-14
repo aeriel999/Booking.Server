@@ -3,7 +3,7 @@ import { ChatListItem } from '../../../components/common/ChatListItem/ChatListIt
 import '../../../css/PageOfMessages/index.scss';
 import { AppDispatch, RootState } from '../../../store';
 import { useAppSelector } from '../../../hooks/redux';
-import { useEffect } from 'react';
+import { useEffect, useState } from 'react';
 import { getListOfChatRoomsForClient } from '../../../store/chat/chat.action';
 import { IChatRoom, IUserMessage } from '../../../interfaces/chat';
 
@@ -24,18 +24,25 @@ export const PageOfMessages = () => {
 
     const listOfChatRoomsForClient = useAppSelector((state: RootState) => state.chat.charRoomsForClient);
     const { user } = useAppSelector((state) => state.account);
+    const savedChatRoom = useAppSelector((state) => state.settings.savedPostIdForChat);
     const dispatch = useDispatch<AppDispatch>();
+
+    const [chatRoomId, setChatRoomId] = useState<string | null>(null);
 
     const getChats = async () => {
         await dispatch(getListOfChatRoomsForClient());
     }
 
     useEffect(() => {
+
         getChats();
     }, [])
     useEffect(() => {
-        console.log(listOfChatRoomsForClient);
-    }, [listOfChatRoomsForClient])
+        if (savedChatRoom?.length != 0) {
+            console.log(savedChatRoom);
+            setChatRoomId(savedChatRoom);
+        }
+    }, [savedChatRoom])
     return (
         <div className="page-of-messages-container">
             <div className='first-container'>
@@ -51,16 +58,14 @@ export const PageOfMessages = () => {
                                         chats: item.chatsForClient
                                     }
                                 }
+                                changeChatRoom={setChatRoomId}
                             />
                         )) : ""}
                 </div>
 
             </div>
             <ChatRoom
-                postImage='https://cf.bstatic.com/xdata/images/hotel/max1024x768/585364794.jpg?k=9efa57e0a316aa1c4a0661edd8103e5f670b8af21cd17b851c75d0ce21e74a1c&o=&hp=1'
-                postName='Атлас Делюкс Готель'
-                realtorAvatar='https://cdn-icons-png.flaticon.com/512/3177/3177440.png'
-                realtorName='Zubar Maxim' />
+                chatRoomId={chatRoomId} />
 
         </div>)
 }

@@ -32,10 +32,11 @@ public interface IChatRoomRepository
 	Task<List<Guid>> GetRealtorChatRoomsIdByClient(Guid clientId);
 
 
-	Task<List<ChatRoomForClient>> GetListOfChatRoomsForClientByRealtorId(Guid realtorId);
+	Task<List<ChatRoomForClient>> GetListOfChatRoomsForClientByRealtorId(Guid realtorId, Guid clientId);
 
 
-	Task<List<ChatRoom>> GetChatRoomListByRealtorIdAsync(Guid realtorId);
+
+    Task<List<ChatRoom>> GetChatRoomListByRealtorIdAsync(Guid realtorId);
 
 
 	Task<ChatRoom?> GetChatRoomByPostIdAndUserIdAsync(Guid userId, Guid postId);
@@ -48,4 +49,5 @@ public interface IChatRoomRepository
 
 
 	Task<bool> CheckChatForClientIsExist(Guid userId, Guid postId);
+	Task<ChatRoom?> GetIncludeChatRoomByIdAsync(Guid roomId);
 }

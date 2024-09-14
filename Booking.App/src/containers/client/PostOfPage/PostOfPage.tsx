@@ -16,7 +16,7 @@ import { Feedback } from "../../../components/common/Feedback/Feedback";
 import { IGetFeedbacksRequest, ISendFeedback } from "../../../interfaces/post";
 import { Pagination } from "../../../components/common/Pagination/Pagination";
 import { FeedbackTextArea } from "../../../components/common/FeedbackTextArea/FeedbackTextArea";
-import { savePath } from "../../../store/settings/settings.slice";
+import { savePath, savePostIdForChat } from "../../../store/settings/settings.slice";
 import { RoomCard } from "../../../components/common/RoomCard/RoomCard";
 import { setIdOfSelectedFeedback } from "../../../store/post/post.slice";
 import { cutNumber } from "../../../utils/data";
@@ -223,7 +223,11 @@ export const PostOfPage = () => {
 
                                     </div>
                                     {post?.categoryName != "Hotel" ? <button
-                                    onClick={async() => (await joinNewPostChatByUser(postId!))}
+                                        onClick={async () => {
+                                            await joinNewPostChatByUser(postId!)
+                                            dispatch(savePostIdForChat(postId!))
+                                            navigate("/dashboard/profile/page-of-messages")
+                                        }}
                                     >Booking</button> : <div></div>}
                                     <div className="booking-location">
                                         <img src={marker} alt="Marker" />

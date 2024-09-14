@@ -46,7 +46,7 @@
 
 @mixin messageText {
     .message-text {
-        width: 90%;
+        width: auto;
         height: auto;
     }
 }
