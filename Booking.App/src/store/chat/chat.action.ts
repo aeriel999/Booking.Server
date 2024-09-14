@@ -101,3 +101,18 @@ export const getListOfChatsByPostInfoForRealtor = createAsyncThunk(
         }
     }
 );
+
+export const getChatRoomById = createAsyncThunk(
+    "chat/get-chat-room-by-id",
+    async (chatRoomId: string, { rejectWithValue }) => {
+        try {
+            const response = await apiClient.get(`/api/Chat/get-chat-room-by-id`, {
+                params: { chatRoomId }
+            });
+            return response.data;
+        } catch (error) {
+            return rejectWithValue(handleAxiosError(error, "Network error"));
+        }
+    }
+);
+

@@ -1,4 +1,5 @@
-﻿using Booking.Api.Contracts.Chat.CreateChat;
+﻿using Booking.Api.Contracts.Chat.ChatRoomForClient;
+using Booking.Api.Contracts.Chat.CreateChat;
 using Booking.Api.Contracts.Chat.GetListOfChatsByPostInfoForRealtor;
 using Booking.Api.Contracts.Chat.GetListOfPostInfoForChatsForRealtor;
 using Booking.Api.Contracts.Post.GetCities;
@@ -51,7 +52,6 @@ public class ChatController(ISender mediatr, IMapper mapper) : ApiController
         var getListOfChatRoomsForClientResult = await mediatr.Send(
             new GetChatRoomsListForClientQuery(Guid.Parse(userId)));
 
-        //ToDo Make response
         return getListOfChatRoomsForClientResult.Match(
             getListOfChatRoomsForClientResult => Ok(getListOfChatRoomsForClientResult),
             errors => Problem(errors));
@@ -143,17 +143,17 @@ public class ChatController(ISender mediatr, IMapper mapper) : ApiController
                 chatIsExist),
             errors => Problem(errors));
     }
-    [HttpGet("get-chat-room-for-client-by-post-id")]
-    public async Task<IActionResult> GetChatRoomForClientByPostIdAsync([FromQuery] Guid postId)
+    [HttpGet("get-chat-room-by-id")]
+    public async Task<IActionResult> GetChatRoomByIdAsync([FromQuery] Guid chatRoomId)
     {
         var userId = User.Claims.First(u => u.Type == ClaimTypes.NameIdentifier).Value;
 
-        var getChatRoomForClient = await mediatr.Send(
-            new GetChatRoomForClientByPostIdQuery(postId,Guid.Parse(userId)));
+        var getChatRoomById = await mediatr.Send(
+            new GetChatRoomByIdQuery(chatRoomId));
 
-        return getChatRoomForClient.Match(
-            getChatRoomForClient => Ok(
-                mapper.Map<ChatRoomForClient>(getChatRoomForClient)),
+        return getChatRoomById.Match(
+            getChatRoomById => Ok(
+                mapper.Map<ChatRoomForClientResponse>(getChatRoomById)),
             errors => Problem(errors));
     }
 }

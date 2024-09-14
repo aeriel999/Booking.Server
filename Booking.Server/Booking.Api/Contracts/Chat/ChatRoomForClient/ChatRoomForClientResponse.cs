@@ -7,6 +7,5 @@ public record ChatRoomForClientResponse
     public required string PostName { get; init; }
     public required string RealtorAvatar { get; init; }
     public required string RealtorName { get; init; }
-    public List<UserMessage>? ListOfMessages { get; set; }
 }
 

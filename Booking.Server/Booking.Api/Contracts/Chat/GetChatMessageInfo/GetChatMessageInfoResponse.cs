@@ -9,4 +9,5 @@ public record GetChatMessageInfoResponse
 	public required string Text { get; set; }
 
 	public required bool IsRead { get; set; }
+    public required DateTime Date { get; set; }
 }

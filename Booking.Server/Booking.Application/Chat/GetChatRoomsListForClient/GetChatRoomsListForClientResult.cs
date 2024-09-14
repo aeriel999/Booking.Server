@@ -1,4 +1,6 @@
-﻿namespace Booking.Application.Chat.GetChatRoomsListForClient;
+﻿using Booking.Domain.Chat;
+
+namespace Booking.Application.Chat.GetChatRoomsListForClient;
 
 public record GetChatRoomsListForClientResult
 {
