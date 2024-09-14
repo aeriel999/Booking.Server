@@ -41,7 +41,7 @@ public class ChatMapping : IRegister
 
 		config.NewConfig<UserMessage, GetChatMessageInfoResponse>()
 		   .Map(desp => desp.UserId, src => src.UserId)
-		   .Map(desp => desp.SentAt, src => src.SentAt.ToUniversalTime())
+		   .Map(desp => desp.SentAt, src => src.SentAt.ToUniversalTime().ToString("R"))
 		   .Map(desp => desp.Text, src => src.Message)
 		   .Map(desp => desp.IsRead, src => src.IsRead);
 
