@@ -41,21 +41,18 @@ public class ChatMapping : IRegister
 
 		config.NewConfig<UserMessage, GetChatMessageInfoResponse>()
 		   .Map(desp => desp.UserId, src => src.UserId)
-		   .Map(desp => desp.SentAt, src => src.SentAt.ToUniversalTime())
+		   .Map(desp => desp.SentAt, src => src.SentAt.ToUniversalTime().ToString("R"))
 		   .Map(desp => desp.Text, src => src.Message)
 		   .Map(desp => desp.IsRead, src => src.IsRead)
 		   .Map(desp => desp.Date, src => src.SentAt);
 
 		config.NewConfig<List<UserMessage>, List<GetChatMessageInfoResponse>>();
 
-		config.NewConfig<(Guid UserId, InputMessage request), CreateMessageCommand>()
-			 .Map(desp => desp.UserId, src => src.UserId)
-			 .Map(dest => dest, src => src.request);
-
 
 		config.NewConfig<(InputMessage inputMessage, Guid UserId), CreateMessageCommand>()
 		.Map(dest => dest.UserId, src => src.UserId)
 		.Map(dest => dest, src => src.inputMessage);
+
 
 		config.NewConfig<ChatRoom, ChatRoomForClientResponse>()
 		.Map(desp => desp.PostName, src => src.Post!.Name)

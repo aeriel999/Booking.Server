@@ -1,8 +1,6 @@
 import { styled } from "@mui/system";
 import {
- 
     IChatItem,
- 
     IChatInfo,
     IChatMessageInfo,
     ISendMessage,
@@ -43,7 +41,6 @@ export default function ChatRoom() {
     const [chatInfo, setChatInfo] = useState<IChatInfo | null>(null);
     const [messages, setMessages] = useState<IChatMessageInfo[]>([]);
     const [message, setMessage] = useState<IChatMessageInfo>();
-    const [textMessage, setTextMessage] = useState<ISendMessage>();
 
     const getChatList = async () => {
         try {
@@ -76,14 +73,25 @@ export default function ChatRoom() {
                 .invoke("JoinRoomForListening", { roomId })
                 .then(async (data) => {
                     console.log("JoinRoomForListening", roomId);
-                    console.log("send_message", data);
-                    setMessages(data);
+                    console.log("JoinRoomForListening", data);
+                    const messageList: IChatMessageInfo[] = data.map(
+                        (message: IChatMessageInfo) => ({
+                            userId: message.userId,
+                            sentAt: message.sentAt,
+                            text: message.text,
+                            isRead: message.isRead,
+                        })
+                    );
+                    console.log("messageList", messageList);
+
+                    setMessages(messageList);
                     // Remove any previous listener before adding a new one
-                    connection.off("send_notify");
+                    connection.off("send_message");
+                     
                     // Add the new listener
-                    connection.on("send_message", async (m) => {
+                    connection.on("send_message", (m) => {
                         console.log("send_message", m);
-                        // setMessages(m)
+                       // setMessage(m);
                     });
                 });
         } else {
@@ -94,7 +102,7 @@ export default function ChatRoom() {
                         console.log("roomId", roomId);
                         setMessages(data);
                         // Remove any previous listener before adding a new one
-                        connection.off("send_notify");
+                        connection.off("send_message");
                         // Add the new listener
                         connection.on("send_message", async (m) => {
                             console.log("send_message", m);
@@ -109,8 +117,15 @@ export default function ChatRoom() {
         startListeningPost(chatInfo?.chatId!);
     }, [chatInfo]);
 
+    useEffect(() => {
+        console.log("send_message use", message);
+        const newMessageList: IChatMessageInfo[] = [...messages!, message!];
 
-  
+        setMessages(newMessageList);
+
+
+    }, [message]);
+
     return (
         <div className="chatRoom">
             <div className="chatList">
@@ -154,21 +169,29 @@ export default function ChatRoom() {
                                 </Button>
                             </div>
                             <div className="messageContainer">
-                                <div className="messages">
-                                    {chatInfo!.chatMessages?.map((msg, index) =>
-                                        msg.userId === user?.id ? (
-                                            <MessageRight
-                                                key={index}
-                                                {...msg}
-                                            />
+                                
+                                    <div className="messages">
+                                    {messages && messages.length > 0 ? (
+                                            messages.map((msg, index) =>
+                                            msg && msg.userId ? (
+                                                msg.userId === user?.id ? (
+                                                <MessageRight key={index} {...msg} />
+                                                ) : (
+                                                <MessageLeft key={index} {...msg} />
+                                                )
+                                            ) : (
+                                                <div key={index}>Invalid message data</div>
+                                            )
+                                            )
                                         ) : (
-                                            <MessageLeft key={index} {...msg} />
-                                        )
-                                    )}
-                                </div>
-                                <ChatTextInput 
-                                    roomId={chatInfo?.chatId!} 
-                                    setMessage={setTextMessage} />
+                                            <div>No messages available</div>
+                                        )}
+                             </div>
+                                <ChatTextInput
+                                    roomId={chatInfo?.chatId!}
+                                    setMessage={setMessage}
+                                    userId={user?.id!}
+                                />
                             </div>
                         </div>
                     </>

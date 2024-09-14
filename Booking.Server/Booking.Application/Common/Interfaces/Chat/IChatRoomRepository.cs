@@ -11,6 +11,9 @@ public interface IChatRoomRepository
 	Task SaveChatRoomAsync();
 
 
+	Task UpdateChatRoomAsync(ChatRoom chatRoom);
+
+
 	Task<ChatRoom?> GetChatRoomByIdAsync(Guid roomId);
 
 
@@ -43,6 +46,7 @@ public interface IChatRoomRepository
 
 
 	Task<List<Guid>?> GetChatRoomIdListByUserIdAsync(Guid userId);
+
 
 	Task<bool> CheckChatForClientIsExist(Guid userId, Guid postId);
 	Task<ChatRoom?> GetIncludeChatRoomByIdAsync(Guid roomId);
