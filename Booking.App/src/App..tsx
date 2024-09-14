@@ -122,7 +122,7 @@ export const App: React.FC = () => {
     };
     
     if (isLogin) {
-        startConnection();
+       // startConnection();
     }
 
     return (

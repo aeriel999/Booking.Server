@@ -86,11 +86,12 @@ export default function ChatRoom() {
 
                     setMessages(messageList);
                     // Remove any previous listener before adding a new one
-                    connection.off("send_notify");
+                    connection.off("send_message");
+                     
                     // Add the new listener
-                    connection.on("send_message", async (m) => {
+                    connection.on("send_message", (m) => {
                         console.log("send_message", m);
-                        setMessage(m);
+                       // setMessage(m);
                     });
                 });
         } else {
@@ -101,7 +102,7 @@ export default function ChatRoom() {
                         console.log("roomId", roomId);
                         setMessages(data);
                         // Remove any previous listener before adding a new one
-                        connection.off("send_notify");
+                        connection.off("send_message");
                         // Add the new listener
                         connection.on("send_message", async (m) => {
                             console.log("send_message", m);
@@ -117,9 +118,12 @@ export default function ChatRoom() {
     }, [chatInfo]);
 
     useEffect(() => {
+        console.log("send_message use", message);
         const newMessageList: IChatMessageInfo[] = [...messages!, message!];
 
         setMessages(newMessageList);
+
+
     }, [message]);
 
     return (
