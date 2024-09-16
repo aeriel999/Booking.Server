@@ -64,9 +64,7 @@ export const getChatIdList = createAsyncThunk(
     "chat/get-chat-id-list",
     async (_, { rejectWithValue }) => {
         try {
-            const response = await apiClient.get(
-                "/api/Chat/get-chat-id-list"
-            );
+            const response = await apiClient.get("/api/Chat/get-chat-id-list");
             return response.data;
         } catch (error) {
             return rejectWithValue(handleAxiosError(error, "Network error"));
@@ -92,9 +90,12 @@ export const getListOfChatsByPostInfoForRealtor = createAsyncThunk(
     "chat/get-list-of-chats-by-post-for-realtor",
     async (postId: string, { rejectWithValue }) => {
         try {
-            const response = await apiClient.get(`/api/Chat/get-list-of-chats-by-post-for-realtor`, {
-                params: { postId } // Pass postId as a query parameter
-            });
+            const response = await apiClient.get(
+                `/api/Chat/get-list-of-chats-by-post-for-realtor`,
+                {
+                    params: { postId }, // Pass postId as a query parameter
+                }
+            );
             return response.data;
         } catch (error) {
             return rejectWithValue(handleAxiosError(error, "Network error"));
@@ -106,9 +107,12 @@ export const getChatRoomById = createAsyncThunk(
     "chat/get-chat-room-by-id",
     async (chatRoomId: string, { rejectWithValue }) => {
         try {
-            const response = await apiClient.get(`/api/Chat/get-chat-room-by-id`, {
-                params: { chatRoomId }
-            });
+            const response = await apiClient.get(
+                `/api/Chat/get-chat-room-by-id`,
+                {
+                    params: { chatRoomId },
+                }
+            );
             return response.data;
         } catch (error) {
             return rejectWithValue(handleAxiosError(error, "Network error"));
@@ -116,3 +120,19 @@ export const getChatRoomById = createAsyncThunk(
     }
 );
 
+export const пetMessageListByChatId = createAsyncThunk(
+    "chat/get-message-list-by-chatId",
+    async (chatRoomId: string, { rejectWithValue }) => {
+        try {
+            const response = await apiClient.get(
+                `/api/Chat/get-message-list-by-chatId`,
+                {
+                    params: { chatRoomId },
+                }
+            );
+            return response.data;
+        } catch (error) {
+            return rejectWithValue(handleAxiosError(error, "Network error"));
+        }
+    }
+);

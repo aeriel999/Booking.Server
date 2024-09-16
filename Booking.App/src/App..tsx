@@ -42,9 +42,12 @@ import { RealtorPageForClient } from "./containers/client/RealtorPageForClient/R
 import { PageOfMessages } from "./containers/client/PageOfMessages/PageOfMessages.tsx";
 import { connection } from "./SignalR/index.ts";
 import * as signalR from "@microsoft/signalr";
-import { addNewMessageInGeneralCount, updateListOfChatIdForListening } from "./store/chat/chat.slice.ts";
-
- 
+import {
+    addNewMessageInGeneralCount,
+    setNewMessage,
+    updateListOfChatIdForListening,
+} from "./store/chat/chat.slice.ts";
+import { ISendMessage } from "./interfaces/chat/index.ts";
 
 export const App: React.FC = () => {
     const { isLogin, user } = useAppSelector((state) => state.account);
@@ -62,35 +65,44 @@ export const App: React.FC = () => {
         }
     };
 
-    const startConnection = async () => {
+    const setMessageTest = (msg: ISendMessage) => {
+        dispatch(setNewMessage(msg));
+    };
+
+    const startConnectionWithSignalR = async () => {
         if (connection.state === signalR.HubConnectionState.Disconnected) {
             await connection
                 .start()
                 .then(async () => {
                     if (listOfPostIdForListening) {
-                        await connectionForRealtorToSignalR(listOfPostIdForListening);
+                        await listeningAllPostChanelForRealtorToSignalR(
+                            listOfPostIdForListening
+                        );
                     }
-                    if(listOfChatsIdForListening){
-
+                    if (listOfChatsIdForListening) {
+                        await listeningAllChats(listOfChatsIdForListening);
                     }
-
                 })
                 .catch((err) => console.error("Connection failed: ", err));
         }
         connection.onreconnected(async () => {
             if (listOfPostIdForListening) {
-                await connectionForRealtorToSignalR(listOfPostIdForListening);
+                await listeningAllPostChanelForRealtorToSignalR(
+                    listOfPostIdForListening
+                );
             }
         });
     };
-    
+
     // //Connection for listening chanels for all posts and new chatrooms
-    const connectionForRealtorToSignalR = async (list: string[]) => {
+    const listeningAllPostChanelForRealtorToSignalR = async (
+        list: string[]
+    ) => {
         if (connection.state === signalR.HubConnectionState.Connected) {
             await Promise.all(list.map((id) => startListeningPost(id)));
         }
     };
-    
+
     const startListeningPost = async (roomId: string) => {
         if (connection.state === signalR.HubConnectionState.Connected) {
             await connection
@@ -107,22 +119,64 @@ export const App: React.FC = () => {
                 });
         }
     };
-    
+
     //join new chatRooms
     const joinForChatListening = async (roomId: string) => {
         if (connection.state === signalR.HubConnectionState.Connected) {
             await connection
                 .invoke("JoinNewChanelOrNewChatRoomForListening", { roomId })
-                .then( () => {
-                     console.log("send_notify",  roomId);
-                      dispatch(addNewMessageInGeneralCount());
-                      dispatch(updateListOfChatIdForListening(roomId));
+                .then(() => {
+                    console.log("send_notify", roomId);
+                    dispatch(addNewMessageInGeneralCount());
+                    dispatch(updateListOfChatIdForListening(roomId));
                 });
         }
     };
-    
+
+    const listeningAllChats = async (list: string[]) => {
+        if (connection.state === signalR.HubConnectionState.Connected) {
+            await Promise.all(list.map((id) => startListeningChat(id)));
+        }
+    };
+
+    const startListeningChat = async (roomId: string) => {
+        if (connection.state === signalR.HubConnectionState.Connected) {
+            await connection
+                .invoke("JoinRoomForListening", { roomId })
+                .then(() => {
+                    console.log("JoinRoomForListening", roomId);
+
+                    // Remove any previous listener before adding a new one
+                    connection.off("send_message");
+
+                    // Add the new listener
+                    connection.on("send_message", (m) => {
+                        console.log("send_message", m);
+                        // console.log("roomId", roomId);
+                        setMessageTest(m);
+                    });
+                });
+        } else {
+            // await connection.start().then(() => {
+            //     connection
+            //         .invoke("JoinRoomForListening", { roomId })
+            //         .then(async (data) => {
+            //             console.log("roomId", roomId);
+            //             //   setMessages(data);
+            //             // Remove any previous listener before adding a new one
+            //             connection.off("send_message");
+            //             // Add the new listener
+            //             connection.on("send_message", async (m) => {
+            //                 console.log("send_message", m);
+            //                 // setMessages(m)
+            //             });
+            //         });
+            // });
+        }
+    };
+
     if (isLogin) {
-       // startConnection();
+        startConnectionWithSignalR();
     }
 
     return (

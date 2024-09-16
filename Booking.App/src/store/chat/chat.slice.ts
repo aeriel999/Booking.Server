@@ -1,7 +1,7 @@
 import { AnyAction, createSlice, PayloadAction } from "@reduxjs/toolkit";
 import { RejectedAction } from "../../utils/types";
 import { Status } from "../../utils/enum";
-import { IChatState } from "../../interfaces/chat";
+import { IChatState, ISendMessage } from "../../interfaces/chat";
 import {
     getChatIdList,
     getChatRoomById,
@@ -11,6 +11,7 @@ import {
     getListOfPostInfoForChatsForRealtor,
     getNumberOfUnleastMessages,
     getPostIdListForListeningChatsByRealtor,
+    пetMessageListByChatId,
 } from "./chat.action.ts";
 import {
     addlistToLocalStorage,
@@ -18,7 +19,6 @@ import {
     getListFromLocalStorage,
     getLocalStorage,
 } from "../../utils/storage/localStorageUtils.ts";
-import { act } from "react";
 
 function isRejectedAction(action: AnyAction): action is RejectedAction {
     return action.type.endsWith("/rejected");
@@ -33,9 +33,9 @@ const initialState: IChatState = {
         "generalNumberOfUnreadMessages"
     )
         ? parseInt(
-            getLocalStorage("generalNumberOfUnreadMessages") as string,
-            10
-        )
+              getLocalStorage("generalNumberOfUnreadMessages") as string,
+              10
+          )
         : 0,
     listOfPostIdForListening: getListFromLocalStorage(
         "updateListOfIdForListening"
@@ -43,19 +43,15 @@ const initialState: IChatState = {
     listOfChatsIdForListening: getListFromLocalStorage(
         "listOfChatsIdForListening"
     ),
-    chatRoomInfoForClient: null
+    chatRoomInfoForClient: null,
+    currentChatRoomId: null,
+    newMessage: null,
 };
 
 export const chatSlice = createSlice({
     name: "chat",
     initialState,
     reducers: {
-        addNewPostState: (state: IChatState) => {
-            state.hasNewPosts = true;
-        },
-        deleteNewPostState: (state: IChatState) => {
-            state.hasNewPosts = false;
-        },
         changeGeneralNumberOfUnreadMessages: (
             state: IChatState,
             action: PayloadAction<number>
@@ -67,7 +63,7 @@ export const chatSlice = createSlice({
             );
         },
         addNewMessageInGeneralCount: (state: IChatState) => {
-            console.log("send_notify", state.generalNumberOfUnreadMessages)
+            console.log("send_notify", state.generalNumberOfUnreadMessages);
 
             state.generalNumberOfUnreadMessages =
                 state.generalNumberOfUnreadMessages + 1;
@@ -90,7 +86,7 @@ export const chatSlice = createSlice({
             state: IChatState,
             action: PayloadAction<string>
         ) => {
-            console.log("action.payload", action.payload)
+            console.log("action.payload", action.payload);
 
             state.listOfChatsIdForListening!.push(action.payload);
             addlistToLocalStorage(
@@ -98,7 +94,23 @@ export const chatSlice = createSlice({
                 state.listOfChatsIdForListening!
             );
 
-            console.log("state.listOfChatsIdForListening", state.listOfChatsIdForListening)
+            console.log(
+                "state.listOfChatsIdForListening",
+                state.listOfChatsIdForListening
+            );
+        },
+        setChatRoomId: (state: IChatState, action: PayloadAction<string>) => {
+            console.log("setChatRoomId", action.payload);
+            state.currentChatRoomId = action.payload;
+            addLocalStorage("currentChatRoomId", state.currentChatRoomId);
+        },
+        setNewMessage: (
+            state: IChatState,
+            action: PayloadAction<ISendMessage>
+        ) => {
+           if(state.currentChatRoomId === action.payload.roomId){
+                state.newMessage = action.payload.message;
+           }
 
         },
     },
@@ -179,8 +191,14 @@ export const chatSlice = createSlice({
             .addCase(getChatRoomById.pending, (state) => {
                 state.status = Status.LOADING;
             })
+            .addCase(пetMessageListByChatId.fulfilled, (state) => {
+                state.status = Status.SUCCESS;
+            })
+            .addCase(пetMessageListByChatId.pending, (state) => {
+                state.status = Status.LOADING;
+            })
 
-            //getListOfChatsByPostInfoForRealtor
+            //пetMessageListByChatId
             .addMatcher(isRejectedAction, (state) => {
                 state.status = Status.ERROR;
             });
@@ -188,11 +206,11 @@ export const chatSlice = createSlice({
 });
 
 export const {
-    addNewPostState,
-    deleteNewPostState,
     changeGeneralNumberOfUnreadMessages,
     updateListOfPostIdForListening,
     addNewMessageInGeneralCount,
     updateListOfChatIdForListening,
+    setChatRoomId,
+    setNewMessage,
 } = chatSlice.actions;
 export default chatSlice.reducer;

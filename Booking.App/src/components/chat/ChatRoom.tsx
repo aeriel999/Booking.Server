@@ -1,10 +1,5 @@
 import { styled } from "@mui/system";
-import {
-    IChatItem,
-    IChatInfo,
-    IChatMessageInfo,
-    ISendMessage,
-} from "../../interfaces/chat";
+import { IChatItem, IChatInfo, IChatMessageInfo } from "../../interfaces/chat";
 import { Avatar, Button } from "@mui/material";
 import { useAppSelector } from "../../hooks/redux";
 import { MessageLeft, MessageRight } from "./Message";
@@ -17,11 +12,13 @@ import { useDispatch } from "react-redux";
 import { AppDispatch } from "../../store";
 import { useEffect, useState } from "react";
 import ErrorHandler from "../common/ErrorHandler";
-import { getListOfPostInfoForChatsForRealtor } from "../../store/chat/chat.action";
+import {
+    getListOfPostInfoForChatsForRealtor,
+    пetMessageListByChatId,
+} from "../../store/chat/chat.action";
 import { unwrapResult } from "@reduxjs/toolkit";
 import { APP_ENV } from "../../env";
-import { connection } from "../../SignalR";
-import * as signalR from "@microsoft/signalr";
+import { setChatRoomId } from "../../store/chat/chat.slice";
 
 const StyledAvatar = styled(Avatar)({
     color: "#fff",
@@ -41,6 +38,7 @@ export default function ChatRoom() {
     const [chatInfo, setChatInfo] = useState<IChatInfo | null>(null);
     const [messages, setMessages] = useState<IChatMessageInfo[]>([]);
     const [message, setMessage] = useState<IChatMessageInfo>();
+    const { newMessage } = useAppSelector((state) => state.chat);
 
     const getChatList = async () => {
         try {
@@ -52,6 +50,14 @@ export default function ChatRoom() {
         } catch (error) {
             setErrorMessage(ErrorHandler(error));
         }
+    };
+
+    const getMessageList = async (roomId: string) => {
+        try {
+            const response = await dispatch(пetMessageListByChatId(roomId));
+            unwrapResult(response);
+            return response;
+        } catch (error) {}
     };
 
     useEffect(() => {
@@ -67,64 +73,32 @@ export default function ChatRoom() {
         throw new Error("Function not implemented.");
     }
 
-    const startListeningPost = async (roomId: string) => {
-        if (connection.state === signalR.HubConnectionState.Connected) {
-            await connection
-                .invoke("JoinRoomForListening", { roomId })
-                .then(async (data) => {
-                    console.log("JoinRoomForListening", roomId);
-                    console.log("JoinRoomForListening", data);
-                    const messageList: IChatMessageInfo[] = data.map(
-                        (message: IChatMessageInfo) => ({
-                            userId: message.userId,
-                            sentAt: message.sentAt,
-                            text: message.text,
-                            isRead: message.isRead,
-                        })
-                    );
-                    console.log("messageList", messageList);
-
-                    setMessages(messageList);
-                    // Remove any previous listener before adding a new one
-                    connection.off("send_message");
-                     
-                    // Add the new listener
-                    connection.on("send_message", (m) => {
-                        console.log("send_message", m);
-                       // setMessage(m);
-                    });
-                });
-        } else {
-            await connection.start().then(() => {
-                connection
-                    .invoke("JoinRoomForListening", { roomId })
-                    .then(async (data) => {
-                        console.log("roomId", roomId);
-                        setMessages(data);
-                        // Remove any previous listener before adding a new one
-                        connection.off("send_message");
-                        // Add the new listener
-                        connection.on("send_message", async (m) => {
-                            console.log("send_message", m);
-                            // setMessages(m)
-                        });
-                    });
+    useEffect(() => {
+        if (chatInfo?.chatId) {
+            dispatch(setChatRoomId(chatInfo?.chatId));
+            getMessageList(chatInfo?.chatId).then((data) => {
+                console.log("data", data);
+                if (data?.payload) {
+                    setMessages(data?.payload.$values);
+                }
             });
         }
-    };
-
-    useEffect(() => {
-        startListeningPost(chatInfo?.chatId!);
     }, [chatInfo]);
 
     useEffect(() => {
-        console.log("send_message use", message);
-        const newMessageList: IChatMessageInfo[] = [...messages!, message!];
+        console.log("send_message use", newMessage);
+
+        const messageInfo: IChatMessageInfo = {
+            sentAt: new Date().toUTCString(),
+            text: newMessage!,
+            isRead: false,
+            userId: user?.id!,
+        };
+
+        const newMessageList: IChatMessageInfo[] = [...messages!, messageInfo];
 
         setMessages(newMessageList);
-
-
-    }, [message]);
+    }, [newMessage]);
 
     return (
         <div className="chatRoom">
@@ -169,24 +143,31 @@ export default function ChatRoom() {
                                 </Button>
                             </div>
                             <div className="messageContainer">
-                                
-                                    <div className="messages">
+                                <div className="messages">
                                     {messages && messages.length > 0 ? (
-                                            messages.map((msg, index) =>
+                                        messages.map((msg, index) =>
                                             msg && msg.userId ? (
                                                 msg.userId === user?.id ? (
-                                                <MessageRight key={index} {...msg} />
+                                                    <MessageRight
+                                                        key={index}
+                                                        {...msg}
+                                                    />
                                                 ) : (
-                                                <MessageLeft key={index} {...msg} />
+                                                    <MessageLeft
+                                                        key={index}
+                                                        {...msg}
+                                                    />
                                                 )
                                             ) : (
-                                                <div key={index}>Invalid message data</div>
+                                                <div key={index}>
+                                                    Invalid message data
+                                                </div>
                                             )
-                                            )
-                                        ) : (
-                                            <div>No messages available</div>
-                                        )}
-                             </div>
+                                        )
+                                    ) : (
+                                        <div>No messages available</div>
+                                    )}
+                                </div>
                                 <ChatTextInput
                                     roomId={chatInfo?.chatId!}
                                     setMessage={setMessage}

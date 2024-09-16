@@ -37,7 +37,7 @@ export const ChatTextInput = (props: ChatTextInputProps) => {
     const onSubmit = async (data: ISendMessage) => {
         await sendMessageSignalR(data.message, props.roomId);
 
-        const messageInfo = {
+        const messageInfo: IChatMessageInfo = {
             sentAt: new Date().toUTCString(),
             text: data.message,
             isRead: false,

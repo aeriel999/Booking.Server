@@ -1,5 +1,4 @@
 import { APP_ENV } from "../env";
-import { IChatMessageInfo } from "../interfaces/chat/index.ts";
 import { getLocalStorage } from "../utils/storage/localStorageUtils.ts";
 import * as signalR from "@microsoft/signalr";
 
@@ -21,11 +20,11 @@ export const joinNewPostChatByUser = async (roomId: string) => {
             });
     }
 };
- 
+
 export const startListeningPost = async (roomId: string) => {
     if (connection.state === signalR.HubConnectionState.Connected) {
         await connection
-            .invoke("JoinRoomForListening", {roomId})
+            .invoke("JoinRoomForListening", { roomId })
             .then(async () => {
                 console.log("roomId", roomId);
                 // Remove any previous listener before adding a new one
@@ -33,12 +32,11 @@ export const startListeningPost = async (roomId: string) => {
                 // Add the new listener
                 connection.on("send_message", async (m) => {
                     console.log("send_message", m);
-                  //  props.setMessages(m)
+                    //  props.setMessages(m)
                 });
             });
     }
 };
-
 
 //end connection
 export const endListening = () =>
@@ -53,7 +51,6 @@ export const endListening = () =>
 //             console.log("currentRoom",currentRoom);
 
 //         });
-
 
 //
 // export const joinForPostListening = (roomId: string) => connection.invoke("JoinRoomForListening", {roomId})

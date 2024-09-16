@@ -20,8 +20,10 @@ public class ChatMapping : IRegister
 		   .Map(desp => desp.Id, src => src.Id)
 		   .Map(desp => desp.Name, src => src.Name)
 		   .Map(desp => desp.Image, src => src.ImagesPost!.FirstOrDefault(i => i.Priority == 1)!.Name)
-		   .Map(desp => desp.NumberOfUnreadMessages,
-				src => src.ChatRooms!.Sum(c => c.NumberOfUnreadMessages));
+			.Map(desp => desp.NumberOfUnreadMessages,
+		src => src.ChatRooms!.Sum(c => c.UserMessages!.Count(m => !m.IsRead && m.UserId != src.UserId)));
+
+
 
 		config.NewConfig<List<Post>, List<GetListOfPostInfoForChatsForRealtorResponse>>();
 
@@ -32,7 +34,8 @@ public class ChatMapping : IRegister
 
 		config.NewConfig<ChatRoom, GetListOfChatsByPostInfoForRealtorResponse>()
 		   .Map(desp => desp.Id, src => src.ChatRoomId)
-		   .Map(desp => desp.NumberOfUnreadMessages, src => src.NumberOfUnreadMessages)
+		   .Map(desp => desp.NumberOfUnreadMessages, 
+		   src => src.UserMessages!.Count(m => !m.IsRead && m.UserId != src.RealtorId))
 		   .Map(desp => desp.Image, src => src.Client!.Avatar)
 		   .Map(desp => desp.Name, src => src.Client!.UserName);
 

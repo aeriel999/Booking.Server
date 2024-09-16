@@ -12,6 +12,8 @@ export interface IChatState {
     listOfPostIdForListening: string[] | null;
     listOfChatsIdForListening: string[] | null;
     chatRoomInfoForClient: IChatRoomInfoForClient | null;
+    currentChatRoomId: string | null;
+    newMessage: string | null;
 }
 
 export interface IChatRoomList {
@@ -70,7 +72,7 @@ export interface IChatRoomListForClient {
     realtorName: string;
     hasUnreadMessages: boolean;
     unreadMessages: number | null;
-    chatsForClient: IChatRoomForClient[]
+    chatsForClient: IChatRoomForClient[];
 }
 
 export interface IChatRoomForClient {
@@ -96,14 +98,12 @@ export interface IChatInfo {
     userAvatar: string;
     userName: string;
     chatMessages: IChatMessageInfo[] | null;
-
 }
 
 export interface IChatMessageInfo {
     userId: string;
     sentAt?: string;
     text: string;
-    isUnread: boolean;
     date?: Date;
     isRead: boolean;
 }
