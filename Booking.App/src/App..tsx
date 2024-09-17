@@ -22,7 +22,6 @@ import AnonymousDashboardLayout from "./containers/anonymous/layouts/AnonymousDa
 import ChatRoom from "./components/chat/ChatRoom.tsx";
 import AllPostList from "./containers/dashboard/AllPostList.tsx";
 import { EditPost } from "./containers/dashboard/EditPost.tsx";
-import { PostOfPage } from "./containers/client/PostOfPage/PostOfPage.tsx";
 import RealtorPage from "./containers/client/RealtorPage.tsx";
 //import { EditUserEpailPage } from "./containers/client/EditUserEmailPage.tsx";
 import ArchivePage from "./containers/dashboard/ArchivePage.tsx";
@@ -48,6 +47,10 @@ import {
     updateListOfChatIdForListening,
 } from "./store/chat/chat.slice.ts";
 import { ISendMessage } from "./interfaces/chat/index.ts";
+import { addNewMessageInGeneralCount, updateListOfChatIdForListening } from "./store/chat/chat.slice.ts";
+import PageOfPost from "./containers/client/PageOfPost/PageOfPost.tsx";
+
+
 
 export const App: React.FC = () => {
     const { isLogin, user } = useAppSelector((state) => state.account);
@@ -250,7 +253,7 @@ export const App: React.FC = () => {
                                 <Route index element={<ListOfPostPage />} />
                                 <Route
                                     path="/dashboard/post/:postId"
-                                    element={<PostOfPage />}
+                                    element={<PageOfPost />}
                                 />
                                 <Route
                                     path="/dashboard/post/:postId/realtor/:realtorId"
@@ -288,7 +291,7 @@ export const App: React.FC = () => {
                     }
                 />
 
-                <Route path="post/:postId" element={<PostOfPage />} />
+                <Route path="post/:postId" element={<PageOfPost />} />
                 <Route
                     path="post/:postId/realtor/:realtorId"
                     element={<RealtorPage />}
@@ -318,7 +321,7 @@ export const App: React.FC = () => {
 
             <Route path="/posts" element={<AnonymousDashboardLayoutForPosts />}>
                 <Route index element={<ListOfPostsPage />} />
-                <Route path="post/:postId" element={<PostOfPage />} />
+                <Route path="post/:postId" element={<PageOfPost />} />
                 <Route
                     path="realtor/:realtorId"
                     element={<RealtorPageForClient />}

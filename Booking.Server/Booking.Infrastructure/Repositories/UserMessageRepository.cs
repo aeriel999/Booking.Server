@@ -26,6 +26,20 @@ public class UserMessageRepository(BookingDbContext context) : IUserMessageRepos
 						.Where(m => m.ChatRoomId == chatRoomId)
 						.ToListAsync();
 	}
+	public async Task ReadMessagesByChatRoomIdAsync(Guid chatRoomId, Guid userId)
+	{
+		var messages = await _dbSet
+			.Where(m => m.ChatRoomId == chatRoomId && m.UserId != userId && !m.IsRead)
+            .ToArrayAsync();
+
+		foreach(var message in messages)
+			message.IsRead = true;
+		
+
+	  _dbSet.UpdateRange(messages);
+	  await SaveUserMessageAsync();
+
+    }
 
 	public async Task UpdateMessageAsync(UserMessage userMessage)
 	{

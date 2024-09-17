@@ -27,7 +27,7 @@ function isRejectedAction(action: AnyAction): action is RejectedAction {
 
 const initialState: IChatState = {
     chatRooms: null,
-    charRoomsForClient: null,
+    chatRoomsForClient: null,
     hasNewPosts: false,
     status: Status.IDLE,
     generalNumberOfUnreadMessages: getLocalStorage(
@@ -127,7 +127,7 @@ export const chatSlice = createSlice({
                 state.status = Status.LOADING;
             })
             .addCase(getListOfChatRoomsForClient.fulfilled, (state, action) => {
-                state.charRoomsForClient = action.payload;
+                state.chatRoomsForClient = action.payload;
                 state.status = Status.SUCCESS;
             })
             .addCase(getListOfChatRoomsForClient.pending, (state) => {

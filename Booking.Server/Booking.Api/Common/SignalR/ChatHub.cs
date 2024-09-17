@@ -52,7 +52,8 @@ namespace Booking.Api.Common.SignalR
 			//Add user to chatRoom
 			await Groups.AddToGroupAsync(Context.ConnectionId, roomName.ToString());
 
-			return roomName;
+			//return roomName;
+			return createChatResult.Value.ToString();
 		}
 
 		//ToDo test for needing this ability
@@ -61,7 +62,11 @@ namespace Booking.Api.Common.SignalR
 		{
 			await Groups.AddToGroupAsync(Context.ConnectionId, request.RoomId.ToString());
 
-			var messageList = await userMessageRepository.GetUserMessagesByChatRoomIdAsync(request.RoomId);
+            var userId = Context.User!.Claims.FirstOrDefault(
+            u => u.Type == ClaimTypes.NameIdentifier)!.Value;
+
+            await userMessageRepository.ReadMessagesByChatRoomIdAsync(request.RoomId,Guid.Parse(userId));
+            var messageList = await userMessageRepository.GetUserMessagesByChatRoomIdAsync(request.RoomId);
 
 			if (messageList == null)
 				return null;

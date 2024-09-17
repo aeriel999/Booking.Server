@@ -5,6 +5,7 @@
     max-width: 340px;
     height: auto;
     display: flex;
+    column-gap: 10px;
     padding: 10px;
     box-sizing: border-box;
     background: #00C2C1;
@@ -19,7 +20,7 @@
 
 @mixin messageIsRead {
     .message-is-read {
-        width: 5%;
+        width: 15px;
         height: auto;
         position: relative;
         margin-left: auto;
@@ -31,11 +32,13 @@
             bottom: 0px;
 
             &:first-of-type {
-                left: 0px
+                left: 0px;
+                bottom: -5px;
             }
 
             &:last-of-type {
-                left: 5px
+                left: 5px;
+                bottom: -5px;
             }
         }
 

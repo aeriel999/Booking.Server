@@ -26,7 +26,7 @@ import OutlinedErrorAlert from "../../../components/common/ErrorAlert";
 import { joinNewPostChatByUser } from "../../../SignalR";
 
 
-export const PostOfPage = () => {
+const PageOfPost = () => {
 
     const navigate = useNavigate();
     const location = useLocation();
@@ -48,6 +48,7 @@ export const PostOfPage = () => {
     const [error, setError] = useState<string | null>(null);
     const [errorMessage, setErrorMessage] = useState<string | null>(null);
     const [postImages, setPostImages] = useState<string[]>([]);
+    const [rating, setRating] = useState<number>(0);
 
 
     const getPost = async (id: string) => {
@@ -97,6 +98,10 @@ export const PostOfPage = () => {
         setPageOfFeedbacks(pageOfSelectedFeedback);
 
     }, [pageOfSelectedFeedback])
+    useEffect(() => {
+        if (post)
+            setRating(post?.rate ? post?.rate : 0)
+    }, [post])
 
     useEffect(() => {
         console.log(post);
@@ -128,6 +133,7 @@ export const PostOfPage = () => {
     const sendFeedbackAsync = async (text: string) => {
         if (selectedRating == null) setError("Choose a rating from 1 to 5!")
         else {
+            setRating((rating + selectedRating) / 2);
             try {
                 const payload: ISendFeedback = {
                     text: text,
@@ -216,7 +222,7 @@ export const PostOfPage = () => {
                                     </div>
                                     <div className="booking-rating">
                                         <Rating
-                                            rating={post?.rate ? post.rate : 0}
+                                            rating={rating}
                                             isSelecting={false}
                                             selectedRating={null}
                                         />
@@ -225,8 +231,13 @@ export const PostOfPage = () => {
                                     {post?.categoryName != "Hotel" ? <button
                                         onClick={async () => {
                                             await joinNewPostChatByUser(postId!)
-                                            dispatch(savePostIdForChat(postId!))
-                                            navigate("/dashboard/profile/page-of-messages")
+                                                .then((id) => {
+                                                    dispatch(savePostIdForChat(id));
+                                                    navigate("/dashboard/profile/page-of-messages");
+                                                });
+
+                                            //dispatch(savePostIdForChat(postId!))
+
                                         }}
                                     >Booking</button> : <div></div>}
                                     <div className="booking-location">
@@ -379,6 +390,8 @@ export const PostOfPage = () => {
             </div>
         </>)
 }
+
+export default PageOfPost;
 /*
 <div className="service-card">
                                         <img src={`${APP_ENV.BASE_URL}/images/icons/wi-fi.svg`} alt="Icon" />

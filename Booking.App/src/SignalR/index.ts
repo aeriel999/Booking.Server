@@ -2,6 +2,8 @@ import { APP_ENV } from "../env";
 import { getLocalStorage } from "../utils/storage/localStorageUtils.ts";
 import * as signalR from "@microsoft/signalr";
 
+
+
 //Connection build
 export const connection = new signalR.HubConnectionBuilder()
     .withUrl(APP_ENV.BASE_URL + "/chat", {
@@ -12,11 +14,13 @@ export const connection = new signalR.HubConnectionBuilder()
 
 //create new chatRoom and choin it for listening
 export const joinNewPostChatByUser = async (roomId: string) => {
+    //const dispatch = useAppDispatch();
     if (connection.state === signalR.HubConnectionState.Connected) {
-        await connection
+        return await connection
             .invoke("JoinNewPostChatByUser", { roomId })
             .then((history) => {
                 console.log("JoinNewPostChatByUser history", history);
+                return history;
             });
     }
 };
