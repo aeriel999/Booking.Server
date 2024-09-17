@@ -42,9 +42,9 @@ import { PageOfMessages } from "./containers/client/PageOfMessages/PageOfMessage
 import { connection } from "./SignalR/index.ts";
 import * as signalR from "@microsoft/signalr";
 import {
-    addNewMessageInGeneralCount,
+   
     setNewMessage,
-    updateListOfChatIdForListening,
+    
 } from "./store/chat/chat.slice.ts";
 import { ISendMessage } from "./interfaces/chat/index.ts";
 import { addNewMessageInGeneralCount, updateListOfChatIdForListening } from "./store/chat/chat.slice.ts";
