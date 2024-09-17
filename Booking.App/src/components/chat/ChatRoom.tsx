@@ -1,10 +1,5 @@
 import { styled } from "@mui/system";
-import {
-    IChatItem,
-    IChatInfo,
-    IChatMessageInfo,
-    ISendMessage,
-} from "../../interfaces/chat";
+import { IChatItem, IChatInfo, IChatMessageInfo } from "../../interfaces/chat";
 import { Avatar, Button } from "@mui/material";
 import { useAppSelector } from "../../hooks/redux";
 import { MessageLeft, MessageRight } from "./Message";
@@ -15,13 +10,16 @@ import { ChatPostList } from "./ChatPostList";
 import Trash from "../../assets/DashboardIcons/mdi_trash-outline.svg";
 import { useDispatch } from "react-redux";
 import { AppDispatch } from "../../store";
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import ErrorHandler from "../common/ErrorHandler";
-import { getListOfPostInfoForChatsForRealtor } from "../../store/chat/chat.action";
+import {
+    getListOfPostInfoForChatsForRealtor,
+    getMessageListByChatId,
+    setMessagesReadtByChatI,
+} from "../../store/chat/chat.action";
 import { unwrapResult } from "@reduxjs/toolkit";
 import { APP_ENV } from "../../env";
-import { connection } from "../../SignalR";
-import * as signalR from "@microsoft/signalr";
+import { setChatRoomId } from "../../store/chat/chat.slice";
 
 const StyledAvatar = styled(Avatar)({
     color: "#fff",
@@ -39,14 +37,29 @@ export default function ChatRoom() {
     );
     const [postChatList, setPostChatList] = useState<IChatItem[]>([]);
     const [chatInfo, setChatInfo] = useState<IChatInfo | null>(null);
-    const [messages, setMessages] = useState<IChatMessageInfo[]>([]);
+    const [readMessages, setReadMessages] = useState<IChatMessageInfo[]>([]);
+    const [unreadMessages, setUnreadMessages] = useState<IChatMessageInfo[]>(
+        []
+    );
     const [message, setMessage] = useState<IChatMessageInfo>();
+    const { newMessage } = useAppSelector((state) => state.chat);
+    const unreadMessageRef = useRef<HTMLDivElement | null>(null);
 
     const getChatList = async () => {
         try {
             const response = await dispatch(
                 getListOfPostInfoForChatsForRealtor()
             );
+            unwrapResult(response);
+            return response;
+        } catch (error) {
+            setErrorMessage(ErrorHandler(error));
+        }
+    };
+
+    const getMessageList = async (roomId: string) => {
+        try {
+            const response = await dispatch(getMessageListByChatId(roomId));
             unwrapResult(response);
             return response;
         } catch (error) {
@@ -67,68 +80,120 @@ export default function ChatRoom() {
         throw new Error("Function not implemented.");
     }
 
-    const startListeningPost = async (roomId: string) => {
-        if (connection.state === signalR.HubConnectionState.Connected) {
-            await connection
-                .invoke("JoinRoomForListening", { roomId })
-                .then(async (data) => {
-                    console.log("JoinRoomForListening", roomId);
-                    console.log("JoinRoomForListening", data);
-                    const messageList: IChatMessageInfo[] = data.map(
-                        (message: IChatMessageInfo) => ({
-                            userId: message.userId,
-                            sentAt: message.sentAt,
-                            text: message.text,
-                            isRead: message.isRead,
-                        })
+    useEffect(() => {
+        if (chatInfo?.chatId) {
+            dispatch(setChatRoomId(chatInfo?.chatId));
+            getMessageList(chatInfo?.chatId).then((data) => {
+                if (data?.payload) {
+                    const readMessages = data?.payload.$values.filter(
+                        (message: IChatMessageInfo) => message.isRead
                     );
-                    console.log("messageList", messageList);
 
-                    setMessages(messageList);
-                    // Remove any previous listener before adding a new one
-                    connection.off("send_message");
-                     
-                    // Add the new listener
-                    connection.on("send_message", (m) => {
-                        console.log("send_message", m);
-                       // setMessage(m);
-                    });
-                });
-        } else {
-            await connection.start().then(() => {
-                connection
-                    .invoke("JoinRoomForListening", { roomId })
-                    .then(async (data) => {
-                        console.log("roomId", roomId);
-                        setMessages(data);
-                        // Remove any previous listener before adding a new one
-                        connection.off("send_message");
-                        // Add the new listener
-                        connection.on("send_message", async (m) => {
-                            console.log("send_message", m);
-                            // setMessages(m)
-                        });
-                    });
+                    // Filter for unread messages
+                    const unreadMessages = data?.payload.$values.filter(
+                        (message: IChatMessageInfo) => !message.isRead
+                    );
+
+                    // Update state for read and unread messages
+                    setReadMessages(readMessages);
+                    setUnreadMessages(unreadMessages);
+                }
             });
         }
-    };
-
-    useEffect(() => {
-        startListeningPost(chatInfo?.chatId!);
     }, [chatInfo]);
 
     useEffect(() => {
-        console.log("send_message use", message);
-        const newMessageList: IChatMessageInfo[] = [...messages!, message!];
+        console.log("send_message use", newMessage);
 
-        setMessages(newMessageList);
+        const messageInfo: IChatMessageInfo = {
+            sentAt: new Date().toUTCString(),
+            text: newMessage!,
+            isRead: false,
+            userId: user?.id!,
+        };
+
+        const newMessageList: IChatMessageInfo[] = [
+            ...readMessages!,
+            messageInfo,
+        ];
+
+        setReadMessages(newMessageList);
+    }, [newMessage]);
+
+    useEffect(() => {
+        if (unreadMessageRef.current) {
+            unreadMessageRef.current.scrollIntoView({
+                behavior: "smooth",
+                block: "start",
+            });
+        }
+    }, [unreadMessages]);
+
+    // Function to move all unread messages to the read messages list
+    async function handleMessageRead(): Promise<void> {
+        if (chatInfo?.chatId && unreadMessages.length > 0) {
+            try {
+                const response = await dispatch(
+                    setMessagesReadtByChatI(chatInfo?.chatId)
+                );
+                unwrapResult(response);
+            } catch (error) {
+                setErrorMessage(ErrorHandler(error));
+            }
 
 
-    }, [message]);
+            ////Not work  in testing now
+
+            const numberOfUnreadMessage = unreadMessages.length;
+
+            console.log("numberOfUnreadMessage", numberOfUnreadMessage);
+
+            // Mark all unread messages as read
+            const updatedUnreadMessages = unreadMessages.map((msg) => ({
+                ...msg,
+                isRead: true,
+            }));
+
+            console.log("updatedUnreadMessages", updatedUnreadMessages);
+
+            // Add the unread messages to the read messages list
+            setReadMessages((prevReadMessages) => [
+                ...prevReadMessages,
+                ...updatedUnreadMessages,
+            ]);
+
+            console.log("setReadMessages", readMessages);
+
+            // Clear the unread messages list
+            setUnreadMessages([]);
+
+            console.log("before setPostChatList", postChatList);
+
+            setPostChatList((prevPostChatList) =>
+                prevPostChatList.map((chat) => {
+                    // Assuming the chat ID can be used to identify the specific chat
+                    if (chat.id === chatInfo?.chatId) {
+                        return {
+                            ...chat,
+                            numberOfUnreadMessages: Math.max(
+                                chat.numberOfUnreadMessages! -
+                                    numberOfUnreadMessage,
+                                0
+                            ),
+                        };
+                    }
+                    return chat; // Return other chats unchanged
+                })
+            );
+
+            console.log("setPostChatList", postChatList);
+        }
+    }
 
     return (
         <div className="chatRoom">
             <div className="chatList">
+                {/* ChatPostList */}
                 {postChatList &&
                     postChatList.map((item, id) => (
                         <ChatPostList
@@ -143,8 +208,8 @@ export default function ChatRoom() {
                         />
                     ))}
             </div>
-
             <div className="chatContainer">
+                {/* Chat Header */}
                 {chatInfo !== null ? (
                     <>
                         <div className="chatGroupName">
@@ -168,25 +233,64 @@ export default function ChatRoom() {
                                     <img src={Trash} alt="delete" />
                                 </Button>
                             </div>
-                            <div className="messageContainer">
-                                
-                                    <div className="messages">
-                                    {messages && messages.length > 0 ? (
-                                            messages.map((msg, index) =>
-                                            msg && msg.userId ? (
-                                                msg.userId === user?.id ? (
-                                                <MessageRight key={index} {...msg} />
-                                                ) : (
-                                                <MessageLeft key={index} {...msg} />
-                                                )
+                            <div
+                                className="messageContainer"
+                                onClick={handleMessageRead}
+                            >
+                                <div className="messages">
+                                    {/* Display Read Messages */}
+                                    {readMessages && readMessages.length > 0 ? (
+                                        readMessages.map((msg, index) =>
+                                            msg.userId === user?.id ? (
+                                                <MessageRight
+                                                    key={`read-${index}`}
+                                                    {...msg}
+                                                />
                                             ) : (
-                                                <div key={index}>Invalid message data</div>
+                                                <MessageLeft
+                                                    key={`read-${index}`}
+                                                    {...msg}
+                                                />
                                             )
-                                            )
-                                        ) : (
-                                            <div>No messages available</div>
+                                        )
+                                    ) : (
+                                        <div>No read messages available</div>
+                                    )}
+
+                                    {/* Separator Line Between Read and Unread Messages */}
+                                    {unreadMessages &&
+                                        unreadMessages.length > 0 && (
+                                            <hr className="messageSeparator" />
                                         )}
-                             </div>
+
+                                    {/* Display Unread Messages */}
+                                    {unreadMessages &&
+                                        unreadMessages.length > 0 &&
+                                        unreadMessages.map((msg, index) =>
+                                            msg.userId === user?.id ? (
+                                                <MessageRight
+                                                    key={`unread-${index}`}
+                                                    {...msg}
+                                                    ref={
+                                                        index === 0
+                                                            ? unreadMessageRef
+                                                            : null
+                                                    } // Focus on first unread message
+                                                />
+                                            ) : (
+                                                <MessageLeft
+                                                    key={`unread-${index}`}
+                                                    {...msg}
+                                                    ref={
+                                                        index === 0
+                                                            ? unreadMessageRef
+                                                            : null
+                                                    } // Focus on first unread message
+                                                />
+                                            )
+                                        )}
+                                </div>
+                                {/* Chat Input for sending messages */}
                                 <ChatTextInput
                                     roomId={chatInfo?.chatId!}
                                     setMessage={setMessage}
@@ -196,7 +300,7 @@ export default function ChatRoom() {
                         </div>
                     </>
                 ) : (
-                    <>Please Coose Chat </>
+                    <>Please Choose Chat </>
                 )}
             </div>
         </div>

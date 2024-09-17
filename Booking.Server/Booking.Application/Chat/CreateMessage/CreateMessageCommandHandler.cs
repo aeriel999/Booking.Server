@@ -27,7 +27,7 @@ public class CreateMessageCommandHandler(
 		if (room == null) return Error.NotFound();
 
 		//update NumberOfUnreadMessages
-		room.NumberOfUnreadMessages += 1;
+	//	room.NumberOfUnreadMessages += 1;
 
 		await chatRoomRepository.UpdateChatRoomAsync(room);
 

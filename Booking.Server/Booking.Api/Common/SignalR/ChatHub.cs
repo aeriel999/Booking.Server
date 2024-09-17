@@ -81,7 +81,7 @@ namespace Booking.Api.Common.SignalR
 		}
 
 		//Create  and save new message in Db. Send new message 
-		public async Task<string> SendMessage(InputMessage message)
+		public async Task SendMessage(InputMessage message)
 		{
 			var userId = Context.User!.Claims.FirstOrDefault(
 			u => u.Type == ClaimTypes.NameIdentifier)!.Value;
@@ -92,9 +92,8 @@ namespace Booking.Api.Common.SignalR
 
 			//send message in real time
 			await Clients.GroupExcept(message.RoomId.ToString(), new[] { Context.ConnectionId })
-				.SendAsync("send_message", message.Message);
-
-			return message.Message;
+				.SendAsync("send_message", message);
+			 
 		}
 
 		public Task SendPrivateMessage(string user, string message)

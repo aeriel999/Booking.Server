@@ -21,7 +21,7 @@ public class ChatRoom
 
 	public ICollection<UserMessage>? UserMessages { get; set; }
 
-	public required int NumberOfUnreadMessages { get; set; }
+//	public required int NumberOfUnreadMessages { get; set; }
 
 
 	[ForeignKey(nameof(ClientId))]

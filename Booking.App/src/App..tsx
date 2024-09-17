@@ -41,6 +41,12 @@ import { RealtorPageForClient } from "./containers/client/RealtorPageForClient/R
 import { PageOfMessages } from "./containers/client/PageOfMessages/PageOfMessages.tsx";
 import { connection } from "./SignalR/index.ts";
 import * as signalR from "@microsoft/signalr";
+import {
+   
+    setNewMessage,
+    
+} from "./store/chat/chat.slice.ts";
+import { ISendMessage } from "./interfaces/chat/index.ts";
 import { addNewMessageInGeneralCount, updateListOfChatIdForListening } from "./store/chat/chat.slice.ts";
 import PageOfPost from "./containers/client/PageOfPost/PageOfPost.tsx";
 
@@ -62,30 +68,39 @@ export const App: React.FC = () => {
         }
     };
 
-    const startConnection = async () => {
+    const setMessageTest = (msg: ISendMessage) => {
+        dispatch(setNewMessage(msg));
+    };
+
+    const startConnectionWithSignalR = async () => {
         if (connection.state === signalR.HubConnectionState.Disconnected) {
             await connection
                 .start()
                 .then(async () => {
                     if (listOfPostIdForListening) {
-                        await connectionForRealtorToSignalR(listOfPostIdForListening);
+                        await listeningAllPostChanelForRealtorToSignalR(
+                            listOfPostIdForListening
+                        );
                     }
                     if (listOfChatsIdForListening) {
-
+                        await listeningAllChats(listOfChatsIdForListening);
                     }
-
                 })
                 .catch((err) => console.error("Connection failed: ", err));
         }
         connection.onreconnected(async () => {
             if (listOfPostIdForListening) {
-                await connectionForRealtorToSignalR(listOfPostIdForListening);
+                await listeningAllPostChanelForRealtorToSignalR(
+                    listOfPostIdForListening
+                );
             }
         });
     };
 
     // //Connection for listening chanels for all posts and new chatrooms
-    const connectionForRealtorToSignalR = async (list: string[]) => {
+    const listeningAllPostChanelForRealtorToSignalR = async (
+        list: string[]
+    ) => {
         if (connection.state === signalR.HubConnectionState.Connected) {
             await Promise.all(list.map((id) => startListeningPost(id)));
         }
@@ -121,8 +136,52 @@ export const App: React.FC = () => {
         }
     };
 
+    const listeningAllChats = async (list: string[]) => {
+        if (connection.state === signalR.HubConnectionState.Connected) {
+            await Promise.all(list.map((id) => startListeningChat(id)));
+        }
+    };
+
+    const startListeningChat = async (roomId: string) => {
+        if (connection.state === signalR.HubConnectionState.Connected) {
+            await connection
+                .invoke("JoinRoomForListening", { roomId })
+                .then(() => {
+                    console.log("JoinRoomForListening", roomId);
+
+                    // Remove any previous listener before adding a new one
+                    connection.off("send_message");
+
+                    // Add the new listener
+                    connection.on("send_message", (m) => {
+                        console.log("send_message", m);
+                        // console.log("roomId", roomId);
+                        setMessageTest(m);
+                    });
+                });
+        } else {
+            await connection.start().then(() => {
+                connection
+                .invoke("JoinRoomForListening", { roomId })
+                .then(() => {
+                    console.log("JoinRoomForListening", roomId);
+
+                    // Remove any previous listener before adding a new one
+                    connection.off("send_message");
+
+                    // Add the new listener
+                    connection.on("send_message", (m) => {
+                        console.log("send_message", m);
+                        // console.log("roomId", roomId);
+                        setMessageTest(m);
+                    });
+                });
+            });
+        }
+    };
+
     if (isLogin) {
-        startConnection();
+        startConnectionWithSignalR();
     }
 
     return (

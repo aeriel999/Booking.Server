@@ -1,7 +1,4 @@
 import { APP_ENV } from "../env";
-//import { useAppDispatch } from "../hooks/redux/index.ts";
-//import { IChatMessageInfo } from "../interfaces/chat/index.ts";
-//import { savePostIdForChat } from "../store/settings/settings.slice.ts";
 import { getLocalStorage } from "../utils/storage/localStorageUtils.ts";
 import * as signalR from "@microsoft/signalr";
 
@@ -45,7 +42,6 @@ export const startListeningPost = async (roomId: string) => {
     }
 };
 
-
 //end connection
 export const endListening = () =>
     connection.stop().then(() => {
@@ -59,7 +55,6 @@ export const endListening = () =>
 //             console.log("currentRoom",currentRoom);
 
 //         });
-
 
 //
 // export const joinForPostListening = (roomId: string) => connection.invoke("JoinRoomForListening", {roomId})

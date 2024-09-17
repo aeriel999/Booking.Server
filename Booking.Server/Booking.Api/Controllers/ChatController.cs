@@ -1,5 +1,6 @@
 ﻿using Booking.Api.Contracts.Chat.ChatRoomForClient;
 using Booking.Api.Contracts.Chat.CreateChat;
+using Booking.Api.Contracts.Chat.GetChatMessageInfo;
 using Booking.Api.Contracts.Chat.GetListOfChatsByPostInfoForRealtor;
 using Booking.Api.Contracts.Chat.GetListOfPostInfoForChatsForRealtor;
 using Booking.Api.Contracts.Post.GetCities;
@@ -11,7 +12,9 @@ using Booking.Application.Chat.GetChatRoomsList;
 using Booking.Application.Chat.GetChatRoomsListForClient;
 using Booking.Application.Chat.GetListOfChatsByPostInfoForRealtor;
 using Booking.Application.Chat.GetListOfPostInfoForChatsForRealtor;
+using Booking.Application.Chat.GetMessageListByChatId;
 using Booking.Application.Chat.GetNumberOfUnleastMessages;
+using Booking.Application.Chat.SetMessagesReadtByChatId;
 using Booking.Application.Posts.GetListOfFeedbackForRealtor;
 using Booking.Application.Posts.GetPostIdListForRealtor;
 using MapsterMapper;
@@ -87,7 +90,7 @@ public class ChatController(ISender mediatr, IMapper mapper) : ApiController
 	}
 
 	[HttpGet("get-chat-id-list")]
-	public async Task<IActionResult> GetChatIdListAsync()
+	public async Task<IActionResult> GetChatIdListForListeningAsync()
 	{
 		var userId = User.Claims.First(u => u.Type == ClaimTypes.NameIdentifier).Value;
 		var useRole = User.Claims.First(u => u.Type == ClaimTypes.Role).Value;
@@ -143,6 +146,8 @@ public class ChatController(ISender mediatr, IMapper mapper) : ApiController
                 chatIsExist),
             errors => Problem(errors));
     }
+
+
     [HttpGet("get-chat-room-by-id")]
     public async Task<IActionResult> GetChatRoomByIdAsync([FromQuery] Guid chatRoomId)
     {
@@ -156,4 +161,32 @@ public class ChatController(ISender mediatr, IMapper mapper) : ApiController
                 mapper.Map<ChatRoomForClientResponse>(getChatRoomById)),
             errors => Problem(errors));
     }
+
+
+	[HttpGet("get-message-list-by-chatId")]
+	public async Task<IActionResult> GetMessageListByChatIdAsync([FromQuery] Guid chatRoomId)
+	{
+		var userId = User.Claims.First(u => u.Type == ClaimTypes.NameIdentifier).Value;
+
+		var getMessageListByChatIdResult = await mediatr.Send(
+			new GetMessageListByChatIdQuery(chatRoomId, Guid.Parse(userId)));
+
+		return getMessageListByChatIdResult.Match(
+			getMessageListByChatIdResult => Ok(
+				mapper.Map<List<GetChatMessageInfoResponse>>(getMessageListByChatIdResult)),
+			errors => Problem(errors));
+	}
+
+	[HttpGet("set-messages-read-by-chatId")]
+	public async Task<IActionResult> SetMessagesReadtByChatIdAsync([FromQuery] Guid chatRoomId)
+	{
+		var userId = User.Claims.First(u => u.Type == ClaimTypes.NameIdentifier).Value;
+
+		var setMessagesReadtByChatIdResult = await mediatr.Send(
+			new SetMessagesReadtByChatIdCommand(chatRoomId, Guid.Parse(userId)));
+
+		return setMessagesReadtByChatIdResult.Match(
+			setMessagesReadtByChatIdResult => Ok(),
+			errors => Problem(errors));
+	}
 }
