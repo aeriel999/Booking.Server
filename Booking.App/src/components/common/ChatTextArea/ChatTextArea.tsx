@@ -37,9 +37,8 @@ export const ChatTextArea = (info: IChatTextArea) => {
             {
                 text: data.message,
                 userId: user!.id,
-                isUnread: true,
-                date: new Date(),
-                sendAt: new Date().toDateString()
+                isUnread: false,
+                date: new Date()
             }
         ]);
     };

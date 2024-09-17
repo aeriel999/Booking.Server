@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { ChatTextArea } from '../../../components/common/ChatTextArea/ChatTextArea';
 import '../../../css/ChatRoom/index.scss';
 import { Message } from '../Message/Message';
@@ -10,28 +10,44 @@ import { connection } from '../../../SignalR';
 import { IChatMessageInfo } from '../../../interfaces/chat';
 import * as signalR from "@microsoft/signalr";
 import { APP_ENV } from '../../../env';
+import { Status } from '../../../utils/enum';
+import { Loading } from '../../../components/common/Loading/Loading';
 interface IChatRoom {
-    /*postImage: string,
-    postName: string,
-    realtorAvatar: string,
-    realtorName: string*/
     chatRoomId: string | null
 }
 
 export const ChatRoom = (info: IChatRoom) => {
     const dispatch = useAppDispatch();
     const chatRoom = useSelector((state: RootState) => state.chat.chatRoomInfoForClient);
+    const status = useSelector((state: RootState) => state.chat.status);
     const user = useSelector((state: RootState) => state.account.user);
     const [messages, setMessages] = useState<IChatMessageInfo[]>([]);
 
+    const messagesRef = useRef<HTMLDivElement>(null);
+
+    const getChatRoom = async () => {
+        if (info.chatRoomId) {
+            await dispatch(getChatRoomById((info.chatRoomId)));
+            //dispatch(changeLoaderIsLoading(true));
+        }
+    }
     useEffect(() => {
-        if (info.chatRoomId)
-            dispatch(getChatRoomById((info.chatRoomId)));
+        getChatRoom();
     }, [info.chatRoomId])
+
+    useEffect(() => {
+        if (messagesRef.current != null) {
+            messagesRef.current!.scrollTop = messagesRef.current!.scrollHeight;
+            console.log("messages- ", messages)
+        }
+
+    }, [messages.length])
 
     useEffect(() => {
         if (info.chatRoomId && chatRoom)
             startListeningPost(info.chatRoomId)
+
+
     }, [chatRoom])
     const startListeningPost = async (roomId: string) => {
         if (connection.state === signalR.HubConnectionState.Connected) {
@@ -70,6 +86,7 @@ export const ChatRoom = (info: IChatRoom) => {
 
     return (
         <div id="chat-room">
+            {status == Status.LOADING ? <Loading /> : ""}
             {
                 chatRoom != null && info.chatRoomId != null ? <>
                     <div className="chat-room-header">
@@ -83,12 +100,12 @@ export const ChatRoom = (info: IChatRoom) => {
                         </div>
                     </div>
                     <div className='chat-room-messages'>
-                        <div className='messages'>
+                        <div className='messages' ref={messagesRef}>
                             {messages.length > 0 ? messages.map((item) =>
                                 <Message
                                     text={item.text}
                                     myMessage={user?.id === item.userId ? true : false}
-                                    date={new Date(item.date)}
+                                    date={new Date(item.date!)}
                                     isRead={item.isUnread}
                                 />) : ""}
 
@@ -99,7 +116,11 @@ export const ChatRoom = (info: IChatRoom) => {
                     </div>
                 </>
                     :
-                    ""
+                    <div className='choose-chat'>
+                        <p>
+                            Choose a chat to communicate
+                        </p>
+                    </div>
             }
 
         </div>

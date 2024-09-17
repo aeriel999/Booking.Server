@@ -5,25 +5,16 @@ import { AppDispatch, RootState } from '../../../store';
 import { useAppSelector } from '../../../hooks/redux';
 import { useEffect, useState } from 'react';
 import { getListOfChatRoomsForClient } from '../../../store/chat/chat.action';
-import { IChatRoom, IUserMessage } from '../../../interfaces/chat';
-
-import { styled } from "@mui/system";
-import Paper from "@mui/material/Paper";
-import { Avatar, Button } from "@mui/material";
-import { MessageLeft, MessageRight } from "../../../components/chat/Message";
-import { ChatTextInput } from "../../../components/chat/ChatTextInput";
-import UAvatar from "../../../assets/Templates/Rectangle-50.webp";
-import { deepOrange } from "@mui/material/colors";
 import "../../../css/DashBoardRealtorClasses/index.scss";
 import { ChatRoom } from '../ChatRoom/ChatRoom';
+import { Loading } from '../../../components/common/Loading/Loading';
 
 
 
 
 export const PageOfMessages = () => {
 
-    const listOfChatRoomsForClient = useAppSelector((state: RootState) => state.chat.charRoomsForClient);
-    const { user } = useAppSelector((state) => state.account);
+    const listOfChatRoomsForClient = useAppSelector((state: RootState) => state.chat.chatRoomsForClient);
     const savedChatRoom = useAppSelector((state) => state.settings.savedPostIdForChat);
     const dispatch = useDispatch<AppDispatch>();
 
@@ -38,31 +29,37 @@ export const PageOfMessages = () => {
         getChats();
     }, [])
     useEffect(() => {
+
+        console.log(listOfChatRoomsForClient)
+    }, [listOfChatRoomsForClient])
+    useEffect(() => {
         if (savedChatRoom?.length != 0) {
             console.log(savedChatRoom);
             setChatRoomId(savedChatRoom);
+            //dispatch(savePostIdForChat(""));
         }
     }, [savedChatRoom])
     return (
         <div className="page-of-messages-container">
             <div className='first-container'>
-                <div className="chat-list" >
-                    {listOfChatRoomsForClient ?
-                        listOfChatRoomsForClient.$values.map((item) => (
+                {listOfChatRoomsForClient ?
+                    <div className="chat-list" >
+
+                        {listOfChatRoomsForClient.map((item) => (
                             <ChatListItem
                                 countOfUnreadMessages={item.unreadMessages}
                                 chatItem={
                                     {
                                         name: item.realtorName,
                                         avatar: item.realtorAvatar,
-                                        chats: item.chatsForClient
+                                        chats: item.chatsForClient.$values!
                                     }
                                 }
                                 changeChatRoom={setChatRoomId}
                             />
-                        )) : ""}
-                </div>
-
+                        ))}
+                    </div>
+                    : <Loading />}
             </div>
             <ChatRoom
                 chatRoomId={chatRoomId} />

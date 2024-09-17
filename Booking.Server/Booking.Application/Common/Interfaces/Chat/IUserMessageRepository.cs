@@ -11,4 +11,5 @@ public interface IUserMessageRepository
 
 
 	Task<List<UserMessage>> GetUserMessagesByChatRoomIdAsync(Guid chatRoomId);
+	Task ReadMessagesByChatRoomIdAsync(Guid chatRoomId, Guid userId);
 }
