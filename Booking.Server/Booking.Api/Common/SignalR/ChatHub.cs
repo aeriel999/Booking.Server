@@ -88,6 +88,7 @@ namespace Booking.Api.Common.SignalR
 			//send message in real time
 			await Clients.GroupExcept(message.RoomId.ToString(), new[] { Context.ConnectionId })
 				.SendAsync("send_message", message);
+			 
 		}
 
 		public Task SendPrivateMessage(string user, string message)

@@ -2,7 +2,10 @@
 
 public record GetChatMessageInfoResponse
 {
-    public required Guid UserId { get; set; }
+	public required Guid Id { get; set; }
+
+
+	public required Guid UserId { get; set; }
 
 
 	public required string SentAt { get; set; }

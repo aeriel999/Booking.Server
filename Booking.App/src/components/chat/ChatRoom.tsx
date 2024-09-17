@@ -10,7 +10,7 @@ import { ChatPostList } from "./ChatPostList";
 import Trash from "../../assets/DashboardIcons/mdi_trash-outline.svg";
 import { useDispatch } from "react-redux";
 import { AppDispatch } from "../../store";
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import ErrorHandler from "../common/ErrorHandler";
 import {
     getListOfPostInfoForChatsForRealtor,
@@ -36,9 +36,15 @@ export default function ChatRoom() {
     );
     const [postChatList, setPostChatList] = useState<IChatItem[]>([]);
     const [chatInfo, setChatInfo] = useState<IChatInfo | null>(null);
-    const [messages, setMessages] = useState<IChatMessageInfo[]>([]);
+    const [readMessages, setReadMessages] = useState<IChatMessageInfo[]>([]);
+    const [unreadMessages, setUnreadMessages] = useState<IChatMessageInfo[]>(
+        []
+    );
     const [message, setMessage] = useState<IChatMessageInfo>();
     const { newMessage } = useAppSelector((state) => state.chat);
+    const unreadMessageRef = useRef<HTMLDivElement | null>(null);
+   
+      
 
     const getChatList = async () => {
         try {
@@ -77,9 +83,19 @@ export default function ChatRoom() {
         if (chatInfo?.chatId) {
             dispatch(setChatRoomId(chatInfo?.chatId));
             getMessageList(chatInfo?.chatId).then((data) => {
-                console.log("data", data);
                 if (data?.payload) {
-                    setMessages(data?.payload.$values);
+                    const readMessages = data?.payload.$values.filter(
+                        (message: IChatMessageInfo) => message.isRead
+                    );
+
+                    // Filter for unread messages
+                    const unreadMessages = data?.payload.$values.filter(
+                        (message: IChatMessageInfo) => !message.isRead
+                    );
+
+                    // Update state for read and unread messages
+                    setReadMessages(readMessages);
+                    setUnreadMessages(unreadMessages);
                 }
             });
         }
@@ -95,10 +111,24 @@ export default function ChatRoom() {
             userId: user?.id!,
         };
 
-        const newMessageList: IChatMessageInfo[] = [...messages!, messageInfo];
+        const newMessageList: IChatMessageInfo[] = [
+            ...readMessages!,
+            messageInfo,
+        ];
 
-        setMessages(newMessageList);
+        setReadMessages(newMessageList);
     }, [newMessage]);
+
+    useEffect(() => {
+        if (unreadMessageRef.current) {
+            unreadMessageRef.current.scrollIntoView({
+                behavior: "smooth",
+                block: "start",
+            });
+        }
+    }, [unreadMessages]);
+
+    function handleMessageRead(): void {}
 
     return (
         <div className="chatRoom">
@@ -142,42 +172,57 @@ export default function ChatRoom() {
                                     <img src={Trash} alt="delete" />
                                 </Button>
                             </div>
-                            <div className="messageContainer">
-                                <div className="messages">
-                                    {messages && messages.length > 0 ? (
-                                        messages.map((msg, index) =>
-                                            msg && msg.userId ? (
-                                                msg.userId === user?.id ? (
-                                                    <MessageRight
-                                                        key={index}
-                                                        {...msg}
-                                                    />
-                                                ) : (
-                                                    <MessageLeft
-                                                        key={index}
-                                                        {...msg}
-                                                    />
-                                                )
-                                            ) : (
-                                                <div key={index}>
-                                                    Invalid message data
-                                                </div>
-                                            )
-                                        )
-                                    ) : (
-                                        <div>No messages available</div>
-                                    )}
-                                </div>
-                                <ChatTextInput
-                                    roomId={chatInfo?.chatId!}
-                                    setMessage={setMessage}
-                                    userId={user?.id!}
-                                />
-                            </div>
+                            <div className="messageContainer" onClick={handleMessageRead}>
+            <div className="messages">
+                {/* Display Read Messages */}
+                {readMessages && readMessages.length > 0 ? (
+                    readMessages.map((msg, index) =>
+                        msg.userId === user?.id ? (
+                            <MessageRight key={`read-${index}`} {...msg} />
+                        ) : (
+                            <MessageLeft key={`read-${index}`} {...msg} />
+                        )
+                    )
+                ) : (
+                    <div>No read messages available</div>
+                )}
+
+                {/* Separator Line Between Read and Unread Messages */}
+                {unreadMessages && unreadMessages.length > 0 && <hr className="messageSeparator" />}
+
+                {/* Display Unread Messages */}
+                {unreadMessages && unreadMessages.length > 0 && (
+                    unreadMessages.map((msg, index) =>
+                        msg.userId === user?.id ? (
+                            <MessageRight
+                                key={`unread-${index}`}
+                                {...msg}
+                               // isUnread={true}
+                                ref={index === 0 ? unreadMessageRef : null} // Focus on first unread message
+                            />
+                        ) : (
+                            <MessageLeft
+                                key={`unread-${index}`}
+                                {...msg}
+                              //  isUnread={true}
+                                ref={index === 0 ? unreadMessageRef : null} // Focus on first unread message
+                            />
+                        )
+                    )
+                )}
+            </div>
+
+            {/* Chat Input for sending messages */}
+            <ChatTextInput
+                roomId={chatInfo?.chatId!}
+                setMessage={setMessage}
+                userId={user?.id!}
+            />
+        </div>
                         </div>
                     </>
                 ) : (
-                    <>Please Coose Chat </>
+                    <>Please Choose Chat </>
                 )}
             </div>
         </div>

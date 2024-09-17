@@ -101,6 +101,7 @@ export interface IChatInfo {
 }
 
 export interface IChatMessageInfo {
+    id?: string;
     userId: string;
     sentAt?: string;
     text: string;

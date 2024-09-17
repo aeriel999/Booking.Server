@@ -23,14 +23,13 @@ public class ChatMapping : IRegister
 			.Map(desp => desp.NumberOfUnreadMessages,
 		src => src.ChatRooms!.Sum(c => c.UserMessages!.Count(m => !m.IsRead && m.UserId != src.UserId)));
 
-
-
 		config.NewConfig<List<Post>, List<GetListOfPostInfoForChatsForRealtorResponse>>();
 
 
 		config.NewConfig<(Guid UserId, CreateChatRequest request), GetListOfChatsByPostInfoForRealtorQuery>()
 			 .Map(desp => desp.UserId, src => src.UserId)
 			 .Map(dest => dest, src => src.request);
+
 
 		config.NewConfig<ChatRoom, GetListOfChatsByPostInfoForRealtorResponse>()
 		   .Map(desp => desp.Id, src => src.ChatRoomId)
@@ -43,6 +42,7 @@ public class ChatMapping : IRegister
 
 
 		config.NewConfig<UserMessage, GetChatMessageInfoResponse>()
+			.Map(desp => desp.Id, src => src.Id)
 		   .Map(desp => desp.UserId, src => src.UserId)
 		   .Map(desp => desp.SentAt, src => src.SentAt.ToUniversalTime().ToString("R"))
 		   .Map(desp => desp.Text, src => src.Message)

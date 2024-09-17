@@ -162,4 +162,15 @@ public class ChatRoomRepository(BookingDbContext context) : IChatRoomRepository
 			.CountAsync(m => !m.IsRead);
 	}
 
+
+	public async Task<List<UserMessage>> GetListOfUnreadMessagesAsync(Guid chatRoomId)
+	{
+		return await _dbSet
+			.Where(c => c.ChatRoomId == chatRoomId)
+			.Include(c => c.UserMessages)
+			.SelectMany(c => c.UserMessages!)                       
+			.Where(m => !m.IsRead)                                 
+			.ToListAsync();                                        
+	}
+
 }

@@ -157,21 +157,23 @@ export const App: React.FC = () => {
                     });
                 });
         } else {
-            // await connection.start().then(() => {
-            //     connection
-            //         .invoke("JoinRoomForListening", { roomId })
-            //         .then(async (data) => {
-            //             console.log("roomId", roomId);
-            //             //   setMessages(data);
-            //             // Remove any previous listener before adding a new one
-            //             connection.off("send_message");
-            //             // Add the new listener
-            //             connection.on("send_message", async (m) => {
-            //                 console.log("send_message", m);
-            //                 // setMessages(m)
-            //             });
-            //         });
-            // });
+            await connection.start().then(() => {
+                connection
+                .invoke("JoinRoomForListening", { roomId })
+                .then(() => {
+                    console.log("JoinRoomForListening", roomId);
+
+                    // Remove any previous listener before adding a new one
+                    connection.off("send_message");
+
+                    // Add the new listener
+                    connection.on("send_message", (m) => {
+                        console.log("send_message", m);
+                        // console.log("roomId", roomId);
+                        setMessageTest(m);
+                    });
+                });
+            });
         }
     };
 
