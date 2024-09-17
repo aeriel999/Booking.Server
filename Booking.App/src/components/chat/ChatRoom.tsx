@@ -14,7 +14,8 @@ import { useEffect, useRef, useState } from "react";
 import ErrorHandler from "../common/ErrorHandler";
 import {
     getListOfPostInfoForChatsForRealtor,
-    пetMessageListByChatId,
+    getMessageListByChatId,
+    setMessagesReadtByChatI,
 } from "../../store/chat/chat.action";
 import { unwrapResult } from "@reduxjs/toolkit";
 import { APP_ENV } from "../../env";
@@ -43,8 +44,6 @@ export default function ChatRoom() {
     const [message, setMessage] = useState<IChatMessageInfo>();
     const { newMessage } = useAppSelector((state) => state.chat);
     const unreadMessageRef = useRef<HTMLDivElement | null>(null);
-   
-      
 
     const getChatList = async () => {
         try {
@@ -60,10 +59,12 @@ export default function ChatRoom() {
 
     const getMessageList = async (roomId: string) => {
         try {
-            const response = await dispatch(пetMessageListByChatId(roomId));
+            const response = await dispatch(getMessageListByChatId(roomId));
             unwrapResult(response);
             return response;
-        } catch (error) {}
+        } catch (error) {
+            setErrorMessage(ErrorHandler(error));
+        }
     };
 
     useEffect(() => {
@@ -128,11 +129,71 @@ export default function ChatRoom() {
         }
     }, [unreadMessages]);
 
-    function handleMessageRead(): void {}
+    // Function to move all unread messages to the read messages list
+    async function handleMessageRead(): Promise<void> {
+        if (chatInfo?.chatId && unreadMessages.length > 0) {
+            try {
+                const response = await dispatch(
+                    setMessagesReadtByChatI(chatInfo?.chatId)
+                );
+                unwrapResult(response);
+            } catch (error) {
+                setErrorMessage(ErrorHandler(error));
+            }
+
+
+            ////Not work  in testing now
+
+            const numberOfUnreadMessage = unreadMessages.length;
+
+            console.log("numberOfUnreadMessage", numberOfUnreadMessage);
+
+            // Mark all unread messages as read
+            const updatedUnreadMessages = unreadMessages.map((msg) => ({
+                ...msg,
+                isRead: true,
+            }));
+
+            console.log("updatedUnreadMessages", updatedUnreadMessages);
+
+            // Add the unread messages to the read messages list
+            setReadMessages((prevReadMessages) => [
+                ...prevReadMessages,
+                ...updatedUnreadMessages,
+            ]);
+
+            console.log("setReadMessages", readMessages);
+
+            // Clear the unread messages list
+            setUnreadMessages([]);
+
+            console.log("before setPostChatList", postChatList);
+
+            setPostChatList((prevPostChatList) =>
+                prevPostChatList.map((chat) => {
+                    // Assuming the chat ID can be used to identify the specific chat
+                    if (chat.id === chatInfo?.chatId) {
+                        return {
+                            ...chat,
+                            numberOfUnreadMessages: Math.max(
+                                chat.numberOfUnreadMessages! -
+                                    numberOfUnreadMessage,
+                                0
+                            ),
+                        };
+                    }
+                    return chat; // Return other chats unchanged
+                })
+            );
+
+            console.log("setPostChatList", postChatList);
+        }
+    }
 
     return (
         <div className="chatRoom">
             <div className="chatList">
+                {/* ChatPostList */}
                 {postChatList &&
                     postChatList.map((item, id) => (
                         <ChatPostList
@@ -147,8 +208,8 @@ export default function ChatRoom() {
                         />
                     ))}
             </div>
-
             <div className="chatContainer">
+                {/* Chat Header */}
                 {chatInfo !== null ? (
                     <>
                         <div className="chatGroupName">
@@ -172,53 +233,70 @@ export default function ChatRoom() {
                                     <img src={Trash} alt="delete" />
                                 </Button>
                             </div>
-                            <div className="messageContainer" onClick={handleMessageRead}>
-            <div className="messages">
-                {/* Display Read Messages */}
-                {readMessages && readMessages.length > 0 ? (
-                    readMessages.map((msg, index) =>
-                        msg.userId === user?.id ? (
-                            <MessageRight key={`read-${index}`} {...msg} />
-                        ) : (
-                            <MessageLeft key={`read-${index}`} {...msg} />
-                        )
-                    )
-                ) : (
-                    <div>No read messages available</div>
-                )}
+                            <div
+                                className="messageContainer"
+                                onClick={handleMessageRead}
+                            >
+                                <div className="messages">
+                                    {/* Display Read Messages */}
+                                    {readMessages && readMessages.length > 0 ? (
+                                        readMessages.map((msg, index) =>
+                                            msg.userId === user?.id ? (
+                                                <MessageRight
+                                                    key={`read-${index}`}
+                                                    {...msg}
+                                                />
+                                            ) : (
+                                                <MessageLeft
+                                                    key={`read-${index}`}
+                                                    {...msg}
+                                                />
+                                            )
+                                        )
+                                    ) : (
+                                        <div>No read messages available</div>
+                                    )}
 
-                {/* Separator Line Between Read and Unread Messages */}
-                {unreadMessages && unreadMessages.length > 0 && <hr className="messageSeparator" />}
+                                    {/* Separator Line Between Read and Unread Messages */}
+                                    {unreadMessages &&
+                                        unreadMessages.length > 0 && (
+                                            <hr className="messageSeparator" />
+                                        )}
 
-                {/* Display Unread Messages */}
-                {unreadMessages && unreadMessages.length > 0 && (
-                    unreadMessages.map((msg, index) =>
-                        msg.userId === user?.id ? (
-                            <MessageRight
-                                key={`unread-${index}`}
-                                {...msg}
-                               // isUnread={true}
-                                ref={index === 0 ? unreadMessageRef : null} // Focus on first unread message
-                            />
-                        ) : (
-                            <MessageLeft
-                                key={`unread-${index}`}
-                                {...msg}
-                              //  isUnread={true}
-                                ref={index === 0 ? unreadMessageRef : null} // Focus on first unread message
-                            />
-                        )
-                    )
-                )}
-            </div>
-
-            {/* Chat Input for sending messages */}
-            <ChatTextInput
-                roomId={chatInfo?.chatId!}
-                setMessage={setMessage}
-                userId={user?.id!}
-            />
-        </div>
+                                    {/* Display Unread Messages */}
+                                    {unreadMessages &&
+                                        unreadMessages.length > 0 &&
+                                        unreadMessages.map((msg, index) =>
+                                            msg.userId === user?.id ? (
+                                                <MessageRight
+                                                    key={`unread-${index}`}
+                                                    {...msg}
+                                                    ref={
+                                                        index === 0
+                                                            ? unreadMessageRef
+                                                            : null
+                                                    } // Focus on first unread message
+                                                />
+                                            ) : (
+                                                <MessageLeft
+                                                    key={`unread-${index}`}
+                                                    {...msg}
+                                                    ref={
+                                                        index === 0
+                                                            ? unreadMessageRef
+                                                            : null
+                                                    } // Focus on first unread message
+                                                />
+                                            )
+                                        )}
+                                </div>
+                                {/* Chat Input for sending messages */}
+                                <ChatTextInput
+                                    roomId={chatInfo?.chatId!}
+                                    setMessage={setMessage}
+                                    userId={user?.id!}
+                                />
+                            </div>
                         </div>
                     </>
                 ) : (

@@ -57,5 +57,5 @@ public interface IChatRoomRepository
 	Task<int> GetNumberOfUnreadMessagesAsync(Guid realtorId);
 
 
-	Task<List<UserMessage>> GetListOfUnreadMessagesAsync(Guid chatRoomId);
+	Task<List<UserMessage>> GetListOfUnreadMessagesByChatIdAsync(Guid chatRoomId);
 }

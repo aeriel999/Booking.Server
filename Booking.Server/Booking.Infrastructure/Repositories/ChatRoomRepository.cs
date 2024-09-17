@@ -163,7 +163,7 @@ public class ChatRoomRepository(BookingDbContext context) : IChatRoomRepository
 	}
 
 
-	public async Task<List<UserMessage>> GetListOfUnreadMessagesAsync(Guid chatRoomId)
+	public async Task<List<UserMessage>> GetListOfUnreadMessagesByChatIdAsync(Guid chatRoomId)
 	{
 		return await _dbSet
 			.Where(c => c.ChatRoomId == chatRoomId)

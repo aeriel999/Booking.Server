@@ -18,7 +18,7 @@ public class SetMessagesReadtByChatIdCommandHandler(
 			return Error.NotFound("User is not found");
 
 		//get list of unread messages
-		var unreadMessagesList = await chatRoomRepository.GetListOfUnreadMessagesAsync(request.UserId);
+		var unreadMessagesList = await chatRoomRepository.GetListOfUnreadMessagesByChatIdAsync(request.ChatId);
 
 		if (unreadMessagesList != null)
 		{

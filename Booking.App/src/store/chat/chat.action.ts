@@ -120,12 +120,29 @@ export const getChatRoomById = createAsyncThunk(
     }
 );
 
-export const пetMessageListByChatId = createAsyncThunk(
+export const getMessageListByChatId = createAsyncThunk(
     "chat/get-message-list-by-chatId",
     async (chatRoomId: string, { rejectWithValue }) => {
         try {
             const response = await apiClient.get(
                 `/api/Chat/get-message-list-by-chatId`,
+                {
+                    params: { chatRoomId },
+                }
+            );
+            return response.data;
+        } catch (error) {
+            return rejectWithValue(handleAxiosError(error, "Network error"));
+        }
+    }
+);
+
+export const setMessagesReadtByChatI = createAsyncThunk(
+    "chat/set-messages-read-by-chatId",
+    async (chatRoomId: string, { rejectWithValue }) => {
+        try {
+            const response = await apiClient.get(
+                `/api/Chat/set-messages-read-by-chatId`,
                 {
                     params: { chatRoomId },
                 }
