@@ -3,20 +3,18 @@ import { useAppDispatch, useAppSelector } from "../../../hooks/redux";
 import { useEffect, useState } from "react";
 import {
     changePasswordResolver,
-    createPasswordResolver,
     editClientProfileResolver
 } from "../../../validations/account";
-import { IResetPassword } from "../../../interfaces/account";
-import { checkPasswordIsNotNull, editUserProfile, forgotPassword, resetPassword } from "../../../store/accounts/account.actions.ts";
+import { checkPasswordIsNotNull, editUserProfile, forgotPassword } from "../../../store/accounts/account.actions.ts";
 import { unwrapResult } from "@reduxjs/toolkit";
 import ErrorHandler from "../../../components/common/ErrorHandler.ts";
 import { useNavigate } from "react-router-dom";
 import OutlinedErrorAlert from "../../../components/common/ErrorAlert.tsx";
 import CustomizedDialogs from "../../..//components/common/Dialog.tsx";
-import "../../../css/DashBoardAnonymousClasses/index.scss";
+//import "../../../css/DashBoardAnonymousClasses/index.scss";
 import { useForm } from "react-hook-form";
 import InputField from "../../../components/common/InputField.tsx";
-import { IChangePassword, ICreatePassword, IEditClientProfile } from "../../../interfaces/user/index.ts";
+import { IChangePassword, IEditClientProfile } from "../../../interfaces/user/index.ts";
 import { changePassword } from "../../../store/users/user.action.ts";
 import { logout } from "../../../store/accounts/account.slice.ts";
 import { changeDashboardMenuItem } from "../../../store/settings/settings.slice.ts";
@@ -24,9 +22,7 @@ import { Status } from "../../../utils/enum/index.ts";
 import { Loading } from "../../../components/common/Loading/Loading.tsx";
 
 export const ClientProfileEditPage = () => {
-    const { user, isUserHasPassword, token } = useAppSelector((state) => state.account);
-    //const isUserHasPassword = useAppSelector((state) => state.account.isUserHasPassword);
-    //const isUserHasPassword = useAppSelector((state) => state.account.isUserHasPassword);
+    const { user, isUserHasPassword } = useAppSelector((state) => state.account);
     const status = useAppSelector((state) => state.account.status)
     const dispatch = useAppDispatch();
     const [errorMessage, setErrorMessage] = useState<string | undefined>(
@@ -52,12 +48,6 @@ export const ClientProfileEditPage = () => {
         setValue: setValuePassword,
     } = useForm<IChangePassword>({ resolver: changePasswordResolver });
 
-    const {
-        register: registerCreatePassword,
-        handleSubmit: handleSubmitCreatePassword,
-        formState: { errors: errorsCreatePassword },
-        setValue: setValueCreatePassword,
-    } = useForm<ICreatePassword>({ resolver: createPasswordResolver });
 
     useEffect(() => {
         dispatch(checkPasswordIsNotNull());
@@ -67,14 +57,6 @@ export const ClientProfileEditPage = () => {
     }, [isUserHasPassword])
 
     const onProfileDataSubmit = async (data: IEditClientProfile) => {
-        /*if (!isPhoneValid) {
-            return;
-        }
-
-        const model: IEditRealtorInfo = {
-            ...data,
-            phoneNumber: phone,
-        };*/
 
         try {
             const response = await dispatch(editUserProfile(data));
@@ -108,14 +90,6 @@ export const ClientProfileEditPage = () => {
 
     const onCreatePassword = async () => {
         try {
-            /*var requestData: IResetPassword = {
-                token: token!,
-                email: user?.email!,
-                password: data.password,
-                confirmPassword: data.confirmPassword
-            }
-            console.log(requestData);*/
-            //const response = await dispatch(resetPassword(requestData));
             const response = await dispatch(forgotPassword({ email: user?.email! }));
             dispatch(logout());
             unwrapResult(response);
@@ -139,7 +113,7 @@ export const ClientProfileEditPage = () => {
                         textColor="#000"
                     /></div>}
 
-            <div className="twoColumnsContainer">
+            <div className="twoColumnsContainer" style={{ position: "relative" }}>
                 {status == Status.LOADING ? <Loading /> : <>
                     {open && (
                         <CustomizedDialogs

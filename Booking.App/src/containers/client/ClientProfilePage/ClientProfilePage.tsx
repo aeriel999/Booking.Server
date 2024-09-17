@@ -4,8 +4,6 @@ import { useEffect, useState } from "react";
 import HeaderImg from "../../../assets/Templates/Rectangle-50.webp";
 import Upload from "../../../assets/DashboardIcons/camera-01.svg";
 import HeaderUpload from "../../../assets/DashboardIcons/mdi_pencil-outline.svg";
-import Edit from "../../../assets/DashboardIcons/Icon.svg";
-import Lock from "../../../assets/DashboardIcons/lock-02.svg";
 import { AvatarValidator } from "../../../validations/account";
 import OutlinedErrorAlert from "../../../components/common/ErrorAlert";
 import {
@@ -15,12 +13,10 @@ import {
 import { IReloadAvatar, IReloadImage } from "../../../interfaces/account";
 import { unwrapResult } from "@reduxjs/toolkit";
 import ErrorHandler from "../../../components/common/ErrorHandler";
-import { useNavigate } from "react-router-dom";
 import "../../../css/ClientProfilePageClasses/index.scss";
 
 // APP
 export default function RealtorProfilePage() {
-    const navigate = useNavigate();
     const { user } = useAppSelector((state) => state.account);
     const [avatarUrl, setAvatarUrl] = useState<string>();
     // const navigate = useNavigate();
@@ -166,24 +162,7 @@ export default function RealtorProfilePage() {
                             <div className="value">{user?.email}</div>
                         </div>
                     </div>
-                    <div id="buttons">
-                        <button
-                            className="button colorButton"
-                            onClick={() => navigate("/dashboard/profile/edit")}
-                        >
-                            <img src={Edit} alt="Edit" />
-                            <p>Edit Profile</p>
-                        </button>
-                        <button
-                            className="button witeButton"
-                            onClick={() =>
-                                navigate("/dashboard/profile/change-password")
-                            }
-                        >
-                            <img src={Lock} alt="Edit" />
-                            <p>Change Password</p>
-                        </button>
-                    </div>
+
                 </div>
             </div>
         </div>

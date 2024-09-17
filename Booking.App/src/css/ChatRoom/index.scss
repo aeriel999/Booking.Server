@@ -10,6 +10,7 @@
     flex-direction: column;
     border-radius: 10px;
     border: 1px solid #6C6C6C;
+    position: relative;
 
     .chat-room-header {
         width: 100%;
@@ -89,7 +90,23 @@
 
         .send-message {
             height: 20%;
-            margin-top: 10px;
+
+            margin-top: auto;
         }
+    }
+
+    .choose-chat {
+        height: 100%;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+
+        p {
+            font-style: $primary-font-normal-style;
+            line-height: normal;
+            font-size: $extra-large-font-size;
+            font-weight: $bold-font-weight;
+        }
+
     }
 }

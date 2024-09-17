@@ -1,7 +1,11 @@
 import { APP_ENV } from "../env";
-import { IChatMessageInfo } from "../interfaces/chat/index.ts";
+//import { useAppDispatch } from "../hooks/redux/index.ts";
+//import { IChatMessageInfo } from "../interfaces/chat/index.ts";
+//import { savePostIdForChat } from "../store/settings/settings.slice.ts";
 import { getLocalStorage } from "../utils/storage/localStorageUtils.ts";
 import * as signalR from "@microsoft/signalr";
+
+
 
 //Connection build
 export const connection = new signalR.HubConnectionBuilder()
@@ -13,19 +17,21 @@ export const connection = new signalR.HubConnectionBuilder()
 
 //create new chatRoom and choin it for listening
 export const joinNewPostChatByUser = async (roomId: string) => {
+    //const dispatch = useAppDispatch();
     if (connection.state === signalR.HubConnectionState.Connected) {
-        await connection
+        return await connection
             .invoke("JoinNewPostChatByUser", { roomId })
             .then((history) => {
                 console.log("JoinNewPostChatByUser history", history);
+                return history;
             });
     }
 };
- 
+
 export const startListeningPost = async (roomId: string) => {
     if (connection.state === signalR.HubConnectionState.Connected) {
         await connection
-            .invoke("JoinRoomForListening", {roomId})
+            .invoke("JoinRoomForListening", { roomId })
             .then(async () => {
                 console.log("roomId", roomId);
                 // Remove any previous listener before adding a new one
@@ -33,7 +39,7 @@ export const startListeningPost = async (roomId: string) => {
                 // Add the new listener
                 connection.on("send_message", async (m) => {
                     console.log("send_message", m);
-                  //  props.setMessages(m)
+                    //  props.setMessages(m)
                 });
             });
     }

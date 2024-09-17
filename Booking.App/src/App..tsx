@@ -22,7 +22,6 @@ import AnonymousDashboardLayout from "./containers/anonymous/layouts/AnonymousDa
 import ChatRoom from "./components/chat/ChatRoom.tsx";
 import AllPostList from "./containers/dashboard/AllPostList.tsx";
 import { EditPost } from "./containers/dashboard/EditPost.tsx";
-import { PostOfPage } from "./containers/client/PostOfPage/PostOfPage.tsx";
 import RealtorPage from "./containers/client/RealtorPage.tsx";
 //import { EditUserEpailPage } from "./containers/client/EditUserEmailPage.tsx";
 import ArchivePage from "./containers/dashboard/ArchivePage.tsx";
@@ -43,8 +42,9 @@ import { PageOfMessages } from "./containers/client/PageOfMessages/PageOfMessage
 import { connection } from "./SignalR/index.ts";
 import * as signalR from "@microsoft/signalr";
 import { addNewMessageInGeneralCount, updateListOfChatIdForListening } from "./store/chat/chat.slice.ts";
+import PageOfPost from "./containers/client/PageOfPost/PageOfPost.tsx";
 
- 
+
 
 export const App: React.FC = () => {
     const { isLogin, user } = useAppSelector((state) => state.account);
@@ -70,7 +70,7 @@ export const App: React.FC = () => {
                     if (listOfPostIdForListening) {
                         await connectionForRealtorToSignalR(listOfPostIdForListening);
                     }
-                    if(listOfChatsIdForListening){
+                    if (listOfChatsIdForListening) {
 
                     }
 
@@ -83,14 +83,14 @@ export const App: React.FC = () => {
             }
         });
     };
-    
+
     // //Connection for listening chanels for all posts and new chatrooms
     const connectionForRealtorToSignalR = async (list: string[]) => {
         if (connection.state === signalR.HubConnectionState.Connected) {
             await Promise.all(list.map((id) => startListeningPost(id)));
         }
     };
-    
+
     const startListeningPost = async (roomId: string) => {
         if (connection.state === signalR.HubConnectionState.Connected) {
             await connection
@@ -107,22 +107,22 @@ export const App: React.FC = () => {
                 });
         }
     };
-    
+
     //join new chatRooms
     const joinForChatListening = async (roomId: string) => {
         if (connection.state === signalR.HubConnectionState.Connected) {
             await connection
                 .invoke("JoinNewChanelOrNewChatRoomForListening", { roomId })
-                .then( () => {
-                     console.log("send_notify",  roomId);
-                      dispatch(addNewMessageInGeneralCount());
-                      dispatch(updateListOfChatIdForListening(roomId));
+                .then(() => {
+                    console.log("send_notify", roomId);
+                    dispatch(addNewMessageInGeneralCount());
+                    dispatch(updateListOfChatIdForListening(roomId));
                 });
         }
     };
-    
+
     if (isLogin) {
-       // startConnection();
+        startConnection();
     }
 
     return (
@@ -194,7 +194,7 @@ export const App: React.FC = () => {
                                 <Route index element={<ListOfPostPage />} />
                                 <Route
                                     path="/dashboard/post/:postId"
-                                    element={<PostOfPage />}
+                                    element={<PageOfPost />}
                                 />
                                 <Route
                                     path="/dashboard/post/:postId/realtor/:realtorId"
@@ -232,7 +232,7 @@ export const App: React.FC = () => {
                     }
                 />
 
-                <Route path="post/:postId" element={<PostOfPage />} />
+                <Route path="post/:postId" element={<PageOfPost />} />
                 <Route
                     path="post/:postId/realtor/:realtorId"
                     element={<RealtorPage />}
@@ -262,7 +262,7 @@ export const App: React.FC = () => {
 
             <Route path="/posts" element={<AnonymousDashboardLayoutForPosts />}>
                 <Route index element={<ListOfPostsPage />} />
-                <Route path="post/:postId" element={<PostOfPage />} />
+                <Route path="post/:postId" element={<PageOfPost />} />
                 <Route
                     path="realtor/:realtorId"
                     element={<RealtorPageForClient />}

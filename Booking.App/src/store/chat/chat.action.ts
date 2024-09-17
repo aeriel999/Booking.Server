@@ -23,7 +23,7 @@ export const getListOfChatRoomsForClient = createAsyncThunk(
             const response = await apiClient.get(
                 "/api/Chat/get-chat-list-for-client"
             );
-            return response.data;
+            return response.data.$values;
         } catch (error) {
             console.log("response error", error);
 
