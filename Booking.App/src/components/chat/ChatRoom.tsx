@@ -42,8 +42,13 @@ export default function ChatRoom() {
         []
     );
     const [message, setMessage] = useState<IChatMessageInfo>();
+    const [clientMessages, setClientMessages] = useState<IChatMessageInfo[]>(
+        []
+    );
     const { newMessage } = useAppSelector((state) => state.chat);
     const unreadMessageRef = useRef<HTMLDivElement | null>(null);
+    const newMessageRef = useRef<HTMLDivElement | null>(null); // Ref for new message
+    const lastReadMessageRef = useRef<HTMLDivElement | null>(null); // Ref for last read message
 
     const getChatList = async () => {
         try {
@@ -68,6 +73,7 @@ export default function ChatRoom() {
     };
 
     useEffect(() => {
+        console.log("LOAD POSTLIST");
         getChatList().then((data) => {
             console.log("(data?.payload", data?.payload.$values);
             if (data?.payload.$values) {
@@ -81,7 +87,10 @@ export default function ChatRoom() {
     }
 
     useEffect(() => {
+        console.log("LOAD MSGS");
+
         if (chatInfo?.chatId) {
+            setClientMessages([]);
             dispatch(setChatRoomId(chatInfo?.chatId));
             getMessageList(chatInfo?.chatId).then((data) => {
                 if (data?.payload) {
@@ -103,34 +112,63 @@ export default function ChatRoom() {
     }, [chatInfo]);
 
     useEffect(() => {
-        console.log("send_message use", newMessage);
+        if (newMessage) {
+            console.log("Set user MSG IF", newMessage);
 
-        const messageInfo: IChatMessageInfo = {
-            sentAt: new Date().toUTCString(),
-            text: newMessage!,
-            isRead: false,
-            userId: user?.id!,
-        };
+            const messageInfo: IChatMessageInfo = {
+                sentAt: new Date().toUTCString(),
+                text: newMessage!,
+                isRead: false,
+                userId: "",
+            };
 
-        const newMessageList: IChatMessageInfo[] = [
-            ...readMessages!,
-            messageInfo,
-        ];
-
-        setReadMessages(newMessageList);
+            setClientMessages((clientMessages) => [
+                ...clientMessages, // Spread the previous state
+                messageInfo, // Add the new message to the array
+            ]);
+        }
     }, [newMessage]);
 
     useEffect(() => {
-        if (unreadMessageRef.current) {
+        console.log("My MSG", message);
+
+        if (message) {
+            console.log("My MSG IF", message);
+
+            const newMessageList: IChatMessageInfo[] = [
+                ...readMessages!,
+                message,
+            ];
+
+            setReadMessages(newMessageList);
+        }
+    }, [message]);
+
+    useEffect(() => {
+        if (unreadMessages.length > 0 && unreadMessageRef.current) {
+            // Scroll to the first unread message
             unreadMessageRef.current.scrollIntoView({
                 behavior: "smooth",
                 block: "start",
             });
+        } else if (newMessageRef.current) {
+            // If no unread messages, scroll to the latest message
+            newMessageRef.current.scrollIntoView({
+                behavior: "smooth",
+                block: "end", // Scroll to the end where the new message appears
+            });
+        } else if (lastReadMessageRef.current) {
+            // Scroll to the last read message if no unread or new messages
+            lastReadMessageRef.current.scrollIntoView({
+                behavior: "smooth",
+                block: "end",
+            });
         }
-    }, [unreadMessages]);
+    }, [unreadMessages, clientMessages, readMessages]);
 
     // Function to move all unread messages to the read messages list
     async function handleMessageRead(): Promise<void> {
+        console.log("unreadMessages.length", unreadMessages.length);
         if (chatInfo?.chatId && unreadMessages.length > 0) {
             try {
                 const response = await dispatch(
@@ -141,12 +179,11 @@ export default function ChatRoom() {
                 setErrorMessage(ErrorHandler(error));
             }
 
-
             ////Not work  in testing now
 
             const numberOfUnreadMessage = unreadMessages.length;
 
-            console.log("numberOfUnreadMessage", numberOfUnreadMessage);
+            //  console.log("numberOfUnreadMessage", numberOfUnreadMessage);
 
             // Mark all unread messages as read
             const updatedUnreadMessages = unreadMessages.map((msg) => ({
@@ -154,7 +191,7 @@ export default function ChatRoom() {
                 isRead: true,
             }));
 
-            console.log("updatedUnreadMessages", updatedUnreadMessages);
+            //  console.log("updatedUnreadMessages", updatedUnreadMessages);
 
             // Add the unread messages to the read messages list
             setReadMessages((prevReadMessages) => [
@@ -162,12 +199,12 @@ export default function ChatRoom() {
                 ...updatedUnreadMessages,
             ]);
 
-            console.log("setReadMessages", readMessages);
+            // console.log("setReadMessages", readMessages);
 
             // Clear the unread messages list
             setUnreadMessages([]);
 
-            console.log("before setPostChatList", postChatList);
+            //   console.log("before setPostChatList", postChatList);
 
             setPostChatList((prevPostChatList) =>
                 prevPostChatList.map((chat) => {
@@ -186,7 +223,18 @@ export default function ChatRoom() {
                 })
             );
 
-            console.log("setPostChatList", postChatList);
+            //  console.log("setPostChatList", postChatList);
+        }
+        if (clientMessages && clientMessages.length > 0) {
+            const updatedUnreadMessages = clientMessages.map((msg) => ({
+                ...msg,
+                isRead: true,
+            }));
+            setReadMessages((prevReadMessages) => [
+                ...prevReadMessages,
+                ...updatedUnreadMessages,
+            ]);
+            setClientMessages([]);
         }
     }
 
@@ -245,11 +293,23 @@ export default function ChatRoom() {
                                                 <MessageRight
                                                     key={`read-${index}`}
                                                     {...msg}
+                                                    ref={
+                                                        index ===
+                                                        readMessages.length - 1
+                                                            ? lastReadMessageRef
+                                                            : null
+                                                    } // Focus on last read message
                                                 />
                                             ) : (
                                                 <MessageLeft
                                                     key={`read-${index}`}
                                                     {...msg}
+                                                    ref={
+                                                        index ===
+                                                        readMessages.length - 1
+                                                            ? lastReadMessageRef
+                                                            : null
+                                                    } // Focus on last read message
                                                 />
                                             )
                                         )
@@ -266,29 +326,31 @@ export default function ChatRoom() {
                                     {/* Display Unread Messages */}
                                     {unreadMessages &&
                                         unreadMessages.length > 0 &&
-                                        unreadMessages.map((msg, index) =>
-                                            msg.userId === user?.id ? (
-                                                <MessageRight
-                                                    key={`unread-${index}`}
-                                                    {...msg}
-                                                    ref={
-                                                        index === 0
-                                                            ? unreadMessageRef
-                                                            : null
-                                                    } // Focus on first unread message
-                                                />
-                                            ) : (
-                                                <MessageLeft
-                                                    key={`unread-${index}`}
-                                                    {...msg}
-                                                    ref={
-                                                        index === 0
-                                                            ? unreadMessageRef
-                                                            : null
-                                                    } // Focus on first unread message
-                                                />
-                                            )
-                                        )}
+                                        unreadMessages.map((msg, index) => (
+                                            <MessageLeft
+                                                key={`unread-${index}`}
+                                                {...msg}
+                                                ref={
+                                                    index === 0
+                                                        ? unreadMessageRef
+                                                        : null
+                                                } // Focus on first unread message
+                                            />
+                                        ))}
+                                    {/* Display New Message */}
+                                    {clientMessages &&
+                                        clientMessages.length > 0 &&
+                                        clientMessages.map((msg, index) => (
+                                            <MessageLeft
+                                                key={`unread-${index}`}
+                                                {...msg}
+                                                ref={
+                                                    index === 0
+                                                        ? newMessageRef
+                                                        : null
+                                                } // Focus on first unread message
+                                            />
+                                        ))}
                                 </div>
                                 {/* Chat Input for sending messages */}
                                 <ChatTextInput
