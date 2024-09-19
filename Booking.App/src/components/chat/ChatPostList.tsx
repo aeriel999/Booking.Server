@@ -1,7 +1,7 @@
 import chewronTop from "../../assets/Icons/chevron-top.svg";
 import chewronDown from "../../assets/Icons/chevron-down.svg";
 import "../../css/DashBoardAnonymousClasses/index.scss";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { IChatInfo, IChatItem, IChatMessageInfo } from "../../interfaces/chat";
 import { useAppDispatch } from "../../hooks/redux";
 import { getListOfChatsByPostInfoForRealtor } from "../../store/chat/chat.action";
@@ -15,6 +15,8 @@ export const ChatPostList = (info: IChatItem) => {
         undefined
     );
     const [chatList, setChatList] = useState<IChatItem[]>([]);
+    // const [newNumberOfUnreadMessage, setNewNumberOfUnreadMessage] =
+    //     useState<number>(info.numberOfUnreadMessages);
 
     const getChatList = async (postId: string) => {
         try {
@@ -33,6 +35,12 @@ export const ChatPostList = (info: IChatItem) => {
             setChatList(data);
         });
     }
+
+    // useEffect(() => {
+    //     if (info.newNumberOfUnreadMessage) {
+    //         setNewNumberOfUnreadMessage(info.newNumberOfUnreadMessage);
+    //     }
+    // }, [info.newNumberOfUnreadMessage]);
 
     return (
         <div className="chatMainItem">
@@ -79,7 +87,8 @@ export const ChatPostList = (info: IChatItem) => {
                                 postName: info.name,
                                 userAvatar: item.image,
                                 userName: item.name,
-                                chatMessages: null
+                                chatMessages: null,
+                                numberOfUnreadMessages: item.numberOfUnreadMessages,
                             };
 
                             info.setChatInfo(chatInfo);

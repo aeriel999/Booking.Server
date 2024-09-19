@@ -81,7 +81,8 @@ export default function SignInPage() {
             //Get number of new messages
            const getNumberOfUnleastMessagesResult = await dispatch(getNumberOfUnleastMessages());
            unwrapResult(getNumberOfUnleastMessagesResult);
-
+        console.log("getNumberOfUnleastMessagesResult", getNumberOfUnleastMessagesResult)
+            
              //Get list of Id for listening posts
            const getPostIdListForListeningChatsByRealtorResult =  
                                 await dispatch(getPostIdListForListeningChatsByRealtor());

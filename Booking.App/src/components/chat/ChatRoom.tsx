@@ -29,7 +29,6 @@ const StyledAvatar = styled(Avatar)({
 });
 
 export default function ChatRoom() {
-    //  const { roomId } = useParams();
     const { user } = useAppSelector((state) => state.account);
     const dispatch = useDispatch<AppDispatch>();
     const [errorMessage, setErrorMessage] = useState<string | undefined>(
@@ -37,18 +36,17 @@ export default function ChatRoom() {
     );
     const [postChatList, setPostChatList] = useState<IChatItem[]>([]);
     const [chatInfo, setChatInfo] = useState<IChatInfo | null>(null);
-    const [readMessages, setReadMessages] = useState<IChatMessageInfo[]>([]);
-    const [unreadMessages, setUnreadMessages] = useState<IChatMessageInfo[]>(
-        []
-    );
+    const [messages, setMessages] = useState<IChatMessageInfo[]>([]);
     const [message, setMessage] = useState<IChatMessageInfo>();
-    const [clientMessages, setClientMessages] = useState<IChatMessageInfo[]>(
-        []
-    );
     const { newMessage } = useAppSelector((state) => state.chat);
-    const unreadMessageRef = useRef<HTMLDivElement | null>(null);
-    const newMessageRef = useRef<HTMLDivElement | null>(null); // Ref for new message
-    const lastReadMessageRef = useRef<HTMLDivElement | null>(null); // Ref for last read message
+    const messageEndRef = useRef<HTMLDivElement>(null);
+
+    // Function to scroll to the bottom of the message list
+    const scrollToBottom = () => {
+        if (messageEndRef.current) {
+            messageEndRef.current.scrollIntoView({ behavior: "smooth" });
+        }
+    };
 
     const getChatList = async () => {
         try {
@@ -72,49 +70,44 @@ export default function ChatRoom() {
         }
     };
 
-    useEffect(() => {
-        console.log("LOAD POSTLIST");
-        getChatList().then((data) => {
-            console.log("(data?.payload", data?.payload.$values);
-            if (data?.payload.$values) {
-                setPostChatList(data.payload.$values);
-            }
-        });
-    }, []);
-
     function deleteChat(): void {
         throw new Error("Function not implemented.");
     }
 
     useEffect(() => {
-        console.log("LOAD MSGS");
+        getChatList().then((data) => {
+            if (data?.payload.$values) {
+                setPostChatList(data.payload.$values);
+                console.log("setPostChatList", data.payload.$values);
+            }
+        });
+    }, []);
 
+    useEffect(() => {
         if (chatInfo?.chatId) {
-            setClientMessages([]);
             dispatch(setChatRoomId(chatInfo?.chatId));
             getMessageList(chatInfo?.chatId).then((data) => {
                 if (data?.payload) {
-                    const readMessages = data?.payload.$values.filter(
-                        (message: IChatMessageInfo) => message.isRead
+                    const sortedMessages = data.payload.$values.sort(
+                        (a: IChatMessageInfo, b: IChatMessageInfo) =>
+                            new Date(a.sentAt!).getTime() -
+                            new Date(b.sentAt!).getTime()
                     );
 
-                    // Filter for unread messages
-                    const unreadMessages = data?.payload.$values.filter(
-                        (message: IChatMessageInfo) => !message.isRead
-                    );
-
-                    // Update state for read and unread messages
-                    setReadMessages(readMessages);
-                    setUnreadMessages(unreadMessages);
+                    setMessages(sortedMessages); // Set the sorted messages
                 }
             });
         }
     }, [chatInfo]);
 
     useEffect(() => {
-        if (newMessage) {
-            console.log("Set user MSG IF", newMessage);
+        if (messages.length > 0) {
+            scrollToBottom();
+        }
+    }, [messages]);
 
+    useEffect(() => {
+        if (newMessage) {
             const messageInfo: IChatMessageInfo = {
                 sentAt: new Date().toUTCString(),
                 text: newMessage!,
@@ -122,119 +115,43 @@ export default function ChatRoom() {
                 userId: "",
             };
 
-            setClientMessages((clientMessages) => [
-                ...clientMessages, // Spread the previous state
+            setMessages((messages) => [
+                ...messages, // Spread the previous state
                 messageInfo, // Add the new message to the array
             ]);
         }
     }, [newMessage]);
 
     useEffect(() => {
-        console.log("My MSG", message);
-
         if (message) {
-            console.log("My MSG IF", message);
+            const newMessageList: IChatMessageInfo[] = [...messages!, message];
 
-            const newMessageList: IChatMessageInfo[] = [
-                ...readMessages!,
-                message,
-            ];
-
-            setReadMessages(newMessageList);
+            setMessages(newMessageList);
         }
     }, [message]);
 
-    useEffect(() => {
-        if (unreadMessages.length > 0 && unreadMessageRef.current) {
-            // Scroll to the first unread message
-            unreadMessageRef.current.scrollIntoView({
-                behavior: "smooth",
-                block: "start",
-            });
-        } else if (newMessageRef.current) {
-            // If no unread messages, scroll to the latest message
-            newMessageRef.current.scrollIntoView({
-                behavior: "smooth",
-                block: "end", // Scroll to the end where the new message appears
-            });
-        } else if (lastReadMessageRef.current) {
-            // Scroll to the last read message if no unread or new messages
-            lastReadMessageRef.current.scrollIntoView({
-                behavior: "smooth",
-                block: "end",
-            });
-        }
-    }, [unreadMessages, clientMessages, readMessages]);
-
     // Function to move all unread messages to the read messages list
     async function handleMessageRead(): Promise<void> {
-        console.log("unreadMessages.length", unreadMessages.length);
-        if (chatInfo?.chatId && unreadMessages.length > 0) {
+        console.log("handleMessageRead");
+        if (chatInfo?.chatId  && chatInfo?.numberOfUnreadMessages! > 0) {
+            console.log("handleMessageRead IF");
+
             try {
                 const response = await dispatch(
                     setMessagesReadtByChatI(chatInfo?.chatId)
                 );
                 unwrapResult(response);
+
+                setMessages((prevMessages) =>
+                    prevMessages.map((msg) =>
+                        msg.userId !== user?.id && !msg.isRead
+                            ? { ...msg, isRead: true } // Mark unread incoming messages as read
+                            : msg
+                    )
+                );
             } catch (error) {
                 setErrorMessage(ErrorHandler(error));
             }
-
-            ////Not work  in testing now
-
-            const numberOfUnreadMessage = unreadMessages.length;
-
-            //  console.log("numberOfUnreadMessage", numberOfUnreadMessage);
-
-            // Mark all unread messages as read
-            const updatedUnreadMessages = unreadMessages.map((msg) => ({
-                ...msg,
-                isRead: true,
-            }));
-
-            //  console.log("updatedUnreadMessages", updatedUnreadMessages);
-
-            // Add the unread messages to the read messages list
-            setReadMessages((prevReadMessages) => [
-                ...prevReadMessages,
-                ...updatedUnreadMessages,
-            ]);
-
-            // console.log("setReadMessages", readMessages);
-
-            // Clear the unread messages list
-            setUnreadMessages([]);
-
-            //   console.log("before setPostChatList", postChatList);
-
-            setPostChatList((prevPostChatList) =>
-                prevPostChatList.map((chat) => {
-                    // Assuming the chat ID can be used to identify the specific chat
-                    if (chat.id === chatInfo?.chatId) {
-                        return {
-                            ...chat,
-                            numberOfUnreadMessages: Math.max(
-                                chat.numberOfUnreadMessages! -
-                                    numberOfUnreadMessage,
-                                0
-                            ),
-                        };
-                    }
-                    return chat; // Return other chats unchanged
-                })
-            );
-
-            //  console.log("setPostChatList", postChatList);
-        }
-        if (clientMessages && clientMessages.length > 0) {
-            const updatedUnreadMessages = clientMessages.map((msg) => ({
-                ...msg,
-                isRead: true,
-            }));
-            setReadMessages((prevReadMessages) => [
-                ...prevReadMessages,
-                ...updatedUnreadMessages,
-            ]);
-            setClientMessages([]);
         }
     }
 
@@ -251,7 +168,9 @@ export default function ChatRoom() {
                             image={
                                 APP_ENV.BASE_URL + "/images/posts/" + item.image
                             }
-                            numberOfUnreadMessages={item.numberOfUnreadMessages}
+                            numberOfUnreadMessages={
+                                item.numberOfUnreadMessages!
+                            }
                             setChatInfo={setChatInfo}
                         />
                     ))}
@@ -287,70 +206,24 @@ export default function ChatRoom() {
                             >
                                 <div className="messages">
                                     {/* Display Read Messages */}
-                                    {readMessages && readMessages.length > 0 ? (
-                                        readMessages.map((msg, index) =>
+                                    {messages && messages.length > 0 ? (
+                                        messages.map((msg, index) =>
                                             msg.userId === user?.id ? (
                                                 <MessageRight
                                                     key={`read-${index}`}
                                                     {...msg}
-                                                    ref={
-                                                        index ===
-                                                        readMessages.length - 1
-                                                            ? lastReadMessageRef
-                                                            : null
-                                                    } // Focus on last read message
                                                 />
                                             ) : (
                                                 <MessageLeft
                                                     key={`read-${index}`}
                                                     {...msg}
-                                                    ref={
-                                                        index ===
-                                                        readMessages.length - 1
-                                                            ? lastReadMessageRef
-                                                            : null
-                                                    } // Focus on last read message
                                                 />
                                             )
                                         )
                                     ) : (
                                         <div>No read messages available</div>
                                     )}
-
-                                    {/* Separator Line Between Read and Unread Messages */}
-                                    {unreadMessages &&
-                                        unreadMessages.length > 0 && (
-                                            <hr className="messageSeparator" />
-                                        )}
-
-                                    {/* Display Unread Messages */}
-                                    {unreadMessages &&
-                                        unreadMessages.length > 0 &&
-                                        unreadMessages.map((msg, index) => (
-                                            <MessageLeft
-                                                key={`unread-${index}`}
-                                                {...msg}
-                                                ref={
-                                                    index === 0
-                                                        ? unreadMessageRef
-                                                        : null
-                                                } // Focus on first unread message
-                                            />
-                                        ))}
-                                    {/* Display New Message */}
-                                    {clientMessages &&
-                                        clientMessages.length > 0 &&
-                                        clientMessages.map((msg, index) => (
-                                            <MessageLeft
-                                                key={`unread-${index}`}
-                                                {...msg}
-                                                ref={
-                                                    index === 0
-                                                        ? newMessageRef
-                                                        : null
-                                                } // Focus on first unread message
-                                            />
-                                        ))}
+                                    <div id="Ref" ref={messageEndRef} />
                                 </div>
                                 {/* Chat Input for sending messages */}
                                 <ChatTextInput
@@ -368,3 +241,14 @@ export default function ChatRoom() {
         </div>
     );
 }
+
+// const unreadMessageRef = useRef<HTMLDivElement | null>(null);
+// const newMessageRef = useRef<HTMLDivElement | null>(null); // Ref for new message
+// const lastReadMessageRef = useRef<HTMLDivElement | null>(null); // Ref for last read message
+// const [clientMessages, setClientMessages] = useState<IChatMessageInfo[]>(
+//     []
+// );
+// const [readMessages, setReadMessages] = useState<IChatMessageInfo[]>([]);
+// const [unreadMessages, setUnreadMessages] = useState<IChatMessageInfo[]>(
+//     []
+// );

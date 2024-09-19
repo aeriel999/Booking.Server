@@ -70,8 +70,8 @@ export interface IChatRoomListForClient {
     hasUnreadMessages: boolean;
     unreadMessages: number | null;
     chatsForClient: {
-        $values: IChatRoomForClient[]
-    }
+        $values: IChatRoomForClient[];
+    };
 }
 
 export interface IChatRoomForClient {
@@ -86,8 +86,10 @@ export interface IChatItem {
     id: string;
     name: string;
     image: string;
-    numberOfUnreadMessages: number | null;
+    numberOfUnreadMessages: number;
     setChatInfo: (arg: IChatInfo) => void;
+  //  setNewNumberOfUnreadMessage?: (arg: number) => void;
+    newNumberOfUnreadMessage?: number | null;
 }
 
 export interface IChatInfo {
@@ -97,6 +99,7 @@ export interface IChatInfo {
     userAvatar: string;
     userName: string;
     chatMessages: IChatMessageInfo[] | null;
+    numberOfUnreadMessages: number | null;
 }
 
 export interface IChatMessageInfo {
@@ -104,7 +107,6 @@ export interface IChatMessageInfo {
     userId: string;
     sentAt?: string;
     text: string;
-   // isUnread: boolean;
     date?: Date;
     isRead: boolean;
 }
