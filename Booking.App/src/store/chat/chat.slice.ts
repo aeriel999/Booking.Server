@@ -1,7 +1,7 @@
 import { AnyAction, createSlice, PayloadAction } from "@reduxjs/toolkit";
 import { RejectedAction } from "../../utils/types";
 import { Status } from "../../utils/enum";
-import { IChatState, ISendMessage } from "../../interfaces/chat";
+import { IChatState, IGetMessage, ISendMessage } from "../../interfaces/chat";
 import {
     getChatIdList,
     getChatRoomById,
@@ -34,9 +34,9 @@ const initialState: IChatState = {
         "generalNumberOfUnreadMessages"
     )
         ? parseInt(
-              getLocalStorage("generalNumberOfUnreadMessages") as string,
-              10
-          )
+            getLocalStorage("generalNumberOfUnreadMessages") as string,
+            10
+        )
         : 0,
     listOfPostIdForListening: getListFromLocalStorage(
         "updateListOfIdForListening"
@@ -48,6 +48,7 @@ const initialState: IChatState = {
     currentChatRoomId: null,
     newMessage: null,
     isCuretnChatReaded: false,
+    getingMessageInfo: null
 };
 
 export const chatSlice = createSlice({
@@ -64,9 +65,12 @@ export const chatSlice = createSlice({
                 state.generalNumberOfUnreadMessages.toString()
             );
         },
-        addNewMessageInGeneralCount: (state: IChatState) => {
+        deleteNumberOfMessageFromGeneralCount: (
+            state: IChatState,
+            action: PayloadAction<number>
+        ) => {
             state.generalNumberOfUnreadMessages =
-                state.generalNumberOfUnreadMessages + 1;
+                state.generalNumberOfUnreadMessages - action.payload;
             addLocalStorage(
                 "generalNumberOfUnreadMessages",
                 state.generalNumberOfUnreadMessages.toString()
@@ -106,11 +110,21 @@ export const chatSlice = createSlice({
         },
         setNewMessage: (
             state: IChatState,
-            action: PayloadAction<ISendMessage>
+            action: PayloadAction<IGetMessage>
         ) => {
-            if (state.currentChatRoomId === action.payload.roomId) {
+            state.generalNumberOfUnreadMessages =
+                state.generalNumberOfUnreadMessages + 1;
+                
+            addLocalStorage(
+                "generalNumberOfUnreadMessages",
+                state.generalNumberOfUnreadMessages.toString()
+            );
+
+            if (state.currentChatRoomId === action.payload.chatRoomId) {
                 state.newMessage = action.payload.message;
             }
+
+            state.getingMessageInfo = action.payload;
         },
     },
     extraReducers: (builder) => {
@@ -213,10 +227,10 @@ export const chatSlice = createSlice({
 export const {
     changeGeneralNumberOfUnreadMessages,
     updateListOfPostIdForListening,
-    addNewMessageInGeneralCount,
     updateListOfChatIdForListening,
     setChatRoomId,
     setNewMessage,
     setIsCuretnChatReaded,
+    deleteNumberOfMessageFromGeneralCount,
 } = chatSlice.actions;
 export default chatSlice.reducer;

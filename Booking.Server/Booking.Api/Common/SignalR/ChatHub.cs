@@ -4,6 +4,7 @@ using Booking.Api.Contracts.Chat.GetChatMessageInfo;
 using Booking.Application.Chat.CheckChatForClientIsExist;
 using Booking.Application.Chat.CreateChat;
 using Booking.Application.Chat.CreateMessage;
+using Booking.Application.Chat.GetNewMessageInfo;
 using Booking.Application.Common.Interfaces.Chat;
 using Booking.Domain.Chat;
 using Booking.Domain.Posts;
@@ -19,6 +20,7 @@ namespace Booking.Api.Common.SignalR
 	[Authorize]
 	public class ChatHub(
 	IUserMessageRepository userMessageRepository, 
+	IChatRoomRepository chatRoomRepository,
 	IMapper mapper,
 	ISender mediatr) : Hub
 	{
@@ -90,10 +92,22 @@ namespace Booking.Api.Common.SignalR
 			var saveUserMessageResult = await mediatr.Send(mapper.Map<CreateMessageCommand>(
 				(message, Guid.Parse(userId))));
 
+			//Get Chatroom
+			var chatRoom = await chatRoomRepository.GetChatRoomByIdAsync(message.RoomId);
+
+			if (chatRoom == null) return;
+
+			//Make sendMessageResponse
+			var sendMessageResponse = new GetNewMessageInfoResponse()
+			{
+				ChatRoomId = message.RoomId,
+				Message = message.Message,
+				PostId = chatRoom.PostId,
+			};
+
 			//send message in real time
 			await Clients.GroupExcept(message.RoomId.ToString(), new[] { Context.ConnectionId })
-				.SendAsync("send_message", message);
-			 
+				.SendAsync("send_message", sendMessageResponse);
 		}
 
 		public Task SendPrivateMessage(string user, string message)

@@ -20,9 +20,9 @@ import {
 import { unwrapResult } from "@reduxjs/toolkit";
 import { APP_ENV } from "../../env";
 import {
+    deleteNumberOfMessageFromGeneralCount,
     setChatRoomId,
     setIsCuretnChatReaded,
-    
 } from "../../store/chat/chat.slice";
 
 const StyledAvatar = styled(Avatar)({
@@ -44,8 +44,15 @@ export default function ChatRoom() {
     const [message, setMessage] = useState<IChatMessageInfo>();
     const [numberOfUnreadMessages, setMumberOfUnreadMessages] =
         useState<number>();
-    const { newMessage } = useAppSelector((state) => state.chat);
+    const { newMessage, generalNumberOfUnreadMessages, getingMessageInfo } =
+        useAppSelector((state) => state.chat);
     const messageEndRef = useRef<HTMLDivElement>(null);
+    const [openChatId, setOpenChatId] = useState<string | null>(null);
+
+    const handleChatToggle = (chatId: string) => {
+        // Toggle the chat open/close
+        setOpenChatId((prevChatId) => (prevChatId === chatId ? null : chatId));
+    };
 
     // Function to scroll to the bottom of the message list
     const scrollToBottom = () => {
@@ -87,7 +94,7 @@ export default function ChatRoom() {
                 console.log("setPostChatList", data.payload.$values);
             }
         });
-    }, []);
+    }, [, generalNumberOfUnreadMessages]);
 
     useEffect(() => {
         if (chatInfo?.chatId) {
@@ -136,6 +143,22 @@ export default function ChatRoom() {
         }
     }, [message]);
 
+    useEffect(() => {
+        if (getingMessageInfo) {
+            setPostChatList((prevPostChatList) =>
+                prevPostChatList.map((chatItem) =>
+                    chatItem.id === getingMessageInfo.postId
+                        ? {
+                              ...chatItem,
+                              numberOfUnreadMessages:
+                                  (chatItem.numberOfUnreadMessages || 0) + 1,
+                          }
+                        : chatItem
+                )
+            );
+        }
+    }, [getingMessageInfo]);
+
     // Function to move all unread messages to the read messages list
     async function handleMessageRead(): Promise<void> {
         if (chatInfo?.chatId && chatInfo?.numberOfUnreadMessages! > 0) {
@@ -161,6 +184,12 @@ export default function ChatRoom() {
                 );
 
                 dispatch(setIsCuretnChatReaded(true));
+
+                dispatch(
+                    deleteNumberOfMessageFromGeneralCount(
+                        chatInfo?.numberOfUnreadMessages!
+                    )
+                );
             } catch (error) {
                 setErrorMessage(ErrorHandler(error));
             }
@@ -184,9 +213,8 @@ export default function ChatRoom() {
                                 item.numberOfUnreadMessages!
                             }
                             setChatInfo={setChatInfo}
-                            newNumberOfUnreadMessage={
-                                item.numberOfUnreadMessages
-                            }
+                            isOpen={openChatId === item.id} // Check if the current chat should be open
+                            onChatClick={() => handleChatToggle(item.id)} // Handle opening/closing the chat
                         />
                     ))}
             </div>

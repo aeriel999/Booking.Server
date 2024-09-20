@@ -8,12 +8,11 @@ import { getListOfChatsByPostInfoForRealtor } from "../../store/chat/chat.action
 import { unwrapResult } from "@reduxjs/toolkit";
 import ErrorHandler from "../common/ErrorHandler";
 import { setIsCuretnChatReaded } from "../../store/chat/chat.slice";
- 
 
 export const ChatPostList = (info: IChatItem) => {
-    const [isOpen, setIsOpen] = useState<boolean>(false);
+    // const [isOpen, setIsOpen] = useState<boolean>(false);
     const dispatch = useAppDispatch();
-    const { isCuretnChatReaded, currentChatRoomId } =
+    const { isCuretnChatReaded, currentChatRoomId, getingMessageInfo } =
         useAppSelector((state) => state.chat);
     const [errorMessage, setErrorMessage] = useState<string | undefined>(
         undefined
@@ -43,13 +42,18 @@ export const ChatPostList = (info: IChatItem) => {
     }
 
     useEffect(() => {
+        setNumberOfUnreadMessageInAllChats(info.numberOfUnreadMessages);
+    }, [info]);
+
+    useEffect(() => {
         if (isCuretnChatReaded && currentChatRoomId) {
             // Find the current chat room's unread message count
             const currentChat = chatList.find(
                 (chatItem) => chatItem.id === currentChatRoomId
             );
-            const numberOfUnreadMessages = currentChat?.numberOfUnreadMessages || 0;
-    
+            const numberOfUnreadMessages =
+                currentChat?.numberOfUnreadMessages || 0;
+
             // Update the chat list to set the unread messages to 0 for the current chat
             setChatList((prevChatList) =>
                 prevChatList.map((chatItem) =>
@@ -58,24 +62,39 @@ export const ChatPostList = (info: IChatItem) => {
                         : chatItem
                 )
             );
-    
+
             // Update the total number of unread messages in all chats
             setNumberOfUnreadMessageInAllChats(
                 (prevTotal) => prevTotal - numberOfUnreadMessages
             );
-    
+
             // Reset the isCuretnChatReaded flag
             dispatch(setIsCuretnChatReaded(false));
         }
-    }, [isCuretnChatReaded, chatList, currentChatRoomId, dispatch]);
-    
+    }, [isCuretnChatReaded, chatList, currentChatRoomId]);
+
+    useEffect(() => {
+        if (getingMessageInfo && info.id === getingMessageInfo.postId) {
+            setChatList((prevChatList) =>
+                prevChatList.map((chatItem) =>
+                    chatItem.id === getingMessageInfo.chatRoomId    
+                        ? {
+                              ...chatItem,
+                              numberOfUnreadMessages:
+                                  (chatItem.numberOfUnreadMessages || 0) + 1,
+                          }
+                        : chatItem
+                )
+            );
+        }
+    }, [getingMessageInfo]);
 
     return (
         <div className="chatMainItem">
             <div
                 className="chatListItem"
                 onClick={() => {
-                    setIsOpen(!isOpen);
+                    info.onChatClick();
                     handleCllick(info.id);
                 }}
             >
@@ -92,14 +111,14 @@ export const ChatPostList = (info: IChatItem) => {
                 )}
                 <img
                     id="chewron"
-                    src={isOpen ? chewronTop : chewronDown}
+                    src={info.isOpen ? chewronTop : chewronDown}
                     alt=""
                 />
             </div>
             <div
                 className="chat"
                 style={{
-                    display: isOpen ? "inline-block" : "none",
+                    display: info.isOpen ? "inline-block" : "none",
                     padding: 15,
                     boxSizing: "border-box",
                 }}
@@ -122,8 +141,6 @@ export const ChatPostList = (info: IChatItem) => {
                             };
 
                             info.setChatInfo(chatInfo);
-
-                            
                         }}
                     >
                         <img id="postImage" src={item.image} alt="" />

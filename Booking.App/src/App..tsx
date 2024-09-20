@@ -7,15 +7,12 @@ import UserRegisterPage from "./pages/accaunt/register/UserRegisterPage.tsx";
 import InformationAfterConfirmationEmail from "./pages/accaunt/instruction/InformationAfterConfirmationEmail.tsx";
 import RealtorProfilePage from "./containers/dashboard/RealtorProfilePage.tsx";
 import RealtorProfileEditPage from "./containers/dashboard/RealtorProfileEditPage.tsx";
-//import ChangePasswordPage from "./containers/dashboard/ChangePasswordPage.tsx";
-//import UserProfilePage from "./containers/client/UserProfilePage.tsx";
 import RegisterInformationPage from "./pages/accaunt/register/RegisterInformationPage.tsx";
 import ConfirmEmailPage from "./pages/accaunt/confirmation/ConfirmEmailPage.tsx";
 import ForgotPasswordPage from "./pages/accaunt/forgot-password/ForgotPasswordPage.tsx";
 import ForgotPasswordInformationPage from "./pages/accaunt/forgot-password/ForgotPasswordInformationPage.tsx";
 import ResetPasswordPage from "./pages/accaunt/reset-password/ResetPasswordPage.tsx";
 import ReConfirmEmailPage from "./pages/reconfirm-email/ReConfirmEmailPage.tsx";
-//import ClientDashboardLayout from "./containers/client/layouts/_ClientDashboardLayout.tsx";
 import { AddNewPost } from "./containers/dashboard/AddNewPost.tsx";
 import ListOfPostPage from "./containers/client/ListOfPostsPage/ListOfPostsPage.tsx";
 import AnonymousDashboardLayout from "./containers/anonymous/layouts/AnonymousDashboardLayout.tsx";
@@ -23,7 +20,6 @@ import ChatRoom from "./components/chat/ChatRoom.tsx";
 import AllPostList from "./containers/dashboard/AllPostList.tsx";
 import { EditPost } from "./containers/dashboard/EditPost.tsx";
 import RealtorPage from "./containers/client/RealtorPage.tsx";
-//import { EditUserEpailPage } from "./containers/client/EditUserEmailPage.tsx";
 import ArchivePage from "./containers/dashboard/ArchivePage.tsx";
 import { ReviewsPage } from "./containers/dashboard/ReviewsPage.tsx";
 import "./App.scss";
@@ -41,16 +37,10 @@ import { RealtorPageForClient } from "./containers/client/RealtorPageForClient/R
 import { PageOfMessages } from "./containers/client/PageOfMessages/PageOfMessages.tsx";
 import { connection } from "./SignalR/index.ts";
 import * as signalR from "@microsoft/signalr";
-import {
-   
-    setNewMessage,
-    
-} from "./store/chat/chat.slice.ts";
-import { ISendMessage } from "./interfaces/chat/index.ts";
-import { addNewMessageInGeneralCount, updateListOfChatIdForListening } from "./store/chat/chat.slice.ts";
+import { setNewMessage } from "./store/chat/chat.slice.ts";
+import { IGetMessage, ISendMessage } from "./interfaces/chat/index.ts";
+import { updateListOfChatIdForListening } from "./store/chat/chat.slice.ts";
 import PageOfPost from "./containers/client/PageOfPost/PageOfPost.tsx";
-
-
 
 export const App: React.FC = () => {
     const { isLogin, user } = useAppSelector((state) => state.account);
@@ -68,8 +58,8 @@ export const App: React.FC = () => {
         }
     };
 
-    const setMessageTest = (msg: ISendMessage) => {
-        dispatch(setNewMessage(msg));
+    const setMessageInRedux = async (msg: IGetMessage) => {
+       await dispatch(setNewMessage(msg));
     };
 
     const startConnectionWithSignalR = async () => {
@@ -111,7 +101,6 @@ export const App: React.FC = () => {
             await connection
                 .invoke("JoinNewChanelOrNewChatRoomForListening", { roomId })
                 .then(async () => {
-                    console.log("roomId", roomId);
                     // Remove any previous listener before adding a new one
                     connection.off("send_notify");
                     // Add the new listener
@@ -129,13 +118,12 @@ export const App: React.FC = () => {
             await connection
                 .invoke("JoinNewChanelOrNewChatRoomForListening", { roomId })
                 .then(() => {
-                    console.log("send_notify", roomId);
-                    dispatch(addNewMessageInGeneralCount());
                     dispatch(updateListOfChatIdForListening(roomId));
                 });
         }
     };
 
+    //Join to listening chats
     const listeningAllChats = async (list: string[]) => {
         if (connection.state === signalR.HubConnectionState.Connected) {
             await Promise.all(list.map((id) => startListeningChat(id)));
@@ -147,36 +135,14 @@ export const App: React.FC = () => {
             await connection
                 .invoke("JoinRoomForListening", { roomId })
                 .then(() => {
-                    console.log("JoinRoomForListening", roomId);
-
                     // Remove any previous listener before adding a new one
                     connection.off("send_message");
 
                     // Add the new listener
-                    connection.on("send_message", (m) => {
-                        console.log("send_message", m);
-                        // console.log("roomId", roomId);
-                        setMessageTest(m);
+                    connection.on("send_message", async (m) => {
+                       await setMessageInRedux(m);
                     });
                 });
-        } else {
-            await connection.start().then(() => {
-                connection
-                .invoke("JoinRoomForListening", { roomId })
-                .then(() => {
-                    console.log("JoinRoomForListening", roomId);
-
-                    // Remove any previous listener before adding a new one
-                    connection.off("send_message");
-
-                    // Add the new listener
-                    connection.on("send_message", (m) => {
-                        console.log("send_message", m);
-                        // console.log("roomId", roomId);
-                        setMessageTest(m);
-                    });
-                });
-            });
         }
     };
 
