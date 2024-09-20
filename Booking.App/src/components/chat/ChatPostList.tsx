@@ -12,8 +12,11 @@ import { setIsCuretnChatReaded } from "../../store/chat/chat.slice";
 export const ChatPostList = (info: IChatItem) => {
     // const [isOpen, setIsOpen] = useState<boolean>(false);
     const dispatch = useAppDispatch();
-    const { isCuretnChatReaded, currentChatRoomId, getingMessageInfo } =
-        useAppSelector((state) => state.chat);
+    const {
+        isCuretnChatReaded,
+        currentChatRoomId,
+        getingMessageInfo,
+    } = useAppSelector((state) => state.chat);
     const [errorMessage, setErrorMessage] = useState<string | undefined>(
         undefined
     );
@@ -77,7 +80,7 @@ export const ChatPostList = (info: IChatItem) => {
         if (getingMessageInfo && info.id === getingMessageInfo.postId) {
             setChatList((prevChatList) =>
                 prevChatList.map((chatItem) =>
-                    chatItem.id === getingMessageInfo.chatRoomId    
+                    chatItem.id === getingMessageInfo.chatRoomId
                         ? {
                               ...chatItem,
                               numberOfUnreadMessages:
@@ -88,6 +91,8 @@ export const ChatPostList = (info: IChatItem) => {
             );
         }
     }, [getingMessageInfo]);
+
+   
 
     return (
         <div className="chatMainItem">

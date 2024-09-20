@@ -37,7 +37,10 @@ import { RealtorPageForClient } from "./containers/client/RealtorPageForClient/R
 import { PageOfMessages } from "./containers/client/PageOfMessages/PageOfMessages.tsx";
 import { connection } from "./SignalR/index.ts";
 import * as signalR from "@microsoft/signalr";
-import { setNewMessage } from "./store/chat/chat.slice.ts";
+import {
+    setOutcomeMessagesReadedChatId,
+    setNewMessage,
+} from "./store/chat/chat.slice.ts";
 import { IGetMessage, ISendMessage } from "./interfaces/chat/index.ts";
 import { updateListOfChatIdForListening } from "./store/chat/chat.slice.ts";
 import PageOfPost from "./containers/client/PageOfPost/PageOfPost.tsx";
@@ -59,7 +62,11 @@ export const App: React.FC = () => {
     };
 
     const setMessageInRedux = async (msg: IGetMessage) => {
-       await dispatch(setNewMessage(msg));
+        await dispatch(setNewMessage(msg));
+    };
+
+    const setIncomeMessagesReadedChatIdInRedux = async (id: string) => {
+        await dispatch(setOutcomeMessagesReadedChatId(id));
     };
 
     const startConnectionWithSignalR = async () => {
@@ -105,7 +112,6 @@ export const App: React.FC = () => {
                     connection.off("send_notify");
                     // Add the new listener
                     connection.on("send_notify", async (m) => {
-                        console.log("Received notify:", m);
                         await joinForChatListening(m);
                     });
                 });
@@ -140,7 +146,15 @@ export const App: React.FC = () => {
 
                     // Add the new listener
                     connection.on("send_message", async (m) => {
-                       await setMessageInRedux(m);
+                        await setMessageInRedux(m);
+                    });
+                })
+                .then(async () => {
+                    // Remove any previous listener before adding a new one
+                    connection.off("get_message");
+                    // Add the new listener
+                    connection.on("get_message", async (m) => {
+                        await setIncomeMessagesReadedChatIdInRedux(m);
                     });
                 });
         }

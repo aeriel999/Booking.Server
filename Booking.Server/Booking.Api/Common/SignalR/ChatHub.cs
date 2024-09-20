@@ -10,6 +10,7 @@ using Booking.Domain.Chat;
 using Booking.Domain.Posts;
 using MapsterMapper;
 using MediatR;
+using Microsoft.AspNet.SignalR.Messaging;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.SignalR;
 using System.Security.Claims;
@@ -110,17 +111,18 @@ namespace Booking.Api.Common.SignalR
 				.SendAsync("send_message", sendMessageResponse);
 		}
 
+		public async Task GetPostNitify(RoomRequest request)
+		{
+			await Clients.GroupExcept(request.RoomId.ToString(), new[] { Context.ConnectionId })
+				.SendAsync("get_message", request);
+		}
+
 		public Task SendPrivateMessage(string user, string message)
 		{
 			return Clients.User(user).SendAsync("ReceiveMessage", message);
 		}
 
-
-		//public async Task JoinExistPostRoomByClient(RoomRequest request)
-		//{
-		//	await Groups.AddToGroupAsync(Context.ConnectionId, request.RoomId.ToString());
-
-		//}
+ 
 
 		//public async Task<string> JoinRoomByClientForPost(RoomRequest request)
 		//{

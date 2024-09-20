@@ -13,6 +13,7 @@ export interface IChatState {
     newMessage: string | null;
     isCuretnChatReaded: boolean;
     getingMessageInfo: IGetMessage | null;
+    outcomeMessagesReadedChatId: string | null;
 }
 
 export interface IChatRoomList {
@@ -62,7 +63,7 @@ export interface ISendMessage {
 export interface IGetMessage {
     message: string;
     chatRoomId: string;
-    postId: string
+    postId: string;
 }
 
 export interface IChatRoomInfoForClient {
@@ -97,7 +98,7 @@ export interface IChatItem {
     image: string;
     numberOfUnreadMessages: number;
     setChatInfo: (arg: IChatInfo) => void;
-  //  newNumberOfUnreadMessage: number | null;
+    //  newNumberOfUnreadMessage: number | null;
     isOpen: boolean;
     onChatClick: () => void;
 }

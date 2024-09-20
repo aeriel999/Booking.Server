@@ -24,6 +24,8 @@ import {
     setChatRoomId,
     setIsCuretnChatReaded,
 } from "../../store/chat/chat.slice";
+import * as signalR from "@microsoft/signalr";
+import { connection } from "../../SignalR";
 
 const StyledAvatar = styled(Avatar)({
     color: "#fff",
@@ -44,7 +46,7 @@ export default function ChatRoom() {
     const [message, setMessage] = useState<IChatMessageInfo>();
     const [numberOfUnreadMessages, setMumberOfUnreadMessages] =
         useState<number>();
-    const { newMessage, generalNumberOfUnreadMessages, getingMessageInfo } =
+    const { newMessage, generalNumberOfUnreadMessages, getingMessageInfo, outcomeMessagesReadedChatId} =
         useAppSelector((state) => state.chat);
     const messageEndRef = useRef<HTMLDivElement>(null);
     const [openChatId, setOpenChatId] = useState<string | null>(null);
@@ -80,6 +82,16 @@ export default function ChatRoom() {
             return response;
         } catch (error) {
             setErrorMessage(ErrorHandler(error));
+        }
+    };
+
+    const getMessageSignalR = async (roomId: string) => {
+        if (connection.state === signalR.HubConnectionState.Connected) {
+            await connection.send("GetPostNitify", {roomId });
+        } else {
+            await connection.start().then(async () => {
+                await connection.send("GetPostNitify", { roomId });
+            });
         }
     };
 
@@ -159,6 +171,18 @@ export default function ChatRoom() {
         }
     }, [getingMessageInfo]);
 
+    useEffect(() => {
+        if (outcomeMessagesReadedChatId) {
+            setMessages((prevMessages) =>
+                prevMessages.map((msg) =>
+                    msg.userId === user?.id && !msg.isRead
+                        ? { ...msg, isRead: true } // Mark unread incoming messages as read
+                        : msg
+                )
+            );
+        }
+    }, [outcomeMessagesReadedChatId]);
+
     // Function to move all unread messages to the read messages list
     async function handleMessageRead(): Promise<void> {
         if (chatInfo?.chatId && chatInfo?.numberOfUnreadMessages! > 0) {
@@ -190,6 +214,8 @@ export default function ChatRoom() {
                         chatInfo?.numberOfUnreadMessages!
                     )
                 );
+
+                await getMessageSignalR(chatInfo?.chatId);
             } catch (error) {
                 setErrorMessage(ErrorHandler(error));
             }
