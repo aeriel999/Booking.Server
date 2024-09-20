@@ -2,21 +2,27 @@ import chewronTop from "../../assets/Icons/chevron-top.svg";
 import chewronDown from "../../assets/Icons/chevron-down.svg";
 import "../../css/DashBoardAnonymousClasses/index.scss";
 import { useEffect, useState } from "react";
-import { IChatInfo, IChatItem, IChatMessageInfo } from "../../interfaces/chat";
-import { useAppDispatch } from "../../hooks/redux";
+import { IChatInfo, IChatItem } from "../../interfaces/chat";
+import { useAppDispatch, useAppSelector } from "../../hooks/redux";
 import { getListOfChatsByPostInfoForRealtor } from "../../store/chat/chat.action";
 import { unwrapResult } from "@reduxjs/toolkit";
 import ErrorHandler from "../common/ErrorHandler";
+import { setIsCuretnChatReaded } from "../../store/chat/chat.slice";
+ 
 
 export const ChatPostList = (info: IChatItem) => {
     const [isOpen, setIsOpen] = useState<boolean>(false);
     const dispatch = useAppDispatch();
+    const { isCuretnChatReaded, currentChatRoomId } =
+        useAppSelector((state) => state.chat);
     const [errorMessage, setErrorMessage] = useState<string | undefined>(
         undefined
     );
     const [chatList, setChatList] = useState<IChatItem[]>([]);
-    // const [newNumberOfUnreadMessage, setNewNumberOfUnreadMessage] =
-    //     useState<number>(info.numberOfUnreadMessages);
+    const [
+        numberOfUnreadMessageInAllChats,
+        setNumberOfUnreadMessageInAllChats,
+    ] = useState<number>(info.numberOfUnreadMessages);
 
     const getChatList = async (postId: string) => {
         try {
@@ -36,11 +42,33 @@ export const ChatPostList = (info: IChatItem) => {
         });
     }
 
-    // useEffect(() => {
-    //     if (info.newNumberOfUnreadMessage) {
-    //         setNewNumberOfUnreadMessage(info.newNumberOfUnreadMessage);
-    //     }
-    // }, [info.newNumberOfUnreadMessage]);
+    useEffect(() => {
+        if (isCuretnChatReaded && currentChatRoomId) {
+            // Find the current chat room's unread message count
+            const currentChat = chatList.find(
+                (chatItem) => chatItem.id === currentChatRoomId
+            );
+            const numberOfUnreadMessages = currentChat?.numberOfUnreadMessages || 0;
+    
+            // Update the chat list to set the unread messages to 0 for the current chat
+            setChatList((prevChatList) =>
+                prevChatList.map((chatItem) =>
+                    chatItem.id === currentChatRoomId
+                        ? { ...chatItem, numberOfUnreadMessages: 0 }
+                        : chatItem
+                )
+            );
+    
+            // Update the total number of unread messages in all chats
+            setNumberOfUnreadMessageInAllChats(
+                (prevTotal) => prevTotal - numberOfUnreadMessages
+            );
+    
+            // Reset the isCuretnChatReaded flag
+            dispatch(setIsCuretnChatReaded(false));
+        }
+    }, [isCuretnChatReaded, chatList, currentChatRoomId, dispatch]);
+    
 
     return (
         <div className="chatMainItem">
@@ -55,9 +83,9 @@ export const ChatPostList = (info: IChatItem) => {
 
                 <div className="postName">{info.name}</div>
 
-                {info.numberOfUnreadMessages ? (
+                {numberOfUnreadMessageInAllChats ? (
                     <div className="countOfUnreadMessages">
-                        <div>{info.numberOfUnreadMessages}</div>
+                        <div>{numberOfUnreadMessageInAllChats}</div>
                     </div>
                 ) : (
                     ""
@@ -88,10 +116,14 @@ export const ChatPostList = (info: IChatItem) => {
                                 userAvatar: item.image,
                                 userName: item.name,
                                 chatMessages: null,
-                                numberOfUnreadMessages: item.numberOfUnreadMessages,
+                                numberOfUnreadMessages:
+                                    item.numberOfUnreadMessages,
+                                postId: info.id,
                             };
 
                             info.setChatInfo(chatInfo);
+
+                            
                         }}
                     >
                         <img id="postImage" src={item.image} alt="" />

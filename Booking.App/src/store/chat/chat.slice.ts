@@ -47,6 +47,7 @@ const initialState: IChatState = {
     chatRoomInfoForClient: null,
     currentChatRoomId: null,
     newMessage: null,
+    isCuretnChatReaded: false,
 };
 
 export const chatSlice = createSlice({
@@ -64,8 +65,6 @@ export const chatSlice = createSlice({
             );
         },
         addNewMessageInGeneralCount: (state: IChatState) => {
-            console.log("send_notify", state.generalNumberOfUnreadMessages);
-
             state.generalNumberOfUnreadMessages =
                 state.generalNumberOfUnreadMessages + 1;
             addLocalStorage(
@@ -94,16 +93,16 @@ export const chatSlice = createSlice({
                 "listOfChatsIdForListening",
                 state.listOfChatsIdForListening!
             );
-
-            console.log(
-                "state.listOfChatsIdForListening",
-                state.listOfChatsIdForListening
-            );
         },
         setChatRoomId: (state: IChatState, action: PayloadAction<string>) => {
-            console.log("setChatRoomId", action.payload);
             state.currentChatRoomId = action.payload;
             addLocalStorage("currentChatRoomId", state.currentChatRoomId);
+        },
+        setIsCuretnChatReaded: (
+            state: IChatState,
+            action: PayloadAction<boolean>
+        ) => {
+            state.isCuretnChatReaded = action.payload;
         },
         setNewMessage: (
             state: IChatState,
@@ -218,5 +217,6 @@ export const {
     updateListOfChatIdForListening,
     setChatRoomId,
     setNewMessage,
+    setIsCuretnChatReaded,
 } = chatSlice.actions;
 export default chatSlice.reducer;

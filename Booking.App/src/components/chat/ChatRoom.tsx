@@ -19,7 +19,11 @@ import {
 } from "../../store/chat/chat.action";
 import { unwrapResult } from "@reduxjs/toolkit";
 import { APP_ENV } from "../../env";
-import { setChatRoomId } from "../../store/chat/chat.slice";
+import {
+    setChatRoomId,
+    setIsCuretnChatReaded,
+    
+} from "../../store/chat/chat.slice";
 
 const StyledAvatar = styled(Avatar)({
     color: "#fff",
@@ -38,6 +42,8 @@ export default function ChatRoom() {
     const [chatInfo, setChatInfo] = useState<IChatInfo | null>(null);
     const [messages, setMessages] = useState<IChatMessageInfo[]>([]);
     const [message, setMessage] = useState<IChatMessageInfo>();
+    const [numberOfUnreadMessages, setMumberOfUnreadMessages] =
+        useState<number>();
     const { newMessage } = useAppSelector((state) => state.chat);
     const messageEndRef = useRef<HTMLDivElement>(null);
 
@@ -132,11 +138,15 @@ export default function ChatRoom() {
 
     // Function to move all unread messages to the read messages list
     async function handleMessageRead(): Promise<void> {
-        console.log("handleMessageRead");
-        if (chatInfo?.chatId  && chatInfo?.numberOfUnreadMessages! > 0) {
-            console.log("handleMessageRead IF");
-
+        if (chatInfo?.chatId && chatInfo?.numberOfUnreadMessages! > 0) {
             try {
+                console.log(
+                    "numberOfUnreadMessages",
+                    chatInfo?.numberOfUnreadMessages!
+                );
+
+                setMumberOfUnreadMessages(numberOfUnreadMessages);
+
                 const response = await dispatch(
                     setMessagesReadtByChatI(chatInfo?.chatId)
                 );
@@ -149,6 +159,8 @@ export default function ChatRoom() {
                             : msg
                     )
                 );
+
+                dispatch(setIsCuretnChatReaded(true));
             } catch (error) {
                 setErrorMessage(ErrorHandler(error));
             }
@@ -172,6 +184,9 @@ export default function ChatRoom() {
                                 item.numberOfUnreadMessages!
                             }
                             setChatInfo={setChatInfo}
+                            newNumberOfUnreadMessage={
+                                item.numberOfUnreadMessages
+                            }
                         />
                     ))}
             </div>

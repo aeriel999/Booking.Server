@@ -65,7 +65,7 @@ namespace Booking.Api.Common.SignalR
             var userId = Context.User!.Claims.FirstOrDefault(
             u => u.Type == ClaimTypes.NameIdentifier)!.Value;
 
-            await userMessageRepository.ReadMessagesByChatRoomIdAsync(request.RoomId,Guid.Parse(userId));
+           // await userMessageRepository.ReadMessagesByChatRoomIdAsync(request.RoomId,Guid.Parse(userId));
             var messageList = await userMessageRepository.GetUserMessagesByChatRoomIdAsync(request.RoomId);
 
 			if (messageList == null)

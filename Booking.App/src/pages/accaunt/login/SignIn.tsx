@@ -15,7 +15,11 @@ import { CredentialResponse, GoogleLogin } from "@react-oauth/google";
 import Header from "../../../components/authentification/Header.tsx";
 import { changeDashboardMenuItem } from "../../../store/settings/settings.slice.ts";
 import { RootState } from "../../../store/index.ts";
-import { getChatIdList, getNumberOfUnleastMessages, getPostIdListForListeningChatsByRealtor } from "../../../store/chat/chat.action.ts";
+import {
+    getChatIdList,
+    getNumberOfUnleastMessages,
+    getPostIdListForListeningChatsByRealtor,
+} from "../../../store/chat/chat.action.ts";
 
 export default function SignInPage() {
     const dispatch = useAppDispatch();
@@ -26,7 +30,7 @@ export default function SignInPage() {
         undefined
     );
     const navigate = useNavigate();
- 
+
     const {
         register,
         handleSubmit,
@@ -58,7 +62,6 @@ export default function SignInPage() {
     };
 
     const afterLogin = async (token: string) => {
-
         const decodedToken: { [key: string]: string } = jwtDecode(token);
 
         const role =
@@ -76,26 +79,27 @@ export default function SignInPage() {
         } else {
             navigate("/#");
         }
-    
+
         try {
             //Get number of new messages
-           const getNumberOfUnleastMessagesResult = await dispatch(getNumberOfUnleastMessages());
-           unwrapResult(getNumberOfUnleastMessagesResult);
-        console.log("getNumberOfUnleastMessagesResult", getNumberOfUnleastMessagesResult)
-            
-             //Get list of Id for listening posts
-           const getPostIdListForListeningChatsByRealtorResult =  
-                                await dispatch(getPostIdListForListeningChatsByRealtor());
+            const getNumberOfUnleastMessagesResult = await dispatch(
+                getNumberOfUnleastMessages()
+            );
+            unwrapResult(getNumberOfUnleastMessagesResult);
+
+            //Get list of Id for listening posts
+            const getPostIdListForListeningChatsByRealtorResult =
+                await dispatch(getPostIdListForListeningChatsByRealtor());
             unwrapResult(getPostIdListForListeningChatsByRealtorResult);
 
-             //Get list of Id for listening chats
-           const getChatIdListResult =  await dispatch(getChatIdList());
-           unwrapResult(getChatIdListResult);
+            //Get list of Id for listening chats
+            const getChatIdListResult = await dispatch(getChatIdList());
+            unwrapResult(getChatIdListResult);
         } catch (error) {
             setErrorMessage(ErrorHandler(error));
         }
     };
- 
+
     return (
         <div className="content">
             <Header />
