@@ -1,16 +1,12 @@
 ﻿using Booking.Api.Contracts.Chat;
 using Booking.Api.Contracts.Chat.CreateMessage;
 using Booking.Api.Contracts.Chat.GetChatMessageInfo;
-using Booking.Application.Chat.CheckChatForClientIsExist;
 using Booking.Application.Chat.CreateChat;
 using Booking.Application.Chat.CreateMessage;
 using Booking.Application.Chat.GetNewMessageInfo;
 using Booking.Application.Common.Interfaces.Chat;
-using Booking.Domain.Chat;
-using Booking.Domain.Posts;
 using MapsterMapper;
 using MediatR;
-using Microsoft.AspNet.SignalR.Messaging;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.SignalR;
 using System.Security.Claims;
