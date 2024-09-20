@@ -11,6 +11,9 @@ export interface IChatState {
     chatRoomInfoForClient: IChatRoomInfoForClient | null;
     currentChatRoomId: string | null;
     newMessage: string | null;
+    isCuretnChatReaded: boolean;
+    getingMessageInfo: IGetMessage | null;
+    outcomeMessagesReadedChatId: string | null;
 }
 
 export interface IChatRoomList {
@@ -56,6 +59,13 @@ export interface ISendMessage {
     message: string;
     roomId: string;
 }
+
+export interface IGetMessage {
+    message: string;
+    chatRoomId: string;
+    postId: string;
+}
+
 export interface IChatRoomInfoForClient {
     postImage: string;
     postName: string;
@@ -70,8 +80,8 @@ export interface IChatRoomListForClient {
     hasUnreadMessages: boolean;
     unreadMessages: number | null;
     chatsForClient: {
-        $values: IChatRoomForClient[]
-    }
+        $values: IChatRoomForClient[];
+    };
 }
 
 export interface IChatRoomForClient {
@@ -86,17 +96,22 @@ export interface IChatItem {
     id: string;
     name: string;
     image: string;
-    numberOfUnreadMessages: number | null;
+    numberOfUnreadMessages: number;
     setChatInfo: (arg: IChatInfo) => void;
+    //  newNumberOfUnreadMessage: number | null;
+    isOpen: boolean;
+    onChatClick: () => void;
 }
 
 export interface IChatInfo {
     chatId: string;
     postImage: string;
+    postId?: string;
     postName: string;
     userAvatar: string;
     userName: string;
     chatMessages: IChatMessageInfo[] | null;
+    numberOfUnreadMessages: number | null;
 }
 
 export interface IChatMessageInfo {
@@ -104,7 +119,6 @@ export interface IChatMessageInfo {
     userId: string;
     sentAt?: string;
     text: string;
-   // isUnread: boolean;
     date?: Date;
     isRead: boolean;
 }

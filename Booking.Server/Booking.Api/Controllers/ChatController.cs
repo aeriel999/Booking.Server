@@ -178,7 +178,7 @@ public class ChatController(ISender mediatr, IMapper mapper) : ApiController
 	}
 
 	[HttpGet("set-messages-read-by-chatId")]
-	public async Task<IActionResult> SetMessagesReadtByChatIdAsync([FromQuery] Guid chatRoomId)
+	public async Task<IActionResult> SetMessagesReadedByChatIdAsync([FromQuery] Guid chatRoomId)
 	{
 		var userId = User.Claims.First(u => u.Type == ClaimTypes.NameIdentifier).Value;
 

@@ -7,7 +7,7 @@ import { useForm } from 'react-hook-form';
 import { sendMessageResolver } from '../../../validations/chat';
 import { RootState } from '../../../store';
 import { useAppSelector } from '../../../hooks/redux';
-
+import * as signalR from "@microsoft/signalr";
 interface IChatTextArea {
     maxLength: number,
     roomId: string,
@@ -27,9 +27,18 @@ export const ChatTextArea = (info: IChatTextArea) => {
 
     } = useForm<ISendMessage>({ resolver: sendMessageResolver })
 
-    const sendMessageSignalR = (message: string, roomId: string) =>
-        connection.send('SendMessage', { message, roomId })
-
+    // const sendMessageSignalR = (message: string, roomId: string) =>
+    //     connection.send('SendMessage', { message, roomId })
+    const sendMessageSignalR = async (message: string, roomId: string) =>
+       {
+        if (connection.state === signalR.HubConnectionState.Connected) {
+            await connection.send("SendMessage", { message, roomId });
+        } else {
+            await connection.start().then(async () => {
+                await connection.send("SendMessage", { message, roomId });
+            });
+        }
+       }
     const onSubmit = async (data: ISendMessage) => {
         await sendMessageSignalR(data.message, info.roomId)
         info.addNewMessage([
@@ -37,7 +46,7 @@ export const ChatTextArea = (info: IChatTextArea) => {
             {
                 text: data.message,
                 userId: user!.id,
-                isUnread: false,
+                isRead: false,
                 date: new Date()
             }
         ]);

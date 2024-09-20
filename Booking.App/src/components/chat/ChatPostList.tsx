@@ -1,20 +1,30 @@
 import chewronTop from "../../assets/Icons/chevron-top.svg";
 import chewronDown from "../../assets/Icons/chevron-down.svg";
 import "../../css/DashBoardAnonymousClasses/index.scss";
-import { useState } from "react";
-import { IChatInfo, IChatItem, IChatMessageInfo } from "../../interfaces/chat";
-import { useAppDispatch } from "../../hooks/redux";
+import { useEffect, useState } from "react";
+import { IChatInfo, IChatItem } from "../../interfaces/chat";
+import { useAppDispatch, useAppSelector } from "../../hooks/redux";
 import { getListOfChatsByPostInfoForRealtor } from "../../store/chat/chat.action";
 import { unwrapResult } from "@reduxjs/toolkit";
 import ErrorHandler from "../common/ErrorHandler";
+import { setIsCuretnChatReaded } from "../../store/chat/chat.slice";
 
 export const ChatPostList = (info: IChatItem) => {
-    const [isOpen, setIsOpen] = useState<boolean>(false);
+    // const [isOpen, setIsOpen] = useState<boolean>(false);
     const dispatch = useAppDispatch();
+    const {
+        isCuretnChatReaded,
+        currentChatRoomId,
+        getingMessageInfo,
+    } = useAppSelector((state) => state.chat);
     const [errorMessage, setErrorMessage] = useState<string | undefined>(
         undefined
     );
     const [chatList, setChatList] = useState<IChatItem[]>([]);
+    const [
+        numberOfUnreadMessageInAllChats,
+        setNumberOfUnreadMessageInAllChats,
+    ] = useState<number>(info.numberOfUnreadMessages);
 
     const getChatList = async (postId: string) => {
         try {
@@ -34,12 +44,62 @@ export const ChatPostList = (info: IChatItem) => {
         });
     }
 
+    useEffect(() => {
+        setNumberOfUnreadMessageInAllChats(info.numberOfUnreadMessages);
+    }, [info]);
+
+    useEffect(() => {
+        if (isCuretnChatReaded && currentChatRoomId) {
+            // Find the current chat room's unread message count
+            const currentChat = chatList.find(
+                (chatItem) => chatItem.id === currentChatRoomId
+            );
+            const numberOfUnreadMessages =
+                currentChat?.numberOfUnreadMessages || 0;
+
+            // Update the chat list to set the unread messages to 0 for the current chat
+            setChatList((prevChatList) =>
+                prevChatList.map((chatItem) =>
+                    chatItem.id === currentChatRoomId
+                        ? { ...chatItem, numberOfUnreadMessages: 0 }
+                        : chatItem
+                )
+            );
+
+            // Update the total number of unread messages in all chats
+            setNumberOfUnreadMessageInAllChats(
+                (prevTotal) => prevTotal - numberOfUnreadMessages
+            );
+
+            // Reset the isCuretnChatReaded flag
+            dispatch(setIsCuretnChatReaded(false));
+        }
+    }, [isCuretnChatReaded, chatList, currentChatRoomId]);
+
+    useEffect(() => {
+        if (getingMessageInfo && info.id === getingMessageInfo.postId) {
+            setChatList((prevChatList) =>
+                prevChatList.map((chatItem) =>
+                    chatItem.id === getingMessageInfo.chatRoomId
+                        ? {
+                              ...chatItem,
+                              numberOfUnreadMessages:
+                                  (chatItem.numberOfUnreadMessages || 0) + 1,
+                          }
+                        : chatItem
+                )
+            );
+        }
+    }, [getingMessageInfo]);
+
+   
+
     return (
         <div className="chatMainItem">
             <div
                 className="chatListItem"
                 onClick={() => {
-                    setIsOpen(!isOpen);
+                    info.onChatClick();
                     handleCllick(info.id);
                 }}
             >
@@ -47,23 +107,23 @@ export const ChatPostList = (info: IChatItem) => {
 
                 <div className="postName">{info.name}</div>
 
-                {info.numberOfUnreadMessages ? (
+                {numberOfUnreadMessageInAllChats ? (
                     <div className="countOfUnreadMessages">
-                        <div>{info.numberOfUnreadMessages}</div>
+                        <div>{numberOfUnreadMessageInAllChats}</div>
                     </div>
                 ) : (
                     ""
                 )}
                 <img
                     id="chewron"
-                    src={isOpen ? chewronTop : chewronDown}
+                    src={info.isOpen ? chewronTop : chewronDown}
                     alt=""
                 />
             </div>
             <div
                 className="chat"
                 style={{
-                    display: isOpen ? "inline-block" : "none",
+                    display: info.isOpen ? "inline-block" : "none",
                     padding: 15,
                     boxSizing: "border-box",
                 }}
@@ -79,7 +139,10 @@ export const ChatPostList = (info: IChatItem) => {
                                 postName: info.name,
                                 userAvatar: item.image,
                                 userName: item.name,
-                                chatMessages: null
+                                chatMessages: null,
+                                numberOfUnreadMessages:
+                                    item.numberOfUnreadMessages,
+                                postId: info.id,
                             };
 
                             info.setChatInfo(chatInfo);
