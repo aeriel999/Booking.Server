@@ -19,9 +19,12 @@ export const sendMessageResolver: Resolver<ISendMessage> = async (values) => {
 };
 
 export const MessageValidator = (value: string): string | undefined => {
-    if (!value) return "Message must not be empty";
-    if (value.length < 5) return "Message must be at least 5 characters long";
-    if (value.length > 4000)
-        return "Message must be less than 4000 characters long";
+    const trimmedValue = value.trim(); // Remove leading/trailing whitespace
+
+    if (!trimmedValue) return "Message must not be empty";
+    if (trimmedValue.length < 3) return "Message must be at least 5 characters long";
+    if (trimmedValue.length > 4000) return "Message must be less than 4000 characters long";
+    
     return undefined; // Return undefined if validation passes
 };
+

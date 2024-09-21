@@ -111,7 +111,7 @@ export interface IChatInfo {
     userAvatar: string;
     userName: string;
     chatMessages: IChatMessageInfo[] | null;
-    numberOfUnreadMessages: number | null;
+   // numberOfUnreadMessages: number | null;
 }
 
 export interface IChatMessageInfo {

@@ -12,11 +12,8 @@ import { setIsCuretnChatReaded } from "../../store/chat/chat.slice";
 export const ChatPostList = (info: IChatItem) => {
     // const [isOpen, setIsOpen] = useState<boolean>(false);
     const dispatch = useAppDispatch();
-    const {
-        isCuretnChatReaded,
-        currentChatRoomId,
-        getingMessageInfo,
-    } = useAppSelector((state) => state.chat);
+    const { isCuretnChatReaded, currentChatRoomId, getingMessageInfo } =
+        useAppSelector((state) => state.chat);
     const [errorMessage, setErrorMessage] = useState<string | undefined>(
         undefined
     );
@@ -92,8 +89,6 @@ export const ChatPostList = (info: IChatItem) => {
         }
     }, [getingMessageInfo]);
 
-   
-
     return (
         <div className="chatMainItem">
             <div
@@ -103,7 +98,7 @@ export const ChatPostList = (info: IChatItem) => {
                     handleCllick(info.id);
                 }}
             >
-                <img id="postImage" src={info.image} alt="" />
+                <img id="postImage" src={info.image} alt={info.name} />
 
                 <div className="postName">{info.name}</div>
 
@@ -140,15 +135,13 @@ export const ChatPostList = (info: IChatItem) => {
                                 userAvatar: item.image,
                                 userName: item.name,
                                 chatMessages: null,
-                                numberOfUnreadMessages:
-                                    item.numberOfUnreadMessages,
                                 postId: info.id,
                             };
 
                             info.setChatInfo(chatInfo);
                         }}
                     >
-                        <img id="postImage" src={item.image} alt="" />
+                        <img id="postImage" src={item.image} alt="avatar" />
 
                         <div className="postName">{item.name}</div>
                         {item.numberOfUnreadMessages ? (

@@ -30,8 +30,8 @@ import { connection } from "../../SignalR";
 const StyledAvatar = styled(Avatar)({
     color: "#fff",
     backgroundColor: "#23a1a0",
-    width: "32px",
-    height: "32px",
+    width: "40px",
+    height: "40px",
 });
 
 export default function ChatRoom() {
@@ -44,10 +44,13 @@ export default function ChatRoom() {
     const [chatInfo, setChatInfo] = useState<IChatInfo | null>(null);
     const [messages, setMessages] = useState<IChatMessageInfo[]>([]);
     const [message, setMessage] = useState<IChatMessageInfo>();
-    const [numberOfUnreadMessages, setMumberOfUnreadMessages] =
-        useState<number>();
-    const { newMessage, generalNumberOfUnreadMessages, getingMessageInfo, outcomeMessagesReadedChatId} =
-        useAppSelector((state) => state.chat);
+
+    const {
+        newMessage,
+        generalNumberOfUnreadMessages,
+        getingMessageInfo,
+        outcomeMessagesReadedChatId,
+    } = useAppSelector((state) => state.chat);
     const messageEndRef = useRef<HTMLDivElement>(null);
     const [openChatId, setOpenChatId] = useState<string | null>(null);
 
@@ -87,7 +90,7 @@ export default function ChatRoom() {
 
     const getMessageSignalR = async (roomId: string) => {
         if (connection.state === signalR.HubConnectionState.Connected) {
-            await connection.send("GetPostNitify", {roomId });
+            await connection.send("GetPostNitify", { roomId });
         } else {
             await connection.start().then(async () => {
                 await connection.send("GetPostNitify", { roomId });
@@ -103,7 +106,6 @@ export default function ChatRoom() {
         getChatList().then((data) => {
             if (data?.payload.$values) {
                 setPostChatList(data.payload.$values);
-                console.log("setPostChatList", data.payload.$values);
             }
         });
     }, [, generalNumberOfUnreadMessages]);
@@ -185,39 +187,38 @@ export default function ChatRoom() {
 
     // Function to move all unread messages to the read messages list
     async function handleMessageRead(): Promise<void> {
-        if (chatInfo?.chatId && chatInfo?.numberOfUnreadMessages! > 0) {
-            try {
-                console.log(
-                    "numberOfUnreadMessages",
-                    chatInfo?.numberOfUnreadMessages!
-                );
+        if (chatInfo?.chatId) {
+            const numberOfUnreadMessages = messages.filter(
+                (msg) => msg.userId !== user?.id && !msg.isRead
+            ).length;
 
-                setMumberOfUnreadMessages(numberOfUnreadMessages);
+            if (numberOfUnreadMessages > 0) {
+                try {
+                    const response = await dispatch(
+                        setMessagesReadtByChatI(chatInfo?.chatId)
+                    );
+                    unwrapResult(response);
 
-                const response = await dispatch(
-                    setMessagesReadtByChatI(chatInfo?.chatId)
-                );
-                unwrapResult(response);
+                    setMessages((prevMessages) =>
+                        prevMessages.map((msg) =>
+                            msg.userId !== user?.id && !msg.isRead
+                                ? { ...msg, isRead: true } // Mark unread incoming messages as read
+                                : msg
+                        )
+                    );
 
-                setMessages((prevMessages) =>
-                    prevMessages.map((msg) =>
-                        msg.userId !== user?.id && !msg.isRead
-                            ? { ...msg, isRead: true } // Mark unread incoming messages as read
-                            : msg
-                    )
-                );
+                    dispatch(setIsCuretnChatReaded(true));
 
-                dispatch(setIsCuretnChatReaded(true));
+                    dispatch(
+                        deleteNumberOfMessageFromGeneralCount(
+                            numberOfUnreadMessages
+                        )
+                    );
 
-                dispatch(
-                    deleteNumberOfMessageFromGeneralCount(
-                        chatInfo?.numberOfUnreadMessages!
-                    )
-                );
-
-                await getMessageSignalR(chatInfo?.chatId);
-            } catch (error) {
-                setErrorMessage(ErrorHandler(error));
+                    await getMessageSignalR(chatInfo?.chatId);
+                } catch (error) {
+                    setErrorMessage(ErrorHandler(error));
+                }
             }
         }
     }
@@ -256,11 +257,9 @@ export default function ChatRoom() {
                             <div className="chatInfo">
                                 <div className="userInfo">
                                     <StyledAvatar
-                                        alt={chatInfo!.userAvatar}
+                                        alt={chatInfo!.userName}
                                         src={
-                                            chatInfo!.userAvatar == null
-                                                ? UAvatar
-                                                : chatInfo!.userAvatar
+                                            chatInfo!.userAvatar 
                                         }
                                     />
                                     <p>{chatInfo!.userName}</p>
