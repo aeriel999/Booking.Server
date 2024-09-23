@@ -45,10 +45,9 @@ export default function ArchivePage() {
         page > 0 ? Math.max(0, (1 + page) * rowsPerPage - totalCount) : 0;
 
     const handleChangePage = (
-        event: React.MouseEvent<HTMLButtonElement> | null,
+        _event: React.MouseEvent<HTMLButtonElement> | null,
         newPage: number
     ) => {
-        console.log(event);
         setPage(newPage);
     };
 

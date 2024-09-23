@@ -137,16 +137,30 @@ export const getMessageListByChatId = createAsyncThunk(
     }
 );
 
-export const setMessagesReadtByChatI = createAsyncThunk(
+export const setMessagesReadtByChatId = createAsyncThunk(
     "chat/set-messages-read-by-chatId",
     async (chatRoomId: string, { rejectWithValue }) => {
+        console.log("setMessagesReadtByChatI", { chatRoomId });
         try {
-            const response = await apiClient.get(
+            const response = await apiClient.post(
                 `/api/Chat/set-messages-read-by-chatId`,
-                {
-                    params: { chatRoomId },
-                }
+                { chatRoomId }
             );
+            return response.data;
+        } catch (error) {
+            return rejectWithValue(handleAxiosError(error, "Network error"));
+        }
+    }
+);
+
+export const deleteChatById = createAsyncThunk(
+    "chat/delete-chat",
+    async (chatRoomId: string, { rejectWithValue }) => {
+        console.log("setMessagesReadtByChatI", { chatRoomId });
+        try {
+            const response = await apiClient.post(`/api/Chat/delete-chat`, {
+                chatRoomId,
+            });
             return response.data;
         } catch (error) {
             return rejectWithValue(handleAxiosError(error, "Network error"));

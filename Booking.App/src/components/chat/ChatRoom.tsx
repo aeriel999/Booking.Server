@@ -13,9 +13,10 @@ import { AppDispatch } from "../../store";
 import { useEffect, useRef, useState } from "react";
 import ErrorHandler from "../common/ErrorHandler";
 import {
+    deleteChatById,
     getListOfPostInfoForChatsForRealtor,
     getMessageListByChatId,
-    setMessagesReadtByChatI,
+    setMessagesReadtByChatId,
 } from "../../store/chat/chat.action";
 import { unwrapResult } from "@reduxjs/toolkit";
 import { APP_ENV } from "../../env";
@@ -26,6 +27,7 @@ import {
 } from "../../store/chat/chat.slice";
 import * as signalR from "@microsoft/signalr";
 import { connection } from "../../SignalR";
+import CustomizedDialogs from "../common/Dialog";
 
 const StyledAvatar = styled(Avatar)({
     color: "#fff",
@@ -44,6 +46,7 @@ export default function ChatRoom() {
     const [chatInfo, setChatInfo] = useState<IChatInfo | null>(null);
     const [messages, setMessages] = useState<IChatMessageInfo[]>([]);
     const [message, setMessage] = useState<IChatMessageInfo>();
+    const [isDialogOpen, setIsDialogOpen] = useState(false);
 
     const {
         newMessage,
@@ -98,8 +101,14 @@ export default function ChatRoom() {
         }
     };
 
-    function deleteChat(): void {
-        throw new Error("Function not implemented.");
+    const deletePost = async (id: string) => {
+        try{
+            const response = await dispatch(deleteChatById(id));
+            unwrapResult(response);
+            return response;
+        }catch(error){
+            setErrorMessage(ErrorHandler(error));
+        }
     }
 
     useEffect(() => {
@@ -187,6 +196,7 @@ export default function ChatRoom() {
 
     // Function to move all unread messages to the read messages list
     async function handleMessageRead(): Promise<void> {
+        console.log("chatInfo?.chatId", chatInfo?.chatId);
         if (chatInfo?.chatId) {
             const numberOfUnreadMessages = messages.filter(
                 (msg) => msg.userId !== user?.id && !msg.isRead
@@ -195,7 +205,7 @@ export default function ChatRoom() {
             if (numberOfUnreadMessages > 0) {
                 try {
                     const response = await dispatch(
-                        setMessagesReadtByChatI(chatInfo?.chatId)
+                        setMessagesReadtByChatId(chatInfo?.chatId)
                     );
                     unwrapResult(response);
 
@@ -225,6 +235,20 @@ export default function ChatRoom() {
 
     return (
         <div className="chatRoom">
+         {isDialogOpen && chatInfo && (
+                <CustomizedDialogs
+                    message={`You want to delete chat with ${chatInfo.userName} in . Are you sure?`}
+                    isOpen={isDialogOpen}
+                    setOpen={setIsDialogOpen}
+                    action={async () => {
+                        await deletePost(chatInfo.chatId!);
+                    }}
+                    navigate={"/dashboard/show-all-post"}
+                    lable="Deleting chat"
+                  //  menuItem="All Posts"
+                />
+            )}
+
             <div className="chatList">
                 {/* ChatPostList */}
                 {postChatList &&
@@ -258,13 +282,14 @@ export default function ChatRoom() {
                                 <div className="userInfo">
                                     <StyledAvatar
                                         alt={chatInfo!.userName}
-                                        src={
-                                            chatInfo!.userAvatar 
-                                        }
+                                        src={chatInfo!.userAvatar}
                                     />
                                     <p>{chatInfo!.userName}</p>
                                 </div>
-                                <Button onClick={deleteChat}>
+                                <Button onClick={()=>{
+                                     setIsDialogOpen(true);
+
+                                }}>
                                     <img src={Trash} alt="delete" />
                                 </Button>
                             </div>
