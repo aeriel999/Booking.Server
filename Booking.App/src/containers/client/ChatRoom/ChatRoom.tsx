@@ -49,6 +49,7 @@ export const ChatRoom = (info: IChatRoom) => {
 
 
     }, [chatRoom])
+    
     const startListeningPost = async (roomId: string) => {
         if (connection.state === signalR.HubConnectionState.Connected) {
             await connection
@@ -106,7 +107,7 @@ export const ChatRoom = (info: IChatRoom) => {
                                     text={item.text}
                                     myMessage={user?.id === item.userId ? true : false}
                                     date={new Date(item.date!)}
-                                    isRead={item.isUnread}
+                                    isRead={item.isRead}
                                 />) : ""}
 
                         </div>

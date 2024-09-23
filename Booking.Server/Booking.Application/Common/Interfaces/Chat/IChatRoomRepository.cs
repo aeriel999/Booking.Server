@@ -36,7 +36,7 @@ public interface IChatRoomRepository
 
 
 
-    Task<List<ChatRoom>> GetChatRoomListByRealtorIdAsync(Guid realtorId);
+   // Task<List<ChatRoom>> GetChatRoomListByRealtorIdAsync(Guid realtorId);
 
 
 	Task<ChatRoom?> GetChatRoomByPostIdAndUserIdAsync(Guid userId, Guid postId);
@@ -49,5 +49,13 @@ public interface IChatRoomRepository
 
 
 	Task<bool> CheckChatForClientIsExist(Guid userId, Guid postId);
+
+
 	Task<ChatRoom?> GetIncludeChatRoomByIdAsync(Guid roomId);
+
+
+	Task<int> GetNumberOfUnreadMessagesAsync(Guid realtorId);
+
+
+	Task<List<UserMessage>> GetListOfUnreadMessagesByChatIdAsync(Guid chatRoomId);
 }

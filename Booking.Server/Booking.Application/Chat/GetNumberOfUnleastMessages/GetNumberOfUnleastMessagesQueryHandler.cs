@@ -1,5 +1,4 @@
 ﻿using Booking.Application.Common.Interfaces.Chat;
-using Booking.Application.Common.Interfaces.Post;
 using Booking.Application.Common.Interfaces.Users;
 using ErrorOr;
 using MediatR;
@@ -18,19 +17,7 @@ public class GetNumberOfUnleastMessagesQueryHandler(
 		if (userOrError.IsError)
 			return Error.NotFound("User is not found");
 
-		//Get chatRoom list
-		var chatRoomList = await chatRoomRepository.GetChatRoomListByRealtorIdAsync(request.UserId);
-
-		var numberOfUnleastMessages = 0;
-
-		if (chatRoomList != null)
-		{
-			foreach (var chatRoom in chatRoomList)
-			{
-				numberOfUnleastMessages += chatRoom.NumberOfUnreadMessages;
-			}
-		}
-
-		return numberOfUnleastMessages;
+		//Get number of unread msg
+		return await chatRoomRepository.GetNumberOfUnreadMessagesAsync(request.UserId);
 	}
 }

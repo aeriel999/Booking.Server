@@ -4,6 +4,8 @@ using Booking.Infrastructure.Common.Persistence;
 using Microsoft.EntityFrameworkCore;
 using System.Text.RegularExpressions;
 using ErrorOr;
+using Booking.Domain.Chat;
+using Booking.Domain.Users;
 
 namespace Booking.Infrastructure.Repositories;
 
@@ -249,9 +251,12 @@ public class PostRepository(BookingDbContext context) : IPostRepository
 	public async Task<List<Post>?> GetListOfPostWithChatRooms(Guid realtorId)
 	{
 		return await _dbSet
+					.Where(p => p.UserId == realtorId)
 					.Include(post => post.ChatRooms)
 					.Include(post => post.ImagesPost)
 					.Where(post => post.ChatRooms!.Count > 0)
+					 .Include(post => post.ChatRooms!) // Include ChatRooms
+							.ThenInclude(chatRoom => chatRoom.UserMessages)
 					.ToListAsync();
 	}
 }

@@ -45,12 +45,12 @@ public class ChatRoomRepository(BookingDbContext context) : IChatRoomRepository
 	}
 
 
-	public async Task<List<ChatRoom>> GetChatRoomListByRealtorIdAsync(Guid realtorId)
-	{
-		return await _dbSet
-			.Where(c => c.RealtorId == realtorId)
-			.ToListAsync();
-	}
+	//public async Task<List<ChatRoom>> GetChatRoomListByRealtorIdAsync(Guid realtorId)
+	//{
+	//	return await _dbSet
+	//		.Where(c => c.RealtorId == realtorId)
+	//		.ToListAsync();
+	//}
 
 
 	public async Task<List<ChatRoom>> GetChatRoomListWithMessagesByUserIdAsync(Guid userId)
@@ -73,6 +73,7 @@ public class ChatRoomRepository(BookingDbContext context) : IChatRoomRepository
 		return await _dbSet
 			.Where(c => c.PostId == postId)
 			.Include(c => c.Client)
+			.Include(c => c.UserMessages)
 			.ToListAsync();
 	}
 
@@ -150,4 +151,26 @@ public class ChatRoomRepository(BookingDbContext context) : IChatRoomRepository
 				context.Entry(chatRoom).State = EntityState.Modified;
 			});
 	}
+
+	public async Task<int> GetNumberOfUnreadMessagesAsync(Guid realtorId)
+	{
+		return await _dbSet
+			.Where(c => c.RealtorId == realtorId)
+			.Include(c => c.UserMessages)
+			.SelectMany(c => c.UserMessages!)
+			.Where(m => m.UserId != realtorId)
+			.CountAsync(m => !m.IsRead);
+	}
+
+
+	public async Task<List<UserMessage>> GetListOfUnreadMessagesByChatIdAsync(Guid chatRoomId)
+	{
+		return await _dbSet
+			.Where(c => c.ChatRoomId == chatRoomId)
+			.Include(c => c.UserMessages)
+			.SelectMany(c => c.UserMessages!)                       
+			.Where(m => !m.IsRead)                                 
+			.ToListAsync();                                        
+	}
+
 }

@@ -1,12 +1,10 @@
 ﻿using Booking.Api.Contracts.Chat;
 using Booking.Api.Contracts.Chat.CreateMessage;
 using Booking.Api.Contracts.Chat.GetChatMessageInfo;
-using Booking.Application.Chat.CheckChatForClientIsExist;
 using Booking.Application.Chat.CreateChat;
 using Booking.Application.Chat.CreateMessage;
+using Booking.Application.Chat.GetNewMessageInfo;
 using Booking.Application.Common.Interfaces.Chat;
-using Booking.Domain.Chat;
-using Booking.Domain.Posts;
 using MapsterMapper;
 using MediatR;
 using Microsoft.AspNetCore.Authorization;
@@ -19,6 +17,7 @@ namespace Booking.Api.Common.SignalR
 	[Authorize]
 	public class ChatHub(
 	IUserMessageRepository userMessageRepository, 
+	IChatRoomRepository chatRoomRepository,
 	IMapper mapper,
 	ISender mediatr) : Hub
 	{
@@ -65,7 +64,7 @@ namespace Booking.Api.Common.SignalR
             var userId = Context.User!.Claims.FirstOrDefault(
             u => u.Type == ClaimTypes.NameIdentifier)!.Value;
 
-            await userMessageRepository.ReadMessagesByChatRoomIdAsync(request.RoomId,Guid.Parse(userId));
+           // await userMessageRepository.ReadMessagesByChatRoomIdAsync(request.RoomId,Guid.Parse(userId));
             var messageList = await userMessageRepository.GetUserMessagesByChatRoomIdAsync(request.RoomId);
 
 			if (messageList == null)
@@ -81,7 +80,7 @@ namespace Booking.Api.Common.SignalR
 		}
 
 		//Create  and save new message in Db. Send new message 
-		public async Task<string> SendMessage(InputMessage message)
+		public async Task SendMessage(InputMessage message)
 		{
 			var userId = Context.User!.Claims.FirstOrDefault(
 			u => u.Type == ClaimTypes.NameIdentifier)!.Value;
@@ -90,11 +89,28 @@ namespace Booking.Api.Common.SignalR
 			var saveUserMessageResult = await mediatr.Send(mapper.Map<CreateMessageCommand>(
 				(message, Guid.Parse(userId))));
 
+			//Get Chatroom
+			var chatRoom = await chatRoomRepository.GetChatRoomByIdAsync(message.RoomId);
+
+			if (chatRoom == null) return;
+
+			//Make sendMessageResponse
+			var sendMessageResponse = new GetNewMessageInfoResponse()
+			{
+				ChatRoomId = message.RoomId,
+				Message = message.Message,
+				PostId = chatRoom.PostId,
+			};
+
 			//send message in real time
 			await Clients.GroupExcept(message.RoomId.ToString(), new[] { Context.ConnectionId })
-				.SendAsync("send_message", message.Message);
+				.SendAsync("send_message", sendMessageResponse);
+		}
 
-			return message.Message;
+		public async Task GetPostNitify(RoomRequest request)
+		{
+			await Clients.GroupExcept(request.RoomId.ToString(), new[] { Context.ConnectionId })
+				.SendAsync("get_message", request);
 		}
 
 		public Task SendPrivateMessage(string user, string message)
@@ -102,12 +118,7 @@ namespace Booking.Api.Common.SignalR
 			return Clients.User(user).SendAsync("ReceiveMessage", message);
 		}
 
-
-		//public async Task JoinExistPostRoomByClient(RoomRequest request)
-		//{
-		//	await Groups.AddToGroupAsync(Context.ConnectionId, request.RoomId.ToString());
-
-		//}
+ 
 
 		//public async Task<string> JoinRoomByClientForPost(RoomRequest request)
 		//{

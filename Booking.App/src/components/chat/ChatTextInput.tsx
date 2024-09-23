@@ -4,6 +4,7 @@ import { useForm } from "react-hook-form";
 import { sendMessageResolver } from "../../validations/chat";
 import { connection } from "../../SignalR";
 import { useState } from "react";
+import * as signalR from "@microsoft/signalr";
 
 export type ChatTextInputProps = {
     roomId: string;
@@ -25,19 +26,19 @@ export const ChatTextInput = (props: ChatTextInputProps) => {
     } = useForm<ISendMessage>({ resolver: sendMessageResolver });
 
     const sendMessageSignalR = async (message: string, roomId: string) => {
-        try {
-            await connection.send('SendMessage', { message, roomId });
-        } catch (error) {
-            // Handle error sending message
-            console.error("Failed to send message:", error);
-            setError("message", { type: "manual", message: "Failed to send message." });
+        if (connection.state === signalR.HubConnectionState.Connected) {
+            await connection.send("SendMessage", { message, roomId });
+        } else {
+            await connection.start().then(async () => {
+                await connection.send("SendMessage", { message, roomId });
+            });
         }
     };
 
     const onSubmit = async (data: ISendMessage) => {
         await sendMessageSignalR(data.message, props.roomId);
 
-        const messageInfo = {
+        const messageInfo: IChatMessageInfo = {
             sentAt: new Date().toUTCString(),
             text: data.message,
             isRead: false,
@@ -50,17 +51,16 @@ export const ChatTextInput = (props: ChatTextInputProps) => {
         reset();
 
         setIsTyping(false);
-
     };
 
     return (
-   <>
-             <form
-            onSubmit={handleSubmit(onSubmit)}
-            className="sendMessageContainer"
-            id="sendMessage"
-        >
-             <textarea
+        <>
+            <form
+                onSubmit={handleSubmit(onSubmit)}
+                className="sendMessageContainer"
+                id="sendMessage"
+            >
+                <textarea
                     {...register("message")}
                     placeholder={"Enter your message"}
                     onChange={(e) => {
@@ -71,20 +71,22 @@ export const ChatTextInput = (props: ChatTextInputProps) => {
                             clearErrors("message"); // Clear the error when user starts typing
                         }
                     }}
-                    className={isTyping ? "textFieldContainerActive" : "textFieldContainer"} // Apply class based on typing state
+                    className={
+                        isTyping
+                            ? "textFieldContainerActive"
+                            : "textFieldContainer"
+                    } // Apply class based on typing state
                     rows={3}
                 />
-            
-            <button className="sendIcon">
-                <img src={SendIcon} alt="Send" />
-            </button>
-        </form>
+
+                <button className="sendIcon">
+                    <img src={SendIcon} alt="Send" />
+                </button>
+            </form>
 
             {errors.message && (
-                <div className="dashboardError">
-                    * {errors.message.message}
-                </div>
+                <div className="dashboardError">* {errors.message.message}</div>
             )}
-   </>
+        </>
     );
 };
