@@ -6,7 +6,6 @@ using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
-using System.Numerics;
 
 namespace Booking.Infrastructure.Common.Initializers;
 
@@ -35,21 +34,6 @@ public static class BookingInitializer
 			context.Categories.AddRange(categories);
 			context.SaveChanges();
 		}
-
-		//if (!context.PostTypeOfRent.Any())
-		//{
-		//	PostTypeOfRent[] typeOfRents =
-		//	[
-		//		new() { Name = TypeOfRent.Daily },
-		//		new() { Name = TypeOfRent.Hourly },
-		//		new() { Name = TypeOfRent.LongTerm },
-				 
-		//	];
-
-		//	context.PostTypeOfRent.AddRange(typeOfRents);
-		//	context.SaveChanges();
-		//}
-
 
 		if (!context.Countries.Any())
 		{
@@ -456,6 +440,8 @@ public static class BookingInitializer
 		}
 
 	}
+
+
 	public async static void SeedUserAndRoleData(this IApplicationBuilder app)
 	{
 		using var scope = app.ApplicationServices.GetRequiredService<IServiceScopeFactory>().CreateScope();
