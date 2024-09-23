@@ -41,7 +41,7 @@ import {
     setOutcomeMessagesReadedChatId,
     setNewMessage,
 } from "./store/chat/chat.slice.ts";
-import { IGetMessage, ISendMessage } from "./interfaces/chat/index.ts";
+import { IGetMessage } from "./interfaces/chat/index.ts";
 import { updateListOfChatIdForListening } from "./store/chat/chat.slice.ts";
 import PageOfPost from "./containers/client/PageOfPost/PageOfPost.tsx";
 

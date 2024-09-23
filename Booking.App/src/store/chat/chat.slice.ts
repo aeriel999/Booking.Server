@@ -1,7 +1,7 @@
 import { AnyAction, createSlice, PayloadAction } from "@reduxjs/toolkit";
 import { RejectedAction } from "../../utils/types";
 import { Status } from "../../utils/enum";
-import { IChatState, IGetMessage, ISendMessage } from "../../interfaces/chat";
+import { IChatState, IGetMessage } from "../../interfaces/chat";
 import {
     getChatIdList,
     getChatRoomById,

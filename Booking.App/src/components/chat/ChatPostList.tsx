@@ -14,7 +14,7 @@ export const ChatPostList = (info: IChatItem) => {
     const dispatch = useAppDispatch();
     const { isCuretnChatReaded, currentChatRoomId, getingMessageInfo } =
         useAppSelector((state) => state.chat);
-    const [errorMessage, setErrorMessage] = useState<string | undefined>(
+    const [_errorMessage, setErrorMessage] = useState<string | undefined>(
         undefined
     );
     const [chatList, setChatList] = useState<IChatItem[]>([]);

@@ -1,14 +1,15 @@
 import { Box, Breadcrumbs, Button, Container, Typography } from "@mui/material";
 import { useEffect, useState } from "react";
 import { useAppDispatch, useAppSelector } from "../../hooks/redux";
-import { editUserProfile } from "../../store/users/user.action";
+ 
 //import InputGroup from "../../components/common/InputGroup";
 //import { EmailValidator } from "../../validations/account";
-import { unwrapResult } from "@reduxjs/toolkit";
+//import { unwrapResult } from "@reduxjs/toolkit";
 import ErrorHandler from "../../components/common/ErrorHandler";
 //import CustomizedDialogs from "../../components/common/Dialog";
 import { Link, useNavigate } from "react-router-dom";
 import { logout } from "../../store/accounts/account.slice";
+//import { editUserProfile } from "../../store/accounts/account.actions";
 
 export const EditUserEpailPage = () => {
     const navigate = useNavigate();
@@ -29,8 +30,8 @@ export const EditUserEpailPage = () => {
         }
 
         try {
-            const response = await dispatch(editUserProfile({ Email: data.get("email") as string }));
-            unwrapResult(response);
+           // const response = await dispatch(editUserProfile({ email: data.get("email") as string }));
+           // unwrapResult(response);
             setMessage(`We have sent a confirmation letter to the ${(data.get("email") as string)}`);
             setLetterSend(true);
             setIsOpen(true);

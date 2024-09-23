@@ -4,7 +4,7 @@ import { Avatar, Button } from "@mui/material";
 import { useAppSelector } from "../../hooks/redux";
 import { MessageLeft, MessageRight } from "./Message";
 import { ChatTextInput } from "./ChatTextInput";
-import UAvatar from "../../assets/Templates/Rectangle-50.webp";
+//import UAvatar from "../../assets/Templates/Rectangle-50.webp";
 import "../../css/DashBoardAnonymousClasses/index.scss";
 import { ChatPostList } from "./ChatPostList";
 import Trash from "../../assets/DashboardIcons/mdi_trash-outline.svg";
@@ -39,7 +39,7 @@ const StyledAvatar = styled(Avatar)({
 export default function ChatRoom() {
     const { user } = useAppSelector((state) => state.account);
     const dispatch = useDispatch<AppDispatch>();
-    const [errorMessage, setErrorMessage] = useState<string | undefined>(
+    const [_errorMessage, setErrorMessage] = useState<string | undefined>(
         undefined
     );
     const [postChatList, setPostChatList] = useState<IChatItem[]>([]);

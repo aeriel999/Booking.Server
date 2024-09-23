@@ -57,7 +57,7 @@ export const endListening = () =>
 //         });
 
 //
-// export const joinForPostListening = (roomId: string) => connection.invoke("JoinRoomForListening", {roomId})
+export const joinForPostListening = (roomId: string) => connection.invoke("JoinNewChanelOrNewChatRoomForListening", {roomId})
 
 //
 // export const joinChatRoom = (roomId: string)=> connection.invoke('JoinRoomForListening', {roomId})
