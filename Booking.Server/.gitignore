@@ -13,7 +13,8 @@
 
 # Ignore appsettings.json and other configuration files
 appsettings.json
-appsettings.*.json
+appsettings.Development.json
+
 
 
 # User-specific files (MonoDevelop/Xamarin Studio)
