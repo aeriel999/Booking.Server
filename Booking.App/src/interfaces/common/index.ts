@@ -14,7 +14,7 @@ export interface CustomizedDialogsProps {
     isOpen: boolean;
     message: string;
     setOpen: (arg: boolean) => void;
-    navigate: string;
+    navigate?: string;
     action?: () => Promise<void>;
     lable: string;
     menuItem?: string;

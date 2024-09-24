@@ -36,12 +36,27 @@ export const ChatRoom = (info: IChatRoom) => {
 
     const messagesRef = useRef<HTMLDivElement>(null);
 
+    ///////////
+    const { deletedChatId } = useAppSelector((state) => state.chat);
+
+    const leave = (roomId: string) =>
+        connection.send("LeaveRoom", { roomId }).then(() => {
+            console.log("leave", roomId);
+            connection.off("send_message");
+        });
+
+    useEffect(() => {
+        if (deletedChatId) {
+            leave(deletedChatId);
+        }
+    }, [deletedChatId]);
+///////////////
     const getChatRoom = async () => {
         if (info.chatRoomId) {
-            await dispatch(getChatRoomById((info.chatRoomId)));
+            await dispatch(getChatRoomById(info.chatRoomId));
             //dispatch(changeLoaderIsLoading(true));
         }
-    }
+    };
     useEffect(() => {
         console.log("Count of unreaded messages from chat ", info.countOfUnreadedMessages)
         getChatRoom();
@@ -76,10 +91,9 @@ export const ChatRoom = (info: IChatRoom) => {
     useEffect(() => {
         if (messagesRef.current != null) {
             messagesRef.current!.scrollTop = messagesRef.current!.scrollHeight;
-            console.log("messages- ", messages)
+            console.log("messages- ", messages);
         }
-
-    }, [messages.length])
+    }, [messages.length]);
 
     useEffect(() => {
         if (info.chatRoomId && chatRoom)
@@ -201,42 +215,54 @@ export const ChatRoom = (info: IChatRoom) => {
     return (
         <div id="chat-room">
             {status == Status.LOADING ? <Loading /> : ""}
-            {
-                chatRoom != null && info.chatRoomId != null ? <>
+            {chatRoom != null && info.chatRoomId != null ? (
+                <>
                     <div className="chat-room-header">
                         <div className="post">
-                            <img src={`${APP_ENV.BASE_URL}/images/posts/${chatRoom.postImage}`} />
+                            <img
+                                src={`${APP_ENV.BASE_URL}/images/posts/${chatRoom.postImage}`}
+                            />
                             <p>{chatRoom.postName}</p>
                         </div>
                         <div className="realtor">
-                            <img src={`${APP_ENV.BASE_URL}/images/avatars/${chatRoom.realtorAvatar}`} />
+                            <img
+                                src={`${APP_ENV.BASE_URL}/images/avatars/${chatRoom.realtorAvatar}`}
+                            />
                             <p>{chatRoom.realtorName}</p>
                         </div>
                     </div>
-                    <div className='chat-room-messages'>
-                        <div className='messages' ref={messagesRef}>
-                            {messages.length > 0 ? messages.map((item) =>
-                                <Message
-                                    text={item.text}
-                                    myMessage={user?.id === item.userId ? true : false}
-                                    date={new Date(item.date!)}
-                                    isRead={item.isRead}
-                                />) : ""}
-
+                    <div className="chat-room-messages">
+                        <div className="messages" ref={messagesRef}>
+                            {messages.length > 0
+                                ? messages.map((item) => (
+                                      <Message
+                                          text={item.text}
+                                          myMessage={
+                                              user?.id === item.userId
+                                                  ? true
+                                                  : false
+                                          }
+                                          date={new Date(item.date!)}
+                                          isRead={item.isRead}
+                                      />
+                                  ))
+                                : ""}
                         </div>
-                        <div className='send-message'>
-                            <ChatTextArea maxLength={4000} roomId={info.chatRoomId} addNewMessage={setMessages} messages={messages} />
+                        <div className="send-message">
+                            <ChatTextArea
+                                maxLength={4000}
+                                roomId={info.chatRoomId}
+                                addNewMessage={setMessages}
+                                messages={messages}
+                            />
                         </div>
                     </div>
                 </>
-                    :
-                    <div className='choose-chat'>
-                        <p>
-                            Choose a chat to communicate
-                        </p>
-                    </div>
-            }
-
+            ) : (
+                <div className="choose-chat">
+                    <p>Choose a chat to communicate</p>
+                </div>
+            )}
         </div>
     )
 }

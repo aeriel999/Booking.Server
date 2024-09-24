@@ -12,6 +12,7 @@ import {
     getNumberOfUnleastMessages,
     getPostIdListForListeningChatsByRealtor,
     getMessageListByChatId,
+    deleteChatById,
     setMessagesReadtByChatI,
     GetGeneralCountOfUnreadedMessages,
 } from "./chat.action.ts";
@@ -52,6 +53,7 @@ const initialState: IChatState = {
     getingMessageInfo: null,
     outcomeMessagesReadedChatId: null,
     readedMessages: null
+    deletedChatId: null
 };
 
 export const chatSlice = createSlice({
@@ -148,6 +150,12 @@ export const chatSlice = createSlice({
             state.readedMessages = action.payload;
         }
 
+        setDeletedChatId: (
+            state: IChatState,
+            action: PayloadAction<string>
+        ) => {
+            state.deletedChatId = action.payload;
+        },
     },
     extraReducers: (builder) => {
         builder
@@ -232,7 +240,13 @@ export const chatSlice = createSlice({
             .addCase(getMessageListByChatId.pending, (state) => {
                 state.status = Status.LOADING;
             })
-            .addCase(setMessagesReadtByChatI.fulfilled, (state) => {
+            .addCase(setMessagesReadtByChatId.fulfilled, (state) => {
+                state.status = Status.SUCCESS;
+            })
+            .addCase(setMessagesReadtByChatId.pending, (state) => {
+                state.status = Status.LOADING;
+            })
+            .addCase(deleteChatById.fulfilled, (state) => {
                 state.status = Status.SUCCESS;
             })
             .addCase(GetGeneralCountOfUnreadedMessages.fulfilled, (state, action) => {
@@ -240,6 +254,7 @@ export const chatSlice = createSlice({
                 localStorage.setItem("generalNumberOfUnreadMessages", action.payload)
                 state.status = Status.SUCCESS;
             })
+            .addCase(deleteChatById.pending, (state) => {
             .addCase(GetGeneralCountOfUnreadedMessages.pending, (state) => {
                 state.status = Status.LOADING;
             })
@@ -248,7 +263,7 @@ export const chatSlice = createSlice({
                 state.status = Status.LOADING;
             })
 
-            //setMessagesReadtByChatI
+            //deleteChatById
             .addMatcher(isRejectedAction, (state) => {
                 state.status = Status.ERROR;
             });
@@ -265,5 +280,6 @@ export const {
     deleteNumberOfMessageFromGeneralCount,
     setOutcomeMessagesReadedChatId,
     readMessages
+    setDeletedChatId
 } = chatSlice.actions;
 export default chatSlice.reducer;

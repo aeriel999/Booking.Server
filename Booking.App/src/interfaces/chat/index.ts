@@ -14,6 +14,7 @@ export interface IChatState {
     isCuretnChatReaded: boolean;
     getingMessageInfo: IGetMessage | null;
     outcomeMessagesReadedChatId: string | null;
+    deletedChatId: string | null;
     readedMessages: IReadMessage | null;
 }
 
@@ -103,9 +104,10 @@ export interface IChatItem {
     image: string;
     numberOfUnreadMessages: number;
     setChatInfo: (arg: IChatInfo) => void;
-    //  newNumberOfUnreadMessage: number | null;
     isOpen: boolean;
     onChatClick: () => void;
+    deletedChatId: string | null;
+    setDeletedPostChatId?: (arg: boolean) => void;
 }
 
 export interface IChatInfo {
@@ -116,7 +118,7 @@ export interface IChatInfo {
     userAvatar: string;
     userName: string;
     chatMessages: IChatMessageInfo[] | null;
-    numberOfUnreadMessages: number | null;
+   // numberOfUnreadMessages: number | null;
 }
 
 export interface IChatMessageInfo {

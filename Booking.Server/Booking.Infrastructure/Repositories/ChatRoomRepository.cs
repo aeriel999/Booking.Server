@@ -188,4 +188,13 @@ public class ChatRoomRepository(BookingDbContext context) : IChatRoomRepository
 			.ToListAsync();                                        
 	}
 
+	 
+	public async Task DeleteChatRoomAsync(ChatRoom chatRoom)
+	{
+		await Task.Run
+			(() =>
+			{
+				_dbSet.Remove(chatRoom);
+			});
+	}
 }

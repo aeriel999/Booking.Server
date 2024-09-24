@@ -40,8 +40,9 @@ import * as signalR from "@microsoft/signalr";
 import {
     setOutcomeMessagesReadedChatId,
     setNewMessage,
+    setDeletedChatId,
 } from "./store/chat/chat.slice.ts";
-import { IGetMessage, ISendMessage } from "./interfaces/chat/index.ts";
+import { IGetMessage } from "./interfaces/chat/index.ts";
 import { updateListOfChatIdForListening } from "./store/chat/chat.slice.ts";
 import PageOfPost from "./containers/client/PageOfPost/PageOfPost.tsx";
 
@@ -67,6 +68,10 @@ export const App: React.FC = () => {
 
     const setIncomeMessagesReadedChatIdInRedux = async (id: string) => {
         await dispatch(setOutcomeMessagesReadedChatId(id));
+    };
+
+    const setDeletedChatIdRedux = async (roomId: string) => {
+        await dispatch(setDeletedChatId(roomId));
     };
 
     const startConnectionWithSignalR = async () => {
@@ -154,9 +159,17 @@ export const App: React.FC = () => {
                     connection.off("get_message");
                     // Add the new listener
                     connection.on("get_message", async (m) => {
-                        console.log("New m - ", m)
+                        console.log("get_message", m);
                         await setIncomeMessagesReadedChatIdInRedux(m);
 
+                    });
+                })
+                .then(async () => {
+                    // Remove any previous listener before adding a new one
+                    connection.off("delete_chat");
+                    // Add the new listener
+                    connection.on("delete_chat", (m) => {
+                        setDeletedChatIdRedux(m);
                     });
                 });
         }

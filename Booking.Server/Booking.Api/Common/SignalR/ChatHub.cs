@@ -3,8 +3,10 @@ using Booking.Api.Contracts.Chat.CreateMessage;
 using Booking.Api.Contracts.Chat.GetChatMessageInfo;
 using Booking.Application.Chat.CreateChat;
 using Booking.Application.Chat.CreateMessage;
+using Booking.Application.Chat.DeleteChat;
 using Booking.Application.Chat.GetNewMessageInfo;
 using Booking.Application.Common.Interfaces.Chat;
+using Booking.Domain.Users;
 using MapsterMapper;
 using MediatR;
 using Microsoft.AspNetCore.Authorization;
@@ -73,11 +75,7 @@ namespace Booking.Api.Common.SignalR
 			return mapper.Map<List<GetChatMessageInfoResponse>>(messageList);
 		}
 
-		//Live room in deleting of chat or post
-		public Task LeaveRoom(RoomRequest request)
-		{
-			return Groups.RemoveFromGroupAsync(Context.ConnectionId, request.RoomId.ToString());
-		}
+		
 
 		//Create  and save new message in Db. Send new message 
 		public async Task SendMessage(InputMessage message)
@@ -93,6 +91,7 @@ namespace Booking.Api.Common.SignalR
 			var chatRoom = await chatRoomRepository.GetChatRoomByIdAsync(message.RoomId);
 
 			if (chatRoom == null) return;
+			 
 
 			//Make sendMessageResponse
 			var sendMessageResponse = new GetNewMessageInfoResponse()
@@ -107,19 +106,38 @@ namespace Booking.Api.Common.SignalR
 				.SendAsync("send_message", sendMessageResponse);
 		}
 
-		public async Task GetPostNitify(RoomRequest request)
+		public async Task GetPostNotify(RoomRequest request)
 		{
 			await Clients.GroupExcept(request.RoomId.ToString(), new[] { Context.ConnectionId })
 				.SendAsync("get_message", request);
 		}
 
-        public Task SendPrivateMessage(string user, string message)
+		//Leave room in deleting of chat or post
+		public async Task LeaveRoom(RoomRequest request)
+		{
+			await Groups.RemoveFromGroupAsync(Context.ConnectionId, request.RoomId.ToString());
+		}
+
+		public async Task DeleteChatNotify(RoomRequest request)
+		{
+			await Clients.GroupExcept(request.RoomId.ToString(), new[] { Context.ConnectionId })
+				.SendAsync("delete_chat", request);
+
+			//	await LeaveRoom(request);
+
+			await Groups.RemoveFromGroupAsync(Context.ConnectionId, request.RoomId.ToString());
+
+			var userId = Context.User!.Claims.FirstOrDefault(
+			u => u.Type == ClaimTypes.NameIdentifier)!.Value;
+
+			var deleteChatResult = await mediatr.Send(
+			new DeleteChatByIdCommand(request.RoomId, Guid.Parse(userId)));
+		}
+
+		public Task SendPrivateMessage(string user, string message)
 		{
 			return Clients.User(user).SendAsync("ReceiveMessage", message);
 		}
-
- 
-
 		//public async Task<string> JoinRoomByClientForPost(RoomRequest request)
 		//{
 		//	var userId = Context.UserName.Claims.FirstOrDefault(x => x.Type == ClaimTypes.NameIdentifier).Value;
