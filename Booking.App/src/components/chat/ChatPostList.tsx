@@ -89,6 +89,20 @@ export const ChatPostList = (info: IChatItem) => {
         }
     }, [getingMessageInfo]);
 
+    useEffect(() => {
+        if (info.deletedChatId) {
+            setChatList((prevChatList) =>
+                prevChatList.filter(
+                    (chatItem) => chatItem.id !== info.deletedChatId
+                )
+            );
+
+            if (chatList.length < 1 && info.setDeletedPostChatId) {
+                info.setDeletedPostChatId(true);
+            }
+        }
+    }, [info.deletedChatId]);
+
     return (
         <div className="chatMainItem">
             <div

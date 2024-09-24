@@ -1,5 +1,6 @@
 ﻿using Booking.Api.Contracts.Chat.ChatRoomForClient;
 using Booking.Api.Contracts.Chat.CreateChat;
+using Booking.Api.Contracts.Chat.DeleteChat;
 using Booking.Api.Contracts.Chat.GetChatMessageInfo;
 using Booking.Api.Contracts.Chat.GetListOfChatsByPostInfoForRealtor;
 using Booking.Api.Contracts.Chat.GetListOfPostInfoForChatsForRealtor;
@@ -193,12 +194,12 @@ public class ChatController(ISender mediatr, IMapper mapper) : ApiController
 	}
 
 	[HttpPost("delete-chat")]
-	public async Task<IActionResult> DeleteChatByIdAsync(Guid chatRoomId)
+	public async Task<IActionResult> DeleteChatByIdAsync(DeleteChatByIdRequest request)
 	{
 		var userId = User.Claims.First(u => u.Type == ClaimTypes.NameIdentifier).Value;
 
 		var deleteChatResult = await mediatr.Send(
-			new DeleteChatByIdCommand(chatRoomId, Guid.Parse(userId)));
+			new DeleteChatByIdCommand(request.ChatRoomId, Guid.Parse(userId)));
 
 		return deleteChatResult.Match(
 			deleteChatResult => Ok(),

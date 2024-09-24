@@ -28,6 +28,7 @@ import {
 import * as signalR from "@microsoft/signalr";
 import { connection } from "../../SignalR";
 import CustomizedDialogs from "../common/Dialog";
+import OutlinedErrorAlert from "../common/ErrorAlert";
 
 const StyledAvatar = styled(Avatar)({
     color: "#fff",
@@ -39,15 +40,16 @@ const StyledAvatar = styled(Avatar)({
 export default function ChatRoom() {
     const { user } = useAppSelector((state) => state.account);
     const dispatch = useDispatch<AppDispatch>();
-    const [_errorMessage, setErrorMessage] = useState<string | undefined>(
+    const [errorMessage, setErrorMessage] = useState<string | undefined>(
         undefined
     );
     const [postChatList, setPostChatList] = useState<IChatItem[]>([]);
     const [chatInfo, setChatInfo] = useState<IChatInfo | null>(null);
     const [messages, setMessages] = useState<IChatMessageInfo[]>([]);
     const [message, setMessage] = useState<IChatMessageInfo>();
-    const [isDialogOpen, setIsDialogOpen] = useState(false);
-
+    const [isDialogOpen, setIsDialogOpen] = useState<boolean>(false);
+    const [deletedChatId, setDeletedChatId] = useState<string | null>(null);
+    const [isDeletePostChat, setIsDeletePostChat] = useState<boolean>(false);
     const {
         newMessage,
         generalNumberOfUnreadMessages,
@@ -69,7 +71,13 @@ export default function ChatRoom() {
         }
     };
 
+    const numberOfUnreadMessages = messages.filter(
+        (msg) => msg.userId !== user?.id && !msg.isRead
+    ).length;
+
     const getChatList = async () => {
+        setErrorMessage(undefined);
+
         try {
             const response = await dispatch(
                 getListOfPostInfoForChatsForRealtor()
@@ -82,6 +90,8 @@ export default function ChatRoom() {
     };
 
     const getMessageList = async (roomId: string) => {
+        setErrorMessage(undefined);
+
         try {
             const response = await dispatch(getMessageListByChatId(roomId));
             unwrapResult(response);
@@ -92,34 +102,68 @@ export default function ChatRoom() {
     };
 
     const getMessageSignalR = async (roomId: string) => {
+        setErrorMessage(undefined);
+
         if (connection.state === signalR.HubConnectionState.Connected) {
-            await connection.send("GetPostNitify", { roomId });
+            await connection.send("GetPostNotify", { roomId });
         } else {
             await connection.start().then(async () => {
-                await connection.send("GetPostNitify", { roomId });
+                await connection.send("GetPostNotify", { roomId });
+            });
+        }
+    };
+    
+
+    const DeleteChatSignalR = async (roomId: string) => {
+        setErrorMessage(undefined);
+
+        if (connection.state === signalR.HubConnectionState.Connected) {
+            await connection.send("DeleteChatNotify", { roomId });
+        } else {
+            await connection.start().then(async () => {
+                await connection.send("DeleteChatNotify", { roomId });
             });
         }
     };
 
-    const deletePost = async (id: string) => {
-        try{
-            const response = await dispatch(deleteChatById(id));
-            unwrapResult(response);
-            return response;
-        }catch(error){
-            setErrorMessage(ErrorHandler(error));
+    const deleteChat = async (id: string) => {
+        setErrorMessage(undefined);
+
+        if (numberOfUnreadMessages < 1) {
+            try {
+                await DeleteChatSignalR(id);
+                // const response = await dispatch(deleteChatById(id));
+                // unwrapResult(response);
+            } catch (error) {
+                setErrorMessage(ErrorHandler(error));
+            }
+
+            setDeletedChatId(id);
+            setChatInfo(null);
+        } else {
+            setErrorMessage(
+                ErrorHandler("You cannot delete chat with unread messages")
+            );
         }
-    }
+    };
 
     useEffect(() => {
+        setErrorMessage(undefined);
+
         getChatList().then((data) => {
             if (data?.payload.$values) {
                 setPostChatList(data.payload.$values);
             }
         });
-    }, [, generalNumberOfUnreadMessages]);
+
+        if(isDeletePostChat){
+            setIsDeletePostChat(false)
+        }
+    }, [, generalNumberOfUnreadMessages, isDeletePostChat]);
 
     useEffect(() => {
+        setErrorMessage(undefined);
+
         if (chatInfo?.chatId) {
             dispatch(setChatRoomId(chatInfo?.chatId));
             getMessageList(chatInfo?.chatId).then((data) => {
@@ -137,12 +181,16 @@ export default function ChatRoom() {
     }, [chatInfo]);
 
     useEffect(() => {
+        setErrorMessage(undefined);
+
         if (messages.length > 0) {
             scrollToBottom();
         }
     }, [messages]);
 
     useEffect(() => {
+        setErrorMessage(undefined);
+
         if (newMessage) {
             const messageInfo: IChatMessageInfo = {
                 sentAt: new Date().toUTCString(),
@@ -159,6 +207,8 @@ export default function ChatRoom() {
     }, [newMessage]);
 
     useEffect(() => {
+        setErrorMessage(undefined);
+
         if (message) {
             const newMessageList: IChatMessageInfo[] = [...messages!, message];
 
@@ -167,6 +217,8 @@ export default function ChatRoom() {
     }, [message]);
 
     useEffect(() => {
+        setErrorMessage(undefined);
+
         if (getingMessageInfo) {
             setPostChatList((prevPostChatList) =>
                 prevPostChatList.map((chatItem) =>
@@ -183,6 +235,8 @@ export default function ChatRoom() {
     }, [getingMessageInfo]);
 
     useEffect(() => {
+        setErrorMessage(undefined);
+
         if (outcomeMessagesReadedChatId) {
             setMessages((prevMessages) =>
                 prevMessages.map((msg) =>
@@ -196,12 +250,9 @@ export default function ChatRoom() {
 
     // Function to move all unread messages to the read messages list
     async function handleMessageRead(): Promise<void> {
-        console.log("chatInfo?.chatId", chatInfo?.chatId);
-        if (chatInfo?.chatId) {
-            const numberOfUnreadMessages = messages.filter(
-                (msg) => msg.userId !== user?.id && !msg.isRead
-            ).length;
+        setErrorMessage(undefined);
 
+        if (chatInfo?.chatId) {
             if (numberOfUnreadMessages > 0) {
                 try {
                     const response = await dispatch(
@@ -235,17 +286,17 @@ export default function ChatRoom() {
 
     return (
         <div className="chatRoom">
-         {isDialogOpen && chatInfo && (
+            {isDialogOpen && chatInfo && (
                 <CustomizedDialogs
-                    message={`You want to delete chat with ${chatInfo.userName} in . Are you sure?`}
+                    message={`You want to delete chat with ${chatInfo.userName}. Are you sure?`}
                     isOpen={isDialogOpen}
                     setOpen={setIsDialogOpen}
                     action={async () => {
-                        await deletePost(chatInfo.chatId!);
+                        await deleteChat(chatInfo.chatId!);
                     }}
-                    navigate={"/dashboard/show-all-post"}
+                    //  navigate={"/dashboard/chat"}
                     lable="Deleting chat"
-                  //  menuItem="All Posts"
+                    //  menuItem="All Posts"
                 />
             )}
 
@@ -266,10 +317,18 @@ export default function ChatRoom() {
                             setChatInfo={setChatInfo}
                             isOpen={openChatId === item.id} // Check if the current chat should be open
                             onChatClick={() => handleChatToggle(item.id)} // Handle opening/closing the chat
+                            deletedChatId={deletedChatId}
+                            setDeletedPostChatId={setIsDeletePostChat}
                         />
                     ))}
             </div>
             <div className="chatContainer">
+                {errorMessage && (
+                    <OutlinedErrorAlert
+                        message={errorMessage}
+                        textColor="#000"
+                    />
+                )}
                 {/* Chat Header */}
                 {chatInfo !== null ? (
                     <>
@@ -286,10 +345,11 @@ export default function ChatRoom() {
                                     />
                                     <p>{chatInfo!.userName}</p>
                                 </div>
-                                <Button onClick={()=>{
-                                     setIsDialogOpen(true);
-
-                                }}>
+                                <Button
+                                    onClick={() => {
+                                        setIsDialogOpen(true);
+                                    }}
+                                >
                                     <img src={Trash} alt="delete" />
                                 </Button>
                             </div>
@@ -334,14 +394,3 @@ export default function ChatRoom() {
         </div>
     );
 }
-
-// const unreadMessageRef = useRef<HTMLDivElement | null>(null);
-// const newMessageRef = useRef<HTMLDivElement | null>(null); // Ref for new message
-// const lastReadMessageRef = useRef<HTMLDivElement | null>(null); // Ref for last read message
-// const [clientMessages, setClientMessages] = useState<IChatMessageInfo[]>(
-//     []
-// );
-// const [readMessages, setReadMessages] = useState<IChatMessageInfo[]>([]);
-// const [unreadMessages, setUnreadMessages] = useState<IChatMessageInfo[]>(
-//     []
-// );

@@ -156,7 +156,7 @@ export const setMessagesReadtByChatId = createAsyncThunk(
 export const deleteChatById = createAsyncThunk(
     "chat/delete-chat",
     async (chatRoomId: string, { rejectWithValue }) => {
-        console.log("setMessagesReadtByChatI", { chatRoomId });
+        console.log("deleteChatById", { chatRoomId });
         try {
             const response = await apiClient.post(`/api/Chat/delete-chat`, {
                 chatRoomId,
