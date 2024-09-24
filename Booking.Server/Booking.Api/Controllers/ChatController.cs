@@ -13,6 +13,7 @@ using Booking.Application.Chat.GetChatIdList;
 using Booking.Application.Chat.GetChatRoomForClientByPostId;
 using Booking.Application.Chat.GetChatRoomsList;
 using Booking.Application.Chat.GetChatRoomsListForClient;
+using Booking.Application.Chat.GetGeneralCountOfUnreadedMessages;
 using Booking.Application.Chat.GetListOfChatsByPostInfoForRealtor;
 using Booking.Application.Chat.GetListOfPostInfoForChatsForRealtor;
 using Booking.Application.Chat.GetMessageListByChatId;

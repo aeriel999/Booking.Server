@@ -16,6 +16,7 @@ import Header from "../../../components/authentification/Header.tsx";
 import { changeDashboardMenuItem } from "../../../store/settings/settings.slice.ts";
 import { RootState } from "../../../store/index.ts";
 import {
+    GetGeneralCountOfUnreadedMessages,
     getChatIdList,
     getNumberOfUnleastMessages,
     getPostIdListForListeningChatsByRealtor,
@@ -25,6 +26,9 @@ export default function SignInPage() {
     const dispatch = useAppDispatch();
     const savedPath = useAppSelector(
         (state: RootState) => state.settings.savedPath
+    );
+    const unreadMessages = useAppSelector(
+        (state: RootState) => state.chat.generalNumberOfUnreadMessages
     );
     const [errorMessage, setErrorMessage] = useState<string | undefined>(
         undefined
@@ -66,7 +70,7 @@ export default function SignInPage() {
 
         const role =
             decodedToken[
-                "http://schemas.microsoft.com/ws/2008/06/identity/claims/role"
+            "http://schemas.microsoft.com/ws/2008/06/identity/claims/role"
             ];
 
         if (role.toLowerCase().includes("realtor")) {

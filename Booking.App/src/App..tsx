@@ -161,6 +161,7 @@ export const App: React.FC = () => {
                     connection.on("get_message", async (m) => {
                         console.log("get_message", m);
                         await setIncomeMessagesReadedChatIdInRedux(m);
+
                     });
                 })
                 .then(async () => {
