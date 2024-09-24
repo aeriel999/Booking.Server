@@ -113,7 +113,7 @@ namespace Booking.Api.Common.SignalR
 				.SendAsync("get_message", request);
 		}
 
-		public Task SendPrivateMessage(string user, string message)
+        public Task SendPrivateMessage(string user, string message)
 		{
 			return Clients.User(user).SendAsync("ReceiveMessage", message);
 		}

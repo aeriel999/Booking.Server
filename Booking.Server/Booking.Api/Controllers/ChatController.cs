@@ -10,6 +10,7 @@ using Booking.Application.Chat.GetChatIdList;
 using Booking.Application.Chat.GetChatRoomForClientByPostId;
 using Booking.Application.Chat.GetChatRoomsList;
 using Booking.Application.Chat.GetChatRoomsListForClient;
+using Booking.Application.Chat.GetGeneralCountOfUnreadedMessages;
 using Booking.Application.Chat.GetListOfChatsByPostInfoForRealtor;
 using Booking.Application.Chat.GetListOfPostInfoForChatsForRealtor;
 using Booking.Application.Chat.GetMessageListByChatId;
@@ -189,4 +190,17 @@ public class ChatController(ISender mediatr, IMapper mapper) : ApiController
 			setMessagesReadtByChatIdResult => Ok(),
 			errors => Problem(errors));
 	}
+
+    [HttpGet("get-general-count-of-unreaded-messages")]
+    public async Task<IActionResult> GetGeneralCountOfUnreadedMessagesAsync()
+    {
+        var userId = User.Claims.First(u => u.Type == ClaimTypes.NameIdentifier).Value;
+
+        var generalCountOfUnreadedMessages = await mediatr.Send(
+            new GetGeneralCountOfUnreadedMessagesQuery(Guid.Parse(userId)));
+
+        return generalCountOfUnreadedMessages.Match(
+            generalCountOfUnreadedMessages => Ok(generalCountOfUnreadedMessages),
+            errors => Problem(errors));
+    }
 }

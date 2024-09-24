@@ -16,6 +16,7 @@ import Header from "../../../components/authentification/Header.tsx";
 import { changeDashboardMenuItem } from "../../../store/settings/settings.slice.ts";
 import { RootState } from "../../../store/index.ts";
 import {
+    GetGeneralCountOfUnreadedMessages,
     getChatIdList,
     getNumberOfUnleastMessages,
     getPostIdListForListeningChatsByRealtor,
@@ -25,6 +26,9 @@ export default function SignInPage() {
     const dispatch = useAppDispatch();
     const savedPath = useAppSelector(
         (state: RootState) => state.settings.savedPath
+    );
+    const unreadMessages = useAppSelector(
+        (state: RootState) => state.chat.generalNumberOfUnreadMessages
     );
     const [errorMessage, setErrorMessage] = useState<string | undefined>(
         undefined
@@ -66,13 +70,15 @@ export default function SignInPage() {
 
         const role =
             decodedToken[
-                "http://schemas.microsoft.com/ws/2008/06/identity/claims/role"
+            "http://schemas.microsoft.com/ws/2008/06/identity/claims/role"
             ];
 
         if (role.toLowerCase().includes("realtor")) {
             dispatch(changeDashboardMenuItem("Profile"));
             navigate("/dashboard/profile");
         } else if (role.toLowerCase().includes("user")) {
+            await dispatch(GetGeneralCountOfUnreadedMessages())
+            console.log("Messages --- ", unreadMessages);
             navigate(savedPath);
         } else if (role.toLowerCase().includes("admin")) {
             navigate("/dashboard/profile");
@@ -82,10 +88,12 @@ export default function SignInPage() {
 
         try {
             //Get number of new messages
-            const getNumberOfUnleastMessagesResult = await dispatch(
-                getNumberOfUnleastMessages()
-            );
-            unwrapResult(getNumberOfUnleastMessagesResult);
+            if (role.toLowerCase().includes("realtor")) {
+                const getNumberOfUnleastMessagesResult = await dispatch(
+                    getNumberOfUnleastMessages()
+                );
+                unwrapResult(getNumberOfUnleastMessagesResult);
+            }
 
             //Get list of Id for listening posts
             const getPostIdListForListeningChatsByRealtorResult =

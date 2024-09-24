@@ -8,7 +8,7 @@ import ActiveUserProfiler from "../../assets/DashboardIcons/Active/user-profile-
 import UserProfiler from "../../assets/DashboardIcons/user-profile-03.svg";
 import AllPost from "../../assets/DashboardIcons/image-01.svg";
 import { IDashboardMenuItem } from "../../interfaces/common";
- 
+
 export const initialMenuData: IDashboardMenuItem[] = [
     {
         name: "Profile",
@@ -44,7 +44,7 @@ export const initialMenuData: IDashboardMenuItem[] = [
         image: Inbox,
         activeImage: Inbox,
         link: "/dashboard/chat",
-         counterOfMsg: true
+        counterOfMsg: true
     },
     {
         name: "Reviews",
@@ -83,6 +83,7 @@ export const clientMenuData: IDashboardMenuItem[] = [
         image: Inbox,
         activeImage: Inbox,
         link: "/dashboard/profile/page-of-messages",
+        counterOfMsg: true
     },
     {
         name: "Settings",

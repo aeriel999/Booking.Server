@@ -24,6 +24,7 @@ public class UserMessageRepository(BookingDbContext context) : IUserMessageRepos
 	{ 
 		return await _dbSet
 						.Where(m => m.ChatRoomId == chatRoomId)
+						.OrderBy(m => m.SentAt)
 						.ToListAsync();
 	}
 	public async Task ReadMessagesByChatRoomIdAsync(Guid chatRoomId, Guid userId)
@@ -50,5 +51,28 @@ public class UserMessageRepository(BookingDbContext context) : IUserMessageRepos
 				context.Entry(userMessage).State = EntityState.Modified;
 			});
 	}
+
+    public async Task<int> GetCountOfUnreadMessages(List<Guid>chatRoomsId, Guid userId)
+    {
+		var unreadMessages = 0;
+		foreach(var chatRoom in chatRoomsId)
+		{
+            var messages = await _dbSet
+            .Where(m => m.ChatRoomId == chatRoom && m.UserId != userId && m.IsRead == false)
+            .ToListAsync();
+			unreadMessages += messages.Count;
+        }
+		return unreadMessages;
+    }
+
+    public async Task<int> GetGeneralCountOfUnreadMessages(Guid userId)
+    {
+       var messages = await _dbSet
+	   .Include(m => m.ChatRoom)
+       .Where(m => m.UserId != userId && m.IsRead == false && m.ChatRoom != null && m.ChatRoom.ClientId == userId)
+       .ToListAsync();
+
+        return messages.Count;
+    }
 }
 

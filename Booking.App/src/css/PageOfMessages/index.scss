@@ -3,11 +3,12 @@
 .page-of-messages-container {
     width: 100%;
     display: grid;
-    grid-template-columns: minmax(320px, 30%) 70%;
+    grid-template-columns: minmax(320px, 30%) minmax(320px, 70%);
 
     grid-template-rows: auto;
     column-gap: 22px;
     max-height: 95%;
+    min-width: 700px;
     //overflow: hidden;
 
     .first-container {
@@ -16,6 +17,7 @@
         position: relative;
 
         .chat-list {
+            min-width: 320px;
             height: auto;
             max-height: 625px;
             border: 1px solid black;

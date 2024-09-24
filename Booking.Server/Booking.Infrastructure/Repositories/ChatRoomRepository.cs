@@ -44,16 +44,18 @@ public class ChatRoomRepository(BookingDbContext context) : IChatRoomRepository
 			.ToListAsync();
 	}
 
-
-	//public async Task<List<ChatRoom>> GetChatRoomListByRealtorIdAsync(Guid realtorId)
-	//{
-	//	return await _dbSet
-	//		.Where(c => c.RealtorId == realtorId)
-	//		.ToListAsync();
-	//}
+    
 
 
-	public async Task<List<ChatRoom>> GetChatRoomListWithMessagesByUserIdAsync(Guid userId)
+    //public async Task<List<ChatRoom>> GetChatRoomListByRealtorIdAsync(Guid realtorId)
+    //{
+    //	return await _dbSet
+    //		.Where(c => c.RealtorId == realtorId)
+    //		.ToListAsync();
+    //}
+
+
+    public async Task<List<ChatRoom>> GetChatRoomListWithMessagesByUserIdAsync(Guid userId)
 	{
 		return await _dbSet
 			.Where(c => c.ClientId == userId)
@@ -92,15 +94,28 @@ public class ChatRoomRepository(BookingDbContext context) : IChatRoomRepository
             .Where(c => c.RealtorId == realtorId && c.ClientId == clientId)
 			.Include(c => c.Post)
 			.ThenInclude(c => c!.ImagesPost)
+            .Include(c => c.UserMessages)
             .Select(c => new ChatRoomForClient()
 			{
 				ChatRoomId = c.ChatRoomId,
 				PostImage = c.Post!.ImagesPost!.FirstOrDefault(img => img.Priority == 1)!.Name,
 				PostName = c.Post!.Name,
-				HasUnreadMessages = false,
-				UnreadMessages = null
+				HasUnreadMessages = c.UserMessages != null ? 
+									c.UserMessages
+											.Where(m => m.IsRead == false && m.UserId != clientId)
+											.Select(m => m.Message)
+											.ToList()
+											.Count > 0 ? true : false 
+									: false,
+				UnreadMessages = c.UserMessages != null ? 
+								 c.UserMessages
+										 .Where(m => m.IsRead == false && m.UserId != clientId)
+										 .Select(m => m.Message)
+										 .ToList()
+										 .Count 
+								 : 0,
 			})
-            .Distinct()
+            //.Distinct()
             .ToListAsync();
     }
 

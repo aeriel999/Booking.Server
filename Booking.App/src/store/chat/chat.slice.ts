@@ -1,7 +1,7 @@
 import { AnyAction, createSlice, PayloadAction } from "@reduxjs/toolkit";
 import { RejectedAction } from "../../utils/types";
 import { Status } from "../../utils/enum";
-import { IChatState, IGetMessage, ISendMessage } from "../../interfaces/chat";
+import { IChatState, IGetMessage, IReadMessage, ISendMessage } from "../../interfaces/chat";
 import {
     getChatIdList,
     getChatRoomById,
@@ -13,6 +13,7 @@ import {
     getPostIdListForListeningChatsByRealtor,
     getMessageListByChatId,
     setMessagesReadtByChatI,
+    GetGeneralCountOfUnreadedMessages,
 } from "./chat.action.ts";
 import {
     addlistToLocalStorage,
@@ -34,9 +35,9 @@ const initialState: IChatState = {
         "generalNumberOfUnreadMessages"
     )
         ? parseInt(
-              getLocalStorage("generalNumberOfUnreadMessages") as string,
-              10
-          )
+            getLocalStorage("generalNumberOfUnreadMessages") as string,
+            10
+        )
         : 0,
     listOfPostIdForListening: getListFromLocalStorage(
         "updateListOfIdForListening"
@@ -50,6 +51,7 @@ const initialState: IChatState = {
     isCuretnChatReaded: false,
     getingMessageInfo: null,
     outcomeMessagesReadedChatId: null,
+    readedMessages: null
 };
 
 export const chatSlice = createSlice({
@@ -70,8 +72,9 @@ export const chatSlice = createSlice({
             state: IChatState,
             action: PayloadAction<number>
         ) => {
-            state.generalNumberOfUnreadMessages =
-                state.generalNumberOfUnreadMessages - action.payload;
+            if (state.generalNumberOfUnreadMessages - action.payload >= 0)
+                state.generalNumberOfUnreadMessages =
+                    state.generalNumberOfUnreadMessages - action.payload;
             addLocalStorage(
                 "generalNumberOfUnreadMessages",
                 state.generalNumberOfUnreadMessages.toString()
@@ -113,8 +116,11 @@ export const chatSlice = createSlice({
             state: IChatState,
             action: PayloadAction<string>
         ) => {
+            console.log("Current chatroom - ", state.currentChatRoomId)
             if (state.currentChatRoomId === action.payload) {
+
                 state.outcomeMessagesReadedChatId = action.payload;
+                console.log("Test test test - ", state.outcomeMessagesReadedChatId)
             }
         },
         setNewMessage: (
@@ -135,6 +141,13 @@ export const chatSlice = createSlice({
 
             state.getingMessageInfo = action.payload;
         },
+        readMessages: (
+            state: IChatState,
+            action: PayloadAction<IReadMessage>
+        ) => {
+            state.readedMessages = action.payload;
+        }
+
     },
     extraReducers: (builder) => {
         builder
@@ -222,6 +235,15 @@ export const chatSlice = createSlice({
             .addCase(setMessagesReadtByChatI.fulfilled, (state) => {
                 state.status = Status.SUCCESS;
             })
+            .addCase(GetGeneralCountOfUnreadedMessages.fulfilled, (state, action) => {
+                state.generalNumberOfUnreadMessages = action.payload
+                localStorage.setItem("generalNumberOfUnreadMessages", action.payload)
+                state.status = Status.SUCCESS;
+            })
+            .addCase(GetGeneralCountOfUnreadedMessages.pending, (state) => {
+                state.status = Status.LOADING;
+            })
+
             .addCase(setMessagesReadtByChatI.pending, (state) => {
                 state.status = Status.LOADING;
             })
@@ -242,5 +264,6 @@ export const {
     setIsCuretnChatReaded,
     deleteNumberOfMessageFromGeneralCount,
     setOutcomeMessagesReadedChatId,
+    readMessages
 } = chatSlice.actions;
 export default chatSlice.reducer;

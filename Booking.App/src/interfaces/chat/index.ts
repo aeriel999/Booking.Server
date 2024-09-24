@@ -14,6 +14,7 @@ export interface IChatState {
     isCuretnChatReaded: boolean;
     getingMessageInfo: IGetMessage | null;
     outcomeMessagesReadedChatId: string | null;
+    readedMessages: IReadMessage | null;
 }
 
 export interface IChatRoomList {
@@ -64,6 +65,10 @@ export interface IGetMessage {
     message: string;
     chatRoomId: string;
     postId: string;
+}
+export interface IReadMessage {
+    chatRoomId: string;
+    countReadedMessages: number;
 }
 
 export interface IChatRoomInfoForClient {

@@ -154,7 +154,9 @@ export const App: React.FC = () => {
                     connection.off("get_message");
                     // Add the new listener
                     connection.on("get_message", async (m) => {
+                        console.log("New m - ", m)
                         await setIncomeMessagesReadedChatIdInRedux(m);
+
                     });
                 });
         }
