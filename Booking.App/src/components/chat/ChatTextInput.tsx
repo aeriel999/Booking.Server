@@ -20,7 +20,7 @@ export const ChatTextInput = (props: ChatTextInputProps) => {
         handleSubmit,
         formState: { errors },
         setValue,
-        setError,
+        //setError,
         clearErrors,
         reset,
     } = useForm<ISendMessage>({ resolver: sendMessageResolver });

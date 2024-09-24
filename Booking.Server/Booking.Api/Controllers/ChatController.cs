@@ -1,11 +1,14 @@
 ﻿using Booking.Api.Contracts.Chat.ChatRoomForClient;
 using Booking.Api.Contracts.Chat.CreateChat;
+using Booking.Api.Contracts.Chat.DeleteChat;
 using Booking.Api.Contracts.Chat.GetChatMessageInfo;
 using Booking.Api.Contracts.Chat.GetListOfChatsByPostInfoForRealtor;
 using Booking.Api.Contracts.Chat.GetListOfPostInfoForChatsForRealtor;
+using Booking.Api.Contracts.Chat.SetMessagesReadtByChatId;
 using Booking.Api.Contracts.Post.GetCities;
 using Booking.Api.Infrastructure;
 using Booking.Application.Chat.CheckChatForClientIsExist;
+using Booking.Application.Chat.DeleteChat;
 using Booking.Application.Chat.GetChatIdList;
 using Booking.Application.Chat.GetChatRoomForClientByPostId;
 using Booking.Application.Chat.GetChatRoomsList;
@@ -62,7 +65,7 @@ public class ChatController(ISender mediatr, IMapper mapper) : ApiController
 
 
 	[HttpGet("get-unread-messages-count")]
-	public async Task<IActionResult> GetNumberOfUnleastMessagesAsync()
+	public async Task<IActionResult> GetNumberOfUnreadMessagesAsync()
 	{
 		var userId = User.Claims.First(u => u.Type == ClaimTypes.NameIdentifier).Value;
 
@@ -177,16 +180,29 @@ public class ChatController(ISender mediatr, IMapper mapper) : ApiController
 			errors => Problem(errors));
 	}
 
-	[HttpGet("set-messages-read-by-chatId")]
-	public async Task<IActionResult> SetMessagesReadedByChatIdAsync([FromQuery] Guid chatRoomId)
+	[HttpPost("set-messages-read-by-chatId")]
+	public async Task<IActionResult> SetMessagesReadedByChatIdAsync(SetMessagesReadtByChatIdRequest request)
 	{
 		var userId = User.Claims.First(u => u.Type == ClaimTypes.NameIdentifier).Value;
 
 		var setMessagesReadtByChatIdResult = await mediatr.Send(
-			new SetMessagesReadtByChatIdCommand(chatRoomId, Guid.Parse(userId)));
+			new SetMessagesReadtByChatIdCommand(request.ChatRoomId, Guid.Parse(userId)));
 
 		return setMessagesReadtByChatIdResult.Match(
 			setMessagesReadtByChatIdResult => Ok(),
+			errors => Problem(errors));
+	}
+
+	[HttpPost("delete-chat")]
+	public async Task<IActionResult> DeleteChatByIdAsync(DeleteChatByIdRequest request)
+	{
+		var userId = User.Claims.First(u => u.Type == ClaimTypes.NameIdentifier).Value;
+
+		var deleteChatResult = await mediatr.Send(
+			new DeleteChatByIdCommand(request.ChatRoomId, Guid.Parse(userId)));
+
+		return deleteChatResult.Match(
+			deleteChatResult => Ok(),
 			errors => Problem(errors));
 	}
 }

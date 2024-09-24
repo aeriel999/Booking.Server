@@ -37,6 +37,7 @@ import { changeDashboardMenuItem } from "../../store/settings/settings.slice.ts"
 import Room from "../../components/realtorDashboard/Room.tsx";
 import Plus from "../../assets/DashboardIcons/iconamoon_sign-plus-fill.svg";
 import { updateListOfPostIdForListening } from "../../store/chat/chat.slice.ts";
+import { joinForPostListening } from "../../SignalR/index.ts";
 
 export function AddNewPost() {
     const dispatch = useAppDispatch();
@@ -628,6 +629,5 @@ export function AddNewPost() {
         </div>
     );
 }
-function joinForPostListening(id: any) {
-    throw new Error("Function not implemented.");
-}
+ 
+

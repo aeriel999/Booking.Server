@@ -12,12 +12,9 @@ import { setIsCuretnChatReaded } from "../../store/chat/chat.slice";
 export const ChatPostList = (info: IChatItem) => {
     // const [isOpen, setIsOpen] = useState<boolean>(false);
     const dispatch = useAppDispatch();
-    const {
-        isCuretnChatReaded,
-        currentChatRoomId,
-        getingMessageInfo,
-    } = useAppSelector((state) => state.chat);
-    const [errorMessage, setErrorMessage] = useState<string | undefined>(
+    const { isCuretnChatReaded, currentChatRoomId, getingMessageInfo } =
+        useAppSelector((state) => state.chat);
+    const [_errorMessage, setErrorMessage] = useState<string | undefined>(
         undefined
     );
     const [chatList, setChatList] = useState<IChatItem[]>([]);
@@ -92,7 +89,19 @@ export const ChatPostList = (info: IChatItem) => {
         }
     }, [getingMessageInfo]);
 
-   
+    useEffect(() => {
+        if (info.deletedChatId) {
+            setChatList((prevChatList) =>
+                prevChatList.filter(
+                    (chatItem) => chatItem.id !== info.deletedChatId
+                )
+            );
+
+            if (chatList.length < 1 && info.setDeletedPostChatId) {
+                info.setDeletedPostChatId(true);
+            }
+        }
+    }, [info.deletedChatId]);
 
     return (
         <div className="chatMainItem">
@@ -103,7 +112,7 @@ export const ChatPostList = (info: IChatItem) => {
                     handleCllick(info.id);
                 }}
             >
-                <img id="postImage" src={info.image} alt="" />
+                <img id="postImage" src={info.image} alt={info.name} />
 
                 <div className="postName">{info.name}</div>
 
@@ -140,15 +149,13 @@ export const ChatPostList = (info: IChatItem) => {
                                 userAvatar: item.image,
                                 userName: item.name,
                                 chatMessages: null,
-                                numberOfUnreadMessages:
-                                    item.numberOfUnreadMessages,
                                 postId: info.id,
                             };
 
                             info.setChatInfo(chatInfo);
                         }}
                     >
-                        <img id="postImage" src={item.image} alt="" />
+                        <img id="postImage" src={item.image} alt="avatar" />
 
                         <div className="postName">{item.name}</div>
                         {item.numberOfUnreadMessages ? (

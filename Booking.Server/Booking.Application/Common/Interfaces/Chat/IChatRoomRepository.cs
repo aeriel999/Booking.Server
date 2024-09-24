@@ -58,4 +58,7 @@ public interface IChatRoomRepository
 
 
 	Task<List<UserMessage>> GetListOfUnreadMessagesByChatIdAsync(Guid chatRoomId);
+
+
+	Task DeleteChatRoomAsync(ChatRoom chatRoom);
 }

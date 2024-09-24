@@ -1,7 +1,7 @@
 import { AnyAction, createSlice, PayloadAction } from "@reduxjs/toolkit";
 import { RejectedAction } from "../../utils/types";
 import { Status } from "../../utils/enum";
-import { IChatState, IGetMessage, ISendMessage } from "../../interfaces/chat";
+import { IChatState, IGetMessage } from "../../interfaces/chat";
 import {
     getChatIdList,
     getChatRoomById,
@@ -12,7 +12,8 @@ import {
     getNumberOfUnleastMessages,
     getPostIdListForListeningChatsByRealtor,
     getMessageListByChatId,
-    setMessagesReadtByChatI,
+    setMessagesReadtByChatId,
+    deleteChatById,
 } from "./chat.action.ts";
 import {
     addlistToLocalStorage,
@@ -34,9 +35,9 @@ const initialState: IChatState = {
         "generalNumberOfUnreadMessages"
     )
         ? parseInt(
-              getLocalStorage("generalNumberOfUnreadMessages") as string,
-              10
-          )
+            getLocalStorage("generalNumberOfUnreadMessages") as string,
+            10
+        )
         : 0,
     listOfPostIdForListening: getListFromLocalStorage(
         "updateListOfIdForListening"
@@ -50,6 +51,7 @@ const initialState: IChatState = {
     isCuretnChatReaded: false,
     getingMessageInfo: null,
     outcomeMessagesReadedChatId: null,
+    deletedChatId: null
 };
 
 export const chatSlice = createSlice({
@@ -135,6 +137,12 @@ export const chatSlice = createSlice({
 
             state.getingMessageInfo = action.payload;
         },
+        setDeletedChatId: (
+            state: IChatState,
+            action: PayloadAction<string>
+        ) => {
+            state.deletedChatId = action.payload;
+        },
     },
     extraReducers: (builder) => {
         builder
@@ -219,14 +227,20 @@ export const chatSlice = createSlice({
             .addCase(getMessageListByChatId.pending, (state) => {
                 state.status = Status.LOADING;
             })
-            .addCase(setMessagesReadtByChatI.fulfilled, (state) => {
+            .addCase(setMessagesReadtByChatId.fulfilled, (state) => {
                 state.status = Status.SUCCESS;
             })
-            .addCase(setMessagesReadtByChatI.pending, (state) => {
+            .addCase(setMessagesReadtByChatId.pending, (state) => {
+                state.status = Status.LOADING;
+            })
+            .addCase(deleteChatById.fulfilled, (state) => {
+                state.status = Status.SUCCESS;
+            })
+            .addCase(deleteChatById.pending, (state) => {
                 state.status = Status.LOADING;
             })
 
-            //setMessagesReadtByChatI
+            //deleteChatById
             .addMatcher(isRejectedAction, (state) => {
                 state.status = Status.ERROR;
             });
@@ -242,5 +256,6 @@ export const {
     setIsCuretnChatReaded,
     deleteNumberOfMessageFromGeneralCount,
     setOutcomeMessagesReadedChatId,
+    setDeletedChatId
 } = chatSlice.actions;
 export default chatSlice.reducer;

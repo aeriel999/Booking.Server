@@ -2,8 +2,6 @@ import { APP_ENV } from "../env";
 import { getLocalStorage } from "../utils/storage/localStorageUtils.ts";
 import * as signalR from "@microsoft/signalr";
 
-
-
 //Connection build
 export const connection = new signalR.HubConnectionBuilder()
     .withUrl(APP_ENV.BASE_URL + "/chat", {
@@ -25,22 +23,22 @@ export const joinNewPostChatByUser = async (roomId: string) => {
     }
 };
 
-export const startListeningPost = async (roomId: string) => {
-    if (connection.state === signalR.HubConnectionState.Connected) {
-        await connection
-            .invoke("JoinRoomForListening", { roomId })
-            .then(async () => {
-                console.log("roomId", roomId);
-                // Remove any previous listener before adding a new one
-                connection.off("send_notify");
-                // Add the new listener
-                connection.on("send_message", async (m) => {
-                    console.log("send_message", m);
-                    //  props.setMessages(m)
-                });
-            });
-    }
-};
+// export const startListeningPost = async (roomId: string) => {
+//     if (connection.state === signalR.HubConnectionState.Connected) {
+//         await connection
+//             .invoke("JoinRoomForListening", { roomId })
+//             .then(async () => {
+//                 console.log("roomId", roomId);
+//                 // Remove any previous listener before adding a new one
+//                 connection.off("send_notify");
+//                 // Add the new listener
+//                 connection.on("send_message", async (m) => {
+//                     console.log("send_message", m);
+//                     //  props.setMessages(m)
+//                 });
+//             });
+//     }
+// };
 
 //end connection
 export const endListening = () =>
@@ -57,7 +55,8 @@ export const endListening = () =>
 //         });
 
 //
-// export const joinForPostListening = (roomId: string) => connection.invoke("JoinRoomForListening", {roomId})
+export const joinForPostListening = (roomId: string) =>
+    connection.invoke("JoinNewChanelOrNewChatRoomForListening", { roomId });
 
 //
 // export const joinChatRoom = (roomId: string)=> connection.invoke('JoinRoomForListening', {roomId})
@@ -76,28 +75,24 @@ export const endListening = () =>
 //
 // // needed for working example
 //
-//
-// export const leave = (roomId: string) => connection.send('LeaveRoom', {roomId})
-//     .then(() => {
-//        // currentRoom = ''
-//         // function reference needs to be the same to work
-//         // connection.off('send_message', m => console.log(m)) // doesn't work
-//         // connection.off('send_message', logMessage) // works
-//         connection.off('send_message')
-//         return connection.stop()
-//     })
+
+// export const leave = (roomId: string) =>
+//     connection.send("LeaveRoom", { roomId }).then((data) => {
+//         console.log("leave", data);
+//         connection.off("send_message");
+//     });
 
 // export const start = (setState: (value: (((prevState: (IActive | undefined)) =>
 //     (IActive | undefined)) | IActive | undefined)) => void) =>
 //     connection.on('send_message', () => setState(true));
 
-export const joinPostListening = (roomId: string) =>
-    connection
-        .start()
-        .then(() => connection.invoke("JoinRoom", { roomId }))
-        .then(() => {
-            console.log("joinPostListening");
-        });
+// export const joinPostListening = (roomId: string) =>
+//     connection
+//         .start()
+//         .then(() => connection.invoke("JoinRoom", { roomId }))
+//         .then(() => {
+//             console.log("joinPostListening");
+//         });
 // export const joinChatRoom = async ({userName, chatRoom}) => {
 //
 //

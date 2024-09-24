@@ -27,7 +27,9 @@ export default function CustomizedDialogs(props: CustomizedDialogsProps) {
             dispatch(changeDashboardMenuItem(props.menuItem));
         }
 
-        navigate(props.navigate);
+        if(props.navigate){
+             navigate(props.navigate);
+        }
     };
 
     return (

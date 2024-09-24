@@ -72,6 +72,21 @@ export default function SignInPage() {
         if (role.toLowerCase().includes("realtor")) {
             dispatch(changeDashboardMenuItem("Profile"));
             navigate("/dashboard/profile");
+            try {
+                //Get number of new messages
+                const getNumberOfUnleastMessagesResult = await dispatch(
+                    getNumberOfUnleastMessages()
+                );
+                unwrapResult(getNumberOfUnleastMessagesResult);
+                
+                //Get list of Id for listening posts
+                const getPostIdListForListeningChatsByRealtorResult =
+                    await dispatch(getPostIdListForListeningChatsByRealtor());
+                unwrapResult(getPostIdListForListeningChatsByRealtorResult);
+            } catch (error) {
+                setErrorMessage(ErrorHandler(error));
+            }
+
         } else if (role.toLowerCase().includes("user")) {
             navigate(savedPath);
         } else if (role.toLowerCase().includes("admin")) {
@@ -81,17 +96,6 @@ export default function SignInPage() {
         }
 
         try {
-            //Get number of new messages
-            const getNumberOfUnleastMessagesResult = await dispatch(
-                getNumberOfUnleastMessages()
-            );
-            unwrapResult(getNumberOfUnleastMessagesResult);
-
-            //Get list of Id for listening posts
-            const getPostIdListForListeningChatsByRealtorResult =
-                await dispatch(getPostIdListForListeningChatsByRealtor());
-            unwrapResult(getPostIdListForListeningChatsByRealtorResult);
-
             //Get list of Id for listening chats
             const getChatIdListResult = await dispatch(getChatIdList());
             unwrapResult(getChatIdListResult);
