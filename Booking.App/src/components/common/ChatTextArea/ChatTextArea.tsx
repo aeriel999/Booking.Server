@@ -22,15 +22,14 @@ export const ChatTextArea = (info: IChatTextArea) => {
     const {
         register,
         handleSubmit,
-        formState: { isSubmitting },
+        formState: { isSubmitting, errors },
         setValue
 
     } = useForm<ISendMessage>({ resolver: sendMessageResolver })
 
     // const sendMessageSignalR = (message: string, roomId: string) =>
     //     connection.send('SendMessage', { message, roomId })
-    const sendMessageSignalR = async (message: string, roomId: string) =>
-       {
+    const sendMessageSignalR = async (message: string, roomId: string) => {
         if (connection.state === signalR.HubConnectionState.Connected) {
             await connection.send("SendMessage", { message, roomId });
         } else {
@@ -38,7 +37,7 @@ export const ChatTextArea = (info: IChatTextArea) => {
                 await connection.send("SendMessage", { message, roomId });
             });
         }
-       }
+    }
     const onSubmit = async (data: ISendMessage) => {
         await sendMessageSignalR(data.message, info.roomId)
         info.addNewMessage([
@@ -77,7 +76,9 @@ export const ChatTextArea = (info: IChatTextArea) => {
                         disabled={isSubmitting}> <img src={SendIcon} alt="" /></button>
                     <p>{textLength}/{info.maxLength}</p>
                 </div>
+
             </form>
+            {errors.message ? <div className='error-message'>{errors.message.message}</div> : ""}
         </div>
     )
 }

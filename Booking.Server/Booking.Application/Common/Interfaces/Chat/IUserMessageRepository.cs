@@ -15,4 +15,8 @@ public interface IUserMessageRepository
 
 	Task UpdateMessageAsync(UserMessage userMessage);
 	Task ReadMessagesByChatRoomIdAsync(Guid chatRoomId, Guid userId);
+
+    Task<int> GetCountOfUnreadMessages(List<Guid> chatRoomsId, Guid userId);
+
+    Task<int> GetGeneralCountOfUnreadMessages(Guid userId);
 }

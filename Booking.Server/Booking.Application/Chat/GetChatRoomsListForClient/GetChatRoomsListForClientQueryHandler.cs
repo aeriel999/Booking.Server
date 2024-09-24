@@ -5,7 +5,9 @@ using MediatR;
 
 namespace Booking.Application.Chat.GetChatRoomsListForClient;
 public class GetChatRoomsListForClientQueryHandler(
-    IChatRoomRepository repositoryChatRoom, IUserRepository repositoryUser) 
+    IChatRoomRepository repositoryChatRoom, 
+    IUserRepository repositoryUser,
+    IUserMessageRepository repositoryUserMessages) 
     : IRequestHandler<GetChatRoomsListForClientQuery, ErrorOr<List<GetChatRoomsListForClientResult>>>
 {
     public async Task<ErrorOr<List<GetChatRoomsListForClientResult>>> Handle(GetChatRoomsListForClientQuery request, CancellationToken cancellationToken)
@@ -24,14 +26,15 @@ public class GetChatRoomsListForClientQueryHandler(
 
             if (currentRealtor.IsError) return currentRealtor.Errors.FirstOrDefault();
 
+            var chats = await repositoryChatRoom.GetListOfChatRoomsForClientByRealtorId(item, request.ClientId);
             list.Add(new GetChatRoomsListForClientResult()
             {
                 RealtorId = item,
                 RealtorAvatar = currentRealtor.Value.Avatar,
                 RealtorName = $"{currentRealtor.Value.FirstName} {currentRealtor.Value.LastName}",
-                HasUnreadMessages = false,
-                UnreadMessages = null,
-                ChatsForClient = await repositoryChatRoom.GetListOfChatRoomsForClientByRealtorId(item,request.ClientId)
+                HasUnreadMessages = await repositoryUserMessages.GetCountOfUnreadMessages(chats.Select(c=>c.ChatRoomId).ToList(),request.ClientId) > 0 ? true : false,
+                UnreadMessages = await repositoryUserMessages.GetCountOfUnreadMessages(chats.Select(c => c.ChatRoomId).ToList(), request.ClientId),
+                ChatsForClient = chats
             });
         }
 

@@ -167,3 +167,17 @@ export const deleteChatById = createAsyncThunk(
         }
     }
 );
+
+export const GetGeneralCountOfUnreadedMessages = createAsyncThunk(
+    "chat/get-general-count-of-unreaded-messages",
+    async (_, { rejectWithValue }) => {
+        try {
+            const response = await apiClient.get(
+                `/api/Chat/get-general-count-of-unreaded-messages`
+            );
+            return response.data;
+        } catch (error) {
+            return rejectWithValue(handleAxiosError(error, "Network error"));
+        }
+    }
+);

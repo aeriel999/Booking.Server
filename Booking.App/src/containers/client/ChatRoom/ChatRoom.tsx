@@ -1,29 +1,38 @@
-import { useEffect, useRef, useState } from "react";
-import { ChatTextArea } from "../../../components/common/ChatTextArea/ChatTextArea";
-import "../../../css/ChatRoom/index.scss";
-import { Message } from "../Message/Message";
-import { useAppDispatch, useAppSelector } from "../../../hooks/redux";
-import { useSelector } from "react-redux";
-import { RootState } from "../../../store";
-import { getChatRoomById } from "../../../store/chat/chat.action";
-import { connection } from "../../../SignalR";
-import { IChatMessageInfo } from "../../../interfaces/chat";
+import { useEffect, useRef, useState } from 'react';
+import { ChatTextArea } from '../../../components/common/ChatTextArea/ChatTextArea';
+import '../../../css/ChatRoom/index.scss';
+import { Message } from '../Message/Message';
+import { useAppDispatch, useAppSelector } from '../../../hooks/redux';
+import { useSelector } from 'react-redux';
+import { RootState } from '../../../store';
+import { getChatRoomById, setMessagesReadtByChatId } from '../../../store/chat/chat.action';
+import { connection } from '../../../SignalR';
+import { IChatMessageInfo } from '../../../interfaces/chat';
 import * as signalR from "@microsoft/signalr";
-import { APP_ENV } from "../../../env";
-import { Status } from "../../../utils/enum";
-import { Loading } from "../../../components/common/Loading/Loading";
+import { APP_ENV } from '../../../env';
+import { Status } from '../../../utils/enum';
+import { Loading } from '../../../components/common/Loading/Loading';
+import { unwrapResult } from '@reduxjs/toolkit';
+import { deleteNumberOfMessageFromGeneralCount, readMessages, setChatRoomId, setIsCuretnChatReaded } from '../../../store/chat/chat.slice';
+import ErrorHandler from '../../../components/common/ErrorHandler';
 interface IChatRoom {
-    chatRoomId: string | null;
+    chatRoomId: string | null,
+    countOfUnreadedMessages: number
 }
 
 export const ChatRoom = (info: IChatRoom) => {
     const dispatch = useAppDispatch();
-    const chatRoom = useSelector(
-        (state: RootState) => state.chat.chatRoomInfoForClient
-    );
+    const chatRoom = useSelector((state: RootState) => state.chat.chatRoomInfoForClient);
+    const outcomeMessagesReadedChatId = useSelector((state: RootState) => state.chat.outcomeMessagesReadedChatId);
+    const newMessage = useSelector((state: RootState) => state.chat.newMessage);
     const status = useSelector((state: RootState) => state.chat.status);
     const user = useSelector((state: RootState) => state.account.user);
     const [messages, setMessages] = useState<IChatMessageInfo[]>([]);
+    const [numberOfUnreadMessages, setNumberOfUnreadMessages] =
+        useState<number>();
+    const [errorMessage, setErrorMessage] = useState<string | undefined>(
+        undefined
+    );
 
     const messagesRef = useRef<HTMLDivElement>(null);
 
@@ -41,7 +50,7 @@ export const ChatRoom = (info: IChatRoom) => {
             leave(deletedChatId);
         }
     }, [deletedChatId]);
-///////////////
+    ///////////////
     const getChatRoom = async () => {
         if (info.chatRoomId) {
             await dispatch(getChatRoomById(info.chatRoomId));
@@ -49,8 +58,35 @@ export const ChatRoom = (info: IChatRoom) => {
         }
     };
     useEffect(() => {
+        console.log("Count of unreaded messages from chat ", info.countOfUnreadedMessages)
         getChatRoom();
-    }, [info.chatRoomId]);
+        handleMessageRead();
+        if (info.chatRoomId)
+            dispatch(setChatRoomId(info.chatRoomId))
+    }, [info.chatRoomId])
+
+    useEffect(() => {
+
+        if (newMessage) {
+
+            const addNewMessage = async () => {
+                const messageInfo: IChatMessageInfo = {
+                    date: new Date(),
+                    text: newMessage!,
+                    isRead: true,
+                    userId: "",
+                };
+
+                setMessages((messages) => [
+                    ...messages, // Spread the previous state
+                    messageInfo, // Add the new message to the array
+                ]);
+                await getMessageSignalR(info?.chatRoomId);
+            }
+            addNewMessage();
+            handleMessageRead();
+        }
+    }, [newMessage]);
 
     useEffect(() => {
         if (messagesRef.current != null) {
@@ -60,8 +96,18 @@ export const ChatRoom = (info: IChatRoom) => {
     }, [messages.length]);
 
     useEffect(() => {
-        if (info.chatRoomId && chatRoom) startListeningPost(info.chatRoomId);
-    }, [chatRoom]);
+        if (info.chatRoomId && chatRoom)
+            startListeningPost(info.chatRoomId)
+
+        if (info.countOfUnreadedMessages > 0) {
+            dispatch(readMessages({
+                chatRoomId: info.chatRoomId!,
+                countReadedMessages: info.countOfUnreadedMessages
+            }))
+        }
+
+
+    }, [chatRoom])
 
     const startListeningPost = async (roomId: string) => {
         if (connection.state === signalR.HubConnectionState.Connected) {
@@ -98,6 +144,74 @@ export const ChatRoom = (info: IChatRoom) => {
         }
     };
 
+    const getMessageSignalR = async (chatId: any) => {
+        if (connection.state === signalR.HubConnectionState.Connected) {
+            await connection.send("GetPostNitify", { chatId: chatId });
+        } else {
+            await connection.start().then(async () => {
+                await connection.send("GetPostNitify", { chatId: chatId });
+            });
+        }
+    }
+
+    useEffect(() => {
+        console.log("Outcome message readed - ", outcomeMessagesReadedChatId)
+        if (outcomeMessagesReadedChatId) {
+            console.log("My message is read");
+            setMessages((prevMessages) =>
+                prevMessages.map((msg) =>
+                    msg.userId === user?.id && !msg.isRead
+                        ? { ...msg, isRead: true } // Mark unread incoming messages as read
+                        : msg
+                )
+            );
+        }
+    }, [outcomeMessagesReadedChatId]);
+
+    async function handleMessageRead(): Promise<void> {
+        if (info?.chatRoomId && info.countOfUnreadedMessages > 0) {
+            try {
+                dispatch(readMessages({
+                    chatRoomId: info.chatRoomId!,
+                    countReadedMessages: info.countOfUnreadedMessages
+                }))
+                console.log(
+                    "numberOfUnreadMessages",
+                    info.countOfUnreadedMessages
+                );
+
+                setNumberOfUnreadMessages(numberOfUnreadMessages);
+
+                const response = await dispatch(
+                    setMessagesReadtByChatId(info?.chatRoomId)
+                );
+                unwrapResult(response);
+
+                setMessages((prevMessages) =>
+                    prevMessages.map((msg) =>
+                        msg.userId !== user?.id && !msg.isRead
+                            ? { ...msg, isRead: true } // Mark unread incoming messages as read
+                            : msg
+                    )
+                );
+
+                dispatch(setIsCuretnChatReaded(true));
+
+                dispatch(
+                    deleteNumberOfMessageFromGeneralCount(
+                        info?.countOfUnreadedMessages
+                    )
+                );
+
+                await getMessageSignalR(info?.chatRoomId);
+
+
+            } catch (error) {
+                setErrorMessage(ErrorHandler(error));
+            }
+        }
+    }
+
     return (
         <div id="chat-room">
             {status == Status.LOADING ? <Loading /> : ""}
@@ -121,17 +235,17 @@ export const ChatRoom = (info: IChatRoom) => {
                         <div className="messages" ref={messagesRef}>
                             {messages.length > 0
                                 ? messages.map((item) => (
-                                      <Message
-                                          text={item.text}
-                                          myMessage={
-                                              user?.id === item.userId
-                                                  ? true
-                                                  : false
-                                          }
-                                          date={new Date(item.date!)}
-                                          isRead={item.isRead}
-                                      />
-                                  ))
+                                    <Message
+                                        text={item.text}
+                                        myMessage={
+                                            user?.id === item.userId
+                                                ? true
+                                                : false
+                                        }
+                                        date={new Date(item.date!)}
+                                        isRead={item.isRead}
+                                    />
+                                ))
                                 : ""}
                         </div>
                         <div className="send-message">
@@ -150,8 +264,10 @@ export const ChatRoom = (info: IChatRoom) => {
                 </div>
             )}
         </div>
-    );
-};
+    )
+}
+
+
 /*
  <Message
                                 text='Text message from Nazariy Slava Ukraine!'
