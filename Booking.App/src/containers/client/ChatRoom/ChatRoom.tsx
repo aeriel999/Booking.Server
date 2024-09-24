@@ -2,10 +2,10 @@ import { useEffect, useRef, useState } from 'react';
 import { ChatTextArea } from '../../../components/common/ChatTextArea/ChatTextArea';
 import '../../../css/ChatRoom/index.scss';
 import { Message } from '../Message/Message';
-import { useAppDispatch } from '../../../hooks/redux';
+import { useAppDispatch, useAppSelector } from '../../../hooks/redux';
 import { useSelector } from 'react-redux';
 import { RootState } from '../../../store';
-import { getChatRoomById, setMessagesReadtByChatI } from '../../../store/chat/chat.action';
+import { getChatRoomById, setMessagesReadtByChatId } from '../../../store/chat/chat.action';
 import { connection } from '../../../SignalR';
 import { IChatMessageInfo } from '../../../interfaces/chat';
 import * as signalR from "@microsoft/signalr";
@@ -50,7 +50,7 @@ export const ChatRoom = (info: IChatRoom) => {
             leave(deletedChatId);
         }
     }, [deletedChatId]);
-///////////////
+    ///////////////
     const getChatRoom = async () => {
         if (info.chatRoomId) {
             await dispatch(getChatRoomById(info.chatRoomId));
@@ -183,7 +183,7 @@ export const ChatRoom = (info: IChatRoom) => {
                 setNumberOfUnreadMessages(numberOfUnreadMessages);
 
                 const response = await dispatch(
-                    setMessagesReadtByChatI(info?.chatRoomId)
+                    setMessagesReadtByChatId(info?.chatRoomId)
                 );
                 unwrapResult(response);
 
@@ -235,17 +235,17 @@ export const ChatRoom = (info: IChatRoom) => {
                         <div className="messages" ref={messagesRef}>
                             {messages.length > 0
                                 ? messages.map((item) => (
-                                      <Message
-                                          text={item.text}
-                                          myMessage={
-                                              user?.id === item.userId
-                                                  ? true
-                                                  : false
-                                          }
-                                          date={new Date(item.date!)}
-                                          isRead={item.isRead}
-                                      />
-                                  ))
+                                    <Message
+                                        text={item.text}
+                                        myMessage={
+                                            user?.id === item.userId
+                                                ? true
+                                                : false
+                                        }
+                                        date={new Date(item.date!)}
+                                        isRead={item.isRead}
+                                    />
+                                ))
                                 : ""}
                         </div>
                         <div className="send-message">

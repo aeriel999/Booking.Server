@@ -13,7 +13,7 @@ import {
     getPostIdListForListeningChatsByRealtor,
     getMessageListByChatId,
     deleteChatById,
-    setMessagesReadtByChatI,
+    setMessagesReadtByChatId,
     GetGeneralCountOfUnreadedMessages,
 } from "./chat.action.ts";
 import {
@@ -52,7 +52,7 @@ const initialState: IChatState = {
     isCuretnChatReaded: false,
     getingMessageInfo: null,
     outcomeMessagesReadedChatId: null,
-    readedMessages: null
+    readedMessages: null,
     deletedChatId: null
 };
 
@@ -148,7 +148,7 @@ export const chatSlice = createSlice({
             action: PayloadAction<IReadMessage>
         ) => {
             state.readedMessages = action.payload;
-        }
+        },
 
         setDeletedChatId: (
             state: IChatState,
@@ -249,20 +249,17 @@ export const chatSlice = createSlice({
             .addCase(deleteChatById.fulfilled, (state) => {
                 state.status = Status.SUCCESS;
             })
+            .addCase(deleteChatById.pending, (state) => {
+                state.status = Status.LOADING;
+            })
             .addCase(GetGeneralCountOfUnreadedMessages.fulfilled, (state, action) => {
                 state.generalNumberOfUnreadMessages = action.payload
                 localStorage.setItem("generalNumberOfUnreadMessages", action.payload)
                 state.status = Status.SUCCESS;
             })
-            .addCase(deleteChatById.pending, (state) => {
             .addCase(GetGeneralCountOfUnreadedMessages.pending, (state) => {
                 state.status = Status.LOADING;
             })
-
-            .addCase(setMessagesReadtByChatI.pending, (state) => {
-                state.status = Status.LOADING;
-            })
-
             //deleteChatById
             .addMatcher(isRejectedAction, (state) => {
                 state.status = Status.ERROR;
@@ -279,7 +276,7 @@ export const {
     setIsCuretnChatReaded,
     deleteNumberOfMessageFromGeneralCount,
     setOutcomeMessagesReadedChatId,
-    readMessages
+    readMessages,
     setDeletedChatId
 } = chatSlice.actions;
 export default chatSlice.reducer;
