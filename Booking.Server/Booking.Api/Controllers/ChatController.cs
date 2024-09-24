@@ -193,16 +193,5 @@ public class ChatController(ISender mediatr, IMapper mapper) : ApiController
 			errors => Problem(errors));
 	}
 
-	[HttpPost("delete-chat")]
-	public async Task<IActionResult> DeleteChatByIdAsync(DeleteChatByIdRequest request)
-	{
-		var userId = User.Claims.First(u => u.Type == ClaimTypes.NameIdentifier).Value;
-
-		var deleteChatResult = await mediatr.Send(
-			new DeleteChatByIdCommand(request.ChatRoomId, Guid.Parse(userId)));
-
-		return deleteChatResult.Match(
-			deleteChatResult => Ok(),
-			errors => Problem(errors));
-	}
+ 
 }
