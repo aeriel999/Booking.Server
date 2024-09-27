@@ -19,6 +19,7 @@ public record GetChatRoomsListForClientResult
 }
 public record ChatRoomForClient
 {
+    public Guid PostId { get; init; }
     public Guid ChatRoomId { get; init; }
     public string? PostImage { get; init; }
 

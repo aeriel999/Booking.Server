@@ -8,6 +8,7 @@ import { APP_ENV } from "../../../env";
 import { useAppDispatch, useAppSelector } from "../../../hooks/redux";
 import { savePostIdForChat } from "../../../store/settings/settings.slice";
 import { setChatRoomId } from "../../../store/chat/chat.slice";
+import { CheckChatIsExist } from "../../../store/chat/chat.action";
 
 interface IChatListItem {
     chatItem: {
@@ -18,6 +19,7 @@ interface IChatListItem {
     countOfUnreadMessages: number | null,
     changeChatRoom: React.Dispatch<React.SetStateAction<string | null>>;
     setCountOfUnreadedMessages: React.Dispatch<React.SetStateAction<number>>;
+    setPostId: React.Dispatch<React.SetStateAction<string | null>>;
 }
 
 export const ChatListItem = (info: IChatListItem) => {
@@ -31,29 +33,20 @@ export const ChatListItem = (info: IChatListItem) => {
     const [chats, setChats] = useState<IChatRoomForClient[] | null>(null);
 
     useEffect(() => {
-        console.log("Count of unread messages - ", info.countOfUnreadMessages);
         setCountOfUnreadMessages(info.countOfUnreadMessages);
         setChats(info.chatItem.chats);
         if (info.chatItem.chats.find((element) => element.chatRoomId == savedChatRoom)) {
             setIsOpen(true);
             dispatch(savePostIdForChat(""));
         }
-
-
-
     }, [])
     useEffect(() => {
-        console.log("Chats", chats);
-    }, [chats])
-
-    useEffect(() => {
-        if (getingMessageInfo && info.chatItem.chats.find((element) => element.chatRoomId == getingMessageInfo.chatRoomId)) {
+        if (getingMessageInfo && info.chatItem.chats && info.chatItem.chats.find((element) => element.chatRoomId == getingMessageInfo.chatRoomId)) {
             if (!countOfUnreadMessages) {
                 setCountOfUnreadMessages(1)
             }
             else setCountOfUnreadMessages(countOfUnreadMessages + 1)
 
-            console.log(chats);
 
             if (chats) {
                 setChats(chats.map((element) => {
@@ -63,12 +56,6 @@ export const ChatListItem = (info: IChatListItem) => {
                             hasUnreadMessages: true,
                             unreadMessages: element.unreadMessages ? element.unreadMessages + 1 : 1
                         };
-                        /*if (element.unreadMessages && element.hasUnreadMessages == true)
-                            element.unreadMessages += 1;
-                        else if (element.hasUnreadMessages == false) {
-                            element.hasUnreadMessages = true;
-                            element.unreadMessages = 1;
-                        }*/
                     }
                     return element;
                 }
@@ -80,11 +67,10 @@ export const ChatListItem = (info: IChatListItem) => {
 
     useEffect(() => {
         if (readedMessages && chats && chats.find((element) => element.chatRoomId == readedMessages.chatRoomId)) {
-            console.log("I'm read")
-            if (countOfUnreadMessages)
+            if (countOfUnreadMessages && countOfUnreadMessages - readedMessages.countReadedMessages >= 0)
                 setCountOfUnreadMessages(countOfUnreadMessages - readedMessages.countReadedMessages);
-
-
+            else
+                setCountOfUnreadMessages(0);
             setChats((chats) =>
                 chats!.map((element) => {
                     if (element.chatRoomId == readedMessages.chatRoomId) {
@@ -101,12 +87,12 @@ export const ChatListItem = (info: IChatListItem) => {
 
         }
     }, [readedMessages])
-    useEffect(() => {
-        if (chats) {
-            console.log("Chats - ", chats)
-        }
-    }, [chats])
+    const chechIsChatExist = async (postId: string) => {
+        if (postId) {
 
+            await dispatch(CheckChatIsExist(postId));
+        }
+    }
 
 
     return (
@@ -129,6 +115,8 @@ export const ChatListItem = (info: IChatListItem) => {
                         item.hasUnreadMessages == true ?
                             info.setCountOfUnreadedMessages(item.unreadMessages ? item.unreadMessages : 0) :
                             0
+                        info.setPostId(item.postId);
+                        //chechIsChatExist(item.postId);
                     }}>
                         <img id="chat-list-item-avatar" src={`${APP_ENV.BASE_URL}/images/posts/${item.postImage}`} alt="" />
 
