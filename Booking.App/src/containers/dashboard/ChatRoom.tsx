@@ -2,18 +2,13 @@ import { styled } from "@mui/system";
 import { IChatItem, IChatInfo, IChatMessageInfo } from "../../interfaces/chat";
 import { Avatar, Button } from "@mui/material";
 import { useAppSelector } from "../../hooks/redux";
-import { MessageLeft, MessageRight } from "./Message";
-import { ChatTextInput } from "./ChatTextInput";
-//import UAvatar from "../../assets/Templates/Rectangle-50.webp";
+
 import "../../css/DashBoardAnonymousClasses/index.scss";
-import { ChatPostList } from "./ChatPostList";
 import Trash from "../../assets/DashboardIcons/mdi_trash-outline.svg";
 import { useDispatch } from "react-redux";
 import { AppDispatch } from "../../store";
 import { useEffect, useRef, useState } from "react";
-import ErrorHandler from "../common/ErrorHandler";
 import {
-    deleteChatById,
     getListOfPostInfoForChatsForRealtor,
     getMessageListByChatId,
     setMessagesReadtByChatId,
@@ -27,8 +22,12 @@ import {
 } from "../../store/chat/chat.slice";
 import * as signalR from "@microsoft/signalr";
 import { connection } from "../../SignalR";
-import CustomizedDialogs from "../common/Dialog";
-import OutlinedErrorAlert from "../common/ErrorAlert";
+import ErrorHandler from "../../components/common/ErrorHandler";
+import CustomizedDialogs from "../../components/common/Dialog";
+import { ChatPostList } from "../../components/chat/ChatPostList";
+import OutlinedErrorAlert from "../../components/common/ErrorAlert";
+import { MessageLeft, MessageRight } from "../../components/chat/Message";
+import { ChatTextInput } from "../../components/chat/ChatTextInput";
 
 const StyledAvatar = styled(Avatar)({
     color: "#fff",
@@ -112,7 +111,6 @@ export default function ChatRoom() {
             });
         }
     };
-    
 
     const DeleteChatSignalR = async (roomId: string) => {
         setErrorMessage(undefined);
@@ -156,8 +154,8 @@ export default function ChatRoom() {
             }
         });
 
-        if(isDeletePostChat){
-            setIsDeletePostChat(false)
+        if (isDeletePostChat) {
+            setIsDeletePostChat(false);
         }
     }, [, generalNumberOfUnreadMessages, isDeletePostChat]);
 

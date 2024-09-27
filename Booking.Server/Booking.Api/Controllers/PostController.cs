@@ -62,6 +62,8 @@ using Booking.Api.Contracts.Post.GetPageOfSelectedFeedback;
 using Booking.Api.Contracts.Post.EditRoom;
 using Booking.Application.Posts.EditRoom;
 using Booking.Application.Posts.GetListOfFeedbackForRealtor;
+using Booking.Application.Posts.GetListOfPostsForModeration;
+using Booking.Api.Contracts.Post.GetListOfPostsForModeration;
 
 namespace Booking.Api.Controllers;
 
@@ -210,9 +212,11 @@ public class PostController(ISender mediatr, IMapper mapper) : ApiController
 	
 	[AllowAnonymous]
     [HttpGet("get-categories-filtered-list")]
-    public async Task<IActionResult> GetCategoriesFilteredListAsync([FromQuery] Guid? Country, Guid? City, Guid? Realtor)
+    public async Task<IActionResult> GetCategoriesFilteredListAsync(
+		[FromQuery] Guid? Country, Guid? City, Guid? Realtor)
     {
-        var getCategoriesListResult = await mediatr.Send(new GetCategoriesFilteredListQuery(Country, City, Realtor));
+        var getCategoriesListResult = await mediatr.Send(
+			new GetCategoriesFilteredListQuery(Country, City, Realtor));
 
         return getCategoriesListResult.Match(
             getCategoriesListResult => Ok(mapper.Map<List<GetCategoryResponse>>(getCategoriesListResult)),
@@ -260,9 +264,11 @@ public class PostController(ISender mediatr, IMapper mapper) : ApiController
 
     [AllowAnonymous]
     [HttpGet("get-cities-filtered-list")]
-    public async Task<IActionResult> GetCitiesFilteredListAsync([FromQuery] Guid? Category,Guid Country ,Guid? Realtor)
+    public async Task<IActionResult> GetCitiesFilteredListAsync(
+		[FromQuery] Guid? Category,Guid Country ,Guid? Realtor)
     {
-        var getCitiesListResult = await mediatr.Send(new GetCitiesFilteredListQuery(Category, Country, Realtor));
+        var getCitiesListResult = await mediatr.Send(
+			new GetCitiesFilteredListQuery(Category, Country, Realtor));
 
         var response = getCitiesListResult == null ? null
             : mapper.Map<List<GetCityResponse>>(getCitiesListResult);
@@ -305,7 +311,6 @@ public class PostController(ISender mediatr, IMapper mapper) : ApiController
     [HttpGet("get-post-list-by-realtor-id-{id}")]
     public async Task<IActionResult> GetPostListByRealtorIdForChatsAsync([FromRoute] Guid id)
     {
-
         var getPostListByRealtorId = await mediatr.Send(new GetPostListByRealtorIdQuery(id));
 
         return getPostListByRealtorId.Match(
@@ -374,7 +379,10 @@ public class PostController(ISender mediatr, IMapper mapper) : ApiController
 		var getArchivedPostListForRealtor = await mediatr.Send(new GetArchivedPostListForRealtorQuery(
 			page, sizeOfPage, Guid.Parse(userId)));
 
-		PagedList<GetArchivedPostListForRealtorResponse> list = mapper.Map<PagedList<GetArchivedPostListForRealtorResponse>>(getArchivedPostListForRealtor);
+		var list = new PagedList<GetArchivedPostListForRealtorResponse>();
+
+		if (getArchivedPostListForRealtor != null)
+			 list = mapper.Map<PagedList<GetArchivedPostListForRealtorResponse>>(getArchivedPostListForRealtor);
 
 		return Ok(list);
 	}
@@ -468,7 +476,8 @@ public class PostController(ISender mediatr, IMapper mapper) : ApiController
 
     [AllowAnonymous]
     [HttpGet("get-feedbacks-{id}")]
-    public async Task<IActionResult> GetFeedbacksAsync([FromRoute] Guid id, [FromQuery] int page, int sizeOfPage)
+    public async Task<IActionResult> GetFeedbacksAsync(
+		[FromRoute] Guid id, [FromQuery] int page, int sizeOfPage)
     {
         var getFeedbacksResult = await mediatr.Send(new GetFeedbacksQuery(id, page, sizeOfPage));
 
@@ -556,9 +565,11 @@ public class PostController(ISender mediatr, IMapper mapper) : ApiController
 
 
     [HttpGet("get-page-of-selected-feedback-{FeedbackId}")]
-    public async Task<IActionResult> GetPageOfSelectedFeedbackAsync([FromRoute] Guid FeedbackId, [FromQuery] Guid PostId)
+    public async Task<IActionResult> GetPageOfSelectedFeedbackAsync(
+		[FromRoute] Guid FeedbackId, [FromQuery] Guid PostId)
     {
-        var getPageOfSelectedFeedback = await mediatr.Send(new GetPageOfSelectedFeedbackQuery(FeedbackId,PostId));
+        var getPageOfSelectedFeedback = await mediatr.Send(
+			new GetPageOfSelectedFeedbackQuery(FeedbackId,PostId));
 
         return getPageOfSelectedFeedback.Match(
             getPageOfSelectedFeedback => Ok(getPageOfSelectedFeedback),
@@ -580,6 +591,21 @@ public class PostController(ISender mediatr, IMapper mapper) : ApiController
 			errors => Problem(errors));
 	}
 
-    
+
+	[HttpGet("get-list-of-unactive-posts")]
+	public async Task<IActionResult> GetListOfPostsForModerationAsync([FromQuery] int page, int sizeOfPage)
+	{
+		var userId = User.Claims.First(u => u.Type == ClaimTypes.NameIdentifier).Value;
+
+		var useRole = User.Claims.First(u => u.Type == ClaimTypes.Role).Value;
+
+		var getListOfPostsForModerationResult = await mediatr.Send(
+			new GetListOfPostsForModerationQuery(Guid.Parse(userId), useRole, page, sizeOfPage));
+
+		return getListOfPostsForModerationResult.Match(
+			getListOfPostsForModerationResult => Ok(
+				mapper.Map<PagedList<GetListOfPostsForModerationResponse>>(getListOfPostsForModerationResult)),
+			errors => Problem(errors));
+	}
 
 }

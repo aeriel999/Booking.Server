@@ -373,3 +373,13 @@ export interface IDeleteImage {
     name: string;
     index: number;
 }
+
+export interface IModaratePost {
+    postId: string;
+    realtorName: string;
+    realtorId: string;
+    postName: string;
+    postCategoryName: string;
+    postedDate: string;
+ 
+}
