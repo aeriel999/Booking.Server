@@ -1,6 +1,4 @@
 ﻿namespace Booking.Application.Common.Interfaces.Post;
-
-using Booking.Application.Common.Behaviors;
 using Booking.Domain.Posts;
 using ErrorOr;
 
@@ -67,4 +65,7 @@ public interface IPostRepository
 
 
 	Task<List<Post>?> GetListOfPostWithChatRooms(Guid realtorId);
+
+
+	Task<List<Post>?> GetPostListForModeration();
 }

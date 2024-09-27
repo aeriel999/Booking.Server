@@ -1,28 +1,41 @@
-import "../../../css/DashBoardRealtorClasses/index.scss";
-import Logo from "../../../assets/Logo/tripbook 1.svg";
-import LogOut from "../../../assets/Icons/logout-03.svg";
-import ArrowBack from "../../../assets/DashboardIcons/chevron-left.svg";
+import "../../css/DashBoardRealtorClasses/index.scss";
+import Logo from "../../assets/Logo/tripbook 1.svg";
+import LogOut from "../../assets/Icons/logout-03.svg";
+import ArrowBack from "../../assets/DashboardIcons/chevron-left.svg";
 import { Outlet, useNavigate } from "react-router-dom";
-import { useAppDispatch, useAppSelector } from "../../../hooks/redux";
-import { logout } from "../../../store/accounts/account.slice";
-import { endListening } from "../../../SignalR";
+import { Avatar, Badge, styled } from "@mui/material";
+import { useAppDispatch, useAppSelector } from "../../hooks/redux";
 import { useEffect, useState } from "react";
-import { APP_ENV } from "../../../env";
-import { changeDashboardMenuItem } from "../../../store/settings/settings.slice";
-import { IDashboardMenuItem } from "../../../interfaces/common";
-import { clientMenuData } from "../../../utils/data";
-import { Avatar } from "../../../components/common/Avatar/Avatar";
+import { IDashboardMenuItem } from "../../interfaces/common";
+import { APP_ENV } from "../../env";
+import { changeDashboardMenuItem } from "../../store/settings/settings.slice";
+import { logout } from "../../store/accounts/account.slice";
+import { endListening } from "../../SignalR";
+import { Loading } from "../../components/common/Loading/Loading";
+import { Status } from "../../utils/enum";
+import { adminInitialMenuData } from "../../utils/data";
 
-export default function ClientDashboardLayout() {
+const StyledAvatar = styled(Avatar)({
+    color: "#fff",
+    backgroundColor: "#23a1a0",
+    width: "40px",
+    height: "40px",
+});
+
+
+export default function AdminDashboardLayout() {
     const { user } = useAppSelector((state) => state.account);
-    const unreadMessages = useAppSelector((state) => state.chat.generalNumberOfUnreadMessages);
+    // const { generalNumberOfUnreadMessages } = useAppSelector(
+    //     (state) => state.chat
+    // );
+    const { status } = useAppSelector((state) => state.post);
     const { currentBreadcrumbsItem } = useAppSelector(
         (state) => state.settings
     );
     const dispatch = useAppDispatch();
     // for set and get active menu item in side menu
     const [menuData, setMenuData] =
-        useState<IDashboardMenuItem[]>(clientMenuData); //initial data in data file
+        useState<IDashboardMenuItem[]>(adminInitialMenuData); //initial data in data file
     const navigate = useNavigate();
     const [currentMenuItem, setCurrentMenuItem] = useState<string>(
         currentBreadcrumbsItem
@@ -33,15 +46,7 @@ export default function ClientDashboardLayout() {
     //Get and set avatar
     useEffect(() => {
         if (user) {
-
-            if (user?.avatar != null) {
-                if (user?.avatar.slice(0, 5) == "https") {
-                    setAvatarUrl(user?.avatar);
-                }
-                else {
-                    setAvatarUrl(APP_ENV.BASE_URL + user?.avatar);
-                }
-            }
+            setAvatarUrl(APP_ENV.BASE_URL + user?.avatar);
         }
     }, [user]);
 
@@ -54,9 +59,7 @@ export default function ClientDashboardLayout() {
             if (menuIndex !== -1) {
                 handleMenuClick(menuIndex);
             }
-
         }
-
     }, [currentBreadcrumbsItem]);
 
     //Menu navigate
@@ -74,7 +77,6 @@ export default function ClientDashboardLayout() {
         dispatch(changeDashboardMenuItem(menuData[index].name));
     };
 
-    
     return (
         <div className="dashboardMainContainer">
             <div className="dashboardHeaderContainer">
@@ -90,16 +92,12 @@ export default function ClientDashboardLayout() {
                     </a>
                     {/* User Info */}
                     <div id="userInfo">
-                        {user!.avatar != null ? <div
-                            id="avatar"
-                            style={{
-                                background: `url(${avatarUrl}) center / cover no-repeat`,
-                            }}
-                        /> :
-                            <Avatar userName={user?.email!} />}
-
+                    <StyledAvatar
+                                        alt={user!.email}
+                                        src={user!.avatar!}
+                                    />
                         <div id="name">
-                            {user?.firstName && user?.lastName ? `${user?.firstName} ${user?.lastName}` : user?.email}
+                            {user?.email}
                         </div>
                     </div>
                 </div>
@@ -116,22 +114,32 @@ export default function ClientDashboardLayout() {
                         {menuData.map((item, index) => (
                             <button
                                 key={index}
-                                className={`menuItem ${item.isActive ? "active" : ""
-                                    }`}
+                                className={`menuItem ${
+                                    item.isActive ? "active" : ""
+                                }`}
                                 onClick={() => handleMenuClick(index)}
                             >
                                 <div className="text">
-                                    {item.counterOfMsg && unreadMessages > 0 ? <div className="count-of-unread-messages">
-                                        {unreadMessages}
-                                    </div> : ""}
-                                    <img
-                                        src={
-                                            item.isActive
-                                                ? item.activeImage
-                                                : item.image
+                                    <Badge
+                                        badgeContent={
+                                            item.counterOfMsg  && 0
                                         }
-                                        alt={item.name}
-                                    />
+                                        sx={{
+                                            "& .MuiBadge-badge": {
+                                                backgroundColor: "#FF6347",
+                                                color: "white",
+                                            },
+                                        }}
+                                    >
+                                        <img
+                                            src={
+                                                item.isActive
+                                                    ? item.activeImage
+                                                    : item.image
+                                            }
+                                            alt={item.name}
+                                        />
+                                    </Badge>
                                     <p className="menuItemsText">{item.name}</p>
                                 </div>
                                 {isExpanded &&
@@ -161,23 +169,24 @@ export default function ClientDashboardLayout() {
                             navigate("/authentication/login");
                         }}
                     >
-                        <><div id="line"></div>
+                        <>
+                            <div id="line"></div>
                             <div id="logOutButton">
                                 <img src={LogOut} alt="logOut" />
                                 <p>Log Out</p>
-                            </div></>
-
+                            </div>
+                        </>
                     </button>
                 </div>
 
                 {/* Dashboard Container */}
                 <div className="outlet">
-
+                    {status === Status.LOADING && (
+                        <Loading className="dashboardLoading" />
+                    )}
                     <Outlet />
                 </div>
             </div>
         </div>
     );
 }
-/*{status === Status.LOADING &&
-                        <Loading className="dashboardClientLoading" />}*/ 

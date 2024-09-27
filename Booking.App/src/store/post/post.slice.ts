@@ -27,6 +27,7 @@ import {
     getListOfCountries,
     getListOfFeedbackForRealtor,
     getListOfPosts,
+    getListOfPostsForModeration,
     getListOfPostsName,
     getListOfServices,
     getListOfStreetsByCityId,
@@ -358,6 +359,13 @@ export const postSlice = createSlice({
             .addCase(getListOfFeedbackForRealtor.pending, (state) => {
                 state.status = Status.LOADING;
             })
+            .addCase(getListOfPostsForModeration.fulfilled, (state) => {
+                state.status = Status.SUCCESS;
+            })
+            .addCase(getListOfPostsForModeration.pending, (state) => {
+                state.status = Status.LOADING;
+            })
+            //getListOfPostsForModeration
             .addMatcher(isRejectedAction, (state) => {
                 state.status = Status.ERROR;
             });

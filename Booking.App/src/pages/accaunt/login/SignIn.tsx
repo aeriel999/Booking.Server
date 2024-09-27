@@ -70,7 +70,7 @@ export default function SignInPage() {
 
         const role =
             decodedToken[
-            "http://schemas.microsoft.com/ws/2008/06/identity/claims/role"
+                "http://schemas.microsoft.com/ws/2008/06/identity/claims/role"
             ];
 
         if (role.toLowerCase().includes("realtor")) {
@@ -82,7 +82,7 @@ export default function SignInPage() {
                     getNumberOfUnleastMessages()
                 );
                 unwrapResult(getNumberOfUnleastMessagesResult);
-                
+
                 //Get list of Id for listening posts
                 const getPostIdListForListeningChatsByRealtorResult =
                     await dispatch(getPostIdListForListeningChatsByRealtor());
@@ -90,11 +90,10 @@ export default function SignInPage() {
             } catch (error) {
                 setErrorMessage(ErrorHandler(error));
             }
-
         } else if (role.toLowerCase().includes("user")) {
             navigate(savedPath);
         } else if (role.toLowerCase().includes("admin")) {
-            navigate("/dashboard/profile");
+            navigate("/admin/moderation");
         } else {
             navigate("/#");
         }

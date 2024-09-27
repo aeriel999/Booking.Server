@@ -61,6 +61,30 @@ export const initialMenuData: IDashboardMenuItem[] = [
         link: "/dashboard/profile/edit",
     },
 ];
+export const adminInitialMenuData: IDashboardMenuItem[] = [
+    {
+        name: "Moderation",
+        isActive: false,
+        image: AllPost,
+        activeImage: AllPost,
+        link: "/admin/moderation",
+    },
+    {
+        name: "Users",
+        isActive: false,
+        image: UserProfiler,
+        activeImage: ActiveUserProfiler,
+        link: "/admin/users",
+    },
+    {
+        name: "Realtors",
+        isActive: false,
+        image: UserProfiler,
+        activeImage: ActiveUserProfiler,
+        link: "/admin/realtors",
+        counterOfMsg: true
+    },
+];
 
 export const clientMenuData: IDashboardMenuItem[] = [
     {

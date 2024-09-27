@@ -16,7 +16,6 @@ import ReConfirmEmailPage from "./pages/reconfirm-email/ReConfirmEmailPage.tsx";
 import { AddNewPost } from "./containers/dashboard/AddNewPost.tsx";
 import ListOfPostPage from "./containers/client/ListOfPostsPage/ListOfPostsPage.tsx";
 import AnonymousDashboardLayout from "./containers/anonymous/layouts/AnonymousDashboardLayout.tsx";
-import ChatRoom from "./components/chat/ChatRoom.tsx";
 import AllPostList from "./containers/dashboard/AllPostList.tsx";
 import { EditPost } from "./containers/dashboard/EditPost.tsx";
 import RealtorPage from "./containers/client/RealtorPage.tsx";
@@ -26,7 +25,7 @@ import "./App.scss";
 import { HomePage } from "./containers/client/HomePage/HomePage.tsx";
 import SignInPage from "./pages/accaunt/login/SignIn.tsx";
 import RealtorRegisterAvatarPage from "./pages/accaunt/register/RealtotRegisterAvatarPage.tsx";
-import DashboardLayout from "./containers/dashboard/layouts/DashboardLayout.tsx";
+import _RealtorDashboardLayout from "./containers/dashboard/layouts/_DashboardLayout.tsx";
 import { AnonymousDashboardLayoutForPosts } from "./containers/anonymous/layouts/AnonymousDashboardLayoutForPosts.tsx";
 import ListOfPostsPage from "./containers/client/ListOfPostsPage/ListOfPostsPage.tsx";
 import ClientDashboardLayout from "./containers/client/layouts/ClientDashboardLayout.tsx";
@@ -45,6 +44,11 @@ import {
 import { IGetMessage } from "./interfaces/chat/index.ts";
 import { updateListOfChatIdForListening } from "./store/chat/chat.slice.ts";
 import PageOfPost from "./containers/client/PageOfPost/PageOfPost.tsx";
+import _AdminDashboardLayout from "./containers/adnin/_AdminDashboardLayout.tsx";
+import ChatRoom from "./containers/dashboard/ChatRoom.tsx";
+import PostModeration from "./containers/adnin/PostModeration.tsx";
+import UsersModeration from "./containers/adnin/UsersModeration.tsx";
+import RealtorsModeration from "./containers/adnin/RealtorsModeration.tsx";
 
 export const App: React.FC = () => {
     const { isLogin, user } = useAppSelector((state) => state.account);
@@ -161,7 +165,6 @@ export const App: React.FC = () => {
                     connection.on("get_message", async (m) => {
                         console.log("get_message", m);
                         await setIncomeMessagesReadedChatIdInRedux(m);
-
                     });
                 })
                 .then(async () => {
@@ -175,7 +178,7 @@ export const App: React.FC = () => {
         }
     };
 
-    if (isLogin) {
+    if (isLogin && (role() === "realtor" || role() === "user")) {
         startConnectionWithSignalR();
     }
 
@@ -189,7 +192,10 @@ export const App: React.FC = () => {
                     />
 
                     {role() === "realtor" && (
-                        <Route path="/dashboard" element={<DashboardLayout />}>
+                        <Route
+                            path="/dashboard"
+                            element={<_RealtorDashboardLayout />}
+                        >
                             <Route index element={<RealtorProfilePage />} />
                             <Route
                                 path="/dashboard/profile"
@@ -212,11 +218,6 @@ export const App: React.FC = () => {
                                 path="/dashboard/edit-post/:postId"
                                 element={<EditPost />}
                             />
-                            <Route
-                                path="/dashboard/chat-room/:roomId"
-                                element={<ChatRoom />}
-                            />
-
                             <Route
                                 path="/dashboard/archive"
                                 element={<ArchivePage />}
@@ -273,6 +274,29 @@ export const App: React.FC = () => {
                                 />
                             </Route>
                         </>
+                    )}
+
+                    {role() === "admin" && (
+                        <Route
+                            path="/admin"
+                            element={<_AdminDashboardLayout />}
+                        >
+                            <Route index element={<PostModeration />} />
+
+                            <Route
+                                    path="/admin/moderation"
+                                    element={<PostModeration />}
+                                />
+
+                            <Route
+                                    path="/admin/users"
+                                    element={<UsersModeration />}
+                                />
+                            <Route
+                                    path="/admin/realtors"
+                                    element={<RealtorsModeration />}
+                                />
+                        </Route>
                     )}
                 </>
             )}

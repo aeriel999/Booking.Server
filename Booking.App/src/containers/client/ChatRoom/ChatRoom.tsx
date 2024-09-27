@@ -42,7 +42,6 @@ export const ChatRoom = (info: IChatRoom) => {
     const leave = (roomId: string) =>
         connection.send("LeaveRoom", { roomId }).then(() => {
             console.log("leave", roomId);
-            connection.off("send_message");
         });
 
     useEffect(() => {

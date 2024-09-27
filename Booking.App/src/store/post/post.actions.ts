@@ -550,3 +550,16 @@ export const getListOfFeedbackForRealtor = createAsyncThunk(
         }
     }
 );
+export const getListOfPostsForModeration = createAsyncThunk(
+    "Post/get-list-of-unactive-posts",
+    async (payload: IFetchData, { rejectWithValue }) => {
+        try {
+            const response = await apiClient.get(
+                `/api/Post/get-list-of-unactive-posts?page=${payload.page}&sizeOfPage=${payload.sizeOfPage}`
+            );
+            return response.data;
+        } catch (error) {
+            return rejectWithValue(handleAxiosError(error, "Network error"));
+        }
+    }
+);
