@@ -20,6 +20,7 @@ export const PageOfMessages = () => {
 
     const [chatRoomId, setChatRoomId] = useState<string | null>(null);
     const [countOfUnreadedMessages, setCountOfUnreadedMessages] = useState<number>(0);
+    const [postOfChatRoom, setPostOfChatRoom] = useState<string | null>(null);
 
     const getChats = async () => {
         await dispatch(getListOfChatRoomsForClient());
@@ -60,6 +61,7 @@ export const PageOfMessages = () => {
                                 }
                                 changeChatRoom={setChatRoomId}
                                 setCountOfUnreadedMessages={setCountOfUnreadedMessages}
+                                setPostId={setPostOfChatRoom}
                             />
                         ))}
                     </div>
@@ -67,7 +69,8 @@ export const PageOfMessages = () => {
             </div>
             <ChatRoom
                 chatRoomId={chatRoomId}
-                countOfUnreadedMessages={countOfUnreadedMessages} />
+                countOfUnreadedMessages={countOfUnreadedMessages}
+                postId={postOfChatRoom} />
 
         </div>)
 }

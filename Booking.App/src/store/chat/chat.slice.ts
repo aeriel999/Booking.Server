@@ -15,6 +15,7 @@ import {
     deleteChatById,
     setMessagesReadtByChatId,
     GetGeneralCountOfUnreadedMessages,
+    CheckChatIsExist,
 } from "./chat.action.ts";
 import {
     addlistToLocalStorage,
@@ -53,7 +54,8 @@ const initialState: IChatState = {
     getingMessageInfo: null,
     outcomeMessagesReadedChatId: null,
     readedMessages: null,
-    deletedChatId: null
+    deletedChatId: null,
+    chatIsExist: null
 };
 
 export const chatSlice = createSlice({
@@ -118,8 +120,7 @@ export const chatSlice = createSlice({
             state: IChatState,
             action: PayloadAction<string>
         ) => {
-            console.log("Current chatroom - ", state.currentChatRoomId)
-            if (state.currentChatRoomId === action.payload) {
+            if (state.currentChatRoomId === action.payload.roomId!) {
 
                 state.outcomeMessagesReadedChatId = action.payload;
                 console.log("Test test test - ", state.outcomeMessagesReadedChatId)
@@ -129,6 +130,7 @@ export const chatSlice = createSlice({
             state: IChatState,
             action: PayloadAction<IGetMessage>
         ) => {
+
             state.generalNumberOfUnreadMessages =
                 state.generalNumberOfUnreadMessages + 1;
 
@@ -142,6 +144,30 @@ export const chatSlice = createSlice({
             }
 
             state.getingMessageInfo = action.payload;
+        },
+        setNewMessageToClient: (
+            state: IChatState,
+            action: PayloadAction<IGetMessage>
+        ) => {
+
+
+
+            if (state.currentChatRoomId === action.payload.chatRoomId) {
+                state.newMessage = action.payload.message;
+            }
+            else {
+                state.generalNumberOfUnreadMessages =
+                    state.generalNumberOfUnreadMessages + 1;
+
+                addLocalStorage(
+                    "generalNumberOfUnreadMessages",
+                    state.generalNumberOfUnreadMessages.toString()
+                );
+                console.log("General count is - ", state.generalNumberOfUnreadMessages)
+                state.getingMessageInfo = action.payload;
+            }
+
+
         },
         readMessages: (
             state: IChatState,
@@ -244,7 +270,7 @@ export const chatSlice = createSlice({
                 state.status = Status.SUCCESS;
             })
             .addCase(setMessagesReadtByChatId.pending, (state) => {
-                state.status = Status.LOADING;
+                //state.status = Status.LOADING;
             })
             .addCase(deleteChatById.fulfilled, (state) => {
                 state.status = Status.SUCCESS;
@@ -260,6 +286,13 @@ export const chatSlice = createSlice({
             .addCase(GetGeneralCountOfUnreadedMessages.pending, (state) => {
                 state.status = Status.LOADING;
             })
+            .addCase(CheckChatIsExist.fulfilled, (state, action) => {
+                state.chatIsExist = action.payload;
+                state.status = Status.SUCCESS;
+            })
+            .addCase(CheckChatIsExist.pending, (state) => {
+                state.status = Status.LOADING;
+            })
             //deleteChatById
             .addMatcher(isRejectedAction, (state) => {
                 state.status = Status.ERROR;
@@ -273,6 +306,7 @@ export const {
     updateListOfChatIdForListening,
     setChatRoomId,
     setNewMessage,
+    setNewMessageToClient,
     setIsCuretnChatReaded,
     deleteNumberOfMessageFromGeneralCount,
     setOutcomeMessagesReadedChatId,

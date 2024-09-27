@@ -97,6 +97,7 @@ public class ChatRoomRepository(BookingDbContext context) : IChatRoomRepository
             .Include(c => c.UserMessages)
             .Select(c => new ChatRoomForClient()
 			{
+				PostId = c.PostId,
 				ChatRoomId = c.ChatRoomId,
 				PostImage = c.Post!.ImagesPost!.FirstOrDefault(img => img.Priority == 1)!.Name,
 				PostName = c.Post!.Name,
