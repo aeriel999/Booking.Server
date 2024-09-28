@@ -15,7 +15,7 @@ import { Status } from "../../../utils/enum";
 import { Loading } from "../../../components/common/Loading/Loading";
 import { Badge } from "@mui/material";
 
-export default function DashboardLayout() {
+export default function _RealtorDashboardLayout() {
     const { user } = useAppSelector((state) => state.account);
     const { generalNumberOfUnreadMessages } = useAppSelector(
         (state) => state.chat

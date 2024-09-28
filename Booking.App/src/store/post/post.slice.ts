@@ -9,6 +9,7 @@ import {
     IPostState,
 } from "../../interfaces/post";
 import {
+    activatePost,
     archivePost,
     createPost,
     createRoom,
@@ -27,6 +28,7 @@ import {
     getListOfCountries,
     getListOfFeedbackForRealtor,
     getListOfPosts,
+    getListOfPostsForModeration,
     getListOfPostsName,
     getListOfServices,
     getListOfStreetsByCityId,
@@ -358,6 +360,19 @@ export const postSlice = createSlice({
             .addCase(getListOfFeedbackForRealtor.pending, (state) => {
                 state.status = Status.LOADING;
             })
+            .addCase(getListOfPostsForModeration.fulfilled, (state) => {
+                state.status = Status.SUCCESS;
+            })
+            .addCase(getListOfPostsForModeration.pending, (state) => {
+                state.status = Status.LOADING;
+            })
+            .addCase(activatePost.fulfilled, (state) => {
+                state.status = Status.SUCCESS;
+            })
+            .addCase(activatePost.pending, (state) => {
+                state.status = Status.LOADING;
+            })
+            //activatePost
             .addMatcher(isRejectedAction, (state) => {
                 state.status = Status.ERROR;
             });

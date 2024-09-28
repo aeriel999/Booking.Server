@@ -21,6 +21,8 @@ using Booking.Application.Users.Client.DeleteUser;
 using Booking.Api.Contracts.Users.Common.ChangeProfileHeader;
 using Booking.Application.Users.Common.ChangeProfileHeader;
 using Booking.Application.Users.Realtor.GetRealtorsFilteredList;
+using Booking.Application.Posts.GetListOfPostsForModeration;
+using Booking.Application.Users.Client.GetListOfAllUsersForAdmin;
 
 namespace Booking.Api.Controllers;
 
@@ -202,4 +204,21 @@ public class UserController(ISender mediatr, IMapper mapper, IConfiguration conf
             updateUser => Ok(mapper.Map<EditUserProfileResponse>(updateUser)),
             errors => Problem(errors));
     }
+
+
+    //[HttpGet("get-list-of-all-users")]
+    //public async Task<IActionResult> GetListOfAllUsersForAdminAsync([FromQuery] int page, int sizeOfPage)
+    //{
+    //    var userId = User.Claims.First(u => u.Type == ClaimTypes.NameIdentifier).Value;
+
+    //    var userRole = User.Claims.First(u => u.Type == ClaimTypes.Role).Value;
+
+    //    var getListOfAllUsersForAdminResult = await mediatr.Send(
+    //        new GetListOfAllUsersForAdminQuery(Guid.Parse(userId), userRole, page, sizeOfPage));
+
+    //    return getListOfAllUsersForAdminResult.Match(
+    //        getListOfPostsForModerationResult => Ok(
+    //            mapper.Map<PagedList<GetListOfAllUsersForAdminResponse>>(getListOfAllUsersForAdminResult)),
+    //        errors => Problem(errors));
+    //}
 }

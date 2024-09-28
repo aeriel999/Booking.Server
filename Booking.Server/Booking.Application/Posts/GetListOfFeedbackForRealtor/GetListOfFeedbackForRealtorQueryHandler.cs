@@ -33,7 +33,8 @@ public class GetListOfFeedbackForRealtorQueryHandler(
 			//Get feedbackList
 			foreach (var post in postList)
 			{
-				var postFeedbackList = await postFeedbackRepository.GetFeedbacksWhithIncludesForPostIdAsync(post.Id);
+				var postFeedbackList = await postFeedbackRepository
+					.GetFeedbacksWhithIncludesForPostIdAsync(post.Id);
 
 				if (postFeedbackList == null) continue;
 
@@ -41,10 +42,12 @@ public class GetListOfFeedbackForRealtorQueryHandler(
 			}
 		}
 
-		var orderList = feedbackList.OrderByDescending(f => f.FeedbackAt);
-
 		//Get part of list
-		var list = PagedList<Feedback>.getPagedList(orderList, request.Page, request.SizeOfPage);
+		var list = PagedList<Feedback>.getPagedList(feedbackList, request.Page, request.SizeOfPage);
+
+		//Sort list 
+		if (list != null)
+			list.items = list.items!.OrderBy(item => item.FeedbackAt).ToList();
 
 		return list;
 	}

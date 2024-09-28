@@ -181,3 +181,22 @@ export const GetGeneralCountOfUnreadedMessages = createAsyncThunk(
         }
     }
 );
+
+export const CheckChatIsExist = createAsyncThunk(
+    'Chat/check-chat-for-client-is-exist',
+    async (postId: string, { rejectWithValue }) => {
+        try {
+            const response = await apiClient.get(
+                `/api/Chat/check-chat-for-client-is-exist`,
+                {
+                    params: {
+                        postId: postId
+                    }
+                }
+            );
+            return response.data;
+        } catch (error) {
+            return rejectWithValue(handleAxiosError(error, "Network error"));
+        }
+    }
+)

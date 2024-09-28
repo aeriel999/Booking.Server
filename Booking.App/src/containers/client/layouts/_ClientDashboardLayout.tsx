@@ -142,6 +142,14 @@ export default function ClientDashboardLayout() {
         setOpen(false);
     };
 
+    function nameButtonHandle(): void {
+        if(user?.role.toLowerCase().includes("admin")){
+           console.log("nameButtonHandle", user?.role.toLowerCase())
+           navigate("/admin/moderation")
+        }else{
+           navigate("/dashboard/profile")
+        }
+   }
     return (
         <Box sx={{ display: "flex" }}>
             <CssBaseline />
@@ -162,7 +170,7 @@ export default function ClientDashboardLayout() {
                     <Typography
                         onMouseEnter={() => setIsMouseEnter(true)}
                         onMouseLeave={() => setIsMouseEnter(false)}
-                        onClick={() => navigate("/dashboard/profile")}
+                        onClick={nameButtonHandle}
                         variant="h6"
                         noWrap
                         component="div"

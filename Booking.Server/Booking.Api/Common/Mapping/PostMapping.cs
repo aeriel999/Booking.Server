@@ -36,6 +36,7 @@ using Booking.Application.Posts.EditRoom;
 using Booking.Application.Posts.GetFeedbacksByClient;
 using Booking.Api.Contracts.Post.GetHistoryOfFeedbacks;
 using Booking.Application.Posts.GetListOfFeedbackForRealtor;
+using Booking.Api.Contracts.Post.GetListOfPostsForModeration;
 
 namespace Booking.Api.Common.Mapping;
 
@@ -344,7 +345,16 @@ public class PostMapping : IRegister
 			.Map(desp => desp.ReviewText, src => src.Text);
 
 		config.NewConfig<PagedList<Feedback>, PagedList<GetListOfFeedbackForRealtorResponse>>();
-			 
 
+
+		config.NewConfig<Post, GetListOfPostsForModerationResponse>()
+			.Map(desp => desp.PostId, src => src.Id)
+			.Map(desp => desp.RealtorName, src => src.User!.UserName)
+			.Map(desp => desp.RealtorId, src => src.UserId)
+			.Map(desp => desp.PostName, src => src.Name)
+			.Map(desp => desp.PostCategoryName, src => src.Category!.Name)
+			.Map(desp => desp.PostedDate, src => src.PostAt.ToUniversalTime());
+
+		config.NewConfig<PagedList<Post>, PagedList<GetListOfPostsForModerationResponse>>();
 	}
 }

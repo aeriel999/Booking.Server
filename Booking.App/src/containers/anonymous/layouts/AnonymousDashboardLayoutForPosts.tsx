@@ -136,6 +136,15 @@ export const AnonymousDashboardLayoutForPosts = () => {
         }
     }, [user]);
 
+    function nameButtonHandle(): void {
+        if(user?.role.toLowerCase().includes("admin")){
+           console.log("nameButtonHandle", user?.role.toLowerCase())
+           navigate("/admin/moderation")
+        }else{
+           navigate("/dashboard/profile")
+        }
+   }
+
     return (
         <div id="mainDashboardForPosts">
             <header>
@@ -150,7 +159,7 @@ export const AnonymousDashboardLayoutForPosts = () => {
                         /> :
                             <Avatar userName={user?.email!} />}
 
-                        <div id="name" onClick={() => navigate("/dashboard/profile")}>
+                        <div id="name" onClick={nameButtonHandle}>
                             {user?.firstName && user?.lastName ? `${user?.firstName} ${user?.lastName}` : user?.email}
                         </div>
                     </div></> : <><button

@@ -6,7 +6,6 @@ using Booking.Application.Chat.CreateMessage;
 using Booking.Application.Chat.DeleteChat;
 using Booking.Application.Chat.GetNewMessageInfo;
 using Booking.Application.Common.Interfaces.Chat;
-using Booking.Domain.Users;
 using MapsterMapper;
 using MediatR;
 using Microsoft.AspNetCore.Authorization;
@@ -109,7 +108,7 @@ namespace Booking.Api.Common.SignalR
 		public async Task GetPostNotify(RoomRequest request)
 		{
 			await Clients.GroupExcept(request.RoomId.ToString(), new[] { Context.ConnectionId })
-				.SendAsync("get_message", request);
+				.SendAsync("get_message", request.RoomId.ToString());
 		}
 
 		//Leave room in deleting of chat or post
@@ -123,9 +122,7 @@ namespace Booking.Api.Common.SignalR
 			await Clients.GroupExcept(request.RoomId.ToString(), new[] { Context.ConnectionId })
 				.SendAsync("delete_chat", request);
 
-			//	await LeaveRoom(request);
-
-			await Groups.RemoveFromGroupAsync(Context.ConnectionId, request.RoomId.ToString());
+			await LeaveRoom(request);
 
 			var userId = Context.User!.Claims.FirstOrDefault(
 			u => u.Type == ClaimTypes.NameIdentifier)!.Value;
@@ -138,35 +135,6 @@ namespace Booking.Api.Common.SignalR
 		{
 			return Clients.User(user).SendAsync("ReceiveMessage", message);
 		}
-		//public async Task<string> JoinRoomByClientForPost(RoomRequest request)
-		//{
-		//	var userId = Context.UserName.Claims.FirstOrDefault(x => x.Type == ClaimTypes.NameIdentifier).Value;
-
-		//	var chatRoom = await chatRoomRepository.GetChatRoomForUserIdAndPostIdAsync(
-		//		Guid.Parse(userId), request.RoomId);
-
-		//	string roomName = "";
-
-		//	if (chatRoom == null)
-		//	{
-		//		var createChatResult = await mediatr
-		//			.Send(new CreateChatCommand(request.RoomId, userId));
-
-		//		if (createChatResult.IsError)
-		//			return string.Empty;
-		//		else roomName = createChatResult.Value.ToString();
-
-		//		await Clients.GroupExcept(request.RoomId.ToString(), new[] { Context.ConnectionId })
-		//		.SendAsync("send_notify", roomName.ToString());
-		//	}
-		//	else
-		//		roomName = chatRoom.ChatRoomId.ToString();
-
-		//	await Groups.AddToGroupAsync(Context.ConnectionId, roomName.ToString());
-
-		//	return roomName;
-		//}
-
 	}
 
 }

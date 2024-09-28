@@ -17,57 +17,79 @@ export default function AnonymousDashboardLayout() {
     const user = useSelector((state: RootState) => state.account.user);
     const [avatarUrl, setAvatarUrl] = useState<string>();
 
-
     useEffect(() => {
         if (user) {
-
             if (user?.avatar != null) {
                 if (user?.avatar.slice(0, 5) == "https") {
                     setAvatarUrl(user?.avatar);
-                }
-                else {
+                } else {
                     setAvatarUrl(APP_ENV.BASE_URL + user?.avatar);
                 }
             }
         }
     }, [user]);
 
+    function nameButtonHandle(): void {
+        if (user?.role.toLowerCase().includes("admin")) {
+            console.log("nameButtonHandle", user?.role.toLowerCase());
+            const nam = "/admin/moderation";
+            console.log("nam", nam);
+            navigate(nam);
+        } else {
+            navigate("/dashboard/profile");
+        }
+    }
+
     return (
         <div id="mainDashboard">
-
             <header>
                 <div className="shapka">
                     <div className="auth">
                         <img tabIndex={0} src={logo} alt="Logo" />
 
-                        {isLogin ? <><div id="userInfo">
-                            {user!.avatar != null ? <div
-                                id="avatar"
-                                style={{
-                                    background: `url(${avatarUrl}) center / cover no-repeat`,
-                                }}
-                            /> :
-                                <Avatar userName={user?.email!} />}
+                        {isLogin ? (
+                            <>
+                                <div id="userInfo">
+                                    {user!.avatar != null ? (
+                                        <div
+                                            id="avatar"
+                                            style={{
+                                                background: `url(${avatarUrl}) center / cover no-repeat`,
+                                            }}
+                                        />
+                                    ) : (
+                                        <Avatar userName={user?.email!} />
+                                    )}
 
-                            <div id="name" onClick={() => navigate("/dashboard/profile")}>
-                                {user?.firstName && user?.lastName ? `${user?.firstName} ${user?.lastName}` : user?.email}
-                            </div>
-                        </div></> : <><button
-                            onClick={() => {
-                                navigate("/authentication/user-register");
-                            }}
-                            tabIndex={1}
-                        >
-                            Register
-                        </button>
-                            <button
-                                onClick={() => {
-                                    navigate("/authentication/login");
-                                }}
-                                tabIndex={2}
-                            >
-                                Login
-                            </button></>}
+                                    <div id="name" onClick={nameButtonHandle}>
+                                        {user?.firstName && user?.lastName
+                                            ? `${user?.firstName} ${user?.lastName}`
+                                            : user?.email}
+                                    </div>
+                                </div>
+                            </>
+                        ) : (
+                            <>
+                                <button
+                                    onClick={() => {
+                                        navigate(
+                                            "/authentication/user-register"
+                                        );
+                                    }}
+                                    tabIndex={1}
+                                >
+                                    Register
+                                </button>
+                                <button
+                                    onClick={() => {
+                                        navigate("/authentication/login");
+                                    }}
+                                    tabIndex={2}
+                                >
+                                    Login
+                                </button>
+                            </>
+                        )}
                     </div>
                     <div className="searching">
                         <div>Travel, visit new places with TripBook!</div>
@@ -98,9 +120,11 @@ export default function AnonymousDashboardLayout() {
                 <div className="explore">
                     <p>Explore</p>
                     <div>
-                        <a tabIndex={3}>Countries</a> <a tabIndex={4}>Regions</a> <a tabIndex={5}>Cities</a>{" "}
-                        <a tabIndex={6}>Districts</a> <a tabIndex={7}>Attractions</a> <a tabIndex={8}>Airports</a>{" "}
-                        <a tabIndex={9}>Hotels</a>
+                        <a tabIndex={3}>Countries</a>{" "}
+                        <a tabIndex={4}>Regions</a> <a tabIndex={5}>Cities</a>{" "}
+                        <a tabIndex={6}>Districts</a>{" "}
+                        <a tabIndex={7}>Attractions</a>{" "}
+                        <a tabIndex={8}>Airports</a> <a tabIndex={9}>Hotels</a>
                     </div>
                 </div>
             </footer>
