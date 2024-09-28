@@ -19,13 +19,13 @@ export const Message = (info: IMessage) => {
                 <div className='message-text'>
                     {info.text}
                 </div>
-                {info.myMessage ? <div className='message-is-read'>
+                <div className='message-is-read'>
 
                     <img src={tabler_check} alt="Tabler Check 1" style={{ zIndex: status == Status.LOADING ? -1 : 0 }} />
                     {info.isRead == true ? <img src={tabler_check} alt="Tabler Check 2" /> : ""}
 
 
-                </div> : ""}
+                </div>
 
 
             </div>
@@ -33,4 +33,3 @@ export const Message = (info: IMessage) => {
         </>
     )
 }
-//

@@ -16,6 +16,7 @@ export interface IChatState {
     outcomeMessagesReadedChatId: string | null;
     deletedChatId: string | null;
     readedMessages: IReadMessage | null;
+    chatIsExist: boolean | null;
 }
 
 export interface IChatRoomList {
@@ -91,6 +92,7 @@ export interface IChatRoomListForClient {
 }
 
 export interface IChatRoomForClient {
+    postId: string;
     chatRoomId: string;
     postImage: string;
     postName: string;
@@ -118,7 +120,7 @@ export interface IChatInfo {
     userAvatar: string;
     userName: string;
     chatMessages: IChatMessageInfo[] | null;
-   // numberOfUnreadMessages: number | null;
+    // numberOfUnreadMessages: number | null;
 }
 
 export interface IChatMessageInfo {

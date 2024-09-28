@@ -40,6 +40,7 @@ import {
     setOutcomeMessagesReadedChatId,
     setNewMessage,
     setDeletedChatId,
+    setNewMessageToClient,
 } from "./store/chat/chat.slice.ts";
 import { IGetMessage } from "./interfaces/chat/index.ts";
 import { updateListOfChatIdForListening } from "./store/chat/chat.slice.ts";
@@ -68,6 +69,10 @@ export const App: React.FC = () => {
 
     const setMessageInRedux = async (msg: IGetMessage) => {
         await dispatch(setNewMessage(msg));
+    };
+    const setMessageToClientInRedux = async (msg: IGetMessage) => {
+        console.log("I have new message!!!")
+        await dispatch(setNewMessageToClient(msg));
     };
 
     const setIncomeMessagesReadedChatIdInRedux = async (id: string) => {
@@ -156,6 +161,10 @@ export const App: React.FC = () => {
 
                     // Add the new listener
                     connection.on("send_message", async (m) => {
+                        //console.log("My role is - ", user?.role);
+                        //if (user?.role.toLowerCase().includes("user"))
+                        //await setMessageToClientInRedux(m);
+                        //else if (user?.role.toLowerCase().includes("realtor"))
                         await setMessageInRedux(m);
                     });
                 })

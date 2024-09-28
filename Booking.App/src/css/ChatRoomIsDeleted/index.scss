@@ -1,0 +1,46 @@
+@import '../variables.scss';
+
+#chat-room-is-deleted {
+    width: 100%;
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    row-gap: 10px;
+    align-items: center;
+    position: relative;
+    padding: 10px;
+    box-sizing: border-box;
+
+    .text {
+        font-size: $normal-font-size;
+        font-style: $primary-font-normal-style;
+        font-weight: $normal-font-weight;
+    }
+
+    .buttons {
+        width: 100%;
+        display: flex;
+        justify-content: center;
+        column-gap: 20px;
+
+        button {
+            padding: 10px 15px;
+            outline: none;
+            border-color: none;
+            border-radius: 7px;
+            font-size: $average-font-size;
+            background: #00C2C1;
+            color: var(--Backgrounds-Primary, $primary-font-color);
+            outline: none;
+            border: 1px solid transparent;
+            font-family: $primary-font-family;
+            font-weight: $normal-font-weight;
+            cursor: pointer;
+
+            &:hover {
+                border: 1px solid $primary-font-color;
+            }
+        }
+    }
+}
