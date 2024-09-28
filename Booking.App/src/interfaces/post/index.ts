@@ -386,7 +386,6 @@ export interface IModarateUser {
     id: string;
     name: string;
     email: string;
-    registerDate: string;
     isActive: boolean;
 }
 

@@ -9,8 +9,8 @@ using Booking.Application.Users.Realtor.EditRealtor;
 using Booking.Domain.Users;
 using Mapster;
 using Booking.Application.Users.Client.EditUser;
- 
-
+using Booking.Application.Common.Behaviors;
+using Booking.Api.Contracts.Users.User.GetListOfAllUsersForAdmin;
 namespace Booking.Api.Common.Mapping;
 
 public class UserMappingConfig : IRegister
@@ -50,13 +50,19 @@ public class UserMappingConfig : IRegister
 			.Map(desp => desp.HeaderImage, src => src.ProfileHeaderImage);
 
 
-		
-
         config.NewConfig<(EditUserProfileRequest request, string Id,string baseUrl), EditUserProfileCommand>()
             .Map(desp => desp.Id, src => Guid.Parse(src.Id))
             .Map(desp => desp.Email, src => src.request.Email)
             .Map(desp => desp.FirstName, src => src.request.FirstName)
             .Map(desp => desp.LastName, src => src.request.LastName)
             .Map(desp => desp.baseUrl, src => src.baseUrl);
-    }
+
+		config.NewConfig<User, GetListOfAllUsersForAdminResponse>()
+			.Map(desp => desp.Id, src => src.Id)
+			.Map(desp => desp.Name, src => src.UserName)
+			.Map(desp => desp.Email, src => src.Email)
+			.Map(desp => desp.IsActive, src => src.LockoutEnabled);
+
+		config.NewConfig<PagedList<User>, PagedList<GetListOfAllUsersForAdminResponse>>();
+	}
 }

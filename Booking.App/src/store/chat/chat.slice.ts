@@ -60,8 +60,7 @@ const initialState: IChatState = {
     outcomeMessagesReadedChatId: null,
     readedMessages: null,
     deletedChatId: null,
-    chatIsExist: null
-    deletedChatId: null,
+    chatIsExist: null,
 };
 
 export const chatSlice = createSlice({
@@ -126,9 +125,8 @@ export const chatSlice = createSlice({
             state: IChatState,
             action: PayloadAction<string>
         ) => {
-            console.log("Current chatroom - ", state.currentChatRoomId)
+            console.log("Current chatroom - ", state.currentChatRoomId);
             if (state.currentChatRoomId === action.payload) {
-
                 state.outcomeMessagesReadedChatId = action.payload;
                 console.log(
                     "Test test test - ",
@@ -140,7 +138,6 @@ export const chatSlice = createSlice({
             state: IChatState,
             action: PayloadAction<IGetMessage>
         ) => {
-
             state.generalNumberOfUnreadMessages =
                 state.generalNumberOfUnreadMessages + 1;
 
@@ -159,13 +156,9 @@ export const chatSlice = createSlice({
             state: IChatState,
             action: PayloadAction<IGetMessage>
         ) => {
-
-
-
             if (state.currentChatRoomId === action.payload.chatRoomId) {
                 state.newMessage = action.payload.message;
-            }
-            else {
+            } else {
                 state.generalNumberOfUnreadMessages =
                     state.generalNumberOfUnreadMessages + 1;
 
@@ -173,11 +166,12 @@ export const chatSlice = createSlice({
                     "generalNumberOfUnreadMessages",
                     state.generalNumberOfUnreadMessages.toString()
                 );
-                console.log("General count is - ", state.generalNumberOfUnreadMessages)
+                console.log(
+                    "General count is - ",
+                    state.generalNumberOfUnreadMessages
+                );
                 state.getingMessageInfo = action.payload;
             }
-
-
         },
         readMessages: (
             state: IChatState,

@@ -17,6 +17,7 @@ export interface IChatState {
     deletedChatId: string | null;
     readedMessages: IReadMessage | null;
     chatIsExist: boolean | null;
+   
 }
 
 export interface IChatRoomList {
