@@ -112,8 +112,8 @@ export interface IPostInformation {
     } | null;
     typesOfRest: string[] | null;
     services: {
-        $id: number,
-        $values: IServiseInfo[]
+        $id: number;
+        $values: IServiseInfo[];
     } | null;
     roomList?: {
         $id: number;
@@ -187,7 +187,7 @@ export interface IPostState {
     historyOfFeedbacksByClient: IHistoryOfFeedbacksByClient | null;
     idOfSelectedFeedback: string | null;
     pageOfSelectedFeedback: number;
-    searchingPost: string | null
+    searchingPost: string | null;
 }
 export interface IHistoryOfFeedbacksByClient {
     items: {
@@ -201,15 +201,14 @@ export interface IHistoryOfFeedbacksByClient {
 export interface IFeedbackForClient {
     feedbackId: string;
     postId: string;
-    feedbackAt: Date,
+    feedbackAt: Date;
     textOfFeedback: string;
     rating: number;
-    imageOfPost: string,
-    nameOfPost: string,
-    country: string,
+    imageOfPost: string;
+    nameOfPost: string;
+    country: string;
     city: string;
 }
-
 
 interface IPostRatingAndDiscount {
     id: string;
@@ -333,13 +332,13 @@ export interface IGetService {
     icon: string;
 }
 export interface IGetTypeOfRest {
-    id: string,
-    name: string,
+    id: string;
+    name: string;
 }
 export interface IGetTypeOfRestWithImage {
-    id: string,
-    name: string,
-    image: string
+    id: string;
+    name: string;
+    image: string;
     postId: string;
 }
 export interface IGetFeedbacksRequest {
@@ -357,11 +356,11 @@ export interface IFeedbacksByPost {
     totalCount: number;
 }
 export interface IFeedback {
-    text: string,
-    rating: number,
-    client: string,
-    clientAvatar: string | null,
-    feedbackAt: Date
+    text: string;
+    rating: number;
+    client: string;
+    clientAvatar: string | null;
+    feedbackAt: Date;
 }
 export interface ISendFeedback {
     text: string | null;
@@ -381,5 +380,21 @@ export interface IModaratePost {
     postName: string;
     postCategoryName: string;
     postedDate: string;
- 
+}
+
+export interface IModarateUser {
+    id: string;
+    name: string;
+    email: string;
+    registerDate: string;
+    isActive: boolean;
+}
+
+export interface IModarateRealtor {
+    id: string;
+    name: string;
+    email: string;
+    phoneNumber: string;
+    rate: number;
+    isActive: boolean;
 }

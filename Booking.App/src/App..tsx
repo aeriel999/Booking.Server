@@ -71,6 +71,7 @@ export const App: React.FC = () => {
     };
 
     const setIncomeMessagesReadedChatIdInRedux = async (id: string) => {
+        console.log("setIncomeMessagesReadedChatIdInRedux", id)
         await dispatch(setOutcomeMessagesReadedChatId(id));
     };
 

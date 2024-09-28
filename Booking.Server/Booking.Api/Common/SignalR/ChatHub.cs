@@ -108,7 +108,7 @@ namespace Booking.Api.Common.SignalR
 		public async Task GetPostNotify(RoomRequest request)
 		{
 			await Clients.GroupExcept(request.RoomId.ToString(), new[] { Context.ConnectionId })
-				.SendAsync("get_message", request);
+				.SendAsync("get_message", request.RoomId.ToString());
 		}
 
 		//Leave room in deleting of chat or post

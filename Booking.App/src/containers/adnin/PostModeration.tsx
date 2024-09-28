@@ -20,22 +20,21 @@ import { IFetchData, IModaratePost } from "../../interfaces/post";
 import { unwrapResult } from "@reduxjs/toolkit";
 import ErrorHandler from "../../components/common/ErrorHandler";
 import TablePaginationActions from "@mui/material/TablePagination/TablePaginationActions";
-import { getListOfPostsForModeration } from "../../store/post/post.actions";
+import { activatePost, getListOfPostsForModeration } from "../../store/post/post.actions";
 
 export default function PostModeration() {
     const [page, setPage] = React.useState(0); // 0-based index for MUI TablePagination
-    const [rowsPerPage, setRowsPerPage] = useState(5);
-    const [totalCount, setTotalCount] = useState(0);
+    const [rowsPerPage, setRowsPerPage] = useState<number>(5);
+    const [totalCount, setTotalCount] = useState<number>(0);
+    //const [numberOfPostsForModeration, setNumberOfPostsForModeration] = useState<number>(0);
     const [rows, setRows] = useState<IModaratePost[]>();
     const [errorMessage, setErrorMessage] = useState<string | undefined>(
         undefined
     );
     const dispatch = useAppDispatch();
-
     const navigate = useNavigate();
-    const [isDialogOpen, setIsDialogOpen] = useState(false);
-    const [postName, setPostName] = useState<string>();
-    const [postId, setPostId] = useState<string>();
+
+ 
 
     const emptyRows =
         page > 0 ? Math.max(0, (1 + page) * rowsPerPage - totalCount) : 0;
@@ -101,7 +100,7 @@ export default function PostModeration() {
                     </TableHead>
                     <TableBody>
                         {rows?.map((row) => (
-                            <>
+                            
                                 <StyledTableRow key={row.postId}>
                                     <StyledTableCell>
                                     <Button
@@ -139,17 +138,23 @@ export default function PostModeration() {
 
                                     <StyledTableCell>
                                         <Button
-                                            onClick={() => {
-                                                navigate(
-                                                    `/dashboard/edit-post/${row.postId}`
-                                                );
+                                            onClick={async () => {
+                                                try {
+                                                    await dispatch(activatePost(row.postId));
+                                                    // Remove the activated post from the rows state
+                                                    setRows((prevRows) => 
+                                                        prevRows?.filter((post) => post.postId !== row.postId)
+                                                    );
+                                                } catch (error) {
+                                                    setErrorMessage(ErrorHandler(error));
+                                                }
                                             }}
                                         >
                                             Activate
                                         </Button>
                                     </StyledTableCell>
                                 </StyledTableRow>
-                            </>
+                            
                         ))}
                         {emptyRows > 0 && (
                             <TableRow style={{ height: 53 * emptyRows }}>

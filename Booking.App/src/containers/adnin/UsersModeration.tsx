@@ -5,7 +5,7 @@ import { StyledTableCell, StyledTableRow } from "../../utils/styles";
 import React, { useEffect, useState } from "react";
 import { useAppDispatch } from "../../hooks/redux";
 import { useNavigate } from "react-router-dom";
-import { IFetchData, IModaratePost } from "../../interfaces/post";
+import { IFetchData, IModarateUser } from "../../interfaces/post";
 import { unwrapResult } from "@reduxjs/toolkit";
 import ErrorHandler from "../../components/common/ErrorHandler";
 import TablePaginationActions from "@mui/material/TablePagination/TablePaginationActions";
@@ -14,7 +14,7 @@ export default function UsersModeration(){
     const [page, setPage] = React.useState(0); // 0-based index for MUI TablePagination
     const [rowsPerPage, setRowsPerPage] = useState(5);
     const [totalCount, setTotalCount] = useState(0);
-    const [rows, setRows] = useState<IModaratePost[]>();
+    const [rows, setRows] = useState<IModarateUser[]>();
     const [errorMessage, setErrorMessage] = useState<string | undefined>(
         undefined
     );
@@ -66,8 +66,6 @@ export default function UsersModeration(){
 
     return(
         <>
-        
-
         {errorMessage && (
             <OutlinedErrorAlert message={errorMessage} textColor="#000" />
         )}
@@ -79,14 +77,14 @@ export default function UsersModeration(){
             >
                 <TableHead>
                     <TableRow>
-                        <StyledTableCell>Realtor</StyledTableCell>
+                        <StyledTableCell>Name</StyledTableCell>
 
-                        <StyledTableCell>Post Category</StyledTableCell>
+                        <StyledTableCell>Email</StyledTableCell>
 
-                        <StyledTableCell>Show Post</StyledTableCell>
+                        <StyledTableCell>Registration date</StyledTableCell>
 
                         <StyledTableCell >
-                            Post Date
+                           Blocked
                         </StyledTableCell>
                         <StyledTableCell >
                             Activate
@@ -96,30 +94,33 @@ export default function UsersModeration(){
                 </TableHead>
                 <TableBody>
                     {rows?.map((row) => (
-                        <>
-                            <StyledTableRow key={row.postId}>
+                         
+                            <StyledTableRow key={row.id}>
                                 <StyledTableCell >
-                                    {row.realtorName}
+                                    {row.name}
                                 </StyledTableCell>
 
                                 <StyledTableCell >
-                                    {row.postName}
+                                    {row.email}
                                 </StyledTableCell>
                                 
                                 <StyledTableCell >
-                                    {row.postCategoryName}
+                                    {row.registerDate}
                                 </StyledTableCell>
-
-                                <StyledTableCell >
-                                    {row.postedDate}
-                                </StyledTableCell>
-
+                                
                                 <StyledTableCell >
                                     <Button
                                         onClick={() => {
-                                            navigate(
-                                                `/dashboard/edit-post/${row.postId}`
-                                            );
+                                             
+                                        }}
+                                    >
+                                        Block
+                                    </Button>
+                                </StyledTableCell>
+                                <StyledTableCell >
+                                    <Button
+                                        onClick={() => {
+                                             
                                         }}
                                     >
                                         Activate
@@ -127,7 +128,7 @@ export default function UsersModeration(){
                                 </StyledTableCell>
                                  
                             </StyledTableRow>
-                        </>
+                         
                     ))}
                     {emptyRows > 0 && (
                         <TableRow style={{ height: 53 * emptyRows }}>
