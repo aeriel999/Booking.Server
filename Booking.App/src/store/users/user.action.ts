@@ -137,3 +137,18 @@ export const blockUserByAdmin = createAsyncThunk(
 );
 
 
+export const unblockUserByAdmin = createAsyncThunk(
+    "User/unblock-user-by-admin",
+    async (userId: string, { rejectWithValue }) => {
+        try {
+            const response = await apiClient.post("/api/User/unblock-user-by-admin", {
+                userId,
+            });
+            return response.data;
+        } catch (error) {
+            return rejectWithValue(handleAxiosError(error, "Network error"));
+        }
+    }
+);
+
+

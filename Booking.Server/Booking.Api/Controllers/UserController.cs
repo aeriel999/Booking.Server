@@ -27,6 +27,8 @@ using Booking.Api.Contracts.Users.User.GetListOfAllUsersForAdmin;
 using Booking.Application.Common.Behaviors;
 using Booking.Api.Contracts.Users.Common.BlockUserByAdmin;
 using Booking.Application.Users.Common.BlockUserByAdmin;
+using Booking.Api.Contracts.Users.Common.UnBlockUserByAdmin;
+using Booking.Application.Users.Common.UnBlockUserByAdmin;
 
 namespace Booking.Api.Controllers;
 
@@ -205,4 +207,19 @@ public class UserController(ISender mediatr, IMapper mapper, IConfiguration conf
 			errors => Problem(errors));
 	}
 
+	[HttpPost("unblock-user-by-admin")]
+	[Authorize(Roles = "admin")]
+	public async Task<IActionResult> UnBlockUserByAdminAsync(UnBlockUserByAdminRequest request)
+	{
+		var currentUserId = User.Claims.First(u => u.Type == ClaimTypes.NameIdentifier).Value;
+
+		var userRole = User.Claims.First(u => u.Type == ClaimTypes.Role).Value;
+
+		var unblockUserByAdminResult = await mediatr.Send(
+			new UnBlockUserByAdminCommand(Guid.Parse(currentUserId), userRole, request.UserId));
+
+		return unblockUserByAdminResult.Match(
+			unblockUserByAdminResult => Ok(),
+			errors => Problem(errors));
+	}
 }

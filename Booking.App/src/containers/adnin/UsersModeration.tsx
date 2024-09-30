@@ -20,7 +20,7 @@ import { IFetchData, IModarateUser } from "../../interfaces/post";
 import { unwrapResult } from "@reduxjs/toolkit";
 import ErrorHandler from "../../components/common/ErrorHandler";
 import TablePaginationActions from "@mui/material/TablePagination/TablePaginationActions";
-import { blockUserByAdmin, getListOfAllUsersForAdmin } from "../../store/users/user.action";
+import { blockUserByAdmin, getListOfAllUsersForAdmin, unblockUserByAdmin } from "../../store/users/user.action";
 
 export default function UsersModeration() {
     const [page, setPage] = React.useState(0); // 0-based index for MUI TablePagination
@@ -125,7 +125,21 @@ export default function UsersModeration() {
                                     }}>Block</Button>
                                 </StyledTableCell>
                                 <StyledTableCell>
-                                    <Button disabled={row.isActive} onClick={() => {}}>Activate</Button>
+                                    <Button disabled={row.isActive} 
+                                    onClick={ async () => {
+                                        try {
+                                            await dispatch(unblockUserByAdmin(row.id));
+                                            // set is active in list
+                                            setRows((prevRows) => 
+                                                prevRows?.map((user) =>
+                                                    user.id === row.id 
+                                                    ? {...user, isActive: true}
+                                                    : user)
+                                            );
+                                        } catch (error) {
+                                            setErrorMessage(ErrorHandler(error));
+                                        }
+                                    }}>Activate</Button>
                                 </StyledTableCell>
                                 <StyledTableCell>
                                     <Button disabled={row.isActive} onClick={() => {}}>Delete</Button>
