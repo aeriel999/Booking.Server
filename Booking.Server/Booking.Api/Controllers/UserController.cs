@@ -25,6 +25,8 @@ using Booking.Application.Posts.GetListOfPostsForModeration;
 using Booking.Application.Users.Client.GetListOfAllUsersForAdmin;
 using Booking.Api.Contracts.Users.User.GetListOfAllUsersForAdmin;
 using Booking.Application.Common.Behaviors;
+using Booking.Api.Contracts.Users.Common.BlockUserByAdmin;
+using Booking.Application.Users.Common.BlockUserByAdmin;
 
 namespace Booking.Api.Controllers;
 
@@ -140,45 +142,7 @@ public class UserController(ISender mediatr, IMapper mapper, IConfiguration conf
             changeEmailResult => Ok(),
             errors => Problem(errors));
     }
-
-
-    /*[HttpPost("send-feedback")]
-    public async Task<IActionResult> SendFeedbackAsync([FromBody] SendFeedbackRequest request)
-    {
-        string clientId = User.Claims.First(u => u.Type == ClaimTypes.NameIdentifier).Value;
-
-        var sendFeedbackResult = await mediatr.Send(mapper.Map<SendFeedbackCommand>((request, clientId)));
-
-        return sendFeedbackResult.Match(
-            sendFeedbackResult => Ok(sendFeedbackResult),
-            errors => Problem(errors));
-    }*/
-
-
-    /*[AllowAnonymous]
-    [HttpGet("get-feedbacks-{id}")]
-    public async Task<IActionResult> GetFeedbacksAsync([FromRoute] Guid id, [FromQuery] int page, int sizeOfPage)
-    {      
-        var getFeedbacksResult = await mediatr.Send(new GetFeedbacksQuery(id,page,sizeOfPage));
-
-        return getFeedbacksResult.Match(
-            getFeedbacksResult => Ok(mapper.Map<PagedList<GetFeedbackResponse>>(getFeedbacksResult)),
-            errors => Problem(errors));
-    }
-
-
-    [HttpGet("get-realtors-by-user-feedbacks")]
-    public async Task<IActionResult> GetRealtorsByUserFeedbacksAsync()
-    {
-        string clientId = User.Claims.First(u => u.Type == ClaimTypes.NameIdentifier).Value;
-
-        var getRealtorsResult = await mediatr.Send(new GetRealtorsByUserFeedbacksQuery(Guid.Parse(clientId)));
-
-        return getRealtorsResult.Match(
-            getRealtorsResult => Ok(mapper.Map<List<GetRealtorByUserFeedbackResponse>>(getRealtorsResult)),
-            errors => Problem(errors));
-    }*/
-
+ 
 
     [HttpDelete("delete-user")]
     public async Task<IActionResult> DeleteUserAsync()
@@ -223,4 +187,20 @@ public class UserController(ISender mediatr, IMapper mapper, IConfiguration conf
                 mapper.Map<PagedList<GetListOfAllUsersForAdminResponse>>(getListOfAllUsersForAdminResult.Value)),
             errors => Problem(errors));
     }
+
+	[HttpPost("block-user-by-admin")]
+	public async Task<IActionResult>BlockUserByAdminAsync(BlockUserByAdminRequest request)
+	{
+		var currentUserId = User.Claims.First(u => u.Type == ClaimTypes.NameIdentifier).Value;
+
+		var userRole = User.Claims.First(u => u.Type == ClaimTypes.Role).Value;
+
+		var blockUserByAdminResult = await mediatr.Send(
+			new BlockUserByAdminCommand(Guid.Parse(currentUserId), userRole, request.UserId));
+
+		return blockUserByAdminResult.Match(
+			blockUserByAdminResult => Ok(),
+			errors => Problem(errors));
+	}
+
 }
