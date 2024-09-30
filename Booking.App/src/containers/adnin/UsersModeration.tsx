@@ -94,7 +94,7 @@ export default function UsersModeration() {
 
                             <StyledTableCell>Email</StyledTableCell>
 
-                            <StyledTableCell>Blocked</StyledTableCell>
+                            <StyledTableCell>Block</StyledTableCell>
                             <StyledTableCell>Activate</StyledTableCell>
                             <StyledTableCell>Delete</StyledTableCell>
                         </TableRow>
@@ -104,7 +104,9 @@ export default function UsersModeration() {
                             <StyledTableRow key={row.id}>
                                 <StyledTableCell>{row.name}</StyledTableCell>
 
-                                <StyledTableCell>{row.email}</StyledTableCell>
+                                <StyledTableCell
+                                     style={{ color: row.isEmailConfirmed === false ? 'red' : 'inherit' }}
+                                >{row.email}</StyledTableCell>
 
                                 <StyledTableCell>
                                     <Button

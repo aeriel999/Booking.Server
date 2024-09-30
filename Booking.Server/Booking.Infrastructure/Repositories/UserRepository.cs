@@ -26,18 +26,21 @@ public class UserRepository(UserManager<User> userManager)
                 .ToList();
 	}
 
-    public async Task<List<User>> GetRealtorsListAsync()
+    public async Task<List<User>?> GetRealtorsListAsync()
     {
-        var realtors = await userManager.GetUsersInRoleAsync(Roles.Realtor);  
-        
-        return realtors.ToList();
-    }
+        var realtors = await userManager.GetUsersInRoleAsync(Roles.Realtor);
+
+		if (realtors.Count > 0) return realtors.ToList();
+
+		else return null;
+	}
 
 	public async Task<List<User>?> GetClientsListAsync()
 	{
-		var realtors = await userManager.GetUsersInRoleAsync(Roles.User);
+		var users = await userManager.GetUsersInRoleAsync(Roles.User);
 
-        if (realtors.Count > 0) return realtors.ToList();
+        if (users.Count > 0) return users.ToList();
+
         else return null;
 	}
 

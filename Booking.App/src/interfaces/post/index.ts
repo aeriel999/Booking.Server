@@ -394,6 +394,7 @@ export interface IModarateRealtor {
     id: string;
     name: string;
     email: string;
+    isEmailConfirmed: boolean;
     phoneNumber: string;
     rate: number;
     isActive: boolean;

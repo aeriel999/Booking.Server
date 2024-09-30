@@ -2,7 +2,7 @@ import { AnyAction, createSlice } from '@reduxjs/toolkit';
 import { RejectedAction } from "../../utils/types";
 import { Status } from "../../utils/enum";
 import { IUserState } from "../../interfaces/user";
-import { blockUserByAdmin, changePassword, deleteUserAccount, deleteUserByAdmin, getFeedbacksByRealtor, getFilteredListOfRealtors, getListOfAllUsersForAdmin, getListOfRealtors, getRealtorById, getRealtorsByUserFeedbacks, sendFeedback, unblockUserByAdmin } from "./user.action.ts";
+import { blockUserByAdmin, changePassword, deleteUserAccount, deleteUserByAdmin, getFeedbacksByRealtor, getFilteredListOfRealtors, getListOfAllRealtorsForAdmin, getListOfAllUsersForAdmin, getListOfRealtors, getRealtorById, getRealtorsByUserFeedbacks, sendFeedback, unblockUserByAdmin } from "./user.action.ts";
 
 function isRejectedAction(action: AnyAction): action is RejectedAction {
     return action.type.endsWith('/rejected');
@@ -102,7 +102,13 @@ export const userSlice = createSlice({
             .addCase(deleteUserByAdmin.pending, (state) => {
                 state.status = Status.LOADING;
             })
-            //deleteUserByAdmin
+            .addCase(getListOfAllRealtorsForAdmin.fulfilled, (state) => {
+                state.status = Status.SUCCESS;
+            })
+            .addCase(getListOfAllRealtorsForAdmin.pending, (state) => {
+                state.status = Status.LOADING;
+            })
+            //getListOfAllRealtorsForAdmin
             .addMatcher(isRejectedAction, (state) => {
                 state.status = Status.ERROR;
             });

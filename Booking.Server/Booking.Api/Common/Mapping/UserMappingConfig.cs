@@ -11,6 +11,7 @@ using Mapster;
 using Booking.Application.Users.Client.EditUser;
 using Booking.Application.Common.Behaviors;
 using Booking.Api.Contracts.Users.User.GetListOfAllUsersForAdmin;
+using Booking.Api.Contracts.Users.Realtor.GetListOfAllRealtorsForAdmin;
 namespace Booking.Api.Common.Mapping;
 
 public class UserMappingConfig : IRegister
@@ -61,9 +62,22 @@ public class UserMappingConfig : IRegister
 			.Map(desp => desp.Id, src => src.Id)
 			.Map(desp => desp.Name, src => src.UserName)
 			.Map(desp => desp.Email, src => src.Email)
+			.Map(desp => desp.IsEmailConfirmed, src => src.EmailConfirmed)
 			.Map(desp => desp.IsActive, 
 				src => src.LockoutEnd == null || src.LockoutEnd <= DateTime.UtcNow);
 
 		config.NewConfig<PagedList<User>, PagedList<GetListOfAllUsersForAdminResponse>>();
+
+		config.NewConfig<User, GetListOfAllRealtorsForAdminResult>()
+			.Map(desp => desp.Id, src => src.Id)
+			.Map(desp => desp.Name, src => src.UserName)
+			.Map(desp => desp.Email, src => src.Email)
+			.Map(desp => desp.IsEmailConfirmed, src => src.EmailConfirmed)
+			.Map(desp => desp.PhoneNumber, src => src.PhoneNumber)
+			.Map(desp => desp.Rate, src => src.Rating)
+			.Map(desp => desp.IsActive,
+				src => src.LockoutEnd == null || src.LockoutEnd <= DateTime.UtcNow);
+
+		config.NewConfig<PagedList<User>, PagedList<GetListOfAllRealtorsForAdminResult>>();
 	}
 }

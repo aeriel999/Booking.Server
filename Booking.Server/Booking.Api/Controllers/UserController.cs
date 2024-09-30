@@ -30,6 +30,8 @@ using Booking.Application.Users.Common.BlockUserByAdmin;
 using Booking.Api.Contracts.Users.Common.UnBlockUserByAdmin;
 using Booking.Application.Users.Common.UnBlockUserByAdmin;
 using Booking.Application.Users.Common.DeleteUserByAdmin;
+using Booking.Application.Users.Realtor.GetListOfAllRealtorsForAdmin;
+using Booking.Api.Contracts.Users.Realtor.GetListOfAllRealtorsForAdmin;
 
 namespace Booking.Api.Controllers;
 
@@ -186,9 +188,12 @@ public class UserController(ISender mediatr, IMapper mapper, IConfiguration conf
         var getListOfAllUsersForAdminResult = await mediatr.Send(
             new GetListOfAllUsersForAdminQuery(Guid.Parse(userId), userRole, page, sizeOfPage));
 
-        return getListOfAllUsersForAdminResult.Match(
-            getListOfPostsForModerationResult => Ok(
-                mapper.Map<PagedList<GetListOfAllUsersForAdminResponse>>(getListOfAllUsersForAdminResult.Value)),
+		var result = getListOfAllUsersForAdminResult.Value != null 
+				? mapper.Map<PagedList<GetListOfAllUsersForAdminResponse>>(getListOfAllUsersForAdminResult.Value!)
+				: null;
+
+		return getListOfAllUsersForAdminResult.Match(
+            getListOfPostsForModerationResult => Ok(result),
             errors => Problem(errors));
     }
 
@@ -238,5 +243,26 @@ public class UserController(ISender mediatr, IMapper mapper, IConfiguration conf
 		return deleteUserByAdminResult.Match(
 			deleteUserByAdminResult => Ok(),
 			errors => Problem(errors));
+	}
+
+	[HttpGet("get-list-of-all-realtors")]
+	[Authorize(Roles = "admin")]
+	public async Task<IActionResult> GetListOfAllRealtorsForAdminAsync([FromQuery] int page, int sizeOfPage)
+	{
+		var userId = User.Claims.First(u => u.Type == ClaimTypes.NameIdentifier).Value;
+
+		var userRole = User.Claims.First(u => u.Type == ClaimTypes.Role).Value;
+
+		var getListOfAllRealtorsForAdminResult = await mediatr.Send(
+			new GetListOfAllRealtorsForAdminQuery(Guid.Parse(userId), userRole, page, sizeOfPage));
+
+		var result = getListOfAllRealtorsForAdminResult.Value != null
+				? mapper.Map<PagedList<GetListOfAllRealtorsForAdminResult>>(getListOfAllRealtorsForAdminResult.Value!)
+				: null;
+
+		return getListOfAllRealtorsForAdminResult.Match(
+			getListOfAllRealtorsForAdminResult => Ok(result),
+			errors => Problem(errors));
+ 
 	}
 }

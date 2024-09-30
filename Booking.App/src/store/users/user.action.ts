@@ -166,4 +166,16 @@ export const deleteUserByAdmin = createAsyncThunk(
     }
 );
 
-
+export const getListOfAllRealtorsForAdmin = createAsyncThunk(
+    'User/get-list-of-all-realtors',
+    async (payload: IFetchData, { rejectWithValue }) => {
+        try {
+            const response = await apiClient.get(
+                `/api/User/get-list-of-all-realtors?page=${payload.page}&sizeOfPage=${payload.sizeOfPage}`
+            );
+            return response.data;
+        } catch (error) {
+            return rejectWithValue(handleAxiosError(error, "Network error"));
+        }
+    }
+);

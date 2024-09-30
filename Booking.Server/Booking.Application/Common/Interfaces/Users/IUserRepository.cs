@@ -9,7 +9,7 @@ public interface IUserRepository
 	Task<List<User>> GetRealtorsFilteredListAsync(Guid? Category, Guid? Country, Guid? City);
 
 
-    Task<List<User>> GetRealtorsListAsync();
+    Task<List<User>?> GetRealtorsListAsync();
 
 
     Task<ErrorOr<User>> FindByEmailAsync(string email);

@@ -11,6 +11,9 @@ public record  GetListOfAllUsersForAdminResponse
 	public required string Email { get; init; }
 
 
+	public required bool IsEmailConfirmed { get; init; }
+
+	
 	public required bool IsActive { get; init; }
 }
  
