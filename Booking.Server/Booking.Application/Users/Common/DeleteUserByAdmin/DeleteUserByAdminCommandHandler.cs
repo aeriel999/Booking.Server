@@ -3,11 +3,12 @@ using Booking.Domain.Constants;
 using ErrorOr;
 using MediatR;
 
-namespace Booking.Application.Users.Common.UnBlockUserByAdmin;
-public class UnBlockUserByAdminCommandHandler(IUserRepository userRepository) 
-	: IRequestHandler<UnBlockUserByAdminCommand, ErrorOr<Success>>
+namespace Booking.Application.Users.Common.DeleteUserByAdmin;
+
+public class DeleteUserByAdminCommandHandler(IUserRepository userRepository)
+	: IRequestHandler<DeleteUserByAdminCommand, ErrorOr<Deleted>>
 {
-	public async Task<ErrorOr<Success>> Handle(UnBlockUserByAdminCommand request, CancellationToken cancellationToken)
+	public async Task<ErrorOr<Deleted>> Handle(DeleteUserByAdminCommand request, CancellationToken cancellationToken)
 	{
 		//Get user
 		var currentUserOrError = await userRepository.GetUserByIdAsync(request.CurrentUserId);
@@ -27,18 +28,12 @@ public class UnBlockUserByAdminCommandHandler(IUserRepository userRepository)
 
 		var user = userOrError.Value;
 
-		// UnBlock the user by  
-		user.LockoutEnd = null;  
-
-		//   set AccessFailedCount  
-		user.AccessFailedCount = 3;
-
-		//Save block
-		var saveResult = await userRepository.UpdateProfileAsync(user);
+		//Delete user
+		var saveResult = await userRepository.DeleteUserAsync(user.Id);
 
 		if (saveResult.IsError)
-			return Error.Validation("Failed to unblock user");
+			return Error.Validation("Error in deleting user");
 
-		return Result.Success;
+		return Result.Deleted;
 	}
 }

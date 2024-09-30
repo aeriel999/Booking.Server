@@ -38,7 +38,7 @@ public class BlockUserByAdminCommandHandler(IUserRepository userRepository)
 		var saveResult = await userRepository.UpdateProfileAsync(user);
 
 		if (saveResult.IsError)
-			return Error.Validation("Error in block");
+			return Error.Validation("Failed to block user");
 
 		return Result.Success;
 	}

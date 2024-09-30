@@ -1,4 +1,4 @@
-﻿namespace Booking.Api.Contracts.Users.Common.UnBlockUserByAdmin;
+﻿namespace Booking.Api.Contracts.Users.Common.DeleteUserByAdmin;
 
 public record DeleteUserByAdminRequest
 {

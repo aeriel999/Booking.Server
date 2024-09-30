@@ -29,6 +29,7 @@ using Booking.Api.Contracts.Users.Common.BlockUserByAdmin;
 using Booking.Application.Users.Common.BlockUserByAdmin;
 using Booking.Api.Contracts.Users.Common.UnBlockUserByAdmin;
 using Booking.Application.Users.Common.UnBlockUserByAdmin;
+using Booking.Application.Users.Common.DeleteUserByAdmin;
 
 namespace Booking.Api.Controllers;
 
@@ -209,7 +210,7 @@ public class UserController(ISender mediatr, IMapper mapper, IConfiguration conf
 
 	[HttpPost("unblock-user-by-admin")]
 	[Authorize(Roles = "admin")]
-	public async Task<IActionResult> UnBlockUserByAdminAsync(UnBlockUserByAdminRequest request)
+	public async Task<IActionResult> UnBlockUserByAdminAsync(DeleteUserByAdminRequest request)
 	{
 		var currentUserId = User.Claims.First(u => u.Type == ClaimTypes.NameIdentifier).Value;
 
@@ -220,6 +221,22 @@ public class UserController(ISender mediatr, IMapper mapper, IConfiguration conf
 
 		return unblockUserByAdminResult.Match(
 			unblockUserByAdminResult => Ok(),
+			errors => Problem(errors));
+	}
+
+	[HttpPost("delete-user-by-admin")]
+	[Authorize(Roles = "admin")]
+	public async Task<IActionResult> DeleteUserByAdminAsync(DeleteUserByAdminRequest request)
+	{
+		var currentUserId = User.Claims.First(u => u.Type == ClaimTypes.NameIdentifier).Value;
+
+		var userRole = User.Claims.First(u => u.Type == ClaimTypes.Role).Value;
+
+		var deleteUserByAdminResult = await mediatr.Send(
+			new DeleteUserByAdminCommand(Guid.Parse(currentUserId), userRole, request.UserId));
+
+		return deleteUserByAdminResult.Match(
+			deleteUserByAdminResult => Ok(),
 			errors => Problem(errors));
 	}
 }

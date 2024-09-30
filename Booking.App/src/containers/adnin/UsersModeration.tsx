@@ -15,12 +15,16 @@ import "../../css/DashBoardRealtorClasses/index.scss";
 import { StyledTableCell, StyledTableRow } from "../../utils/styles";
 import React, { useEffect, useState } from "react";
 import { useAppDispatch } from "../../hooks/redux";
-import { useNavigate } from "react-router-dom";
 import { IFetchData, IModarateUser } from "../../interfaces/post";
 import { unwrapResult } from "@reduxjs/toolkit";
 import ErrorHandler from "../../components/common/ErrorHandler";
 import TablePaginationActions from "@mui/material/TablePagination/TablePaginationActions";
-import { blockUserByAdmin, getListOfAllUsersForAdmin, unblockUserByAdmin } from "../../store/users/user.action";
+import {
+    blockUserByAdmin,
+    deleteUserByAdmin,
+    getListOfAllUsersForAdmin,
+    unblockUserByAdmin,
+} from "../../store/users/user.action";
 
 export default function UsersModeration() {
     const [page, setPage] = React.useState(0); // 0-based index for MUI TablePagination
@@ -31,11 +35,6 @@ export default function UsersModeration() {
         undefined
     );
     const dispatch = useAppDispatch();
-
-    const navigate = useNavigate();
-    const [isDialogOpen, setIsDialogOpen] = useState(false);
-    const [postName, setPostName] = useState<string>();
-    const [postId, setPostId] = useState<string>();
 
     const emptyRows =
         page > 0 ? Math.max(0, (1 + page) * rowsPerPage - totalCount) : 0;
@@ -108,41 +107,89 @@ export default function UsersModeration() {
                                 <StyledTableCell>{row.email}</StyledTableCell>
 
                                 <StyledTableCell>
-                                    <Button disabled={!row.isActive}  
-                                     onClick={async () => {
-                                        try {
-                                            await dispatch(blockUserByAdmin(row.id));
-                                            // set is active in list
-                                            setRows((prevRows) => 
-                                                prevRows?.map((user) =>
-                                                    user.id === row.id 
-                                                    ? {...user, isActive: false}
-                                                    : user)
-                                            );
-                                        } catch (error) {
-                                            setErrorMessage(ErrorHandler(error));
-                                        }
-                                    }}>Block</Button>
+                                    <Button
+                                        disabled={!row.isActive}
+                                        onClick={async () => {
+                                            try {
+                                                await dispatch(
+                                                    blockUserByAdmin(row.id)
+                                                );
+                                                // set is active in list
+                                                setRows((prevRows) =>
+                                                    prevRows?.map((user) =>
+                                                        user.id === row.id
+                                                            ? {
+                                                                  ...user,
+                                                                  isActive:
+                                                                      false,
+                                                              }
+                                                            : user
+                                                    )
+                                                );
+                                            } catch (error) {
+                                                setErrorMessage(
+                                                    ErrorHandler(error)
+                                                );
+                                            }
+                                        }}
+                                    >
+                                        Block
+                                    </Button>
                                 </StyledTableCell>
                                 <StyledTableCell>
-                                    <Button disabled={row.isActive} 
-                                    onClick={ async () => {
-                                        try {
-                                            await dispatch(unblockUserByAdmin(row.id));
-                                            // set is active in list
-                                            setRows((prevRows) => 
-                                                prevRows?.map((user) =>
-                                                    user.id === row.id 
-                                                    ? {...user, isActive: true}
-                                                    : user)
-                                            );
-                                        } catch (error) {
-                                            setErrorMessage(ErrorHandler(error));
-                                        }
-                                    }}>Activate</Button>
+                                    <Button
+                                        disabled={row.isActive}
+                                        onClick={async () => {
+                                            try {
+                                                await dispatch(
+                                                    unblockUserByAdmin(row.id)
+                                                );
+                                                // set is active in list
+                                                setRows((prevRows) =>
+                                                    prevRows?.map((user) =>
+                                                        user.id === row.id
+                                                            ? {
+                                                                  ...user,
+                                                                  isActive:
+                                                                      true,
+                                                              }
+                                                            : user
+                                                    )
+                                                );
+                                            } catch (error) {
+                                                setErrorMessage(
+                                                    ErrorHandler(error)
+                                                );
+                                            }
+                                        }}
+                                    >
+                                        Activate
+                                    </Button>
                                 </StyledTableCell>
                                 <StyledTableCell>
-                                    <Button disabled={row.isActive} onClick={() => {}}>Delete</Button>
+                                    <Button
+                                        disabled={row.isActive}
+                                        onClick={async () => {
+                                            try {
+                                                await dispatch(
+                                                    deleteUserByAdmin(row.id)
+                                                );
+                                                // Remove the deleted user from the rows state
+                                                setRows((prevRows) =>
+                                                    prevRows?.filter(
+                                                        (user) =>
+                                                            user.id !== row.id
+                                                    )
+                                                );
+                                            } catch (error) {
+                                                setErrorMessage(
+                                                    ErrorHandler(error)
+                                                );
+                                            }
+                                        }}
+                                    >
+                                        Delete
+                                    </Button>
                                 </StyledTableCell>
                             </StyledTableRow>
                         ))}

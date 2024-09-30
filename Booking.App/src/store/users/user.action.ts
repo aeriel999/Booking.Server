@@ -152,3 +152,18 @@ export const unblockUserByAdmin = createAsyncThunk(
 );
 
 
+export const deleteUserByAdmin = createAsyncThunk(
+    "User/delete-user-by-admin",
+    async (userId: string, { rejectWithValue }) => {
+        try {
+            const response = await apiClient.post("/api/User/delete-user-by-admin", {
+                userId,
+            });
+            return response.data;
+        } catch (error) {
+            return rejectWithValue(handleAxiosError(error, "Network error"));
+        }
+    }
+);
+
+
