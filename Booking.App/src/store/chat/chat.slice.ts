@@ -1,16 +1,10 @@
 import { AnyAction, createSlice, PayloadAction } from "@reduxjs/toolkit";
 import { RejectedAction } from "../../utils/types";
 import { Status } from "../../utils/enum";
-import {
-    IChatState,
-    IGetMessage,
-    IReadMessage,
-    ISendMessage,
-} from "../../interfaces/chat";
+import { IChatState, IGetMessage, IReadMessage } from "../../interfaces/chat";
 import {
     getChatIdList,
     getChatRoomById,
-    getListOfChatRooms,
     getListOfChatRoomsForClient,
     getListOfChatsByPostInfoForRealtor,
     getListOfPostInfoForChatsForRealtor,
@@ -189,16 +183,6 @@ export const chatSlice = createSlice({
     },
     extraReducers: (builder) => {
         builder
-            .addCase(getListOfChatRooms.fulfilled, (state, action) => {
-                const { chatRooms, hasNewPosts } = action.payload;
-                state.chatRooms = chatRooms;
-                state.hasNewPosts = hasNewPosts;
-
-                state.status = Status.SUCCESS;
-            })
-            .addCase(getListOfChatRooms.pending, (state) => {
-                state.status = Status.LOADING;
-            })
             .addCase(getListOfChatRoomsForClient.fulfilled, (state, action) => {
                 state.chatRoomsForClient = action.payload;
                 state.status = Status.SUCCESS;

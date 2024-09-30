@@ -32,12 +32,16 @@ public class EditRealtorPrifileInfoCommandHandler(
         if (request.FirstName != user.FirstName)
         {
             user.FirstName = request.FirstName;
-        }
+
+			user.UserName = (user.FirstName + " " + user.LastName).TrimEnd().TrimStart();
+		}
 
         if (request.LastName != user.LastName)
         {
             user.LastName = request.LastName;
-        }
+
+			user.UserName = (user.FirstName + " " + user.LastName).TrimEnd().TrimStart();
+		}
 
         if (request.PhoneNumber != user.PhoneNumber)
         {

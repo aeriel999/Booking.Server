@@ -26,7 +26,7 @@ public class RegisterRealtorCommandHandler(
 		var user = new User
 		{
 			Email = request.Email,
-			UserName = request.Email,
+			UserName = request.FirstName + " " + request.LastName,
 			FirstName = request.FirstName,
 			LastName = request.LastName,
 			PhoneNumber = request.PhoneNumber,

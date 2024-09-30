@@ -1,32 +1,25 @@
 ﻿using Booking.Api.Contracts.Chat.ChatRoomForClient;
 using Booking.Api.Contracts.Chat.CreateChat;
-using Booking.Api.Contracts.Chat.DeleteChat;
 using Booking.Api.Contracts.Chat.GetChatMessageInfo;
 using Booking.Api.Contracts.Chat.GetListOfChatsByPostInfoForRealtor;
 using Booking.Api.Contracts.Chat.GetListOfPostInfoForChatsForRealtor;
 using Booking.Api.Contracts.Chat.SetMessagesReadtByChatId;
-using Booking.Api.Contracts.Post.GetCities;
 using Booking.Api.Infrastructure;
 using Booking.Application.Chat.CheckChatForClientIsExist;
-using Booking.Application.Chat.DeleteChat;
 using Booking.Application.Chat.GetChatIdList;
 using Booking.Application.Chat.GetChatRoomForClientByPostId;
-using Booking.Application.Chat.GetChatRoomsList;
 using Booking.Application.Chat.GetChatRoomsListForClient;
-using Booking.Application.Chat.GetGeneralCountOfUnreadedMessages;
 using Booking.Application.Chat.GetListOfChatsByPostInfoForRealtor;
 using Booking.Application.Chat.GetListOfPostInfoForChatsForRealtor;
 using Booking.Application.Chat.GetMessageListByChatId;
 using Booking.Application.Chat.GetNumberOfUnleastMessages;
 using Booking.Application.Chat.SetMessagesReadtByChatId;
-using Booking.Application.Posts.GetListOfFeedbackForRealtor;
 using Booking.Application.Posts.GetPostIdListForRealtor;
 using MapsterMapper;
 using MediatR;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.Mvc.RazorPages;
 using System.Security.Claims;
 
 namespace Booking.Api.Controllers;
@@ -36,22 +29,7 @@ namespace Booking.Api.Controllers;
 [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
 public class ChatController(ISender mediatr, IMapper mapper) : ApiController
 {
-	[HttpGet("chat-list")]
-	public async Task<IActionResult> GetListOfChatsAsync()
-	{
-		var userId = User.Claims.First(u => u.Type == ClaimTypes.NameIdentifier).Value;
-		var useRole = User.Claims.First(u => u.Type == ClaimTypes.Role).Value;
-
-		var getListOfChatRoomsResult = await mediatr.Send(
-			new GetChatRoomsListQuery(Guid.Parse(userId), useRole));
-
-		//ToDo Make response
-		return getListOfChatRoomsResult.Match(
-			getListOfChatRoomsResult => Ok(getListOfChatRoomsResult),
-			errors => Problem(errors));
-	}
-
-    [HttpGet("get-chat-list-for-client")]
+	[HttpGet("get-chat-list-for-client")]
     public async Task<IActionResult> GetListOfChatsForClientAsync()
     {
         var userId = User.Claims.First(u => u.Type == ClaimTypes.NameIdentifier).Value;
@@ -124,7 +102,8 @@ public class ChatController(ISender mediatr, IMapper mapper) : ApiController
 
 
 	[HttpGet("get-list-of-chats-by-post-for-realtor")]
-	public async Task<IActionResult> GetListOfChatsByPostInfoForRealtorAsync([FromQuery] CreateChatRequest request)
+	public async Task<IActionResult> GetListOfChatsByPostInfoForRealtorAsync(
+		[FromQuery] CreateChatRequest request)
 	{
 		var userId = User.Claims.First(u => u.Type == ClaimTypes.NameIdentifier).Value;
 

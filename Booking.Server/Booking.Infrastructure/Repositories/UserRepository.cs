@@ -97,27 +97,6 @@ public class UserRepository(UserManager<User> userManager)
         return Result.Deleted;
     }
 
-    public async Task<ErrorOr<Updated>> EditUserAsync(Guid id, string? email)
-    {
-        var user = await userManager.FindByIdAsync(id.ToString());
-
-        if (email == null && user.Email.Equals(email))
-        {
-            return Result.Updated;
-        }
-
-       var token = await userManager.GenerateChangeEmailTokenAsync(user, email);
-
-        var result = await userManager.ChangeEmailAsync(user, email, token);
-
-        if(!result.Succeeded)return Error.Conflict(result.Errors.FirstOrDefault().Description);
-
-        user.UserName = email;
-
-        await UpdateProfileAsync(user);
-
-        return Result.Updated;
-    }
 
     public async Task<ErrorOr<User>> FindByEmailAsync(string email)
     {
@@ -129,6 +108,7 @@ public class UserRepository(UserManager<User> userManager)
         return user;
     }
 
+
     public async Task<ErrorOr<User>> GetUserByIdAsync(Guid userId)
     {
 		var user = await userManager.FindByIdAsync(userId.ToString());
@@ -138,6 +118,7 @@ public class UserRepository(UserManager<User> userManager)
 
         return user;
 	}
+
 
 	public async Task<ErrorOr<List<string>>> FindRolesByUserIdAsync(User user)
 	{
@@ -162,29 +143,12 @@ public class UserRepository(UserManager<User> userManager)
         else
             user.Rating = (user.Rating + rating) / 2;
 
-
         await UpdateProfileAsync(user);
 
         return user;
         
     }
-   
-    //ToDo Async Method without await
-    public async Task<string> GetUserNameByUserAsync(User user)
-    {
-		if (string.IsNullOrEmpty(user.FirstName) || string.IsNullOrEmpty(user.LastName))
-		{
-			if (string.IsNullOrEmpty(user.LastName) && string.IsNullOrEmpty(user.FirstName))
-				return user.Email!;
-			else if (string.IsNullOrEmpty(user.LastName))
-				return user.FirstName!;
-			else
-				return user.LastName;
-		}
-		else
-			return user.FirstName + " " + user.LastName;
-	}
-	 
+
 
 	public async Task<User?> FindByLoginAsync(string loginProvider, string providerKey)
 	{
@@ -207,6 +171,7 @@ public class UserRepository(UserManager<User> userManager)
 
 		return roles.FirstOrDefault()!;
 	}
+
 
     public async Task<ErrorOr<bool>> IsPasswordAsync(Guid userId)
     {

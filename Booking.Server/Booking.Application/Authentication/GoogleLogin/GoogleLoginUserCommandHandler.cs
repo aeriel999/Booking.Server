@@ -36,12 +36,12 @@ public class GoogleLoginUserCommandHandler(
 
 		var isRegister = true;
 
-		//CreatePostPostTypeOfRestAsync user
+		//Create user
 		if (googleUser == null && errorOrUser.IsError)
 		{
 			googleUser = new User
 			{
-				UserName = validPayload.Email,
+				UserName = (validPayload.GivenName + " " + validPayload.FamilyName).TrimEnd().TrimStart(),
 				Email = validPayload.Email,
 				FirstName = validPayload.GivenName,
 				LastName = validPayload.FamilyName,

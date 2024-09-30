@@ -1,7 +1,4 @@
 import { useEffect, useState } from "react";
-import { getListOfChatRooms } from "../../store/chat/chat.action.ts";
-import { unwrapResult } from "@reduxjs/toolkit";
- 
 import { useAppDispatch, useAppSelector } from "../../hooks/redux";
 import {
     Avatar,
@@ -31,16 +28,16 @@ export default function UserProfilePage() {
     useEffect(() => {
         if (user) {
             setAvatarUrl(APP_ENV.BASE_URL + user?.avatar);
-            const getRooms = async () => {
-                try {
-                    const response = await dispatch(getListOfChatRooms());
-                    unwrapResult(response);
-                } catch (e) {
-                    console.log(e);
-                }
-            };
+            // const getRooms = async () => {
+            //     try {
+            //         const response = await dispatch(getListOfChatRooms());
+            //         unwrapResult(response);
+            //     } catch (e) {
+            //         console.log(e);
+            //     }
+            // };
 
-            getRooms();
+            // getRooms();
             connectForRealtorToSignalR();
         }
     }, [user]);

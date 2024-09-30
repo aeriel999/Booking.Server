@@ -33,12 +33,6 @@ public interface IUserRepository
 	Task<ErrorOr<Deleted>> DeleteUserAsync(Guid userId);
 
 
-	Task<ErrorOr<Updated>> EditUserAsync(Guid id, string? email);
-
-
-	Task<string> GetUserNameByUserAsync(User user);
-
-
 	Task<User?> FindByLoginAsync(string loginProvider, string providerKey);
 
 
