@@ -2,7 +2,7 @@ import { AnyAction, createSlice } from '@reduxjs/toolkit';
 import { RejectedAction } from "../../utils/types";
 import { Status } from "../../utils/enum";
 import { IUserState } from "../../interfaces/user";
-import { changePassword, deleteUserAccount, getFeedbacksByRealtor, getFilteredListOfRealtors, getListOfAllUsersForAdmin, getListOfRealtors, getRealtorById, getRealtorsByUserFeedbacks, sendFeedback } from "./user.action.ts";
+import { blockUserByAdmin, changePassword, deleteUserAccount, getFeedbacksByRealtor, getFilteredListOfRealtors, getListOfAllUsersForAdmin, getListOfRealtors, getRealtorById, getRealtorsByUserFeedbacks, sendFeedback } from "./user.action.ts";
 
 function isRejectedAction(action: AnyAction): action is RejectedAction {
     return action.type.endsWith('/rejected');
@@ -84,7 +84,13 @@ export const userSlice = createSlice({
             .addCase(getListOfAllUsersForAdmin.pending, (state) => {
                 state.status = Status.LOADING;
             })
-            //getListOfAllUsersForAdmin
+            .addCase(blockUserByAdmin.fulfilled, (state) => {
+                state.status = Status.SUCCESS;
+            })
+            .addCase(blockUserByAdmin.pending, (state) => {
+                state.status = Status.LOADING;
+            })
+            //blockUserByAdmin
             .addMatcher(isRejectedAction, (state) => {
                 state.status = Status.ERROR;
             });

@@ -62,7 +62,7 @@ public class UserMappingConfig : IRegister
 			.Map(desp => desp.Name, src => src.UserName)
 			.Map(desp => desp.Email, src => src.Email)
 			.Map(desp => desp.IsActive, 
-				src => !src.LockoutEnabled && (src.LockoutEnd == null || src.LockoutEnd <= DateTime.UtcNow));
+				src => src.LockoutEnd == null || src.LockoutEnd <= DateTime.UtcNow);
 
 		config.NewConfig<PagedList<User>, PagedList<GetListOfAllUsersForAdminResponse>>();
 	}

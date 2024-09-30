@@ -173,7 +173,8 @@ public class UserController(ISender mediatr, IMapper mapper, IConfiguration conf
 
 
     [HttpGet("get-list-of-all-users")]
-    public async Task<IActionResult> GetListOfAllUsersForAdminAsync([FromQuery] int page, int sizeOfPage)
+	[Authorize(Roles = "admin")] 
+	public async Task<IActionResult> GetListOfAllUsersForAdminAsync([FromQuery] int page, int sizeOfPage)
     {
         var userId = User.Claims.First(u => u.Type == ClaimTypes.NameIdentifier).Value;
 
@@ -189,6 +190,7 @@ public class UserController(ISender mediatr, IMapper mapper, IConfiguration conf
     }
 
 	[HttpPost("block-user-by-admin")]
+	[Authorize(Roles = "admin")]  
 	public async Task<IActionResult>BlockUserByAdminAsync(BlockUserByAdminRequest request)
 	{
 		var currentUserId = User.Claims.First(u => u.Type == ClaimTypes.NameIdentifier).Value;

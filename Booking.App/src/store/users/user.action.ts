@@ -122,3 +122,18 @@ export const getListOfAllUsersForAdmin = createAsyncThunk(
 );
 
 
+export const blockUserByAdmin = createAsyncThunk(
+    "User/block-user-by-admin",
+    async (userId: string, { rejectWithValue }) => {
+        try {
+            const response = await apiClient.post("/api/User/block-user-by-admin", {
+                userId,
+            });
+            return response.data;
+        } catch (error) {
+            return rejectWithValue(handleAxiosError(error, "Network error"));
+        }
+    }
+);
+
+
