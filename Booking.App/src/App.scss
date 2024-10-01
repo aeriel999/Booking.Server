@@ -4,6 +4,8 @@ body {
     margin: 0;
     padding: 0;
     font-family: $primary-font-family;
+    font-style: $primary-font-normal-style;
+    line-height: normal;
 }
 
 #root {
@@ -38,9 +40,7 @@ body {
     p {
         color: $secondary-font-color;
         font-size: $medium-font-size;
-        font-style: normal;
         font-weight: $light-font-weight;
-        line-height: normal;
     }
 }
 
@@ -98,9 +98,7 @@ body {
             #name {
                 color: #fff;
                 font-size: $normal-font-size;
-                font-style: $primary-font-normal-style;
                 font-weight: $normal-font-weight;
-                line-height: normal;
             }
         }
     }
@@ -112,8 +110,6 @@ body {
     align-items: center;
     width: 80%;
     font-size: $medium-font-size;
-    font-style: $primary-font-normal-style;
-    line-height: normal;
     height: 5%;
     min-height: 30px;
     gap: 5px;
@@ -191,9 +187,9 @@ body {
                         margin: 0;
                         padding: 0;
                         font-size: $normal-font-size;
-                        font-style: $primary-font-normal-style;
+
                         font-weight: $medium-font-weight;
-                        line-height: normal;
+
                         align-self: center;
                         opacity: 0;
                         transition: opacity 0.3s;
@@ -299,4 +295,46 @@ body {
     height: 100%;
     width: 100%;
     position: absolute;
+}
+
+.notFound {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+
+    img {
+        height: 35vh;
+        min-height: 100px;
+        align-self: stretch;
+    }
+
+    p {
+        align-self: stretch;
+        color: $menu-border-color;
+        text-align: center;
+        font-size: $large-font-size;
+        font-weight: $normal-font-weight;
+    }
+
+    button {
+        border: none;
+        display: flex;
+        height: 54px;
+        padding: 13px 32px;
+        justify-content: center;
+        align-items: center;
+        gap: 10px;
+        border-radius: 5px;
+        background: $header-menu-background;
+        color: $primary-font-color;
+        font-family: $baloo-font-family;
+        font-size: $normal-font-size;
+        font-weight: $big-font-weight;
+
+        &:hover {
+            background-color: $primary-style-color;
+        }
+    }
 }

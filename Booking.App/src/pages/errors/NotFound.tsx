@@ -1,23 +1,18 @@
-import { Typography, Button, createTheme, ThemeProvider } from '@mui/material';
-import { Link } from 'react-router-dom';
-
-const theme = createTheme(); // Create a default theme
+import { useNavigate } from "react-router-dom";
+import "../../App.scss";
+import NotFound from "../../assets/NotFound/look-02 1.svg";
 
 const NotFoundPage = () => {
+   const  navigate = useNavigate();
     return (
-        <ThemeProvider theme={theme}>
-            <div style={{ textAlign: 'center', marginTop: '50px' }}>
-                <Typography variant="h4" gutterBottom>
-                    404 - Not Found
-                </Typography>
-                <Typography variant="subtitle1" gutterBottom>
-                    Sorry, the page you visited does not exist.
-                </Typography>
-                <Button variant="contained" color="primary" component={Link} to="/">
+        <div className='notFound'>
+            <img src={NotFound} alt="Not found" />
+            <p>NOT FOUND</p>
+            <button onClick={()=>{navigate("/home")}}>
                     Back Home
-                </Button>
-            </div>
-        </ThemeProvider>
+                </button>
+        </div>
+      
     );
 };
 
