@@ -55,9 +55,9 @@ const initialState: IChatState = {
     outcomeMessagesReadedChatId: null,
     readedMessages: null,
     deletedChatId: null,
-    deletedChatRooms: null
-    chatIsExist: null
-    deletedChatId: null,
+    deletedChatRooms: null,
+    chatIsExist: null,
+    
 };
 
 export const chatSlice = createSlice({
