@@ -2,10 +2,12 @@ import "../../../css/AuthenticationClasses/index.scss";
 import Header from "../../../components/authentification/Header";
 import { useAppSelector } from "../../../hooks/redux";
 import { useEffect, useState } from "react";
+import { useNavigate } from "react-router-dom";
 
 export default function InformationAfterConfirmationEmail() {
     const { user } = useAppSelector((state) => state.account);
     const [isRealtorInfo, setIsRealtorInfo] = useState<boolean>(false);
+    const naigate = useNavigate();
 
     useEffect(() => {
         if (user) {
@@ -15,19 +17,18 @@ export default function InformationAfterConfirmationEmail() {
     }, [user]);
 
     return (
-        <>
-            <div className="content">
-                <Header />
-
-                <div className="instructionPageContainer">
-                    <div id="instructionTextContainer">
-                        <div id="topContainer">
-                            <h1>Welcome to TripBook!</h1>
-                            <div id="afterTitleText">
-                                Familiarize yourself with the key steps for a
-                                quick start.
-                            </div>
-                            {isRealtorInfo ? (
+        <div className="content">
+            <Header />
+            <div className="instructionPageContainer">
+                <div id="instructionTextContainer">
+                    <div id="topContainer">
+                        <h1>Welcome to TripBook!</h1>
+                        <div id="afterTitleText">
+                            Familiarize yourself with the key steps for a quick
+                            start.
+                        </div>
+                        {isRealtorInfo ? (
+                           
                                 <ol>
                                     <li>
                                         Complete your professional profile by
@@ -60,7 +61,9 @@ export default function InformationAfterConfirmationEmail() {
                                         any questions or suggestions.
                                     </li>
                                 </ol>
-                            ) : (
+                               
+                        ) : (
+                             
                                 <ol>
                                     <li>
                                         Complete your profile by adding a photo
@@ -92,11 +95,15 @@ export default function InformationAfterConfirmationEmail() {
                                         important information.
                                     </li>
                                 </ol>
-                            )}
-                        </div>
+ 
+                        )}
+                        <button 
+                                    className="endRegisterButton"
+                                    onClick={()=>{naigate("/dashboard")}}
+                                    >Go to dashboard</button>
                     </div>
                 </div>
             </div>
-        </>
+        </div>
     );
 }

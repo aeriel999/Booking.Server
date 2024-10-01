@@ -44,6 +44,7 @@ public interface IUserRepository
 
 	Task<ErrorOr<string>> GetRoleByUserAsync(User user);
 
+
 	Task<ErrorOr<bool>> IsPasswordAsync(Guid userId);
 
 
@@ -51,4 +52,7 @@ public interface IUserRepository
 
 
 	Task<List<User>?> GetClientsListAsync();
+
+
+	Task<string> GetUserNameByUserAsync(User user);
 }
