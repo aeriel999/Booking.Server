@@ -79,10 +79,10 @@ export const ChatPostList = (info: IChatItem) => {
                 prevChatList.map((chatItem) =>
                     chatItem.id === getingMessageInfo.chatRoomId
                         ? {
-                              ...chatItem,
-                              numberOfUnreadMessages:
-                                  (chatItem.numberOfUnreadMessages || 0) + 1,
-                          }
+                            ...chatItem,
+                            numberOfUnreadMessages:
+                                (chatItem.numberOfUnreadMessages || 0) + 1,
+                        }
                         : chatItem
                 )
             );
@@ -100,6 +100,7 @@ export const ChatPostList = (info: IChatItem) => {
             if (chatList.length < 1 && info.setDeletedPostChatId) {
                 info.setDeletedPostChatId(true);
             }
+
         }
     }, [info.deletedChatId]);
 
@@ -129,6 +130,7 @@ export const ChatPostList = (info: IChatItem) => {
                     alt=""
                 />
             </div>
+
             <div
                 className="chat"
                 style={{

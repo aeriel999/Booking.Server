@@ -40,6 +40,8 @@ import {
     setOutcomeMessagesReadedChatId,
     setNewMessage,
     setDeletedChatId,
+    setNewMessageToClient,
+    setDeletedChatIdToArr,
 } from "./store/chat/chat.slice.ts";
 import { IGetMessage } from "./interfaces/chat/index.ts";
 import { updateListOfChatIdForListening } from "./store/chat/chat.slice.ts";
@@ -49,6 +51,7 @@ import ChatRoom from "./containers/dashboard/ChatRoom.tsx";
 import PostModeration from "./containers/adnin/PostModeration.tsx";
 import UsersModeration from "./containers/adnin/UsersModeration.tsx";
 import RealtorsModeration from "./containers/adnin/RealtorsModeration.tsx";
+import React from "react";
 
 export const App: React.FC = () => {
     const { isLogin, user } = useAppSelector((state) => state.account);
@@ -78,6 +81,9 @@ export const App: React.FC = () => {
     const setDeletedChatIdRedux = async (roomId: string) => {
         await dispatch(setDeletedChatId(roomId));
     };
+    const addDeletedIdToArrRedux = async (roomId: string) => {
+        await dispatch(setDeletedChatIdToArr(roomId));
+    };
 
     const startConnectionWithSignalR = async () => {
         if (connection.state === signalR.HubConnectionState.Disconnected) {
@@ -90,6 +96,7 @@ export const App: React.FC = () => {
                         );
                     }
                     if (listOfChatsIdForListening) {
+                        console.log("All chats - ", listOfChatsIdForListening);
                         await listeningAllChats(listOfChatsIdForListening);
                     }
                 })
@@ -148,6 +155,7 @@ export const App: React.FC = () => {
 
     const startListeningChat = async (roomId: string) => {
         if (connection.state === signalR.HubConnectionState.Connected) {
+            console.log("startListeningChat");
             await connection
                 .invoke("JoinRoomForListening", { roomId })
                 .then(() => {
@@ -171,12 +179,25 @@ export const App: React.FC = () => {
                     // Remove any previous listener before adding a new one
                     connection.off("delete_chat");
                     // Add the new listener
-                    connection.on("delete_chat", (m) => {
-                        setDeletedChatIdRedux(m);
+                    connection.on("delete_chat", async (m) => {
+                        console.log("Deleted chat - ", m);
+                        addDeletedIdToArrRedux(m);
+                        await leaveRoom(m);
                     });
                 });
         }
     };
+
+    const leaveRoom = async (roomId: string) => {
+        if (connection.state === signalR.HubConnectionState.Connected) {
+            await connection.send("LeaveRoom", { roomId });
+        } else {
+            await connection.start().then(async () => {
+                await connection.send("LeaveRoom", { roomId });
+            })
+        }
+    }
+
 
     if (isLogin && (role() === "realtor" || role() === "user")) {
         startConnectionWithSignalR();

@@ -1,6 +1,103 @@
 @import "../variables.scss";
 
 
+                    .count-of-unread-messages {
+                        width: 30px;
+                        height: 30px;
+                        display: flex;
+                        justify-content: center;
+                        align-items: center;
+                        color: $primary-font-color;
+                        border-radius: 16px;
+                        background: #FF6347;
+                    }
+
+                    .menuItemsText {
+                        margin: 0;
+                        padding: 0;
+                        font-size: 20px;
+                        font-style: normal;
+                        font-weight: 400;
+                        line-height: normal;
+                        align-self: center;
+                        opacity: 0;
+                        transition: opacity 0.3s;
+                    }
+                }
+
+                .outIcon {
+                    align-self: center;
+                    margin-left: auto;
+                    margin-right: 5px;
+                    // background-color: #781010;
+                }
+
+                &.active,
+                &:hover {
+                    background-color: $header-menu-background;
+                    color: $primary-font-color;
+
+                    .menuItemsText {
+                        opacity: 1;
+                    }
+                }
+
+                &:focus {
+                    outline: 2px solid #000;
+                    /* or any color you prefer */
+                }
+            }
+        }
+
+        #footer {
+            all: unset;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-around;
+            height: 60px;
+            margin: 0;
+            padding: 0;
+
+            #line {
+                height: 1px;
+                background-color: $menu-border-color;
+            }
+
+            #logOutButton {
+                display: flex;
+                align-items: center;
+                gap: 20px;
+                margin-left: 20px;
+                color: $default-color;
+
+                p {
+                    margin: 0;
+                    padding: 0;
+                    align-self: center;
+                    opacity: 0;
+                    transition: opacity 0.3s;
+                }
+            }
+
+            &:hover #logOutButton p {
+                opacity: 1;
+                font-weight: 900;
+            }
+
+            &:focus {
+                outline: 2px solid #000;
+                /* or any color you prefer */
+            }
+        }
+
+        &.expanded {
+            width: 250px;
+
+            #items .menuItem .menuItemsText,
+            #footer #logOutButton p {
+                opacity: 1;
+            }
+        }
 
 
 

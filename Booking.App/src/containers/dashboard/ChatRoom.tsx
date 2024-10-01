@@ -28,6 +28,7 @@ import { ChatPostList } from "../../components/chat/ChatPostList";
 import OutlinedErrorAlert from "../../components/common/ErrorAlert";
 import { MessageLeft, MessageRight } from "../../components/chat/Message";
 import { ChatTextInput } from "../../components/chat/ChatTextInput";
+import { ChatRoomIsDeleted } from "../../components/common/ChatRoomIsDeleted/ChatRoomIsDeleted";
 
 const StyledAvatar = styled(Avatar)({
     color: "#fff",
@@ -48,6 +49,7 @@ export default function ChatRoom() {
     const [message, setMessage] = useState<IChatMessageInfo>();
     const [isDialogOpen, setIsDialogOpen] = useState<boolean>(false);
     const [deletedChatId, setDeletedChatId] = useState<string | null>(null);
+    const deletedChatRooms = useAppSelector((state) => state.chat.deletedChatRooms);
     const [isDeletePostChat, setIsDeletePostChat] = useState<boolean>(false);
     const {
         newMessage,
@@ -57,6 +59,17 @@ export default function ChatRoom() {
     } = useAppSelector((state) => state.chat);
     const messageEndRef = useRef<HTMLDivElement>(null);
     const [openChatId, setOpenChatId] = useState<string | null>(null);
+    const [chatIsDeleted, setChatIsDeleted] = useState<boolean>(false);
+
+    const leaveRoom = async (roomId: string) => {
+        if (connection.state === signalR.HubConnectionState.Connected) {
+            await connection.send("Leave", { roomId });
+        } else {
+            await connection.start().then(async () => {
+                await connection.send("Leave", { roomId });
+            })
+        }
+    }
 
     const handleChatToggle = (chatId: string) => {
         // Toggle the chat open/close
@@ -163,18 +176,24 @@ export default function ChatRoom() {
         setErrorMessage(undefined);
 
         if (chatInfo?.chatId) {
-            dispatch(setChatRoomId(chatInfo?.chatId));
-            getMessageList(chatInfo?.chatId).then((data) => {
-                if (data?.payload) {
-                    const sortedMessages = data.payload.$values.sort(
-                        (a: IChatMessageInfo, b: IChatMessageInfo) =>
-                            new Date(a.sentAt!).getTime() -
-                            new Date(b.sentAt!).getTime()
-                    );
+            if (deletedChatRooms && deletedChatRooms.find((element) => element == chatInfo.chatId)) {
+                setChatIsDeleted(true);
+            }
+            else {
+                setChatIsDeleted(false);
+                dispatch(setChatRoomId(chatInfo?.chatId));
+                getMessageList(chatInfo?.chatId).then((data) => {
+                    if (data?.payload) {
+                        const sortedMessages = data.payload.$values.sort(
+                            (a: IChatMessageInfo, b: IChatMessageInfo) =>
+                                new Date(a.sentAt!).getTime() -
+                                new Date(b.sentAt!).getTime()
+                        );
 
-                    setMessages(sortedMessages); // Set the sorted messages
-                }
-            });
+                        setMessages(sortedMessages); // Set the sorted messages
+                    }
+                });
+            }
         }
     }, [chatInfo]);
 
@@ -222,10 +241,10 @@ export default function ChatRoom() {
                 prevPostChatList.map((chatItem) =>
                     chatItem.id === getingMessageInfo.postId
                         ? {
-                              ...chatItem,
-                              numberOfUnreadMessages:
-                                  (chatItem.numberOfUnreadMessages || 0) + 1,
-                          }
+                            ...chatItem,
+                            numberOfUnreadMessages:
+                                (chatItem.numberOfUnreadMessages || 0) + 1,
+                        }
                         : chatItem
                 )
             );
@@ -281,6 +300,19 @@ export default function ChatRoom() {
             }
         }
     }
+    useEffect(() => {
+        const leave = async () => {
+            if (deletedChatRooms && chatInfo) {
+                console.log(deletedChatRooms)
+                if (deletedChatRooms.find((element) => element == chatInfo.chatId)) {
+                    //await leaveRoom(chatInfo.chatId);
+                    setChatIsDeleted(true);
+                }
+            }
+        }
+        leave();
+
+    }, [deletedChatRooms])
 
     return (
         <div className="chatRoom">
@@ -294,7 +326,7 @@ export default function ChatRoom() {
                     }}
                     //  navigate={"/dashboard/chat"}
                     lable="Deleting chat"
-                    //  menuItem="All Posts"
+                //  menuItem="All Posts"
                 />
             )}
 
@@ -321,73 +353,71 @@ export default function ChatRoom() {
                     ))}
             </div>
             <div className="chatContainer">
-                {errorMessage && (
-                    <OutlinedErrorAlert
-                        message={errorMessage}
-                        textColor="#000"
-                    />
-                )}
-                {/* Chat Header */}
-                {chatInfo !== null ? (
+                {chatIsDeleted == true ? <ChatRoomIsDeleted /> : (
                     <>
-                        <div className="chatGroupName">
-                            <img src={chatInfo!.postImage} alt="post" />
-                            <p>{chatInfo!.postName}</p>
-                        </div>
-                        <div className="chatUserContainer">
-                            <div className="chatInfo">
-                                <div className="userInfo">
-                                    <StyledAvatar
-                                        alt={chatInfo!.userName}
-                                        src={chatInfo!.userAvatar}
-                                    />
-                                    <p>{chatInfo!.userName}</p>
+                        {errorMessage && (
+                            <OutlinedErrorAlert
+                                message={errorMessage}
+                                textColor="#000"
+                            />
+                        )}
+                        {/* Chat Header */}
+                        {chatInfo !== null ? (
+                            <>
+                                <div className="chatGroupName">
+                                    <img src={chatInfo!.postImage} alt="post" />
+                                    <p>{chatInfo!.postName}</p>
                                 </div>
-                                <Button
-                                    onClick={() => {
-                                        setIsDialogOpen(true);
-                                    }}
-                                >
-                                    <img src={Trash} alt="delete" />
-                                </Button>
-                            </div>
-                            <div
-                                className="messageContainer"
-                                onClick={handleMessageRead}
-                            >
-                                <div className="messages">
-                                    {/* Display Read Messages */}
-                                    {messages && messages.length > 0 ? (
-                                        messages.map((msg, index) =>
-                                            msg.userId === user?.id ? (
-                                                <MessageRight
-                                                    key={`read-${index}`}
-                                                    {...msg}
-                                                />
+                                <div className="chatUserContainer">
+                                    <div className="chatInfo">
+                                        <div className="userInfo">
+                                            <StyledAvatar
+                                                alt={chatInfo!.userName}
+                                                src={chatInfo!.userAvatar}
+                                            />
+                                            <p>{chatInfo!.userName}</p>
+                                        </div>
+                                    </div>
+                                    <div
+                                        className="messageContainer"
+                                        onClick={handleMessageRead}
+                                    >
+                                        <div className="messages">
+                                            {/* Display Read Messages */}
+                                            {messages && messages.length > 0 ? (
+                                                messages.map((msg, index) =>
+                                                    msg.userId === user?.id ? (
+                                                        <MessageRight
+                                                            key={`read-${index}`}
+                                                            {...msg}
+                                                        />
+                                                    ) : (
+                                                        <MessageLeft
+                                                            key={`read-${index}`}
+                                                            {...msg}
+                                                        />
+                                                    )
+                                                )
                                             ) : (
-                                                <MessageLeft
-                                                    key={`read-${index}`}
-                                                    {...msg}
-                                                />
-                                            )
-                                        )
-                                    ) : (
-                                        <div>No read messages available</div>
-                                    )}
-                                    <div id="Ref" ref={messageEndRef} />
+                                                <div>No read messages available</div>
+                                            )}
+                                            <div id="Ref" ref={messageEndRef} />
+                                        </div>
+                                        {/* Chat Input for sending messages */}
+                                        <ChatTextInput
+                                            roomId={chatInfo?.chatId!}
+                                            setMessage={setMessage}
+                                            userId={user?.id!}
+                                        />
+                                    </div>
                                 </div>
-                                {/* Chat Input for sending messages */}
-                                <ChatTextInput
-                                    roomId={chatInfo?.chatId!}
-                                    setMessage={setMessage}
-                                    userId={user?.id!}
-                                />
-                            </div>
-                        </div>
+                            </>
+                        ) : (
+                            <>Please Choose Chat </>
+                        )}
                     </>
-                ) : (
-                    <>Please Choose Chat </>
                 )}
+
             </div>
         </div>
     );

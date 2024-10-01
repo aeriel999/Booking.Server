@@ -13,12 +13,12 @@ import { changeDashboardMenuItem } from "../../../store/settings/settings.slice"
 import { IDashboardMenuItem } from "../../../interfaces/common";
 import { clientMenuData } from "../../../utils/data";
 import { Avatar } from "../../../components/common/Avatar/Avatar";
+import { Badge } from "@mui/material";
 
 export default function ClientDashboardLayout() {
     const { user } = useAppSelector((state) => state.account);
-    const unreadMessages = useAppSelector(
-        (state) => state.chat.generalNumberOfUnreadMessages
-    );
+    const unreadMessages = useAppSelector((state) => state.chat.generalNumberOfUnreadMessages);
+    const savedChatRoom = useAppSelector((state) => state.settings.savedPostIdForChat);
     const { currentBreadcrumbsItem } = useAppSelector(
         (state) => state.settings
     );
@@ -73,6 +73,13 @@ export default function ClientDashboardLayout() {
         dispatch(changeDashboardMenuItem(menuData[index].name));
     };
 
+    useEffect(() => {
+        if (savedChatRoom?.length != 0) {
+            handleMenuClick(2);
+        }
+    }, [savedChatRoom])
+
+
     return (
         <div className="dashboardMainContainer">
             <div className="dashboardHeaderContainer">
@@ -125,21 +132,27 @@ export default function ClientDashboardLayout() {
                                 onClick={() => handleMenuClick(index)}
                             >
                                 <div className="text">
-                                    {item.counterOfMsg && unreadMessages > 0 ? (
-                                        <div className="count-of-unread-messages">
-                                            {unreadMessages}
-                                        </div>
-                                    ) : (
-                                        ""
-                                    )}
-                                    <img
-                                        src={
-                                            item.isActive
-                                                ? item.activeImage
-                                                : item.image
+                                    <Badge
+                                        badgeContent={
+                                            item.counterOfMsg &&
+                                            unreadMessages
                                         }
-                                        alt={item.name}
-                                    />
+                                        sx={{
+                                            "& .MuiBadge-badge": {
+                                                backgroundColor: "#FF6347",
+                                                color: "white",
+                                            },
+                                        }}
+                                    >
+                                        <img
+                                            src={
+                                                item.isActive
+                                                    ? item.activeImage
+                                                    : item.image
+                                            }
+                                            alt={item.name}
+                                        />
+                                    </Badge>
                                     <p className="menuItemsText">{item.name}</p>
                                 </div>
                                 {isExpanded &&

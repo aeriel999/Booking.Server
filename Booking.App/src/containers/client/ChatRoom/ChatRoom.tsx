@@ -13,9 +13,11 @@ import { APP_ENV } from '../../../env';
 import { Status } from '../../../utils/enum';
 import { Loading } from '../../../components/common/Loading/Loading';
 import { unwrapResult } from '@reduxjs/toolkit';
-import { deleteNumberOfMessageFromGeneralCount, readMessages, setChatRoomId, setIsCuretnChatReaded } from '../../../store/chat/chat.slice';
+import { deleteNumberOfMessageFromGeneralCount, readMessages, resetChatInfoForClient, setChatRoomId, setDeletedChatId, setIsCuretnChatReaded } from '../../../store/chat/chat.slice';
 import ErrorHandler from '../../../components/common/ErrorHandler';
 import { ChatRoomIsDeleted } from '../../../components/common/ChatRoomIsDeleted/ChatRoomIsDeleted';
+import Trash from "../../../assets/DashboardIcons/mdi_trash-outline.svg";
+import CustomizedDialogs from '../../../components/common/Dialog';
 
 interface IChatRoom {
     chatRoomId: string | null,
@@ -37,11 +39,14 @@ export const ChatRoom = (info: IChatRoom) => {
     const [errorMessage, setErrorMessage] = useState<string | undefined>(
         undefined
     );
+    const [isDialogOpen, setIsDialogOpen] = useState<boolean>(false);
+    //const [isDeletePostChat, setIsDeletePostChat] = useState<boolean>(false);
+    //const [deletedChatId, setDeletedChatId] = useState<string | null>(null);
 
     const messagesRef = useRef<HTMLDivElement>(null);
 
     ///////////
-    const { deletedChatId } = useAppSelector((state) => state.chat);
+    /*const { deletedChatId } = useAppSelector((state) => state.chat);
 
     const leave = (roomId: string) =>
         connection.send("LeaveRoom", { roomId }).then(() => {
@@ -52,7 +57,7 @@ export const ChatRoom = (info: IChatRoom) => {
         if (deletedChatId) {
             leave(deletedChatId);
         }
-    }, [deletedChatId]);
+    }, [deletedChatId]);*/
     ///////////////
     const getChatRoom = async () => {
         if (info.chatRoomId) {
@@ -60,13 +65,7 @@ export const ChatRoom = (info: IChatRoom) => {
             //dispatch(changeLoaderIsLoading(true));
         }
     };
-    const chechIsChatExist = async () => {
-        console.log("Post - ", info.postId)
-        if (info.postId) {
 
-            await dispatch(CheckChatIsExist(info.postId));
-        }
-    }
     /*useEffect(() => {
         if (chatIsExist) {
             if (chatIsExist === true) {
@@ -90,6 +89,8 @@ export const ChatRoom = (info: IChatRoom) => {
         //handleMessageRead();
         if (info.chatRoomId)
             dispatch(setChatRoomId(info.chatRoomId!))
+
+
         //}
         //}
         //chechIsChatExist()
@@ -181,6 +182,7 @@ export const ChatRoom = (info: IChatRoom) => {
 
     const getMessageSignalR = async (chatId: any) => {
         if (connection.state === signalR.HubConnectionState.Connected) {
+            console.log("GetPostNotify");
             await connection.send("GetPostNotify", { chatId });
         } else {
             await connection.start().then(async () => {
@@ -216,6 +218,7 @@ export const ChatRoom = (info: IChatRoom) => {
                     setMessages(sortedMessages); // Set the sorted messages
                 }
             });
+            //startListeningPost(info.chatRoomId);
         }
     }, [chatRoom]);
 
@@ -270,10 +273,54 @@ export const ChatRoom = (info: IChatRoom) => {
             }
         }
     }
+    const DeleteChatSignalR = async (roomId: string) => {
+        setErrorMessage(undefined);
 
+        if (connection.state === signalR.HubConnectionState.Connected) {
+            await connection.send("DeleteChatNotify", { roomId });
+        } else {
+            await connection.start().then(async () => {
+                await connection.send("DeleteChatNotify", { roomId });
+            });
+        }
+    };
+    const deleteChat = async (id: string) => {
+        setErrorMessage(undefined);
+
+        if (numberOfUnreadMessages < 1) {
+            try {
+                await DeleteChatSignalR(id);
+                // const response = await dispatch(deleteChatById(id));
+                // unwrapResult(response);
+            } catch (error) {
+                setErrorMessage(ErrorHandler(error));
+            }
+
+            //setDeletedChatId(id);
+            dispatch(setDeletedChatId(id))
+            dispatch(resetChatInfoForClient())
+        } else {
+            setErrorMessage(
+                ErrorHandler("You cannot delete chat with unread messages")
+            );
+        }
+    };
 
     return (
         <div id="chat-room">
+            {isDialogOpen && chatRoom && (
+                <CustomizedDialogs
+                    message={`You want to delete chat with ${chatRoom.realtorName}. Are you sure?`}
+                    isOpen={isDialogOpen}
+                    setOpen={setIsDialogOpen}
+                    action={async () => {
+                        await deleteChat(info.chatRoomId!);
+                    }}
+                    //  navigate={"/dashboard/chat"}
+                    lable="Deleting chat"
+                //  menuItem="All Posts"
+                />
+            )}
             {status == Status.LOADING ? <Loading /> : ""}
             {chatRoom && info.chatRoomId ? (
                 <>
@@ -291,6 +338,12 @@ export const ChatRoom = (info: IChatRoom) => {
                                 alt="Realtor Avatar"
                             />
                             <p>{chatRoom.realtorName}</p>
+                            <button
+                                className='delete-button'
+                                onClick={() => setIsDialogOpen(true)}
+                            >
+                                <img src={Trash} alt="delete" />
+                            </button>
                         </div>
                     </div>
                     <div className="chat-room-messages" onClick={handleMessageRead}>

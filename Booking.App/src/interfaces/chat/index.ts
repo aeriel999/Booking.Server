@@ -5,6 +5,7 @@ export interface IChatState {
     chatRoomsForClient: IChatRoomListForClient[] | null;
     hasNewPosts: boolean;
     status: Status;
+    statusToListOfChatRooms: Status;
     generalNumberOfUnreadMessages: number;
     listOfPostIdForListening: string[] | null;
     listOfChatsIdForListening: string[] | null;
@@ -17,7 +18,7 @@ export interface IChatState {
     deletedChatId: string | null;
     readedMessages: IReadMessage | null;
     chatIsExist: boolean | null;
-   
+    deletedChatRooms: string[] | null;
 }
 
 export interface IChatRoomList {
