@@ -25,9 +25,12 @@ public class ForgotPasswordQueryHandler(
 		//Generate token
 		var token = await userAuthenticationService.GeneratePasswordResetTokenAsync(user);
 
+		//Make user name
+		var userName = await userRepository.GetUserNameByUserAsync(user);
+
 		//Make Link for email
 		var sendEmailResult = await emailService.SendResetPasswordEmailAysync(
-			user.Email!, token, request.BaseUrl, user.UserName!);
+			user.Email!, token, request.BaseUrl, userName);
 
 		return sendEmailResult;
 	}

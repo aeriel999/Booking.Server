@@ -24,15 +24,11 @@ public class EditUserProfileCommandHandler(IUserRepository repository,
 		if (!String.IsNullOrEmpty(request.FirstName) && user.FirstName != request.FirstName)
 		{
 			user.FirstName = request.FirstName;
-
-			user.UserName = (user.FirstName + " " + user.LastName).TrimEnd().TrimStart();
 		}
 
 		if (!String.IsNullOrEmpty(request.LastName) && user.LastName != request.LastName)
 		{
 			user.LastName = request.LastName;
-
-			user.UserName = (user.FirstName + " " + user.LastName).TrimEnd().TrimStart();
 		}
 
 		var result = await repository.UpdateProfileAsync(user);

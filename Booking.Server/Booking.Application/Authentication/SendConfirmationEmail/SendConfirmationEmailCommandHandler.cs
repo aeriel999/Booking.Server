@@ -23,9 +23,12 @@ public class SendConfirmationEmailCommandHandler(
 		//Generate token
 		var token = await userAuthenticationService.GenerateEmailConfirmationTokenAsync(user);
 
+		//Make user name
+		var userName = await userRepository.GetUserNameByUserAsync(user);
+
 		//Send confirmation
 		var sendEmailResult = await emailService.SendEmailConfirmationEmailAsync(
-			user.Id, user.Email!, token, request.BaseUrl, user.UserName!);
+			user.Id, user.Email!, token, request.BaseUrl, userName);
 
 		return sendEmailResult;
 	}

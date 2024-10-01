@@ -1,5 +1,6 @@
 ﻿using Booking.Application.Common.Interfaces.Users;
 using Booking.Domain.Constants;
+using Booking.Domain.Posts;
 using Booking.Domain.Users;
 using ErrorOr;
 using Microsoft.AspNetCore.Identity;
@@ -184,16 +185,19 @@ public class UserRepository(UserManager<User> userManager)
 
 	public async Task<string> GetUserNameByUserAsync(User user)
 	{
-		if (string.IsNullOrEmpty(user.FirstName) || string.IsNullOrEmpty(user.LastName))
+		return await Task.Run(() =>
 		{
-			if (string.IsNullOrEmpty(user.LastName) && string.IsNullOrEmpty(user.FirstName))
-				return user.Email!;
-			else if (string.IsNullOrEmpty(user.LastName))
-				return user.FirstName!;
+			if (string.IsNullOrEmpty(user.FirstName) || string.IsNullOrEmpty(user.LastName))
+			{
+				if (string.IsNullOrEmpty(user.LastName) && string.IsNullOrEmpty(user.FirstName))
+					return user.Email!;
+				else if (string.IsNullOrEmpty(user.LastName))
+					return user.FirstName!;
+				else
+					return user.LastName;
+			}
 			else
-				return user.LastName;
-		}
-		else
-			return user.FirstName + " " + user.LastName;
+				return user.FirstName + " " + user.LastName;
+		});
 	}
 }

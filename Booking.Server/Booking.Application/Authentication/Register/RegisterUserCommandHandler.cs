@@ -19,7 +19,7 @@ public class RegisterUserCommandHandler(IUserRepository userRepository, ISender 
 		if (errorOrUser.IsSuccess())
 			return Error.Validation("User with such email already exists");
 
-		//CreatePostPostTypeOfRestAsync
+		//Create user
 		var user = new User { Email = request.Email, UserName = request.Email };
 
 		var role = Roles.User;

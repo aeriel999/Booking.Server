@@ -2,9 +2,9 @@ import { Outlet, useNavigate } from "react-router-dom";
 import "../../../css/DashBoardRealtorClasses/index.scss";
 import "../../../css/DashBoardAnonymousClasses/index.scss";
 import logo from "../../../assets/Logo/tripbook 1.svg";
-import dot from "../../../assets/Icons/mingcute_map-pin-line.svg";
-import calendar from "../../../assets/Icons/calendar-06.svg";
-import human from "../../../assets/Icons/user-profile-03.svg";
+// import dot from "../../../assets/Icons/mingcute_map-pin-line.svg";
+// import calendar from "../../../assets/Icons/calendar-06.svg";
+// import human from "../../../assets/Icons/user-profile-03.svg";
 import { useSelector } from "react-redux";
 import { RootState } from "../../../store";
 import { useEffect, useState } from "react";
@@ -93,7 +93,7 @@ export default function AnonymousDashboardLayout() {
                     </div>
                     <div className="searching">
                         <div>Travel, visit new places with TripBook!</div>
-                        <form>
+                        {/* <form>
                             <img src={dot} />
                             <input placeholder="Place of travel?" />
                             <img src={calendar} />
@@ -110,21 +110,30 @@ export default function AnonymousDashboardLayout() {
                             <img src={human} />
                             <input placeholder="Count of people - number" />
                             <button>Find</button>
-                        </form>
+                        </form> */}
                     </div>
                 </div>
             </header>
             <Outlet />
             <footer>
                 <img src={logo} />
+
                 <div className="explore">
-                    <p>Explore</p>
+                    <p>For partners</p>
                     <div>
-                        <a tabIndex={3}>Countries</a>{" "}
-                        <a tabIndex={4}>Regions</a> <a tabIndex={5}>Cities</a>{" "}
-                        <a tabIndex={6}>Districts</a>{" "}
+                        <a
+                            onClick={() => {
+                                navigate("/authentication/realtor-register");
+                            }}
+                            tabIndex={3}
+                        >
+                            Create Realtor Account
+                        </a>
+                        <a tabIndex={4}>Send Message to Administrator</a>
+                        <a tabIndex={5}>On issues of advertising</a>
+                        {/* <a tabIndex={6}>Districts</a>{" "}
                         <a tabIndex={7}>Attractions</a>{" "}
-                        <a tabIndex={8}>Airports</a> <a tabIndex={9}>Hotels</a>
+                        <a tabIndex={8}>Airports</a> <a tabIndex={9}>Hotels</a> */}
                     </div>
                 </div>
             </footer>

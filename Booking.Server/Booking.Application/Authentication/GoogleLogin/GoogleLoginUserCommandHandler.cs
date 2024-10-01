@@ -41,7 +41,7 @@ public class GoogleLoginUserCommandHandler(
 		{
 			googleUser = new User
 			{
-				UserName = (validPayload.GivenName + " " + validPayload.FamilyName).TrimEnd().TrimStart(),
+				UserName = validPayload.Email,
 				Email = validPayload.Email,
 				FirstName = validPayload.GivenName,
 				LastName = validPayload.FamilyName,

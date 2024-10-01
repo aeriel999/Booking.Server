@@ -9,6 +9,7 @@ using Booking.Application.Chat.GetListOfChatsByPostInfoForRealtor;
 using Booking.Domain.Chat;
 using Booking.Domain.Posts;
 using Mapster;
+using Booking.Domain.Users;
 
 namespace Booking.Api.Common.Mapping;
 
@@ -36,7 +37,7 @@ public class ChatMapping : IRegister
 		   .Map(desp => desp.NumberOfUnreadMessages, 
 		   src => src.UserMessages!.Count(m => !m.IsRead && m.UserId != src.RealtorId))
 		   .Map(desp => desp.Image, src => src.Client!.Avatar)
-		   .Map(desp => desp.Name, src => src.Client!.UserName);
+			.Map(desp => desp.Name, src => CommonMaping.GetUserName(src.Client!));
 
 		config.NewConfig<List<ChatRoom>, List<GetListOfChatsByPostInfoForRealtorResponse>>();
 
@@ -65,4 +66,9 @@ public class ChatMapping : IRegister
 		//.Map(desp => desp.ListOfMessages, src => src.UserMessages != null ? src.UserMessages : new List<UserMessage>());
 
     }
+
+
+
 }
+
+

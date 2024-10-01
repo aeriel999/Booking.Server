@@ -216,8 +216,8 @@
 
             div {
                 display: flex;
-                column-gap: 3.7%;
-
+              //  column-gap: 3.7%;
+                justify-content: space-around;
 
                 a {
                     font-size: $normal-font-size;
@@ -225,6 +225,7 @@
                     flex-basis: 14.2%;
                     text-decoration: none;
                     cursor: pointer;
+                    text-wrap: nowrap;
                 }
             }
         }
