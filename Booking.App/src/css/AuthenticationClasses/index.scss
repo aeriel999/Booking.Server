@@ -21,7 +21,7 @@
 
 .content {
     height: 100vh;
-    min-height: 700px;
+    min-height: 750px;
     min-width: 700px;
     display: flex;
     flex-direction: column;
@@ -78,6 +78,7 @@
     padding: 0;
     color: $primary-font-color;
     text-align: center;
+    
 }
 
 .resetPasswordMainContainer {
