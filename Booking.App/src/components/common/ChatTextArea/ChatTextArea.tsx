@@ -22,9 +22,10 @@ export const ChatTextArea = (info: IChatTextArea) => {
     const {
         register,
         handleSubmit,
+        getValues,
         formState: { isSubmitting, errors },
-        setValue
-
+        setValue,
+        reset
     } = useForm<ISendMessage>({ resolver: sendMessageResolver })
 
     // const sendMessageSignalR = (message: string, roomId: string) =>
@@ -49,6 +50,7 @@ export const ChatTextArea = (info: IChatTextArea) => {
                 date: new Date()
             }
         ]);
+        reset();
     };
     const handleChange = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
 

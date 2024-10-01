@@ -38,6 +38,7 @@ const initialState: IChatState = {
     chatRoomsForClient: null,
     hasNewPosts: false,
     status: Status.IDLE,
+    statusToListOfChatRooms: Status.IDLE,
     generalNumberOfUnreadMessages: getLocalStorage(
         "generalNumberOfUnreadMessages"
     )
@@ -60,6 +61,7 @@ const initialState: IChatState = {
     outcomeMessagesReadedChatId: null,
     readedMessages: null,
     deletedChatId: null,
+    deletedChatRooms: null
     chatIsExist: null
     deletedChatId: null,
 };
@@ -126,7 +128,6 @@ export const chatSlice = createSlice({
             state: IChatState,
             action: PayloadAction<string>
         ) => {
-            console.log("Current chatroom - ", state.currentChatRoomId)
             if (state.currentChatRoomId === action.payload) {
 
                 state.outcomeMessagesReadedChatId = action.payload;
@@ -192,6 +193,28 @@ export const chatSlice = createSlice({
         ) => {
             state.deletedChatId = action.payload;
         },
+        resetChatInfoForClient: (
+            state: IChatState
+        ) => {
+            state.chatRoomInfoForClient = null;
+        },
+        setDeletedChatIdToArr: (
+            state: IChatState,
+            action: PayloadAction<string>
+        ) => {
+            if (state.deletedChatRooms) {
+                state.deletedChatRooms = [...state.deletedChatRooms, action.payload];
+            } else {
+                state.deletedChatRooms = [action.payload];
+            }
+
+        },
+        clearChatRoomsForClient: (
+            state: IChatState
+        ) => {
+            if (state.chatRoomsForClient) state.chatRoomsForClient = null;
+
+        },
     },
     extraReducers: (builder) => {
         builder
@@ -207,10 +230,10 @@ export const chatSlice = createSlice({
             })
             .addCase(getListOfChatRoomsForClient.fulfilled, (state, action) => {
                 state.chatRoomsForClient = action.payload;
-                state.status = Status.SUCCESS;
+                state.statusToListOfChatRooms = Status.SUCCESS;
             })
             .addCase(getListOfChatRoomsForClient.pending, (state) => {
-                state.status = Status.LOADING;
+                state.statusToListOfChatRooms = Status.LOADING;
             })
             .addCase(getNumberOfUnleastMessages.fulfilled, (state, action) => {
                 state.generalNumberOfUnreadMessages = action.payload;
@@ -328,5 +351,8 @@ export const {
     setOutcomeMessagesReadedChatId,
     readMessages,
     setDeletedChatId,
+    resetChatInfoForClient,
+    setDeletedChatIdToArr,
+    clearChatRoomsForClient
 } = chatSlice.actions;
 export default chatSlice.reducer;

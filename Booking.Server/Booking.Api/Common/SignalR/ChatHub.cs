@@ -115,12 +115,14 @@ namespace Booking.Api.Common.SignalR
 		public async Task LeaveRoom(RoomRequest request)
 		{
 			await Groups.RemoveFromGroupAsync(Context.ConnectionId, request.RoomId.ToString());
-		}
+
+            Console.WriteLine($"Клієнт {Context.ConnectionId} покинув кімнату {request.RoomId}");
+        }
 
 		public async Task DeleteChatNotify(RoomRequest request)
 		{
 			await Clients.GroupExcept(request.RoomId.ToString(), new[] { Context.ConnectionId })
-				.SendAsync("delete_chat", request);
+				.SendAsync("delete_chat", request.RoomId.ToString());
 
 			await LeaveRoom(request);
 
