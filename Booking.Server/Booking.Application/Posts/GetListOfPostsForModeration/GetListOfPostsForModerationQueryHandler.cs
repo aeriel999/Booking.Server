@@ -21,9 +21,9 @@ public class GetListOfPostsForModerationQueryHandler(
 		if (userOrError.IsError)
 			return Error.NotFound("User is not found");
 
-		//Compare user rele
+		//Compare user role
 		if (request.Role.ToLower() != Roles.Admin.ToLower())
-			return Error.Conflict("Permission deny");
+			return Error.Validation("Access deny");
 
 		//get list of posts
 		var postList = await postRepository.GetPostListForModeration();

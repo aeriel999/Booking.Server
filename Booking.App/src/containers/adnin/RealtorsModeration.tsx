@@ -5,7 +5,7 @@ import { StyledTableCell, StyledTableRow } from "../../utils/styles";
 import React, { useEffect, useState } from "react";
 import { useAppDispatch } from "../../hooks/redux";
 import { useNavigate } from "react-router-dom";
-import { IFetchData, IModaratePost } from "../../interfaces/post";
+import { IFetchData, IModarateRealtor } from "../../interfaces/post";
 import { unwrapResult } from "@reduxjs/toolkit";
 import ErrorHandler from "../../components/common/ErrorHandler";
 import TablePaginationActions from "@mui/material/TablePagination/TablePaginationActions";
@@ -14,7 +14,7 @@ export default function RealtorsModeration(){
     const [page, setPage] = React.useState(0); // 0-based index for MUI TablePagination
     const [rowsPerPage, setRowsPerPage] = useState(5);
     const [totalCount, setTotalCount] = useState(0);
-    const [rows, setRows] = useState<IModaratePost[]>();
+    const [rows, setRows] = useState<IModarateRealtor[]>();
     const [errorMessage, setErrorMessage] = useState<string | undefined>(
         undefined
     );
@@ -79,14 +79,17 @@ export default function RealtorsModeration(){
             >
                 <TableHead>
                     <TableRow>
-                        <StyledTableCell>Realtor</StyledTableCell>
+                        <StyledTableCell>Name</StyledTableCell>
 
-                        <StyledTableCell>Post Category</StyledTableCell>
+                        <StyledTableCell>Email</StyledTableCell>
 
-                        <StyledTableCell>Show Post</StyledTableCell>
+                        <StyledTableCell>Phone number</StyledTableCell>
 
                         <StyledTableCell >
-                            Post Date
+                           Rate
+                        </StyledTableCell>
+                        <StyledTableCell >
+                            Blocked
                         </StyledTableCell>
                         <StyledTableCell >
                             Activate
@@ -96,30 +99,38 @@ export default function RealtorsModeration(){
                 </TableHead>
                 <TableBody>
                     {rows?.map((row) => (
-                        <>
-                            <StyledTableRow key={row.postId}>
+                        
+                            <StyledTableRow key={row.id}>
                                 <StyledTableCell >
-                                    {row.realtorName}
+                                    {row.name}
                                 </StyledTableCell>
 
                                 <StyledTableCell >
-                                    {row.postName}
+                                    {row.email}
                                 </StyledTableCell>
                                 
                                 <StyledTableCell >
-                                    {row.postCategoryName}
+                                    {row.phoneNumber}
                                 </StyledTableCell>
 
                                 <StyledTableCell >
-                                    {row.postedDate}
+                                    {row.rate}
                                 </StyledTableCell>
 
                                 <StyledTableCell >
                                     <Button
                                         onClick={() => {
-                                            navigate(
-                                                `/dashboard/edit-post/${row.postId}`
-                                            );
+                                           
+                                        }}
+                                    >
+                                        Block
+                                    </Button>
+                                </StyledTableCell>
+                                 
+                                <StyledTableCell >
+                                    <Button
+                                        onClick={() => {
+                                           
                                         }}
                                     >
                                         Activate
@@ -127,7 +138,7 @@ export default function RealtorsModeration(){
                                 </StyledTableCell>
                                  
                             </StyledTableRow>
-                        </>
+                        
                     ))}
                     {emptyRows > 0 && (
                         <TableRow style={{ height: 53 * emptyRows }}>

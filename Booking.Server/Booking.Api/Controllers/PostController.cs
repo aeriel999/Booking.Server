@@ -64,6 +64,8 @@ using Booking.Application.Posts.EditRoom;
 using Booking.Application.Posts.GetListOfFeedbackForRealtor;
 using Booking.Application.Posts.GetListOfPostsForModeration;
 using Booking.Api.Contracts.Post.GetListOfPostsForModeration;
+using Booking.Api.Contracts.Post.ActivatePost;
+using Booking.Application.Posts.ActivatePost;
 
 namespace Booking.Api.Controllers;
 
@@ -597,14 +599,29 @@ public class PostController(ISender mediatr, IMapper mapper) : ApiController
 	{
 		var userId = User.Claims.First(u => u.Type == ClaimTypes.NameIdentifier).Value;
 
-		var useRole = User.Claims.First(u => u.Type == ClaimTypes.Role).Value;
+		var userRole = User.Claims.First(u => u.Type == ClaimTypes.Role).Value;
 
 		var getListOfPostsForModerationResult = await mediatr.Send(
-			new GetListOfPostsForModerationQuery(Guid.Parse(userId), useRole, page, sizeOfPage));
+			new GetListOfPostsForModerationQuery(Guid.Parse(userId), userRole, page, sizeOfPage));
 
 		return getListOfPostsForModerationResult.Match(
 			getListOfPostsForModerationResult => Ok(
 				mapper.Map<PagedList<GetListOfPostsForModerationResponse>>(getListOfPostsForModerationResult)),
+			errors => Problem(errors));
+	}
+
+	[HttpPost("activate-post")]
+	public async Task<IActionResult> ActivatePostAsync(ActivatePostRequest request)
+	{
+		string userId = User.Claims.First(u => u.Type == ClaimTypes.NameIdentifier).Value;
+
+		var useRole = User.Claims.First(u => u.Type == ClaimTypes.Role).Value;
+
+		var activatePostResult = await mediatr.Send(new ActivatePostCommand(
+			request.PostId, Guid.Parse(userId), useRole));
+
+		return activatePostResult.Match(
+			activatePostResult => Ok(activatePostResult),
 			errors => Problem(errors));
 	}
 

@@ -9,6 +9,7 @@ import {
     IPostState,
 } from "../../interfaces/post";
 import {
+    activatePost,
     archivePost,
     createPost,
     createRoom,
@@ -365,7 +366,13 @@ export const postSlice = createSlice({
             .addCase(getListOfPostsForModeration.pending, (state) => {
                 state.status = Status.LOADING;
             })
-            //getListOfPostsForModeration
+            .addCase(activatePost.fulfilled, (state) => {
+                state.status = Status.SUCCESS;
+            })
+            .addCase(activatePost.pending, (state) => {
+                state.status = Status.LOADING;
+            })
+            //activatePost
             .addMatcher(isRejectedAction, (state) => {
                 state.status = Status.ERROR;
             });

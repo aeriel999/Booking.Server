@@ -4,8 +4,7 @@ using Booking.Domain.Users;
 using ErrorOr;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
-using Org.BouncyCastle.Asn1.Ocsp;
-//using static System.Runtime.InteropServices.JavaScript.JSType;
+ 
 
 namespace Booking.Infrastructure.Repositories;
 
@@ -34,7 +33,15 @@ public class UserRepository(UserManager<User> userManager)
         return realtors.ToList();
     }
 
-    public async Task<ErrorOr<User>> CreateUserAsync(User user, string password, string role)
+	public async Task<List<User>?> GetClientsListAsync()
+	{
+		var realtors = await userManager.GetUsersInRoleAsync(Roles.User);
+
+        if (realtors.Count > 0) return realtors.ToList();
+        else return null;
+	}
+
+	public async Task<ErrorOr<User>> CreateUserAsync(User user, string password, string role)
     {
         var createUserResult = await userManager.CreateAsync(user, password);
 
