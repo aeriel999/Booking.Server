@@ -1,4 +1,5 @@
-import "../../../css/DashBoardRealtorClasses/index.scss";
+//import "../../../css/DashBoardRealtorClasses/index.scss";
+import "../../../App.scss";
 import Logo from "../../../assets/Logo/tripbook 1.svg";
 import LogOut from "../../../assets/Icons/logout-03.svg";
 import ArrowBack from "../../../assets/DashboardIcons/chevron-left.svg";

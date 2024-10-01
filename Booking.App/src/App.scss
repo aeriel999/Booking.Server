@@ -4,6 +4,8 @@ body {
     margin: 0;
     padding: 0;
     font-family: $primary-font-family;
+    font-style: $primary-font-normal-style;
+    line-height: normal;
 }
 
 #root {
@@ -18,6 +20,7 @@ body {
     height: 100vh;
 }
 
+//Errors
 .errorFormInput {
     display: flex;
     height: 50px;
@@ -37,12 +40,301 @@ body {
     p {
         color: $secondary-font-color;
         font-size: $medium-font-size;
-        font-style: normal;
         font-weight: $light-font-weight;
-        line-height: normal;
     }
 }
 
 .dashboardError {
     color: $error-border-color;
+}
+
+//Dashboard layout
+
+.dashboardMainContainer {
+    display: flex;
+    flex-direction: column;
+    justify-content: start;
+    gap: 20px;
+    align-items: center;
+    height: 100%;
+}
+
+.dashboardHeaderContainer {
+    background: $primary-style-color;
+    min-width: 1150px;
+    height: 8%;
+    min-height: 80px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    align-self: stretch;
+
+    #headerMainPart {
+        width: 80%;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+
+        #headerLogo {
+            width: 226px;
+            min-height: 80px;
+            flex-shrink: 0;
+            cursor: pointer;
+        }
+
+        #userInfo {
+            display: flex;
+            align-items: center;
+            gap: 11px;
+
+            #avatar {
+                width: 40px;
+                height: 40px;
+                border-radius: 50%;
+                overflow: hidden;
+                align-self: stretch;
+            }
+
+            #name {
+                color: #fff;
+                font-size: $normal-font-size;
+                font-weight: $normal-font-weight;
+            }
+        }
+    }
+}
+
+.breadcrumbs {
+    display: flex;
+    justify-content: start;
+    align-items: center;
+    width: 80%;
+    font-size: $medium-font-size;
+    height: 5%;
+    min-height: 30px;
+    gap: 5px;
+
+    a {
+        margin: 0;
+        padding: 0;
+        text-decoration: none;
+        color: $dashboard-title-color;
+        font-weight: $medium-font-weight;
+    }
+
+    p {
+        margin: 0;
+        padding: 0;
+        color: $default-color;
+        font-weight: $normal-font-weight;
+    }
+}
+
+.mainContainer {
+    display: flex;
+    width: 80%;
+    gap: 20px;
+    height: 90%;
+    min-height: 580px;
+    position: relative;
+
+    .sideMenu {
+        width: 4%;
+        min-width: 65px;
+        flex-shrink: 0;
+        border-radius: 10px;
+        border: 1px solid $menu-border-color;
+        background: $menu-background;
+        display: flex;
+        flex-direction: column;
+        justify-content: space-between;
+        gap: 30px;
+        transition: width 0.3s;
+
+        #items {
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+
+            .menuItem {
+                all: unset;
+                height: 72px;
+                flex-shrink: 0;
+                border-radius: 9px;
+                display: flex;
+                align-items: center;
+                cursor: pointer;
+
+                .text {
+                    display: flex;
+                    align-items: center;
+                    gap: 20px;
+                    margin-left: 24px;
+                    transition: opacity 0.3s;
+
+                    .count-of-unread-messages {
+                        width: 30px;
+                        height: 30px;
+                        display: flex;
+                        justify-content: center;
+                        align-items: center;
+                        color: $primary-font-color;
+                        border-radius: 16px;
+                        background: #ff6347;
+                    }
+
+                    .menuItemsText {
+                        margin: 0;
+                        padding: 0;
+                        font-size: $normal-font-size;
+
+                        font-weight: $medium-font-weight;
+
+                        align-self: center;
+                        opacity: 0;
+                        transition: opacity 0.3s;
+                    }
+                }
+
+                .outIcon {
+                    align-self: center;
+                    margin-left: auto;
+                    margin-right: 5px;
+                    // background-color: #781010;
+                }
+
+                &.active,
+                &:hover {
+                    background-color: $header-menu-background;
+                    color: $primary-font-color;
+
+                    .menuItemsText {
+                        opacity: 1;
+                    }
+                }
+
+                &:focus {
+                    outline: 2px solid $default-color;
+                }
+            }
+        }
+
+        #footer {
+            all: unset;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-around;
+            height: 60px;
+            margin: 0;
+            padding: 0;
+
+            #line {
+                height: 1px;
+                background-color: $menu-border-color;
+            }
+
+            #logOutButton {
+                display: flex;
+                align-items: center;
+                gap: 20px;
+                margin-left: 20px;
+                color: $default-color;
+
+                p {
+                    margin: 0;
+                    padding: 0;
+                    align-self: center;
+                    opacity: 0;
+                    transition: opacity 0.3s;
+                }
+            }
+
+            &:hover #logOutButton p {
+                opacity: 1;
+                font-weight: $fat-font-weight;
+            }
+
+            &:focus {
+                outline: 2px solid $default-color;
+            }
+        }
+
+        &.expanded {
+            width: 250px;
+
+            #items .menuItem .menuItemsText,
+            #footer #logOutButton p {
+                opacity: 1;
+            }
+        }
+
+        &:hover {
+            width: 250px;
+
+            #items .menuItem .menuItemsText,
+            #footer #logOutButton p {
+                opacity: 1;
+            }
+        }
+    }
+
+    .outlet {
+        width: 91%;
+        min-width: 700px;
+        display: flex;
+        flex-direction: column;
+    }
+}
+
+.dashboardLoading {
+    display: flex;
+    align-self: center;
+    justify-self: center;
+    align-items: center;
+    justify-content: center;
+    height: 100%;
+    width: 100%;
+    position: absolute;
+}
+
+.notFound {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+
+    img {
+        height: 35vh;
+        min-height: 100px;
+        align-self: stretch;
+    }
+
+    p {
+        align-self: stretch;
+        color: $menu-border-color;
+        text-align: center;
+        font-size: $large-font-size;
+        font-weight: $normal-font-weight;
+    }
+
+    button {
+        border: none;
+        display: flex;
+        height: 54px;
+        padding: 13px 32px;
+        justify-content: center;
+        align-items: center;
+        gap: 10px;
+        border-radius: 5px;
+        background: $header-menu-background;
+        color: $primary-font-color;
+        font-family: $baloo-font-family;
+        font-size: $normal-font-size;
+        font-weight: $big-font-weight;
+
+        &:hover {
+            background-color: $primary-style-color;
+        }
+    }
 }

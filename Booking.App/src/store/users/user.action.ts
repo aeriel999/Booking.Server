@@ -2,6 +2,7 @@ import { createAsyncThunk } from "@reduxjs/toolkit";
 import { apiClient } from "../../utils/api/apiClient.ts";
 import { handleAxiosError } from "../../utils/errors";
 import { IChangePassword, IFilteredListOfRealtorsRequest, IGetFeedbacks, ISendFeedback } from "../../interfaces/user";
+import { IFetchData } from "../../interfaces/post/index.ts";
 
 export const changePassword = createAsyncThunk(
     'User/change-password',
@@ -79,7 +80,8 @@ export const sendFeedback = createAsyncThunk(
             return rejectWithValue(handleAxiosError(error, "Network error"));
         }
     }
-)
+);
+
 export const getRealtorsByUserFeedbacks = createAsyncThunk(
     'User/get-realtor-by-user-feedbacks',
     async (_, { rejectWithValue }) => {
@@ -90,7 +92,8 @@ export const getRealtorsByUserFeedbacks = createAsyncThunk(
             return rejectWithValue(handleAxiosError(error, "Network error"));
         }
     }
-)
+);
+
 export const deleteUserAccount = createAsyncThunk(
     'User/delete-user-account',
     async (_, { rejectWithValue }) => {
@@ -101,6 +104,78 @@ export const deleteUserAccount = createAsyncThunk(
             return rejectWithValue(handleAxiosError(error, "Network error"));
         }
     }
-)
+);
 
 
+export const getListOfAllUsersForAdmin = createAsyncThunk(
+    'User/get-list-of-all-users',
+    async (payload: IFetchData, { rejectWithValue }) => {
+        try {
+            const response = await apiClient.get(
+                `/api/User/get-list-of-all-users?page=${payload.page}&sizeOfPage=${payload.sizeOfPage}`
+            );
+            return response.data;
+        } catch (error) {
+            return rejectWithValue(handleAxiosError(error, "Network error"));
+        }
+    }
+);
+
+
+export const blockUserByAdmin = createAsyncThunk(
+    "User/block-user-by-admin",
+    async (userId: string, { rejectWithValue }) => {
+        try {
+            const response = await apiClient.post("/api/User/block-user-by-admin", {
+                userId,
+            });
+            return response.data;
+        } catch (error) {
+            return rejectWithValue(handleAxiosError(error, "Network error"));
+        }
+    }
+);
+
+
+export const unblockUserByAdmin = createAsyncThunk(
+    "User/unblock-user-by-admin",
+    async (userId: string, { rejectWithValue }) => {
+        try {
+            const response = await apiClient.post("/api/User/unblock-user-by-admin", {
+                userId,
+            });
+            return response.data;
+        } catch (error) {
+            return rejectWithValue(handleAxiosError(error, "Network error"));
+        }
+    }
+);
+
+
+export const deleteUserByAdmin = createAsyncThunk(
+    "User/delete-user-by-admin",
+    async (userId: string, { rejectWithValue }) => {
+        try {
+            const response = await apiClient.post("/api/User/delete-user-by-admin", {
+                userId,
+            });
+            return response.data;
+        } catch (error) {
+            return rejectWithValue(handleAxiosError(error, "Network error"));
+        }
+    }
+);
+
+export const getListOfAllRealtorsForAdmin = createAsyncThunk(
+    'User/get-list-of-all-realtors',
+    async (payload: IFetchData, { rejectWithValue }) => {
+        try {
+            const response = await apiClient.get(
+                `/api/User/get-list-of-all-realtors?page=${payload.page}&sizeOfPage=${payload.sizeOfPage}`
+            );
+            return response.data;
+        } catch (error) {
+            return rejectWithValue(handleAxiosError(error, "Network error"));
+        }
+    }
+);

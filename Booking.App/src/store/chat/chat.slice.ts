@@ -1,16 +1,10 @@
 import { AnyAction, createSlice, PayloadAction } from "@reduxjs/toolkit";
 import { RejectedAction } from "../../utils/types";
 import { Status } from "../../utils/enum";
-import {
-    IChatState,
-    IGetMessage,
-    IReadMessage,
-    ISendMessage,
-} from "../../interfaces/chat";
+import { IChatState, IGetMessage, IReadMessage } from "../../interfaces/chat";
 import {
     getChatIdList,
     getChatRoomById,
-    getListOfChatRooms,
     getListOfChatRoomsForClient,
     getListOfChatsByPostInfoForRealtor,
     getListOfPostInfoForChatsForRealtor,
@@ -61,9 +55,9 @@ const initialState: IChatState = {
     outcomeMessagesReadedChatId: null,
     readedMessages: null,
     deletedChatId: null,
-    deletedChatRooms: null
-    chatIsExist: null
-    deletedChatId: null,
+    deletedChatRooms: null,
+    chatIsExist: null,
+    
 };
 
 export const chatSlice = createSlice({
@@ -129,7 +123,6 @@ export const chatSlice = createSlice({
             action: PayloadAction<string>
         ) => {
             if (state.currentChatRoomId === action.payload) {
-
                 state.outcomeMessagesReadedChatId = action.payload;
                 console.log(
                     "Test test test - ",
@@ -141,7 +134,6 @@ export const chatSlice = createSlice({
             state: IChatState,
             action: PayloadAction<IGetMessage>
         ) => {
-
             state.generalNumberOfUnreadMessages =
                 state.generalNumberOfUnreadMessages + 1;
 
@@ -160,13 +152,9 @@ export const chatSlice = createSlice({
             state: IChatState,
             action: PayloadAction<IGetMessage>
         ) => {
-
-
-
             if (state.currentChatRoomId === action.payload.chatRoomId) {
                 state.newMessage = action.payload.message;
-            }
-            else {
+            } else {
                 state.generalNumberOfUnreadMessages =
                     state.generalNumberOfUnreadMessages + 1;
 
@@ -174,11 +162,12 @@ export const chatSlice = createSlice({
                     "generalNumberOfUnreadMessages",
                     state.generalNumberOfUnreadMessages.toString()
                 );
-                console.log("General count is - ", state.generalNumberOfUnreadMessages)
+                console.log(
+                    "General count is - ",
+                    state.generalNumberOfUnreadMessages
+                );
                 state.getingMessageInfo = action.payload;
             }
-
-
         },
         readMessages: (
             state: IChatState,
@@ -218,16 +207,6 @@ export const chatSlice = createSlice({
     },
     extraReducers: (builder) => {
         builder
-            .addCase(getListOfChatRooms.fulfilled, (state, action) => {
-                const { chatRooms, hasNewPosts } = action.payload;
-                state.chatRooms = chatRooms;
-                state.hasNewPosts = hasNewPosts;
-
-                state.status = Status.SUCCESS;
-            })
-            .addCase(getListOfChatRooms.pending, (state) => {
-                state.status = Status.LOADING;
-            })
             .addCase(getListOfChatRoomsForClient.fulfilled, (state, action) => {
                 state.chatRoomsForClient = action.payload;
                 state.statusToListOfChatRooms = Status.SUCCESS;

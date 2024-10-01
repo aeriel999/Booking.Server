@@ -338,7 +338,7 @@ public class PostMapping : IRegister
 			.Map(desp => desp.CityName, src => src.Post!.Street!.City!.Name)
 			.Map(desp => desp.PostRaiting, src => src.Post!.Rate)
 			.Map(desp => desp.PostImage, src => src.Post!.ImagesPost!.ToList()[0].Name)
-			.Map(desp => desp.UserName, src => src.Client!.UserName)
+			.Map(desp => desp.UserName, src => CommonMaping.GetUserName(src.Client!))
 			.Map(desp => desp.Date, src => src.FeedbackAt.ToUniversalTime())
 			.Map(desp => desp.GivenRate, src => src.Rating)
 			.Map(desp => desp.Avatar, src => src.Client!.Avatar ?? null)
@@ -349,7 +349,7 @@ public class PostMapping : IRegister
 
 		config.NewConfig<Post, GetListOfPostsForModerationResponse>()
 			.Map(desp => desp.PostId, src => src.Id)
-			.Map(desp => desp.RealtorName, src => src.User!.UserName)
+			.Map(desp => desp.RealtorName, src => src.User!.FirstName + " " + src.User!.LastName)
 			.Map(desp => desp.RealtorId, src => src.UserId)
 			.Map(desp => desp.PostName, src => src.Name)
 			.Map(desp => desp.PostCategoryName, src => src.Category!.Name)

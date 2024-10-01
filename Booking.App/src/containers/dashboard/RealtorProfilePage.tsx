@@ -23,7 +23,7 @@ export default function RealtorProfilePage() {
     const { user } = useAppSelector((state) => state.account);
     const [avatarUrl, setAvatarUrl] = useState<string>();
     const [rating, setRating] = useState<number>(user?.rating ?? 0);
-   // const navigate = useNavigate();
+    // const navigate = useNavigate();
     const dispatch = useAppDispatch();
     const [image, setImage] = useState<File | null>(null);
     const [headerUrl, setHeaderUrl] = useState<string | null>(null);
@@ -79,7 +79,7 @@ export default function RealtorProfilePage() {
 
         console.log("file", file);
 
-       // const errorMessage = AvatarValidator(file);
+        // const errorMessage = AvatarValidator(file);
 
         if (!errorMessage) {
             setErrorMessage(undefined);
@@ -103,16 +103,15 @@ export default function RealtorProfilePage() {
 
     return (
         <div className="profileMainContainer">
-            
-                {errorMessage && (
-                    <div className="errorContainer">
+            {errorMessage && (
+                <div className="errorContainer">
                     <OutlinedErrorAlert
                         message={errorMessage}
                         textColor="#000"
                     />
-                     </div>
-                )}
-           
+                </div>
+            )}
+
             <div
                 className="header"
                 style={{
@@ -169,24 +168,6 @@ export default function RealtorProfilePage() {
                             <div className="value">{user?.phoneNumber}</div>
                         </div>
                     </div>
-                    {/* <div id="buttons">
-                        <button
-                            className="button colorButton"
-                            onClick={() => navigate("/dashboard/profile/edit")}
-                        >
-                            <img src={Edit} alt="Edit" />
-                            <p>Edit Profile</p>
-                        </button>
-                        <button
-                            className="button witeButton"
-                            onClick={() =>
-                                navigate("/dashboard/profile/change-password")
-                            }
-                        >
-                            <img src={Lock} alt="Edit" />
-                            <p>Change Password</p>
-                        </button>
-                    </div> */}
                 </div>
             </div>
         </div>

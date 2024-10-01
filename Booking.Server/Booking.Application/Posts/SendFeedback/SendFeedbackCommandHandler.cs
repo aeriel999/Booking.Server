@@ -23,8 +23,6 @@ public class SendFeedbackCommandHandler(IPostFeedbackRepository repository, IUse
             await repository.CreateAsync(feedback);
         }
 
-        
-
         var post = await postRepository.GetPostByIdAsync(request.PostId);
 
         if (post == null) return Error.NotFound("Post is not found");
@@ -35,6 +33,7 @@ public class SendFeedbackCommandHandler(IPostFeedbackRepository repository, IUse
             return responsePost.FirstError;
 
         var responseRealtor = await userRepository.ChangeRatingForRealtorAsync(post.UserId, request.Rating);
+
         if (responseRealtor.IsError)
             return responseRealtor.FirstError;
 

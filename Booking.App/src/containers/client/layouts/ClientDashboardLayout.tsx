@@ -1,4 +1,5 @@
-import "../../../css/DashBoardRealtorClasses/index.scss";
+//import "../../../css/DashBoardRealtorClasses/index.scss";
+import "../../../App.scss";
 import Logo from "../../../assets/Logo/tripbook 1.svg";
 import LogOut from "../../../assets/Icons/logout-03.svg";
 import ArrowBack from "../../../assets/DashboardIcons/chevron-left.svg";
@@ -35,12 +36,10 @@ export default function ClientDashboardLayout() {
     //Get and set avatar
     useEffect(() => {
         if (user) {
-
             if (user?.avatar != null) {
                 if (user?.avatar.slice(0, 5) == "https") {
                     setAvatarUrl(user?.avatar);
-                }
-                else {
+                } else {
                     setAvatarUrl(APP_ENV.BASE_URL + user?.avatar);
                 }
             }
@@ -56,9 +55,7 @@ export default function ClientDashboardLayout() {
             if (menuIndex !== -1) {
                 handleMenuClick(menuIndex);
             }
-
         }
-
     }, [currentBreadcrumbsItem]);
 
     //Menu navigate
@@ -98,16 +95,21 @@ export default function ClientDashboardLayout() {
                     </a>
                     {/* User Info */}
                     <div id="userInfo">
-                        {user!.avatar != null ? <div
-                            id="avatar"
-                            style={{
-                                background: `url(${avatarUrl}) center / cover no-repeat`,
-                            }}
-                        /> :
-                            <Avatar userName={user?.email!} />}
+                        {user!.avatar != null ? (
+                            <div
+                                id="avatar"
+                                style={{
+                                    background: `url(${avatarUrl}) center / cover no-repeat`,
+                                }}
+                            />
+                        ) : (
+                            <Avatar userName={user?.email!} />
+                        )}
 
                         <div id="name">
-                            {user?.firstName && user?.lastName ? `${user?.firstName} ${user?.lastName}` : user?.email}
+                            {user?.firstName && user?.lastName
+                                ? `${user?.firstName} ${user?.lastName}`
+                                : user?.email}
                         </div>
                     </div>
                 </div>
@@ -124,8 +126,9 @@ export default function ClientDashboardLayout() {
                         {menuData.map((item, index) => (
                             <button
                                 key={index}
-                                className={`menuItem ${item.isActive ? "active" : ""
-                                    }`}
+                                className={`menuItem ${
+                                    item.isActive ? "active" : ""
+                                }`}
                                 onClick={() => handleMenuClick(index)}
                             >
                                 <div className="text">
@@ -179,18 +182,18 @@ export default function ClientDashboardLayout() {
                             navigate("/authentication/login");
                         }}
                     >
-                        <><div id="line"></div>
+                        <>
+                            <div id="line"></div>
                             <div id="logOutButton">
                                 <img src={LogOut} alt="logOut" />
                                 <p>Log Out</p>
-                            </div></>
-
+                            </div>
+                        </>
                     </button>
                 </div>
 
                 {/* Dashboard Container */}
                 <div className="outlet">
-
                     <Outlet />
                 </div>
             </div>
@@ -198,4 +201,4 @@ export default function ClientDashboardLayout() {
     );
 }
 /*{status === Status.LOADING &&
-                        <Loading className="dashboardClientLoading" />}*/ 
+                        <Loading className="dashboardClientLoading" />}*/

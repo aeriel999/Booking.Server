@@ -143,7 +143,7 @@ export default function UserRegisterPage() {
 
                                 <div id="secondaryRegisterText">
                                     <a
-                                        href="/authentication/forgot-password"
+                                        href="/authentication/login"
                                         className="linkConfirmation"
                                     >
                                         Already have an account? Sign in
@@ -151,6 +151,7 @@ export default function UserRegisterPage() {
                                 </div>
                             </div>
                         </form>
+                        
 
                         <div id="googleLogin">
                             <p>or</p>

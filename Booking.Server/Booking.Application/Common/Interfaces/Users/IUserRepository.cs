@@ -9,7 +9,7 @@ public interface IUserRepository
 	Task<List<User>> GetRealtorsFilteredListAsync(Guid? Category, Guid? Country, Guid? City);
 
 
-    Task<List<User>> GetRealtorsListAsync();
+    Task<List<User>?> GetRealtorsListAsync();
 
 
     Task<ErrorOr<User>> FindByEmailAsync(string email);
@@ -33,12 +33,6 @@ public interface IUserRepository
 	Task<ErrorOr<Deleted>> DeleteUserAsync(Guid userId);
 
 
-	Task<ErrorOr<Updated>> EditUserAsync(Guid id, string? email);
-
-
-	Task<string> GetUserNameByUserAsync(User user);
-
-
 	Task<User?> FindByLoginAsync(string loginProvider, string providerKey);
 
 
@@ -50,6 +44,7 @@ public interface IUserRepository
 
 	Task<ErrorOr<string>> GetRoleByUserAsync(User user);
 
+
 	Task<ErrorOr<bool>> IsPasswordAsync(Guid userId);
 
 
@@ -57,4 +52,7 @@ public interface IUserRepository
 
 
 	Task<List<User>?> GetClientsListAsync();
+
+
+	Task<string> GetUserNameByUserAsync(User user);
 }

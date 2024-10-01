@@ -2,7 +2,7 @@ import { AnyAction, createSlice } from '@reduxjs/toolkit';
 import { RejectedAction } from "../../utils/types";
 import { Status } from "../../utils/enum";
 import { IUserState } from "../../interfaces/user";
-import { changePassword, deleteUserAccount, getFeedbacksByRealtor, getFilteredListOfRealtors, getListOfRealtors, getRealtorById, getRealtorsByUserFeedbacks, sendFeedback } from "./user.action.ts";
+import { blockUserByAdmin, changePassword, deleteUserAccount, deleteUserByAdmin, getFeedbacksByRealtor, getFilteredListOfRealtors, getListOfAllRealtorsForAdmin, getListOfAllUsersForAdmin, getListOfRealtors, getRealtorById, getRealtorsByUserFeedbacks, sendFeedback, unblockUserByAdmin } from "./user.action.ts";
 
 function isRejectedAction(action: AnyAction): action is RejectedAction {
     return action.type.endsWith('/rejected');
@@ -78,11 +78,40 @@ export const userSlice = createSlice({
             .addCase(deleteUserAccount.pending, (state) => {
                 state.status = Status.LOADING;
             })
+            .addCase(getListOfAllUsersForAdmin.fulfilled, (state) => {
+                state.status = Status.SUCCESS;
+            })
+            .addCase(getListOfAllUsersForAdmin.pending, (state) => {
+                state.status = Status.LOADING;
+            })
+            .addCase(blockUserByAdmin.fulfilled, (state) => {
+                state.status = Status.SUCCESS;
+            })
+            .addCase(blockUserByAdmin.pending, (state) => {
+                state.status = Status.LOADING;
+            })
+            .addCase(unblockUserByAdmin.fulfilled, (state) => {
+                state.status = Status.SUCCESS;
+            })
+            .addCase(unblockUserByAdmin.pending, (state) => {
+                state.status = Status.LOADING;
+            })
+            .addCase(deleteUserByAdmin.fulfilled, (state) => {
+                state.status = Status.SUCCESS;
+            })
+            .addCase(deleteUserByAdmin.pending, (state) => {
+                state.status = Status.LOADING;
+            })
+            .addCase(getListOfAllRealtorsForAdmin.fulfilled, (state) => {
+                state.status = Status.SUCCESS;
+            })
+            .addCase(getListOfAllRealtorsForAdmin.pending, (state) => {
+                state.status = Status.LOADING;
+            })
+            //getListOfAllRealtorsForAdmin
             .addMatcher(isRejectedAction, (state) => {
                 state.status = Status.ERROR;
-            })
-
-            ;
+            });
     },
 });
 
