@@ -8,6 +8,8 @@ import { getListOfChatRoomsForClient } from '../../../store/chat/chat.action';
 import "../../../css/DashBoardRealtorClasses/index.scss";
 import { ChatRoom } from '../ChatRoom/ChatRoom';
 import { Loading } from '../../../components/common/Loading/Loading';
+import { Status } from '../../../utils/enum';
+import { clearChatRoomsForClient } from '../../../store/chat/chat.slice';
 
 
 
@@ -15,6 +17,7 @@ import { Loading } from '../../../components/common/Loading/Loading';
 export const PageOfMessages = () => {
 
     const listOfChatRoomsForClient = useAppSelector((state: RootState) => state.chat.chatRoomsForClient);
+    const status = useAppSelector((state: RootState) => state.chat.statusToListOfChatRooms);
     const savedChatRoom = useAppSelector((state) => state.settings.savedPostIdForChat);
     const dispatch = useDispatch<AppDispatch>();
 
@@ -27,8 +30,16 @@ export const PageOfMessages = () => {
     }
 
     useEffect(() => {
-
         getChats();
+    }, [])
+    useEffect(() => {
+
+        console.log(listOfChatRoomsForClient)
+    }, [listOfChatRoomsForClient])
+    useEffect(() => {
+        return () => {
+            dispatch(clearChatRoomsForClient());
+        };
     }, [])
     useEffect(() => {
 
@@ -44,6 +55,7 @@ export const PageOfMessages = () => {
     return (
         <div className="page-of-messages-container">
             <div className='first-container'>
+                {status === Status.LOADING ? <Loading /> : ""}
                 {listOfChatRoomsForClient ?
                     <div className="chat-list" >
 
@@ -53,7 +65,6 @@ export const PageOfMessages = () => {
                                 countOfUnreadMessages={item.unreadMessages}
                                 chatItem={
                                     {
-
                                         name: item.realtorName,
                                         avatar: item.realtorAvatar,
                                         chats: item.chatsForClient.$values!
@@ -65,7 +76,7 @@ export const PageOfMessages = () => {
                             />
                         ))}
                     </div>
-                    : <Loading />}
+                    : ""}
             </div>
             <ChatRoom
                 chatRoomId={chatRoomId}

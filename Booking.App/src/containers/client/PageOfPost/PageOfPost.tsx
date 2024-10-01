@@ -19,11 +19,12 @@ import { FeedbackTextArea } from "../../../components/common/FeedbackTextArea/Fe
 import { savePath, savePostIdForChat } from "../../../store/settings/settings.slice";
 import { RoomCard } from "../../../components/common/RoomCard/RoomCard";
 import { setIdOfSelectedFeedback } from "../../../store/post/post.slice";
-import { cutNumber } from "../../../utils/data";
+import { clientMenuData, cutNumber } from "../../../utils/data";
 import { unwrapResult } from "@reduxjs/toolkit";
 import ErrorHandler from "../../../components/common/ErrorHandler";
 import OutlinedErrorAlert from "../../../components/common/ErrorAlert";
 import { joinNewPostChatByUser } from "../../../SignalR";
+import { IDashboardMenuItem } from "../../../interfaces/common";
 
 
 const PageOfPost = () => {
@@ -38,6 +39,8 @@ const PageOfPost = () => {
     const selectedFeedback = useAppSelector((state: RootState) => state.post.idOfSelectedFeedback);
     const pageOfSelectedFeedback = useAppSelector((state: RootState) => state.post.pageOfSelectedFeedback);
     const searchingPost = useAppSelector((state: RootState) => state.post.searchingPost);
+    const [menuData, setMenuData] =
+        useState<IDashboardMenuItem[]>(clientMenuData);
 
     const { postId } = useParams<string>();
     const [isLoading, setIsLoading] = useState<boolean>(true);
@@ -373,6 +376,7 @@ const PageOfPost = () => {
                                     <RoomCard
                                         key={item.id}
                                         id={item.id}
+                                        postId={postId!}
                                         image={item.mainImage}
                                         discount={item.discount}
                                         price={item.price}
