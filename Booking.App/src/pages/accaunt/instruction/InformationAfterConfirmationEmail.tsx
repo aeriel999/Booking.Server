@@ -1,7 +1,7 @@
+import "../../../css/AuthenticationClasses/index.scss";
 import Header from "../../../components/authentification/Header";
 import { useAppSelector } from "../../../hooks/redux";
 import { useEffect, useState } from "react";
-import "../../../css/AuthenticationClasses/index.scss";
 
 export default function InformationAfterConfirmationEmail() {
     const { user } = useAppSelector((state) => state.account);

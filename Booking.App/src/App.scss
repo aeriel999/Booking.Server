@@ -97,9 +97,9 @@ body {
 
             #name {
                 color: #fff;
-                font-size: 20px;
-                font-style: normal;
-                font-weight: 500;
+                font-size: $normal-font-size;
+                font-style: $primary-font-normal-style;
+                font-weight: $normal-font-weight;
                 line-height: normal;
             }
         }
@@ -112,7 +112,7 @@ body {
     align-items: center;
     width: 80%;
     font-size: $medium-font-size;
-    font-style: normal;
+    font-style: $primary-font-normal-style;
     line-height: normal;
     height: 5%;
     min-height: 30px;
@@ -122,14 +122,14 @@ body {
         margin: 0;
         padding: 0;
         text-decoration: none;
-        color: #5d5d5d;
+        color: $dashboard-title-color;
         font-weight: $medium-font-weight;
     }
 
     p {
         margin: 0;
         padding: 0;
-        color: #000;
+        color: $default-color;
         font-weight: $normal-font-weight;
     }
 }
@@ -190,9 +190,9 @@ body {
                     .menuItemsText {
                         margin: 0;
                         padding: 0;
-                        font-size: 20px;
-                        font-style: normal;
-                        font-weight: 400;
+                        font-size: $normal-font-size;
+                        font-style: $primary-font-normal-style;
+                        font-weight: $medium-font-weight;
                         line-height: normal;
                         align-self: center;
                         opacity: 0;
@@ -218,7 +218,7 @@ body {
                 }
 
                 &:focus {
-                    outline: 2px solid #000;
+                    outline: 2px solid $default-color;
                 }
             }
         }
@@ -255,12 +255,11 @@ body {
 
             &:hover #logOutButton p {
                 opacity: 1;
-                font-weight: 900;
+                font-weight: $fat-font-weight;
             }
 
             &:focus {
-                outline: 2px solid #000;
-                /* or any color you prefer */
+                outline: 2px solid $default-color;
             }
         }
 
@@ -285,7 +284,6 @@ body {
 
     .outlet {
         width: 91%;
-        //min-width: 800px;
         min-width: 700px;
         display: flex;
         flex-direction: column;

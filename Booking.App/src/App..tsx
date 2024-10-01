@@ -1,3 +1,4 @@
+import "./App.scss";
 import { Routes, Route } from "react-router-dom";
 import NotFound from "./pages/errors/NotFound.tsx";
 import RealtorRegisterPage from "./pages/accaunt/register/RealtorRegisterPage.tsx";
@@ -21,7 +22,6 @@ import { EditPost } from "./containers/dashboard/EditPost.tsx";
 import RealtorPage from "./containers/client/RealtorPage.tsx";
 import ArchivePage from "./containers/dashboard/ArchivePage.tsx";
 import { ReviewsPage } from "./containers/dashboard/ReviewsPage.tsx";
-import "./App.scss";
 import { HomePage } from "./containers/client/HomePage/HomePage.tsx";
 import SignInPage from "./pages/accaunt/login/SignIn.tsx";
 import RealtorRegisterAvatarPage from "./pages/accaunt/register/RealtotRegisterAvatarPage.tsx";
@@ -40,7 +40,6 @@ import {
     setOutcomeMessagesReadedChatId,
     setNewMessage,
     setDeletedChatId,
-    setNewMessageToClient,
 } from "./store/chat/chat.slice.ts";
 import { IGetMessage } from "./interfaces/chat/index.ts";
 import { updateListOfChatIdForListening } from "./store/chat/chat.slice.ts";
@@ -70,13 +69,9 @@ export const App: React.FC = () => {
     const setMessageInRedux = async (msg: IGetMessage) => {
         await dispatch(setNewMessage(msg));
     };
-    const setMessageToClientInRedux = async (msg: IGetMessage) => {
-        console.log("I have new message!!!")
-        await dispatch(setNewMessageToClient(msg));
-    };
 
     const setIncomeMessagesReadedChatIdInRedux = async (id: string) => {
-        console.log("setIncomeMessagesReadedChatIdInRedux", id)
+        console.log("setIncomeMessagesReadedChatIdInRedux", id);
         await dispatch(setOutcomeMessagesReadedChatId(id));
     };
 
@@ -161,10 +156,6 @@ export const App: React.FC = () => {
 
                     // Add the new listener
                     connection.on("send_message", async (m) => {
-                        //console.log("My role is - ", user?.role);
-                        //if (user?.role.toLowerCase().includes("user"))
-                        //await setMessageToClientInRedux(m);
-                        //else if (user?.role.toLowerCase().includes("realtor"))
                         await setMessageInRedux(m);
                     });
                 })
@@ -173,7 +164,6 @@ export const App: React.FC = () => {
                     connection.off("get_message");
                     // Add the new listener
                     connection.on("get_message", async (m) => {
-                        console.log("get_message", m);
                         await setIncomeMessagesReadedChatIdInRedux(m);
                     });
                 })
@@ -194,6 +184,7 @@ export const App: React.FC = () => {
 
     return (
         <Routes>
+            {/* For ligin users */}
             {isLogin && (
                 <>
                     <Route
@@ -207,14 +198,17 @@ export const App: React.FC = () => {
                             element={<_RealtorDashboardLayout />}
                         >
                             <Route index element={<RealtorProfilePage />} />
+
                             <Route
                                 path="/dashboard/profile"
                                 element={<RealtorProfilePage />}
                             />
+
                             <Route
                                 path="/dashboard/profile/edit"
                                 element={<RealtorProfileEditPage />}
                             />
+
                             <Route
                                 path="/dashboard/post/add"
                                 element={<AddNewPost />}
@@ -224,10 +218,12 @@ export const App: React.FC = () => {
                                 path="/dashboard/show-all-post"
                                 element={<AllPostList />}
                             />
+
                             <Route
                                 path="/dashboard/edit-post/:postId"
                                 element={<EditPost />}
                             />
+
                             <Route
                                 path="/dashboard/archive"
                                 element={<ArchivePage />}
@@ -257,10 +253,12 @@ export const App: React.FC = () => {
                                 element={<ClientDashboardLayout />}
                             >
                                 <Route index element={<ListOfPostPage />} />
+
                                 <Route
                                     path="/dashboard/post/:postId"
                                     element={<PageOfPost />}
                                 />
+
                                 <Route
                                     path="/dashboard/post/:postId/realtor/:realtorId"
                                     element={<RealtorPage />}
@@ -270,14 +268,17 @@ export const App: React.FC = () => {
                                     path="/dashboard/profile"
                                     element={<ClientProfilePage />}
                                 />
+
                                 <Route
                                     path="/dashboard/profile/edit"
                                     element={<ClientProfileEditPage />}
                                 />
+
                                 <Route
                                     path="/dashboard/profile/history-of-feedbacks"
                                     element={<HistoryOfFeedbacksPage />}
                                 />
+
                                 <Route
                                     path="/dashboard/profile/page-of-messages"
                                     element={<PageOfMessages />}
@@ -294,70 +295,51 @@ export const App: React.FC = () => {
                             <Route index element={<PostModeration />} />
 
                             <Route
-                                    path="/admin/moderation"
-                                    element={<PostModeration />}
-                                />
+                                path="/admin/moderation"
+                                element={<PostModeration />}
+                            />
 
                             <Route
-                                    path="/admin/users"
-                                    element={<UsersModeration />}
-                                />
+                                path="/admin/users"
+                                element={<UsersModeration />}
+                            />
+                            
                             <Route
-                                    path="/admin/realtors"
-                                    element={<RealtorsModeration />}
-                                />
+                                path="/admin/realtors"
+                                element={<RealtorsModeration />}
+                            />
                         </Route>
                     )}
                 </>
             )}
 
+            {/* Unauthirithed dashboard */}
             <Route path="/" element={<AnonymousDashboardLayout />}>
-                <Route
-                    index
-                    element={
-                        //<ListOfPostPage />
-                        <HomePage />
-                    }
-                />
+                <Route index element={<HomePage />} />
+
+                <Route path="home" element={<HomePage />} />
 
                 <Route path="post/:postId" element={<PageOfPost />} />
+
                 <Route
                     path="post/:postId/realtor/:realtorId"
                     element={<RealtorPage />}
                 />
-                {/* <Route path="dashboard/profile" element={<SignInPage />} />
-                <Route path="dashboard/profile/edit" element={<SignInPage />} />
-                <Route
-                    path="dashboard/profile/change-password"
-                    element={<SignInPage />}
-                /> */}
-
-                {/* <Route path="*" element={<NotFound />} /> */}
             </Route>
 
-            <Route
-                path="dashboard/profile/change-password"
-                element={<SignInPage />}
-            />
-
-            <Route
-                path="dashboard/dashboard/post/add"
-                element={<SignInPage />}
-            />
-
-            <Route path="*" element={<NotFound />} />
-            {/* </Route> */}
-
+            {/* Pages for sorting */}
             <Route path="/posts" element={<AnonymousDashboardLayoutForPosts />}>
                 <Route index element={<ListOfPostsPage />} />
+
                 <Route path="post/:postId" element={<PageOfPost />} />
+
                 <Route
                     path="realtor/:realtorId"
                     element={<RealtorPageForClient />}
                 />
-                <Route path="*" element={<NotFound />} />
             </Route>
 
+            {/* Athorization page */}
             <Route path="authentication/login" element={<SignInPage />} />
 
             <Route
@@ -408,6 +390,7 @@ export const App: React.FC = () => {
                 path="authentication/reconfirm-email"
                 element={<ReConfirmEmailPage />}
             />
+
             <Route path="*" element={<NotFound />} />
         </Routes>
     );
