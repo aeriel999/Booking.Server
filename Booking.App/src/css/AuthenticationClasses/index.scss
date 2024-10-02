@@ -78,7 +78,6 @@
     padding: 0;
     color: $primary-font-color;
     text-align: center;
-    
 }
 
 .resetPasswordMainContainer {
@@ -378,12 +377,14 @@ h1 {
     font-weight: $normal-font-weight;
     border: none;
 
-    &:hover {
-        background-color: $menu-border-color;
-    }
-
+   
     &.active {
         background: $primary-style-color;
+
+        &:hover {
+            background-color: $header-menu-background;
+        }
+    
     }
 }
 

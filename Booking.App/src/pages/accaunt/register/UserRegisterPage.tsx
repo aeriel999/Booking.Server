@@ -20,9 +20,7 @@ export default function UserRegisterPage() {
     const dispatch = useAppDispatch();
     const navigate = useNavigate();
     const { user } = useAppSelector((state) => state.account);
-    const [errorMessage, setErrorMessage] = useState<string | undefined>(
-        undefined
-    );
+    const [errorMessage, setErrorMessage] = useState<string | undefined>(undefined);
 
     const {
         register,
@@ -32,10 +30,11 @@ export default function UserRegisterPage() {
     } = useForm<IUserRegister>({ resolver: userRegisterResolver });
 
     const onSubmit = async (data: IUserRegister) => {
+        setErrorMessage(undefined);
+
         try {
             const response = await dispatch(userRegister(data));
             unwrapResult(response);
-
             navigate(`/authentication/register-information/${data.email}`);
         } catch (error) {
             setErrorMessage(ErrorHandler(error));
@@ -43,12 +42,14 @@ export default function UserRegisterPage() {
     };
 
     const handleLoginSuccess = async (response: CredentialResponse) => {
+        setErrorMessage(undefined);
+
         const token: IGoogleLogin = {
             googleToken: response.credential as string,
         };
+
         try {
             const resp = await dispatch(googleLogin(token));
-
             unwrapResult(resp);
 
             if (!resp.payload.isAlreadyRegister) {
@@ -56,6 +57,7 @@ export default function UserRegisterPage() {
             } else {
                 navigate("/dashboard/profile");
             }
+            
         } catch (error) {
             setErrorMessage(ErrorHandler(error));
         }

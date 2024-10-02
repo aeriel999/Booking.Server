@@ -1,5 +1,8 @@
 import "../../../css/AuthenticationClasses/index.scss";
-import { PhoneNumberValidator, realtorRegisterResolver } from "../../../validations/account";
+import {
+    PhoneNumberValidator,
+    realtorRegisterResolver,
+} from "../../../validations/account";
 import { useState } from "react";
 import { IRealtorRegister } from "../../../interfaces/account";
 import { unwrapResult } from "@reduxjs/toolkit";
@@ -18,9 +21,7 @@ export default function RealtorRegisterPage() {
     const { registerData } = useAppSelector((state) => state.account);
     const dispatch = useAppDispatch();
     const navigate = useNavigate();
-    const [errorMessage, setErrorMessage] = useState<string | undefined>(
-        undefined
-    );
+    const [errorMessage, setErrorMessage] = useState<string | undefined>(undefined);
     const [isPhoneValid, setIsPhoneValid] = useState(true);
     const [phone, setPhone] = useState<string>("");
 
@@ -32,11 +33,14 @@ export default function RealtorRegisterPage() {
     } = useForm<IRealtorRegister>({ resolver: realtorRegisterResolver });
 
     const onSubmit = async (data: IRealtorRegister) => {
+        setErrorMessage(undefined);
+
         const model: IRealtorRegister = {
             ...data,
             phoneNumber: phone,
             avatar: null,
         };
+        
         try {
             const response = await dispatch(realtorRegisterFirstStep(model));
             unwrapResult(response);
@@ -114,14 +118,13 @@ export default function RealtorRegisterPage() {
                                         }}
                                         error={!isPhoneValid}
                                     />
-                                   
                                 </div>
                                 {PhoneNumberValidator(phone) !== undefined && (
-                                        <div className="error">
-                                            <p>*</p>
-                                            {PhoneNumberValidator(phone)}
-                                        </div>
-                                    )}
+                                    <div className="error">
+                                        <p>*</p>
+                                        {PhoneNumberValidator(phone)}
+                                    </div>
+                                )}
 
                                 <InputField
                                     placeholder="Email"

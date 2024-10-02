@@ -78,3 +78,9 @@ export type ReviewCardProps = {
     givenRate: number;
     reviewText: string;
 };
+
+export type AvatarUploadProps = {
+    image: File | null | undefined;
+    setImage: (file: File | null) => void;
+    validator: (value: File) => string | false | undefined;
+};
