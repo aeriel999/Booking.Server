@@ -4,10 +4,11 @@ import bankNote from '../../../assets/Icons/bank-note-05.svg';
 import coinHand from '../../../assets/Icons/coin-hand.svg';
 import x from '../../../assets/Icons/x-01 (1).svg';
 import { joinNewPostChatByUser } from '../../../SignalR';
-import { AppDispatch } from '../../../store';
+import { AppDispatch, RootState } from '../../../store';
 import { useDispatch } from 'react-redux';
 import { savePostIdForChat } from '../../../store/settings/settings.slice';
 import { useNavigate } from 'react-router-dom';
+import { useAppSelector } from '../../../hooks/redux';
 
 interface IRoomCard {
     id: string,
@@ -19,6 +20,7 @@ interface IRoomCard {
     numberOfRooms: number
 }
 export const RoomCard = (info: IRoomCard) => {
+    const isLogin = useAppSelector((state: RootState) => state.account.isLogin);
     const navigate = useNavigate();
     const dispatch = useDispatch<AppDispatch>();
     return (
@@ -54,7 +56,8 @@ export const RoomCard = (info: IRoomCard) => {
                     <p>{info.price} UAH</p>
                     <p>/ 1 day</p>
                 </div>
-                <button
+                {isLogin == true ? <button
+                    tabIndex={0}
                     onClick={async () => {
                         await joinNewPostChatByUser(info.postId)
                             .then((id) => {
@@ -62,7 +65,8 @@ export const RoomCard = (info: IRoomCard) => {
                                 navigate("/dashboard/profile/page-of-messages");
                             });
                     }}
-                >Booking</button>
+                >Booking</button> : ""}
+
                 <div className='room-card-booking-details'>
                     <p>. It will only take 2 minutes</p>
                     <p>. Instant confirmation</p>

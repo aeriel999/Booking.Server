@@ -63,9 +63,10 @@ export const FeedbackTextArea = (info: IFeedbackTextArea) => {
                     maxLength={300} id=""
                     placeholder="Leave a comment..."
                     disabled={isSubmitting}
+                    tabIndex={0}
                 ></textarea>
                 <div ref={buttonCounterRef} className='text-area-counter-and-button'>
-                    <button disabled={isSubmitting} type='submit'>
+                    <button tabIndex={0} disabled={isSubmitting} type='submit'>
                         <img
                             src={sendMessage}
                             alt="Send"

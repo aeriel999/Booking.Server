@@ -21,7 +21,14 @@ interface IPostCardInformation {
 export const PostCard = (info: IPostCardInformation) => {
 
     return (
-        <div className="post-card" onClick={info.onClick}>
+        <div className="post-card"
+            onClick={info.onClick}
+            tabIndex={0}
+            onKeyDown={(e) => {
+                if (e.key === 'Enter') {
+                    info.onClick();
+                }
+            }}>
             <div className="post-card-image">
                 <img src={`${APP_ENV.BASE_URL}/images/posts/${info.image}`} alt="" />
             </div>

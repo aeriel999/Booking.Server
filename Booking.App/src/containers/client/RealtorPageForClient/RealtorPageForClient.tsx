@@ -113,6 +113,7 @@ export const RealtorPageForClient = () => {
                             </div>
                             <div id="buttons">
                                 {isLogin ? <button
+                                    tabIndex={0}
                                     className="button colorButton"
                                     onClick={() => navigate("/dashboard/profile/edit")}
                                 >
