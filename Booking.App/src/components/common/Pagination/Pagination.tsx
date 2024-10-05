@@ -64,10 +64,25 @@ export const Pagination = (info: IPagination) => {
         <div className="pagination">
             {countOfPages > 1 ?
                 <>
-                    <div className="pagination-button-move" onClick={() => info.page != 1 ? info.changePage(info.page - 1) : ""}>
+                    <div className="pagination-button-move"
+                        tabIndex={0}
+                        onClick={() => info.page != 1 ? info.changePage(info.page - 1) : ""}
+                        onKeyDown={(e) => {
+                            if (e.key === 'Enter') {
+                                info.page != 1 ? info.changePage(info.page - 1) : ""
+                            }
+                        }}>
                         <img src={chevronLeft} alt="chevron left" />
                     </div>
-                    <div className={`${info.page == 1 ? "page-number-active" : "page-number"}`} onClick={() => info.changePage(1)}>
+                    <div tabIndex={0}
+                        className={`${info.page == 1 ? "page-number-active" : "page-number"}`}
+                        onClick={() => info.changePage(1)}
+                        onKeyDown={(e) => {
+                            if (e.key === 'Enter') {
+                                info.changePage(1)
+                            }
+                        }}
+                    >
                         {1}
                     </div>
                     {dotsLeft ? (
@@ -77,7 +92,15 @@ export const Pagination = (info: IPagination) => {
                     ) : ""}
                     {allPages.map((item) => (
 
-                        <div className={`${info.page == item ? "page-number-active" : "page-number"}`} onClick={() => info.changePage(item)}>
+                        <div tabIndex={0}
+                            className={`${info.page == item ? "page-number-active" : "page-number"}`}
+                            onClick={() => info.changePage(item)}
+                            onKeyDown={(e) => {
+                                if (e.key === 'Enter') {
+                                    info.changePage(item)
+                                }
+                            }}
+                        >
                             {item}
                         </div>
 
@@ -87,10 +110,25 @@ export const Pagination = (info: IPagination) => {
                             ...
                         </div>
                     ) : ""}
-                    <div className={`${info.page == countOfPages ? "page-number-active" : "page-number"}`} onClick={() => info.changePage(countOfPages)}>
+                    <div tabIndex={0}
+                        className={`${info.page == countOfPages ? "page-number-active" : "page-number"}`}
+                        onClick={() => info.changePage(countOfPages)}
+                        onKeyDown={(e) => {
+                            if (e.key === 'Enter') {
+                                info.changePage(countOfPages)
+                            }
+                        }}
+                    >
                         {countOfPages}
                     </div>
-                    <div className="pagination-button-move" onClick={() => info.page != countOfPages ? info.changePage(info.page + 1) : ""}>
+                    <div tabIndex={0}
+                        className="pagination-button-move" onClick={() => info.page != countOfPages ? info.changePage(info.page + 1) : ""}
+                        onKeyDown={(e) => {
+                            if (e.key === 'Enter') {
+                                info.page != countOfPages ? info.changePage(info.page + 1) : ""
+                            }
+                        }}
+                    >
                         <img src={chevronRight} alt="chevron right" />
                     </div>
                 </>

@@ -23,7 +23,7 @@ import {
 } from "./account.actions.ts";
 import { Status } from "../../utils/enum";
 import { IAccountState, IRealtorRegister } from "../../interfaces/account";
- 
+
 
 function isRejectedAction(action: AnyAction): action is RejectedAction {
     return action.type.endsWith("/rejected");
@@ -38,7 +38,7 @@ const updateLoginUserState = (state: IAccountState, token: string): void => {
         ];
     const id = decodedToken["sub"];
     const headerImage = decodedToken["ProfileHeaderImage"];
-    
+
     const firstName = decodedToken["given_name"];
     const lastName = decodedToken["family_name"];
 
@@ -64,7 +64,7 @@ const updateLoginUserState = (state: IAccountState, token: string): void => {
             profileHeaderImage:
                 headerImage === "" ? null : "/images/avatars/" + headerImage,
         };
-    } else if(role === "admin"){
+    } else if (role === "admin") {
         state.user = {
             id: id,
             email: email,
@@ -76,10 +76,10 @@ const updateLoginUserState = (state: IAccountState, token: string): void => {
             rating: null,
             profileHeaderImage: null
         }
-    } else if(role === "user"){
+    } else if (role === "user") {
         const avatar = decodedToken["Avatar"];
         let savedAvatar: string | null = null;
-        if (avatar != null) {
+        if (avatar != null && avatar != "") {
             if (avatar.slice(0, 5) == "https") {
                 savedAvatar = avatar;
             }

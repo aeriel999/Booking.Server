@@ -171,9 +171,10 @@ export default function ListOfPostsPage() {
                         var result2 = await dispatch(getFilteredListOfCities({ category: filter.category, country: filter.country!, realtor: filter.realtor }))
                         unwrapResult(result2);
                     }
-
-                    var result3 = await dispatch(getFilteredListOfRealtors({ category: filter.category, country: filter.country, city: filter.city }))
-                    unwrapResult(result3);
+                    if (filter.city == null) {
+                        var result3 = await dispatch(getFilteredListOfRealtors({ category: filter.category, country: filter.country, city: filter.city }))
+                        unwrapResult(result3);
+                    }
 
                 } catch (error) {
                     setErrorMessage(ErrorHandler(error))
@@ -225,6 +226,10 @@ export default function ListOfPostsPage() {
                 try {
                     var result1 = await dispatch(getFilteredListOfCategories({ country: filter.country, city: filter.city, realtor: filter.realtor }))
                     unwrapResult(result1);
+                    if (filter.city == null) {
+                        var result2 = await dispatch(getFilteredListOfCountries({ category: filter.category, realtor: filter.realtor }))
+                        unwrapResult(result2);
+                    }
                     var result3 = await dispatch(getFilteredListOfRealtors({ category: filter.category, country: filter.country, city: filter.city }))
                     unwrapResult(result3);
                 } catch (error) {
@@ -251,11 +256,14 @@ export default function ListOfPostsPage() {
                     var result1 = await dispatch(getFilteredListOfCategories({ country: filter.country, city: filter.city, realtor: filter.realtor }))
                     unwrapResult(result1);
                     if (filter.country != null) {
-                        var result2 = await dispatch(getFilteredListOfCities({ category: filter.category, country: filter.country!, realtor: filter.realtor }))
+                        console.log("Country - ", filter.country);
+                        var result2 = await dispatch(getFilteredListOfCities({ category: filter.category, country: filter.country, realtor: filter.realtor }))
                         unwrapResult(result2);
                     }
-                    var result3 = await dispatch(getFilteredListOfCountries({ category: filter.category, realtor: filter.realtor }))
-                    unwrapResult(result3);
+                    if (filter.city == null) {
+                        var result3 = await dispatch(getFilteredListOfCountries({ category: filter.category, realtor: filter.realtor }))
+                        unwrapResult(result3);
+                    }
                 } catch (error) {
                     setErrorMessage(ErrorHandler(error))
                 }
@@ -283,7 +291,14 @@ export default function ListOfPostsPage() {
     return (<div id="list-of-posts-container">
         {errorMessage ? <OutlinedErrorAlert message={errorMessage} /> : ""}
         <div className="navigation">
-            <a onClick={() => navigate("/")}>Home Page / </a>
+            <a tabIndex={0}
+                onClick={() => navigate("/")}
+                onKeyDown={(e) => {
+                    if (e.key === 'Enter') {
+                        navigate("/")
+                    }
+                }
+                }>Home Page / </a>
             <p>View Accommodation</p>
         </div>
         <div className="post-list">
@@ -319,7 +334,7 @@ export default function ListOfPostsPage() {
 
 
                 </div>
-                <button className="skipButton" onClick={() => skip()}>Skip</button>
+                <button tabIndex={0} className="skipButton" onClick={() => skip()}>Skip</button>
             </div>
 
             <div className="posts">

@@ -14,7 +14,7 @@ import { AppDispatch, RootState } from "../../../store";
 import { getListOfPostsName, getPostByName } from "../../../store/post/post.actions";
 import { setTextForSearching } from "../../../store/post/post.slice";
 import { changeLoaderIsLoading, changePaginationPage, savePath } from "../../../store/settings/settings.slice";
-import { Avatar } from "../../../components/common/Avatar/Avatar";
+import avatar from "../../../assets/Auth/image20.svg";
 import { APP_ENV } from "../../../env";
 
 export const AnonymousDashboardLayoutForPosts = () => {
@@ -28,7 +28,7 @@ export const AnonymousDashboardLayoutForPosts = () => {
     const listOfPostsName = useSelector((state: RootState) => state.post.searchPost);
     const isLogin = useSelector((state: RootState) => state.account.isLogin);
     const user = useSelector((state: RootState) => state.account.user);
-    const [avatarUrl, setAvatarUrl] = useState<string>();
+    const [avatarUrl, setAvatarUrl] = useState<string | null>(null);
     //const [isBlur, setIsBlur] = useState<boolean>(true);
     /*
     <div id="userInfo">
@@ -73,23 +73,7 @@ export const AnonymousDashboardLayoutForPosts = () => {
     const findPost = async (event: React.FormEvent<HTMLFormElement>) => {
         event.preventDefault();
         dispatch(changeLoaderIsLoading(true));
-        if (searchingText == null || searchingText == "") {
-            /*const currentFilter: IFilter = {
-                category: filter.category,
-                country: filter.country,
-                city: filter.city,
-                realtor: filter.realtor
-            };
-            const payload: IFilteredRequest = {
-                filter: currentFilter,
-                pages: {
-                    page: 1,
-                    sizeOfPage: 9
-                }
-            }
-            await dispatch(getFilteredListByType(payload));*/
-        }
-        else {
+        if (searchingText != null && searchingText != "") {
             const currentFilter: IFilter = {
                 category: filter.category,
                 country: filter.country,
@@ -103,6 +87,7 @@ export const AnonymousDashboardLayoutForPosts = () => {
             await dispatch(getPostByName(payload));
             dispatch(changePaginationPage(1))
         }
+
     }
 
     useEffect(() => {
@@ -137,13 +122,13 @@ export const AnonymousDashboardLayoutForPosts = () => {
     }, [user]);
 
     function nameButtonHandle(): void {
-        if(user?.role.toLowerCase().includes("admin")){
-           console.log("nameButtonHandle", user?.role.toLowerCase())
-           navigate("/admin/moderation")
-        }else{
-           navigate("/dashboard/profile")
+        if (user?.role.toLowerCase().includes("admin")) {
+            console.log("nameButtonHandle", user?.role.toLowerCase())
+            navigate("/admin/moderation")
+        } else {
+            navigate("/dashboard/profile")
         }
-   }
+    }
 
     return (
         <div id="mainDashboardForPosts">
@@ -151,22 +136,28 @@ export const AnonymousDashboardLayoutForPosts = () => {
                 <div className="auth">
                     <img tabIndex={0} src={logo} onClick={() => navigate("/")} alt="logo" />
                     {isLogin ? <><div id="userInfo">
-                        {user!.avatar != null ? <div
+                        <div
                             id="avatar"
                             style={{
-                                background: `url(${avatarUrl}) center / cover no-repeat`,
+                                background: `url(${avatarUrl === null ? avatar : avatarUrl}) center / cover no-repeat`,
                             }}
-                        /> :
-                            <Avatar userName={user?.email!} />}
+                        />
 
-                        <div id="name" onClick={nameButtonHandle}>
+                        <div tabIndex={0}
+                            id="name"
+                            onClick={nameButtonHandle}
+                            onKeyDown={(e) => {
+                                if (e.key === 'Enter') {
+                                    nameButtonHandle();
+                                }
+                            }}>
                             {user?.firstName && user?.lastName ? `${user?.firstName} ${user?.lastName}` : user?.email}
                         </div>
                     </div></> : <><button
                         onClick={() => {
                             navigate("/authentication/user-register");
                         }}
-                        tabIndex={1}
+                        tabIndex={0}
                     >
                         Register
                     </button>
@@ -177,7 +168,7 @@ export const AnonymousDashboardLayoutForPosts = () => {
                                 navigate("/authentication/login");
 
                             }}
-                            tabIndex={2}
+                            tabIndex={0}
                         >
                             Login
                         </button></>}
@@ -191,7 +182,7 @@ export const AnonymousDashboardLayoutForPosts = () => {
                             postsName={listOfPostsName ? listOfPostsName : []}
                             setText={setSearchingText}
                         ></FindPostInput>
-                        <button type="submit" >Find</button>
+                        <button tabIndex={0} type="submit" >Find</button>
                     </form>
                 </div>
             </header>
@@ -203,35 +194,35 @@ export const AnonymousDashboardLayoutForPosts = () => {
                 <div className="information">
                     <div>
                         <h6>Company</h6>
-                        <a tabIndex={3}>About the company</a>
-                        <a tabIndex={4}>Vacancies</a>
-                        <a tabIndex={5}>Mobile applications</a>
-                        <a tabIndex={6}>How we work</a>
+                        <a tabIndex={0}>About the company</a>
+                        <a tabIndex={0}>Vacancies</a>
+                        <a tabIndex={0}>Mobile applications</a>
+                        <a tabIndex={0}>How we work</a>
                     </div>
                     <div>
                         <h6>Connection</h6>
-                        <a tabIndex={7}>Help and FAQ</a>
-                        <a tabIndex={8}>Affiliate programs</a>
-                        <a tabIndex={9}>Hotel owners</a>
-                        <a tabIndex={10}>To partners</a>
+                        <a tabIndex={0}>Help and FAQ</a>
+                        <a tabIndex={0}>Affiliate programs</a>
+                        <a tabIndex={0}>Hotel owners</a>
+                        <a tabIndex={0}>To partners</a>
                     </div>
                     <div>
                         <h6>Explore</h6>
-                        <a tabIndex={11}>Countries</a>
-                        <a tabIndex={12}>Regions</a>
-                        <a tabIndex={13}>Cities</a>
-                        <a tabIndex={14}>Districts</a>
-                        <a tabIndex={15}>Airports</a>
-                        <a tabIndex={16}>Hotels</a>
-                        <a tabIndex={17}>Attractions</a>
+                        <a tabIndex={0}>Countries</a>
+                        <a tabIndex={0}>Regions</a>
+                        <a tabIndex={0}>Cities</a>
+                        <a tabIndex={0}>Districts</a>
+                        <a tabIndex={0}>Airports</a>
+                        <a tabIndex={0}>Hotels</a>
+                        <a tabIndex={0}>Attractions</a>
                     </div>
                     <div>
                         <h6>Support</h6>
-                        <a tabIndex={18}>Reference center</a>
-                        <a tabIndex={19}>Anti-discrimination</a>
-                        <a tabIndex={20}>Support for people with disabilities</a>
-                        <a tabIndex={21}>Options for canceling reservations</a>
-                        <a tabIndex={22}>Send a complaint from neighbors</a>
+                        <a tabIndex={0}>Reference center</a>
+                        <a tabIndex={0}>Anti-discrimination</a>
+                        <a tabIndex={0}>Support for people with disabilities</a>
+                        <a tabIndex={0}>Options for canceling reservations</a>
+                        <a tabIndex={0}>Send a complaint from neighbors</a>
                     </div>
                 </div>
                 <div className="social-networks">

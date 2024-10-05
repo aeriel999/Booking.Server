@@ -12,8 +12,8 @@ import { APP_ENV } from "../../../env";
 import { changeDashboardMenuItem } from "../../../store/settings/settings.slice";
 import { IDashboardMenuItem } from "../../../interfaces/common";
 import { clientMenuData } from "../../../utils/data";
-import { Avatar } from "../../../components/common/Avatar/Avatar";
 import { Badge } from "@mui/material";
+import avatar from "../../../assets/Auth/image20.svg";
 
 export default function ClientDashboardLayout() {
     const { user } = useAppSelector((state) => state.account);
@@ -30,7 +30,7 @@ export default function ClientDashboardLayout() {
     const [currentMenuItem, setCurrentMenuItem] = useState<string>(
         currentBreadcrumbsItem
     ); //Item name for Breadcrumbs navigate
-    const [avatarUrl, setAvatarUrl] = useState<string>();
+    const [avatarUrl, setAvatarUrl] = useState<string | null>(null);
     const [isExpanded, setIsExpanded] = useState(false); //set and get menu expanded
 
     //Get and set avatar
@@ -95,16 +95,14 @@ export default function ClientDashboardLayout() {
                     </a>
                     {/* User Info */}
                     <div id="userInfo">
-                        {user!.avatar != null ? (
-                            <div
-                                id="avatar"
-                                style={{
-                                    background: `url(${avatarUrl}) center / cover no-repeat`,
-                                }}
-                            />
-                        ) : (
-                            <Avatar userName={user?.email!} />
-                        )}
+
+                        <div
+                            id="avatar"
+                            style={{
+                                background: `url(${avatarUrl === null ? avatar : avatarUrl}) center / cover no-repeat`,
+                            }}
+                        />
+
 
                         <div id="name">
                             {user?.firstName && user?.lastName
@@ -126,9 +124,8 @@ export default function ClientDashboardLayout() {
                         {menuData.map((item, index) => (
                             <button
                                 key={index}
-                                className={`menuItem ${
-                                    item.isActive ? "active" : ""
-                                }`}
+                                className={`menuItem ${item.isActive ? "active" : ""
+                                    }`}
                                 onClick={() => handleMenuClick(index)}
                             >
                                 <div className="text">

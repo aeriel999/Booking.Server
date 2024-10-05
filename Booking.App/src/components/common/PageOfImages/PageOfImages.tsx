@@ -21,9 +21,15 @@ export const PageOfImages = (info: IPageOfImages) => {
             <div className='page-of-images-list'>
                 <div className='page-of-images-list-exit'>
                     <img
+                        tabIndex={0}
                         onClick={() => info.setIsOpen(false)}
                         onMouseEnter={() => setIsEnter(true)}
                         onMouseLeave={() => setIsEnter(false)} src={isEnter ? active_button : notActive_button}
+                        onKeyDown={(e) => {
+                            if (e.key === 'Enter') {
+                                info.setIsOpen(false)
+                            }
+                        }}
                         alt="Exit Button" />
                 </div>
                 <div className='page-of-images-list-items'>

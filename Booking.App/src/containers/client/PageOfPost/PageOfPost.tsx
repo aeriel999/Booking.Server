@@ -19,12 +19,11 @@ import { FeedbackTextArea } from "../../../components/common/FeedbackTextArea/Fe
 import { savePath, savePostIdForChat } from "../../../store/settings/settings.slice";
 import { RoomCard } from "../../../components/common/RoomCard/RoomCard";
 import { setIdOfSelectedFeedback } from "../../../store/post/post.slice";
-import { clientMenuData, cutNumber } from "../../../utils/data";
+import { cutNumber } from "../../../utils/data";
 import { unwrapResult } from "@reduxjs/toolkit";
 import ErrorHandler from "../../../components/common/ErrorHandler";
 import OutlinedErrorAlert from "../../../components/common/ErrorAlert";
 import { joinNewPostChatByUser } from "../../../SignalR";
-import { IDashboardMenuItem } from "../../../interfaces/common";
 
 
 const PageOfPost = () => {
@@ -39,8 +38,6 @@ const PageOfPost = () => {
     const selectedFeedback = useAppSelector((state: RootState) => state.post.idOfSelectedFeedback);
     const pageOfSelectedFeedback = useAppSelector((state: RootState) => state.post.pageOfSelectedFeedback);
     const searchingPost = useAppSelector((state: RootState) => state.post.searchingPost);
-    const [menuData, setMenuData] =
-        useState<IDashboardMenuItem[]>(clientMenuData);
 
     const { postId } = useParams<string>();
     const [isLoading, setIsLoading] = useState<boolean>(true);
@@ -182,8 +179,22 @@ const PageOfPost = () => {
                     :
                     <>
                         <div className="navigation">
-                            <a onClick={() => navigate("/")}>Home Page / </a>
-                            <a onClick={() => navigate("/posts/")}>View Accommodation / </a>
+                            <a tabIndex={0}
+                                onClick={() => navigate("/")}
+                                onKeyDown={(e) => {
+                                    if (e.key === 'Enter') {
+                                        navigate("/");
+                                    }
+                                }}
+                            >Home Page / </a>
+                            <a tabIndex={0}
+                                onClick={() => navigate("/posts/")}
+                                onKeyDown={(e) => {
+                                    if (e.key === 'Enter') {
+                                        navigate("/posts/");
+                                    }
+                                }}
+                            >View Accommodation / </a>
                             <p>{post?.name}</p>
                         </div>
                         {errorMessage && <OutlinedErrorAlert message={errorMessage} />}
@@ -198,9 +209,15 @@ const PageOfPost = () => {
                                 postImages.slice(0, 7).map((item, index) => (
                                     index === 6 ? (
                                         <div
+                                            tabIndex={0}
                                             className="morePhoto"
                                             onClick={() => setIsOpenPageOfImages(!isOpenPageOfImages)}
                                             key={index}
+                                            onKeyDown={(e) => {
+                                                if (e.key === 'Enter') {
+                                                    setIsOpenPageOfImages(!isOpenPageOfImages)
+                                                }
+                                            }}
                                         >
                                             <img src={`${APP_ENV.BASE_URL}/images/posts/${item}`} alt={item} />
                                             <div>
@@ -231,7 +248,8 @@ const PageOfPost = () => {
                                         />
 
                                     </div>
-                                    {post?.categoryName != "Hotel" ? <button
+                                    {post?.categoryName != "Hotel" && isLogin == true ? <button
+                                        tabIndex={0}
                                         onClick={async () => {
                                             await joinNewPostChatByUser(postId!)
                                                 .then((id) => {
@@ -290,6 +308,7 @@ const PageOfPost = () => {
                                             </div>
                                             <div className="send-feedback-text-area">
                                                 <FeedbackTextArea
+
                                                     maxLength={300}
                                                     //setText={setFeedbackMessage}
                                                     onClickSend={sendFeedbackAsync} />
@@ -301,14 +320,14 @@ const PageOfPost = () => {
                                                     To write a feedback, you must log in or register
                                                 </p>
                                                 <div className="buttons">
-                                                    <button onClick={() => {
+                                                    <button tabIndex={0} onClick={() => {
                                                         dispatch(savePath(location.pathname))
                                                         navigate("/authentication/login")
 
                                                     }}>
                                                         Login
                                                     </button>
-                                                    <button onClick={() => navigate("/authentication/user-register")}>
+                                                    <button tabIndex={0} onClick={() => navigate("/authentication/user-register")}>
                                                         Register
                                                     </button>
                                                 </div>
