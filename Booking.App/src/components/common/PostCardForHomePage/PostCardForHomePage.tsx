@@ -17,7 +17,15 @@ interface IPostCard {
 export const PostCardForHomePage = (info: IPostCard) => {
     const navigate = useNavigate();
     return (
-        <div className="card" onClick={() => navigate(`/posts/post/${info.id}`)}>
+        <div tabIndex={0}
+            className="card"
+            onClick={() => navigate(`/posts/post/${info.id}`)}
+            onKeyDown={(e) => {
+                if (e.key === 'Enter') {
+                    navigate(`/posts/post/${info.id}`);
+                }
+            }}
+        >
             <img src={`${APP_ENV.BASE_URL}/images/posts/${info.image}`}></img>
             {(info.discount != null && info.discount != 0) ? <div className='discount'>-{info.discount}%</div> : ""}
             <div className="location">

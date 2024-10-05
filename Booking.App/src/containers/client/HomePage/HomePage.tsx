@@ -10,10 +10,13 @@ import { useDispatch, useSelector } from 'react-redux';
 import { AppDispatch, RootState } from '../../../store';
 import { getPostsWithMostDiscount, getPostsWithMostRating, getTypesOfRest } from '../../../store/post/post.actions';
 import { APP_ENV } from '../../../env';
-import { useNavigate } from 'react-router-dom';
+import { useLocation, useNavigate } from 'react-router-dom';
+import { Loading } from '../../../components/common/Loading/Loading';
+import { savePath } from '../../../store/settings/settings.slice';
 
 export const HomePage = () => {
 
+    const location = useLocation();
     const navigate = useNavigate();
     const typesOfRest = useSelector((state: RootState) => state.post.typesOfRest);
     const mostRating = useSelector((state: RootState) => state.post.postMostRating);
@@ -70,7 +73,16 @@ export const HomePage = () => {
 
                     <div className='places'>
                         {typesOfRest != null ? typesOfRest.map((item) => (
-                            <div className='place-item' key={item.id} onClick={() => navigate(`posts/post/${item.postId}`)} >
+                            <div className='place-item'
+                                tabIndex={0}
+                                key={item.id}
+                                onClick={() => navigate(`posts/post/${item.postId}`)}
+                                onKeyDown={(e) => {
+                                    if (e.key === 'Enter') {
+                                        navigate(`posts/post/${item.postId}`)
+                                    }
+                                }}
+                            >
                                 <div className='place-image' style={
                                     {
                                         backgroundImage: `url(${APP_ENV.BASE_URL}/images/posts/${item.image})`,
@@ -80,13 +92,13 @@ export const HomePage = () => {
                                 }></div>
                                 <div className='place-name'><p>{item.name}</p></div>
                             </div>
-                        )) : ""}
+                        )) : <Loading />}
                     </div>
                 </div>
                 <div className='find-dwelling'>
                     <div>
                         <p>Find a home for your new journey!</p>
-                        <button onClick={() => navigate("/posts")}>View properties</button>
+                        <button tabIndex={0} onClick={() => navigate("/posts")}>View properties</button>
                     </div>
                     <div>
                         <img src={earth} alt="Earth" style={{ height: "100%", width: "100%" }} />
@@ -118,7 +130,7 @@ export const HomePage = () => {
                                 city={item.city}
                                 country={item.country}
                                 image={item.image} />
-                        )) : ""}
+                        )) : <Loading />}
 
 
                     </div>
@@ -140,11 +152,14 @@ export const HomePage = () => {
                     </div>
                     <div className='buttons'>
                         <button
+                            tabIndex={0}
                             onClick={() => {
+                                dispatch(savePath(location.pathname))
                                 navigate("/authentication/login");
                             }}
                         >Login</button>
                         <button
+                            tabIndex={0}
                             onClick={() => {
                                 navigate("/authentication/user-register");
                             }}
@@ -168,7 +183,7 @@ export const HomePage = () => {
                                 country={item.country}
                                 discount={item.discount}
                                 image={item.image} />
-                        )) : ""}
+                        )) : <Loading />}
 
 
                     </div>

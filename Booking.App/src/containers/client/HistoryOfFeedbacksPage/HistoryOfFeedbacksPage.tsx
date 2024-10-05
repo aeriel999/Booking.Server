@@ -69,12 +69,20 @@ export const HistoryOfFeedbacksPage = () => {
             {status == Status.LOADING ? <Loading /> : ""}
             {historyOfFeedbacks ? historyOfFeedbacks.items.$values.map((item) => (
                 <div
+                    tabIndex={0}
                     className="history-of-feedbacks-item"
                     key={item.feedbackId}
                     onClick={() => {
                         navigate(`/posts/post/${item.postId}`);
                         dispatch(setIdOfSelectedFeedback(item.feedbackId))
-                    }}>
+                    }}
+                    onKeyDown={(e) => {
+                        if (e.key === 'Enter') {
+                            navigate(`/posts/post/${item.postId}`);
+                            dispatch(setIdOfSelectedFeedback(item.feedbackId))
+                        }
+                    }}
+                >
                     <div className='history-of-feedbacks-item-post-details'>
                         <img src={`${APP_ENV.BASE_URL}/images/posts/${item.imageOfPost}`} alt="Image of post" />
                         <div className='location'>

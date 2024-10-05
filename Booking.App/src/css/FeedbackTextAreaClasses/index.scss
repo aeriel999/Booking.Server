@@ -27,7 +27,7 @@
 
 
         border: none;
-        outline: none;
+        outline-color: $primary-style-color;
 
         color: #676767;
         font-size: $medium-font-size;
@@ -43,7 +43,7 @@
 
         button {
             border: none;
-            outline: none;
+            outline-color: $primary-style-color;
             background-color: $primary-font-color;
 
             img {

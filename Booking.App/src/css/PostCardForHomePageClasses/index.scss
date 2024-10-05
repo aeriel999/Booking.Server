@@ -12,6 +12,7 @@
     background: $primary-font-color;
     position: relative;
     cursor: pointer;
+    outline-color: $primary-style-color;
 
     &:hover {
         border-color: $primary-style-color;
@@ -26,6 +27,8 @@
     }
 
     .location {
+        height: 90%;
+
         p {
             color: $default-color;
             line-height: normal;

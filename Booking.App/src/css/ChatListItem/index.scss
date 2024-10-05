@@ -10,8 +10,10 @@
     box-sizing: border-box;
     //border: 1px solid black;
     //min-height: 105px;
+    outline-color: $primary-style-color;
     user-select: none;
     cursor: pointer;
+
 
 
     #chat-list-item-avatar {
@@ -48,6 +50,9 @@
         line-height: normal;
     }
 
+    &:hover {
+        background-color: #D9D9D9;
+    }
 
 }
 

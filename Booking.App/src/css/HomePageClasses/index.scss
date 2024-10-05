@@ -45,9 +45,11 @@
     .posts {
         width: 100%;
         height: 70%;
+        min-height: 333.95px;
         display: flex;
         box-sizing: border-box;
         justify-content: space-between;
+        position: relative;
     }
 }
 
@@ -105,11 +107,13 @@ main {
         .places {
             width: 100%;
             height: auto;
+            min-height: 183px;
             display: flex;
             flex-wrap: wrap;
             row-gap: 10px;
             column-gap: 1.3%;
             justify-content: center;
+            position: relative;
 
             .place-item {
                 display: flex;
@@ -121,6 +125,7 @@ main {
                 height: 181px;
                 overflow: hidden;
                 cursor: pointer;
+                outline-color: $primary-style-color;
 
                 &:hover {
                     border-color: $primary-style-color;
@@ -194,12 +199,12 @@ main {
                     padding: 10px 15px;
                     border-radius: 10px;
                     background: $background-color;
-                    border: 1px solid transparent;
-                    outline: none;
+                    //outline: none;
+                    border: none;
                     cursor: pointer;
 
                     &:hover {
-                        border-color: $primary-font-color;
+                        background-color: $header-menu-background;
                     }
                 }
             }
@@ -398,23 +403,29 @@ main {
                 flex-basis: 33%;
                 padding: 10px 15px;
                 border-radius: 7px;
-                outline: none;
-                border: 1px solid transparent;
+                //outline: none;
                 margin: auto;
+                border: none;
                 cursor: pointer;
 
-                &:hover {
-                    border-color: $primary-style-color;
-                }
 
                 &:first-of-type {
                     background: $primary-font-color;
                     color: $primary-style-color;
+
+
+                    &:hover {
+                        background-color: $register-button-background;
+                    }
                 }
 
                 &:last-of-type {
                     background: linear-gradient(0deg, $background-color -25%, $primary-font-color 412.14%);
                     color: $primary-font-color;
+
+                    &:hover {
+                        background: $header-menu-background;
+                    }
                 }
             }
         }
