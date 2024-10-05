@@ -22,6 +22,7 @@
             cursor: pointer;
             color: $dashboard-title-color;
             font-weight: $medium-font-weight;
+            outline-color: $primary-style-color;
         }
 
         p {
@@ -65,6 +66,7 @@
 
     .morePhoto {
         cursor: pointer;
+        outline-color: $primary-style-color;
 
         div {
             display: flex;
@@ -158,13 +160,14 @@
                     font-style: $primary-font-normal-style;
                     font-weight: $big-font-weight;
                     border: none;
-                    outline: none;
+                    //outline: none;
                     border-radius: 5px;
-                    border: 1px solid transparent;
+                    border: none;
+                    outline-color: $primary-style-color;
                     cursor: pointer;
 
                     &:hover {
-                        border-color: white;
+                        background-color: $header-menu-background;
                     }
                 }
 
@@ -291,15 +294,16 @@
                             background-color: #00C2C1;
                             border-radius: 7px;
                             font-size: $normal-font-size;
-                            outline: none;
+                            //outline: none;
                             padding: 10px 15px;
                             color: $primary-font-color;
                             align-self: center;
-                            border: 1px solid transparent;
+                            border: none;
+                            outline-color: $primary-style-color;
                             cursor: pointer;
 
                             &:hover {
-                                border-color: white;
+                                background-color: $header-menu-background;
                             }
                         }
                     }

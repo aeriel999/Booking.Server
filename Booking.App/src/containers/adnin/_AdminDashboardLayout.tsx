@@ -1,4 +1,5 @@
-import "../../css/DashBoardRealtorClasses/index.scss";
+//import "../../css/DashBoardRealtorClasses/index.scss";
+import "../../App.scss";
 import Logo from "../../assets/Logo/tripbook 1.svg";
 import LogOut from "../../assets/Icons/logout-03.svg";
 import ArrowBack from "../../assets/DashboardIcons/chevron-left.svg";
@@ -21,7 +22,6 @@ const StyledAvatar = styled(Avatar)({
     width: "40px",
     height: "40px",
 });
-
 
 export default function AdminDashboardLayout() {
     const { user } = useAppSelector((state) => state.account);
@@ -92,13 +92,8 @@ export default function AdminDashboardLayout() {
                     </a>
                     {/* User Info */}
                     <div id="userInfo">
-                    <StyledAvatar
-                                        alt={user!.email}
-                                        src={user!.avatar!}
-                                    />
-                        <div id="name">
-                            {user?.email}
-                        </div>
+                        <StyledAvatar alt={user!.email} src={user!.avatar!} />
+                        <div id="name">{user?.email}</div>
                     </div>
                 </div>
             </div>
@@ -121,9 +116,7 @@ export default function AdminDashboardLayout() {
                             >
                                 <div className="text">
                                     <Badge
-                                        badgeContent={
-                                            item.counterOfMsg  && 0
-                                        }
+                                        badgeContent={item.counterOfMsg && 0}
                                         sx={{
                                             "& .MuiBadge-badge": {
                                                 backgroundColor: "#FF6347",

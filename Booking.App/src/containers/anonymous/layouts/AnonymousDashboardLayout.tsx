@@ -1,21 +1,25 @@
-import { Outlet, useNavigate } from "react-router-dom";
+import { Outlet, useLocation, useNavigate } from "react-router-dom";
 import "../../../css/DashBoardRealtorClasses/index.scss";
 import "../../../css/DashBoardAnonymousClasses/index.scss";
 import logo from "../../../assets/Logo/tripbook 1.svg";
-import dot from "../../../assets/Icons/mingcute_map-pin-line.svg";
-import calendar from "../../../assets/Icons/calendar-06.svg";
-import human from "../../../assets/Icons/user-profile-03.svg";
+// import dot from "../../../assets/Icons/mingcute_map-pin-line.svg";
+// import calendar from "../../../assets/Icons/calendar-06.svg";
+// import human from "../../../assets/Icons/user-profile-03.svg";
 import { useSelector } from "react-redux";
 import { RootState } from "../../../store";
 import { useEffect, useState } from "react";
 import { APP_ENV } from "../../../env";
-import { Avatar } from "../../../components/common/Avatar/Avatar";
+import avatar from "../../../assets/Auth/image20.svg";
+import { useAppDispatch } from "../../../hooks/redux";
+import { savePath } from "../../../store/settings/settings.slice";
 
 export default function AnonymousDashboardLayout() {
     const navigate = useNavigate();
+    const dispatch = useAppDispatch();
+    const location = useLocation();
     const isLogin = useSelector((state: RootState) => state.account.isLogin);
     const user = useSelector((state: RootState) => state.account.user);
-    const [avatarUrl, setAvatarUrl] = useState<string>();
+    const [avatarUrl, setAvatarUrl] = useState<string | null>(null);
 
     useEffect(() => {
         if (user) {
@@ -50,18 +54,22 @@ export default function AnonymousDashboardLayout() {
                         {isLogin ? (
                             <>
                                 <div id="userInfo">
-                                    {user!.avatar != null ? (
-                                        <div
-                                            id="avatar"
-                                            style={{
-                                                background: `url(${avatarUrl}) center / cover no-repeat`,
-                                            }}
-                                        />
-                                    ) : (
-                                        <Avatar userName={user?.email!} />
-                                    )}
+                                    <div
+                                        id="avatar"
+                                        style={{
+                                            background: `url(${avatarUrl === null ? avatar : avatarUrl}) center / cover no-repeat`,
+                                        }}
+                                    />
 
-                                    <div id="name" onClick={nameButtonHandle}>
+                                    <div tabIndex={0}
+                                        id="name"
+                                        onClick={nameButtonHandle}
+                                        onKeyDown={(e) => {
+                                            if (e.key === 'Enter') {
+                                                nameButtonHandle();
+                                            }
+                                        }}
+                                    >
                                         {user?.firstName && user?.lastName
                                             ? `${user?.firstName} ${user?.lastName}`
                                             : user?.email}
@@ -76,15 +84,16 @@ export default function AnonymousDashboardLayout() {
                                             "/authentication/user-register"
                                         );
                                     }}
-                                    tabIndex={1}
+                                    tabIndex={0}
                                 >
                                     Register
                                 </button>
                                 <button
                                     onClick={() => {
+                                        dispatch(savePath(location.pathname))
                                         navigate("/authentication/login");
                                     }}
-                                    tabIndex={2}
+                                    tabIndex={0}
                                 >
                                     Login
                                 </button>
@@ -93,7 +102,7 @@ export default function AnonymousDashboardLayout() {
                     </div>
                     <div className="searching">
                         <div>Travel, visit new places with TripBook!</div>
-                        <form>
+                        {/* <form>
                             <img src={dot} />
                             <input placeholder="Place of travel?" />
                             <img src={calendar} />
@@ -110,21 +119,30 @@ export default function AnonymousDashboardLayout() {
                             <img src={human} />
                             <input placeholder="Count of people - number" />
                             <button>Find</button>
-                        </form>
+                        </form> */}
                     </div>
                 </div>
             </header>
             <Outlet />
             <footer>
                 <img src={logo} />
+
                 <div className="explore">
-                    <p>Explore</p>
+                    <p>For partners</p>
                     <div>
-                        <a tabIndex={3}>Countries</a>{" "}
-                        <a tabIndex={4}>Regions</a> <a tabIndex={5}>Cities</a>{" "}
-                        <a tabIndex={6}>Districts</a>{" "}
+                        <a
+                            onClick={() => {
+                                navigate("/authentication/realtor-register");
+                            }}
+                            tabIndex={0}
+                        >
+                            Create Realtor Account
+                        </a>
+                        <a tabIndex={0}>Send Message to Administrator</a>
+                        <a tabIndex={0}>On issues of advertising</a>
+                        {/* <a tabIndex={6}>Districts</a>{" "}
                         <a tabIndex={7}>Attractions</a>{" "}
-                        <a tabIndex={8}>Airports</a> <a tabIndex={9}>Hotels</a>
+                        <a tabIndex={8}>Airports</a> <a tabIndex={9}>Hotels</a> */}
                     </div>
                 </div>
             </footer>

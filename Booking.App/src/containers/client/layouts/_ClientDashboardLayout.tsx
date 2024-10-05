@@ -27,15 +27,13 @@ import Button from "@mui/material/Button";
 import { logout } from "../../../store/accounts/account.slice.ts";
 import LogoutIcon from "@mui/icons-material/Logout";
 import StarBorder from "@mui/icons-material/StarBorder";
- 
-import { getListOfChatRooms } from "../../../store/chat/chat.action.ts";
-import { unwrapResult } from "@reduxjs/toolkit";
 import { Collapse } from "@mui/material";
 import ExpandLess from "@mui/icons-material/ExpandLess";
 import ExpandMore from "@mui/icons-material/ExpandMore";
 import { getRealtorsByUserFeedbacks } from "../../../store/users/user.action.ts";
 import { useSelector } from "react-redux";
 import { RootState } from "../../../store/index.ts";
+import "../../../App.scss";
 
 const drawerWidth = 240;
 
@@ -111,16 +109,16 @@ export default function ClientDashboardLayout() {
     useEffect(() => {
         if (user) {
             setAvatarUrl(APP_ENV.BASE_URL + user?.avatar);
-            const getRooms = async () => {
-                try {
-                    const response = await dispatch(getListOfChatRooms());
-                    unwrapResult(response);
-                } catch (e) {
-                    console.log(e);
-                }
-            };
+            // const getRooms = async () => {
+            //     try {
+            //         const response = await dispatch(getListOfChatRooms());
+            //         unwrapResult(response);
+            //     } catch (e) {
+            //         console.log(e);
+            //     }
+            // };
 
-            getRooms();
+            // getRooms();
         }
     }, [user]);
 
@@ -143,13 +141,13 @@ export default function ClientDashboardLayout() {
     };
 
     function nameButtonHandle(): void {
-        if(user?.role.toLowerCase().includes("admin")){
-           console.log("nameButtonHandle", user?.role.toLowerCase())
-           navigate("/admin/moderation")
-        }else{
-           navigate("/dashboard/profile")
+        if (user?.role.toLowerCase().includes("admin")) {
+            console.log("nameButtonHandle", user?.role.toLowerCase());
+            navigate("/admin/moderation");
+        } else {
+            navigate("/dashboard/profile");
         }
-   }
+    }
     return (
         <Box sx={{ display: "flex" }}>
             <CssBaseline />
@@ -321,4 +319,3 @@ export default function ClientDashboardLayout() {
 function connectForRealtorToSignalR() {
     throw new Error("Function not implemented.");
 }
-

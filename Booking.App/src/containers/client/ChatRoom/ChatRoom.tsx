@@ -2,10 +2,10 @@ import { useCallback, useEffect, useRef, useState } from 'react';
 import { ChatTextArea } from '../../../components/common/ChatTextArea/ChatTextArea';
 import '../../../css/ChatRoom/index.scss';
 import { Message } from '../Message/Message';
-import { useAppDispatch, useAppSelector } from '../../../hooks/redux';
+import { useAppDispatch } from '../../../hooks/redux';
 import { useSelector } from 'react-redux';
 import { RootState } from '../../../store';
-import { CheckChatIsExist, getChatRoomById, getMessageListByChatId, setMessagesReadtByChatId } from '../../../store/chat/chat.action';
+import { getChatRoomById, getMessageListByChatId, setMessagesReadtByChatId } from '../../../store/chat/chat.action';
 import { connection } from '../../../SignalR';
 import { IChatMessageInfo } from '../../../interfaces/chat';
 import * as signalR from "@microsoft/signalr";
@@ -13,9 +13,8 @@ import { APP_ENV } from '../../../env';
 import { Status } from '../../../utils/enum';
 import { Loading } from '../../../components/common/Loading/Loading';
 import { unwrapResult } from '@reduxjs/toolkit';
-import { deleteNumberOfMessageFromGeneralCount, readMessages, resetChatInfoForClient, setChatRoomId, setDeletedChatId, setIsCuretnChatReaded } from '../../../store/chat/chat.slice';
+import { deleteNumberOfMessageFromGeneralCount, readMessages, resetChatInfoForClient, setChatRoomId, setDeletedChatId } from '../../../store/chat/chat.slice';
 import ErrorHandler from '../../../components/common/ErrorHandler';
-import { ChatRoomIsDeleted } from '../../../components/common/ChatRoomIsDeleted/ChatRoomIsDeleted';
 import Trash from "../../../assets/DashboardIcons/mdi_trash-outline.svg";
 import CustomizedDialogs from '../../../components/common/Dialog';
 
@@ -28,7 +27,6 @@ interface IChatRoom {
 export const ChatRoom = (info: IChatRoom) => {
     const dispatch = useAppDispatch();
     const chatRoom = useSelector((state: RootState) => state.chat.chatRoomInfoForClient);
-    const chatIsExist = useSelector((state: RootState) => state.chat.chatIsExist);
     const outcomeMessagesReadedChatId = useSelector((state: RootState) => state.chat.outcomeMessagesReadedChatId);
     const newMessage = useSelector((state: RootState) => state.chat.newMessage);
     const status = useSelector((state: RootState) => state.chat.status);
@@ -339,8 +337,14 @@ export const ChatRoom = (info: IChatRoom) => {
                             />
                             <p>{chatRoom.realtorName}</p>
                             <button
+                                tabIndex={0}
                                 className='delete-button'
                                 onClick={() => setIsDialogOpen(true)}
+                                onKeyDown={(e) => {
+                                    if (e.key === 'Enter') {
+                                        setIsDialogOpen(true)
+                                    }
+                                }}
                             >
                                 <img src={Trash} alt="delete" />
                             </button>

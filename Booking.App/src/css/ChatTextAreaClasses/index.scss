@@ -28,7 +28,7 @@
             line-height: normal;
             border: none;
             resize: none;
-            outline: none;
+            outline-color: $primary-style-color;
 
             &::placeholder {
                 color: #A2A2A2;
@@ -64,11 +64,16 @@
                 align-items: center;
                 background-color: $primary-style-color;
                 border: none;
+                outline-color: $primary-style-color;
                 cursor: pointer;
 
                 img {
                     width: 23px;
                     height: 23px;
+                }
+
+                &:hover {
+                    background-color: $header-menu-background;
                 }
             }
 

@@ -18,7 +18,7 @@ public class PostCityRepository(BookingDbContext context) : IPostCityRepository
 	public Task<PostCity?> FindCityByNameAndCountryIdAsync(string name, Guid countryId)
 	{
 		 return _dbSet.FirstOrDefaultAsync(c => c.CountryId == countryId 
-		 && c.Name.ToLower() == name.ToLower());
+		 && c.Name!.ToLower() == name.ToLower());
 	}
 
 	public async Task<List<PostCity>?> GetCitiesListByCountryIdAsync(Guid countryId)
@@ -34,9 +34,9 @@ public class PostCityRepository(BookingDbContext context) : IPostCityRepository
         if (Country == null) return new();
 
         return await _dbSet
-            .Include(s => s.Streets)
+            .Include(s => s.Streets!)
             .ThenInclude(p => p.Posts)
-            .Where(c => (c.CountryId == Country) && (Category == null ? true :
+            .Where(c => (c.CountryId == Country && c.Streets!=null && c.Streets.Any(s => s.Posts !=null && s.Posts.Any(p => p.Street!.CityId == c.Id))) && (Category == null ? true :
               c.Streets!.Any(street =>
                    street.Posts!.Any(post =>
                           post.CategoryId == Category)))

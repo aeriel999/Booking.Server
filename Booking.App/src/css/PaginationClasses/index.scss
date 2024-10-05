@@ -21,6 +21,7 @@
         height: 100%;
         border-radius: 18px;
         border: 1px solid $default-color;
+        outline-color: $primary-style-color;
         cursor: pointer;
 
         img {
@@ -34,11 +35,13 @@
     }
 
     .page-number {
+        outline-color: $primary-style-color;
         color: $default-color;
         cursor: pointer;
     }
 
     .page-number-active {
+        outline-color: $primary-style-color;
         color: var(--light-blue, $primary-style-color);
     }
 }

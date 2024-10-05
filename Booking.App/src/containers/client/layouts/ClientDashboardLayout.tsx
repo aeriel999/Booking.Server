@@ -1,4 +1,5 @@
-import "../../../css/DashBoardRealtorClasses/index.scss";
+//import "../../../css/DashBoardRealtorClasses/index.scss";
+import "../../../App.scss";
 import Logo from "../../../assets/Logo/tripbook 1.svg";
 import LogOut from "../../../assets/Icons/logout-03.svg";
 import ArrowBack from "../../../assets/DashboardIcons/chevron-left.svg";
@@ -11,8 +12,8 @@ import { APP_ENV } from "../../../env";
 import { changeDashboardMenuItem } from "../../../store/settings/settings.slice";
 import { IDashboardMenuItem } from "../../../interfaces/common";
 import { clientMenuData } from "../../../utils/data";
-import { Avatar } from "../../../components/common/Avatar/Avatar";
 import { Badge } from "@mui/material";
+import avatar from "../../../assets/Auth/image20.svg";
 
 export default function ClientDashboardLayout() {
     const { user } = useAppSelector((state) => state.account);
@@ -29,18 +30,16 @@ export default function ClientDashboardLayout() {
     const [currentMenuItem, setCurrentMenuItem] = useState<string>(
         currentBreadcrumbsItem
     ); //Item name for Breadcrumbs navigate
-    const [avatarUrl, setAvatarUrl] = useState<string>();
+    const [avatarUrl, setAvatarUrl] = useState<string | null>(null);
     const [isExpanded, setIsExpanded] = useState(false); //set and get menu expanded
 
     //Get and set avatar
     useEffect(() => {
         if (user) {
-
             if (user?.avatar != null) {
                 if (user?.avatar.slice(0, 5) == "https") {
                     setAvatarUrl(user?.avatar);
-                }
-                else {
+                } else {
                     setAvatarUrl(APP_ENV.BASE_URL + user?.avatar);
                 }
             }
@@ -56,9 +55,7 @@ export default function ClientDashboardLayout() {
             if (menuIndex !== -1) {
                 handleMenuClick(menuIndex);
             }
-
         }
-
     }, [currentBreadcrumbsItem]);
 
     //Menu navigate
@@ -98,16 +95,19 @@ export default function ClientDashboardLayout() {
                     </a>
                     {/* User Info */}
                     <div id="userInfo">
-                        {user!.avatar != null ? <div
+
+                        <div
                             id="avatar"
                             style={{
-                                background: `url(${avatarUrl}) center / cover no-repeat`,
+                                background: `url(${avatarUrl === null ? avatar : avatarUrl}) center / cover no-repeat`,
                             }}
-                        /> :
-                            <Avatar userName={user?.email!} />}
+                        />
+
 
                         <div id="name">
-                            {user?.firstName && user?.lastName ? `${user?.firstName} ${user?.lastName}` : user?.email}
+                            {user?.firstName && user?.lastName
+                                ? `${user?.firstName} ${user?.lastName}`
+                                : user?.email}
                         </div>
                     </div>
                 </div>
@@ -179,18 +179,18 @@ export default function ClientDashboardLayout() {
                             navigate("/authentication/login");
                         }}
                     >
-                        <><div id="line"></div>
+                        <>
+                            <div id="line"></div>
                             <div id="logOutButton">
                                 <img src={LogOut} alt="logOut" />
                                 <p>Log Out</p>
-                            </div></>
-
+                            </div>
+                        </>
                     </button>
                 </div>
 
                 {/* Dashboard Container */}
                 <div className="outlet">
-
                     <Outlet />
                 </div>
             </div>
@@ -198,4 +198,4 @@ export default function ClientDashboardLayout() {
     );
 }
 /*{status === Status.LOADING &&
-                        <Loading className="dashboardClientLoading" />}*/ 
+                        <Loading className="dashboardClientLoading" />}*/

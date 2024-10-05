@@ -595,6 +595,7 @@ public class PostController(ISender mediatr, IMapper mapper) : ApiController
 
 
 	[HttpGet("get-list-of-unactive-posts")]
+	[Authorize(Roles = "admin")]
 	public async Task<IActionResult> GetListOfPostsForModerationAsync([FromQuery] int page, int sizeOfPage)
 	{
 		var userId = User.Claims.First(u => u.Type == ClaimTypes.NameIdentifier).Value;
@@ -611,6 +612,7 @@ public class PostController(ISender mediatr, IMapper mapper) : ApiController
 	}
 
 	[HttpPost("activate-post")]
+	[Authorize(Roles = "admin")]
 	public async Task<IActionResult> ActivatePostAsync(ActivatePostRequest request)
 	{
 		string userId = User.Claims.First(u => u.Type == ClaimTypes.NameIdentifier).Value;

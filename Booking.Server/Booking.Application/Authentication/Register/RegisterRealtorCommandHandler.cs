@@ -22,7 +22,7 @@ public class RegisterRealtorCommandHandler(
 		if (errorOrUser.IsSuccess())
 			return Error.Validation("User with such email already exists");
 
-		//CreatePostPostTypeOfRestAsync
+		//Create user
 		var user = new User
 		{
 			Email = request.Email,

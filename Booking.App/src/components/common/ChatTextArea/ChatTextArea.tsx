@@ -1,6 +1,6 @@
 import '../../../css/ChatTextAreaClasses/index.scss';
 import SendIcon from "../../../assets/DashboardIcons/send.svg";
-import { useState } from 'react';
+import { useRef, useState } from 'react';
 import { connection } from '../../../SignalR';
 import { IChatMessageInfo, ISendMessage } from '../../../interfaces/chat';
 import { useForm } from 'react-hook-form';
@@ -18,6 +18,7 @@ interface IChatTextArea {
 export const ChatTextArea = (info: IChatTextArea) => {
     const user = useAppSelector((state: RootState) => state.account.user);
     const [textLength, setTextLength] = useState<number>(0);
+    const formRef = useRef<HTMLFormElement>(null);
 
     const {
         register,
@@ -63,10 +64,11 @@ export const ChatTextArea = (info: IChatTextArea) => {
     };
     return (
         <div className="chat-text-area">
-            <form onSubmit={handleSubmit(onSubmit)}>
+            <form ref={formRef} onSubmit={handleSubmit(onSubmit)}>
 
 
                 <textarea
+                    tabIndex={0}
                     {...register("message")}
                     placeholder="Message"
                     maxLength={info.maxLength}
@@ -74,8 +76,10 @@ export const ChatTextArea = (info: IChatTextArea) => {
                     onChange={handleChange}></textarea>
                 <div>
                     <button
+                        tabIndex={0}
                         type='submit'
-                        disabled={isSubmitting}> <img src={SendIcon} alt="" /></button>
+                        disabled={isSubmitting}
+                    > <img src={SendIcon} alt="" /></button>
                     <p>{textLength}/{info.maxLength}</p>
                 </div>
 

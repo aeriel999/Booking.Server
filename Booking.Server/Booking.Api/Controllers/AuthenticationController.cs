@@ -148,12 +148,6 @@ public class AuthenticationController(
 	}
 
 
-	[HttpGet("ping")]
-	public IActionResult Ping()
-	{
-		return Ok(DateTime.Now);
-	}
-
     [HttpGet("check-password-is-not-null")]
     public async Task<IActionResult>CheckPasswordIsNotNullAsync()
     {

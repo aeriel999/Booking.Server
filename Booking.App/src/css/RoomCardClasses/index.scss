@@ -122,16 +122,16 @@
             background: $primary-style-color;
             padding: 13px 32px;
             box-sizing: border-box;
-            outline: none;
+            //outline: none;
             border: none;
             margin-top: 52px;
             font-size: $normal-font-size;
             font-weight: $big-font-weight;
-            border: 1px solid transparent;
+            border: none;
             cursor: pointer;
 
             &:hover {
-                border-color: white;
+                background-color: $header-menu-background;
             }
         }
 

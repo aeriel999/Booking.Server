@@ -14,11 +14,12 @@ import { IReloadAvatar, IReloadImage } from "../../../interfaces/account";
 import { unwrapResult } from "@reduxjs/toolkit";
 import ErrorHandler from "../../../components/common/ErrorHandler";
 import "../../../css/ClientProfilePageClasses/index.scss";
+import avatar from "../../../assets/Auth/image20.svg";
 
 // APP
 export default function RealtorProfilePage() {
     const { user } = useAppSelector((state) => state.account);
-    const [avatarUrl, setAvatarUrl] = useState<string>();
+    const [avatarUrl, setAvatarUrl] = useState<string | null>(null);
     // const navigate = useNavigate();
     const dispatch = useAppDispatch();
     const [image, setImage] = useState<File | null>(null);
@@ -134,11 +135,10 @@ export default function RealtorProfilePage() {
                     />
                 </div>
             </div>
-
             <div
                 className="avatar"
                 style={{
-                    background: `url(${image === null ? avatarUrl : URL.createObjectURL(image)
+                    background: `url(${image === null ? avatarUrl === null ? avatar : avatarUrl : URL.createObjectURL(image)
                         }) center / cover no-repeat`,
                 }}
             >

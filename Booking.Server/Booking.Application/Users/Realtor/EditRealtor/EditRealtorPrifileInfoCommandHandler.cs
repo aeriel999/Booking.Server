@@ -32,12 +32,12 @@ public class EditRealtorPrifileInfoCommandHandler(
         if (request.FirstName != user.FirstName)
         {
             user.FirstName = request.FirstName;
-        }
+		}
 
         if (request.LastName != user.LastName)
         {
             user.LastName = request.LastName;
-        }
+		}
 
         if (request.PhoneNumber != user.PhoneNumber)
         {
@@ -71,25 +71,12 @@ public class EditRealtorPrifileInfoCommandHandler(
             var tokenForConfirmEmail = await userAuthenticationService.GenerateEmailChangeTokenAsync(
                 user, request.Email!);
 
-            //Make Link for email
-            string? userName;
+			//Make user name
+			var userName = await userRepository.GetUserNameByUserAsync(user);
 
-            if (string.IsNullOrEmpty(user.FirstName) || string.IsNullOrEmpty(user.LastName))
-            {
-                if (string.IsNullOrEmpty(user.LastName) && string.IsNullOrEmpty(user.FirstName))
-                    userName = request.Email;
-                else if (string.IsNullOrEmpty(user.LastName))
-                    userName = user.FirstName;
-                else
-                    userName = user.LastName;
-            }
-            else
-            {
-                userName = user.FirstName + " " + user.LastName;
-            }
-
-            var sendEmailResult = await emailService.SendChangeEmailEmailAsync(
-                request.Email!, tokenForConfirmEmail, request.BaseUrl, userName!, user.Id.ToString());
+			//Make Link for email
+			var sendEmailResult = await emailService.SendChangeEmailEmailAsync(
+                request.Email!, tokenForConfirmEmail, request.BaseUrl, userName, user.Id.ToString());
 
             if (sendEmailResult.IsError) return sendEmailResult.Errors;
 
