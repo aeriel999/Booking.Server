@@ -38,7 +38,7 @@ const updateLoginUserState = (state: IAccountState, token: string): void => {
         ];
     const id = decodedToken["sub"];
     const headerImage = decodedToken["ProfileHeaderImage"];
-   
+    
     const firstName = decodedToken["given_name"];
     const lastName = decodedToken["family_name"];
 
@@ -62,7 +62,7 @@ const updateLoginUserState = (state: IAccountState, token: string): void => {
             avatar: "/images/avatars/" + avatar,
             rating: Number(rating),
             profileHeaderImage:
-                headerImage === null ? null : "/images/avatars/" + headerImage,
+                headerImage === "" ? null : "/images/avatars/" + headerImage,
         };
     } else if(role === "admin"){
         state.user = {

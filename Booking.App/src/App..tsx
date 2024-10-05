@@ -40,7 +40,6 @@ import {
     setOutcomeMessagesReadedChatId,
     setNewMessage,
     setDeletedChatId,
-    setNewMessageToClient,
     setDeletedChatIdToArr,
 } from "./store/chat/chat.slice.ts";
 import { IGetMessage } from "./interfaces/chat/index.ts";
@@ -78,9 +77,9 @@ export const App: React.FC = () => {
         await dispatch(setOutcomeMessagesReadedChatId(id));
     };
 
-    const setDeletedChatIdRedux = async (roomId: string) => {
-        await dispatch(setDeletedChatId(roomId));
-    };
+    // const setDeletedChatIdRedux = async (roomId: string) => {
+    //     await dispatch(setDeletedChatId(roomId));
+    // };
     const addDeletedIdToArrRedux = async (roomId: string) => {
         await dispatch(setDeletedChatIdToArr(roomId));
     };
@@ -194,10 +193,9 @@ export const App: React.FC = () => {
         } else {
             await connection.start().then(async () => {
                 await connection.send("LeaveRoom", { roomId });
-            })
+            });
         }
-    }
-
+    };
 
     if (isLogin && (role() === "realtor" || role() === "user")) {
         startConnectionWithSignalR();
@@ -324,7 +322,7 @@ export const App: React.FC = () => {
                                 path="/admin/users"
                                 element={<UsersModeration />}
                             />
-                            
+
                             <Route
                                 path="/admin/realtors"
                                 element={<RealtorsModeration />}

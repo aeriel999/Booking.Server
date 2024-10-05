@@ -3,11 +3,8 @@ import { APP_ENV } from "../../env";
 import { useEffect, useState } from "react";
 import HeaderImg from "../../assets/Templates/Rectangle-50.webp";
 import Upload from "../../assets/DashboardIcons/camera-01.svg";
-// import Edit from "../../assets/DashboardIcons/Icon.svg";
-// import Lock from "../../assets/DashboardIcons/lock-02.svg";
 import HeaderUpload from "../../assets/DashboardIcons/mdi_pencil-outline.svg";
 import { Rating } from "@mui/material";
-//import { useNavigate } from "react-router-dom";
 import { AvatarValidator } from "../../validations/account";
 import OutlinedErrorAlert from "../../components/common/ErrorAlert";
 import {
@@ -18,12 +15,10 @@ import { IReloadAvatar, IReloadImage } from "../../interfaces/account";
 import { unwrapResult } from "@reduxjs/toolkit";
 import ErrorHandler from "../../components/common/ErrorHandler";
 
-// APP
 export default function RealtorProfilePage() {
     const { user } = useAppSelector((state) => state.account);
     const [avatarUrl, setAvatarUrl] = useState<string>();
     const [rating, setRating] = useState<number>(user?.rating ?? 0);
-    // const navigate = useNavigate();
     const dispatch = useAppDispatch();
     const [image, setImage] = useState<File | null>(null);
     const [headerUrl, setHeaderUrl] = useState<string | null>(null);
@@ -37,6 +32,7 @@ export default function RealtorProfilePage() {
 
             setRating(user?.rating ?? 0);
 
+            console.log("user.profileHeaderImage", user.profileHeaderImage);
             if (user.profileHeaderImage !== null) {
                 setHeaderUrl(APP_ENV.BASE_URL + user.profileHeaderImage);
             } else {
@@ -71,20 +67,13 @@ export default function RealtorProfilePage() {
     };
 
     const handleOnReloadHeaderImage = async (
-        e: React.ChangeEvent<HTMLInputElement>
-    ) => {
+        e: React.ChangeEvent<HTMLInputElement>) => {
         if (!e.target.files) return;
 
         const file = e.target.files[0];
 
-        console.log("file", file);
-
-        // const errorMessage = AvatarValidator(file);
-
         if (!errorMessage) {
             setErrorMessage(undefined);
-
-            // setImage(file);
 
             const headerImage: IReloadImage = { profileHeaderImage: file };
 
