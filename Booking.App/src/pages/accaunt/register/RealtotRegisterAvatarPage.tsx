@@ -22,24 +22,32 @@ export default function RealtorRegisterAvatarPage() {
     );
 
     const handleSubmit = async () => {
-        if (registerData) {
-            const model: IRealtorRegister = {
-                ...registerData,
-                avatar: image,
-            };
+        setErrorMessage(undefined);
+        console.log("Avatar");
+        if (image) {
+            if (registerData) {
+                const model: IRealtorRegister = {
+                    ...registerData,
+                    avatar: image,
+                };
 
-            try {
-                const response = await dispatch(realtorRegister(model));
-                unwrapResult(response);
+                try {
+                    const response = await dispatch(realtorRegister(model));
+                    unwrapResult(response);
 
-                navigate(`/authentication/register-information/${model.email}`);
-            } catch (error) {
-                setErrorMessage(ErrorHandler(error));
+                    navigate(
+                        `/authentication/register-information/${model.email}`
+                    );
+                } catch (error) {
+                    setErrorMessage(ErrorHandler(error));
+                }
+            } else {
+                setErrorMessage(
+                    "Looks like something went wrong. Please go back and try again."
+                );
             }
         } else {
-            setErrorMessage(
-                "Looks like something went wrong. Please go back and try again."
-            );
+            setErrorMessage("Please upload an avatar.");
         }
     };
 
@@ -66,6 +74,7 @@ export default function RealtorRegisterAvatarPage() {
 
                     <button
                         onClick={handleSubmit}
+                        disabled={image !== null}
                         className={`endRegisterButton ${image ? "active" : ""}`}
                     >
                         Complete Registration

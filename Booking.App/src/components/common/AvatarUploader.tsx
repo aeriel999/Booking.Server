@@ -1,13 +1,8 @@
 import React, { useState } from "react";
 import OutlinedErrorAlert from "./ErrorAlert.tsx";
 import UserAvatar from "../../assets/Auth/image20.svg";
-import "../../css/AuthenticationClasses/index.scss"
-
-type AvatarUploadProps = {
-    image: File | null | undefined;
-    setImage: (file: File | null) => void;
-    validator: (value: File) => string | false | undefined;
-};
+import "../../css/AuthenticationClasses/index.scss";
+import { AvatarUploadProps } from "../../utils/types/index.ts";
 
 const AvatarUploader = (props: AvatarUploadProps) => {
     const [error, setError] = useState<string | false | undefined>(false);
@@ -19,6 +14,7 @@ const AvatarUploader = (props: AvatarUploadProps) => {
         const errorMessage = props.validator(file);
 
         setError(errorMessage);
+
         if (!errorMessage) {
             props.setImage(file);
         }
@@ -31,20 +27,23 @@ const AvatarUploader = (props: AvatarUploadProps) => {
     return (
         <>
             {error && <OutlinedErrorAlert message={error} />}
+
             <div id="avatarUpload">
-            <div
-                        style={{
-                            width: "220px",
-                            height: "220px",
-                            borderRadius: "50%",
-                            overflow: "hidden",
-                            background: `url(${displayImage}) center / cover no-repeat`,
-                            alignSelf: "stretch",
-                        }}
-                    />
+            <label htmlFor="avatar-upload">
+                <div
+                    style={{
+                        width: "220px",
+                        height: "220px",
+                        borderRadius: "50%",
+                        overflow: "hidden",
+                        background: `url(${displayImage}) center / cover no-repeat`,
+                        alignSelf: "stretch",
+                    }}
+                />
+                </label>
 
                 <label htmlFor="avatar-upload">
-                    <a  id="uploadAvatarButton">
+                    <a id="uploadAvatarButton">
                         {props.image ? "Change Avatar" : "Upload Avatar"}
                     </a>
                     <input

@@ -1,14 +1,10 @@
 @import "../variables.scss";
 
-.errorContainer {
-    margin-bottom: 20px;
-}
 
 .profileMainContainer {
     display: flex;
     flex-direction: column;
     justify-content: start;
-    //  align-items: center;
     width: 100%;
 
     .header {
@@ -16,7 +12,6 @@
         min-height: 200px;
         flex-shrink: 0;
         border-radius: 10px;
-        //  position: "relative";
         display: flex;
 
         #reload {

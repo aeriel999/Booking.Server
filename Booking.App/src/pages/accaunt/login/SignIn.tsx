@@ -1,4 +1,4 @@
-import "../../../css/AuthenticationClasses/index.scss"; // Import your CSS file
+import "../../../css/AuthenticationClasses/index.scss";  
 import { useForm } from "react-hook-form";
 import InputField from "../../../components/common/InputField";
 import { IGoogleLogin, ILogin } from "../../../interfaces/account";
@@ -16,7 +16,6 @@ import Header from "../../../components/authentification/Header.tsx";
 import { changeDashboardMenuItem } from "../../../store/settings/settings.slice.ts";
 import { RootState } from "../../../store/index.ts";
 import {
-    GetGeneralCountOfUnreadedMessages,
     getChatIdList,
     getNumberOfUnleastMessages,
     getPostIdListForListeningChatsByRealtor,
@@ -24,15 +23,8 @@ import {
 
 export default function SignInPage() {
     const dispatch = useAppDispatch();
-    const savedPath = useAppSelector(
-        (state: RootState) => state.settings.savedPath
-    );
-    const unreadMessages = useAppSelector(
-        (state: RootState) => state.chat.generalNumberOfUnreadMessages
-    );
-    const [errorMessage, setErrorMessage] = useState<string | undefined>(
-        undefined
-    );
+    const savedPath = useAppSelector((state: RootState) => state.settings.savedPath);
+    const [errorMessage, setErrorMessage] = useState<string | undefined>(undefined);
     const navigate = useNavigate();
 
     const {
@@ -42,24 +34,11 @@ export default function SignInPage() {
         setValue,
     } = useForm<ILogin>({ resolver: loginResolver });
 
-    const onSubmit = async (data: ILogin) => {
+    //Get list of Id for listening chats
+    const getListOfChatsIdForListening = async () => {
         try {
-            const response = await dispatch(login(data));
-            unwrapResult(response);
-            await afterLogin(response.payload);
-        } catch (error) {
-            setErrorMessage(ErrorHandler(error));
-        }
-    };
-
-    const handleLoginSuccess = async (response: CredentialResponse) => {
-        const token: IGoogleLogin = {
-            googleToken: response.credential as string,
-        };
-        try {
-            const resp = await dispatch(googleLogin(token));
-            unwrapResult(resp);
-            await afterLogin(resp.payload.token);
+            const getChatIdListResult = await dispatch(getChatIdList());
+            unwrapResult(getChatIdListResult);
         } catch (error) {
             setErrorMessage(ErrorHandler(error));
         }
@@ -74,8 +53,10 @@ export default function SignInPage() {
             ];
 
         if (role.toLowerCase().includes("realtor")) {
+            //Set menu item
             dispatch(changeDashboardMenuItem("Profile"));
             navigate("/dashboard/profile");
+
             try {
                 //Get number of new messages
                 const getNumberOfUnleastMessagesResult = await dispatch(
@@ -87,26 +68,54 @@ export default function SignInPage() {
                 const getPostIdListForListeningChatsByRealtorResult =
                     await dispatch(getPostIdListForListeningChatsByRealtor());
                 unwrapResult(getPostIdListForListeningChatsByRealtorResult);
+
+                getListOfChatsIdForListening();
             } catch (error) {
                 setErrorMessage(ErrorHandler(error));
             }
+
         } else if (role.toLowerCase().includes("user")) {
             navigate(savedPath);
+
+            getListOfChatsIdForListening();
+
         } else if (role.toLowerCase().includes("admin")) {
+            dispatch(changeDashboardMenuItem("Moderation"));
+
             navigate("/admin/moderation");
+
         } else {
-            navigate("/#");
+            navigate("/");
         }
+    };
+
+    const onSubmit = async (data: ILogin) => {
+        setErrorMessage(undefined);
 
         try {
-            //Get list of Id for listening chats
-            const getChatIdListResult = await dispatch(getChatIdList());
-            unwrapResult(getChatIdListResult);
+            const response = await dispatch(login(data));
+            unwrapResult(response);
+            await afterLogin(response.payload);
         } catch (error) {
             setErrorMessage(ErrorHandler(error));
         }
     };
 
+    const handleLoginSuccess = async (response: CredentialResponse) => {
+        setErrorMessage(undefined);
+
+        const token: IGoogleLogin = {
+            googleToken: response.credential as string,
+        };
+
+        try {
+            const resp = await dispatch(googleLogin(token));
+            unwrapResult(resp);
+            await afterLogin(resp.payload.token);
+        } catch (error) {
+            setErrorMessage(ErrorHandler(error));
+        }
+    };
     return (
         <div className="content">
             <Header />
@@ -201,7 +210,7 @@ export default function SignInPage() {
                         <a href="#">Privacy Policy</a>.
                     </p>
                     <p>
-                        Усі права захищено. <br />
+                        All rights reserved. <br />
                         Copyryight (2024 - 2024) - TripBook.com
                     </p>
                 </div>

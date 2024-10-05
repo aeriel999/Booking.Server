@@ -6,8 +6,13 @@ import Reviews from "../../assets/DashboardIcons/user-profile-square.svg";
 import Settings from "../../assets/DashboardIcons/gear.svg";
 import ActiveUserProfiler from "../../assets/DashboardIcons/Active/user-profile-03.svg";
 import UserProfiler from "../../assets/DashboardIcons/user-profile-03.svg";
-import AllPost from "../../assets/DashboardIcons/image-01.svg";
+import AllPost from "../../assets/DashboardIcons/AllPost.svg";
 import { IDashboardMenuItem } from "../../interfaces/common";
+import ActiveSettings from "../../assets/DashboardIcons/Active/Active_Settings.svg";
+import ActiveReviews from "../../assets/DashboardIcons/Active/user-profile-square.svg";
+import ActiveArchive from "../../assets/DashboardIcons/Active/ActiveArchive.svg";
+import ActiveInbox from "../../assets/DashboardIcons/Active/ActiveInbox.svg";
+import ActiveAllPost from "../../assets/DashboardIcons/Active/ActiveAllPost.svg";
 
 export const initialMenuData: IDashboardMenuItem[] = [
     {
@@ -21,7 +26,7 @@ export const initialMenuData: IDashboardMenuItem[] = [
         name: "All Posts",
         isActive: false,
         image: AllPost,
-        activeImage: AllPost,
+        activeImage: ActiveAllPost,
         link: "/dashboard/show-all-post",
     },
     {
@@ -35,29 +40,29 @@ export const initialMenuData: IDashboardMenuItem[] = [
         name: "Archive",
         isActive: false,
         image: Archive,
-        activeImage: Archive,
+        activeImage: ActiveArchive,
         link: "/dashboard/archive",
     },
     {
         name: "Inbox",
         isActive: false,
         image: Inbox,
-        activeImage: Inbox,
+        activeImage: ActiveInbox,
         link: "/dashboard/chat",
-        counterOfMsg: true
+        counterOfMsg: true,
     },
     {
         name: "Reviews",
         isActive: false,
         image: Reviews,
-        activeImage: Reviews,
+        activeImage: ActiveReviews,
         link: "/dashboard/reviews",
     },
     {
         name: "Settings",
         isActive: false,
         image: Settings,
-        activeImage: Settings,
+        activeImage: ActiveSettings,
         link: "/dashboard/profile/edit",
     },
 ];
@@ -66,7 +71,7 @@ export const adminInitialMenuData: IDashboardMenuItem[] = [
         name: "Moderation",
         isActive: false,
         image: AllPost,
-        activeImage: AllPost,
+        activeImage: ActiveAllPost,
         link: "/admin/moderation",
     },
     {
@@ -82,7 +87,7 @@ export const adminInitialMenuData: IDashboardMenuItem[] = [
         image: UserProfiler,
         activeImage: ActiveUserProfiler,
         link: "/admin/realtors",
-        counterOfMsg: true
+        counterOfMsg: true,
     },
 ];
 
@@ -98,22 +103,22 @@ export const clientMenuData: IDashboardMenuItem[] = [
         name: "My feedbacks",
         isActive: false,
         image: Reviews,
-        activeImage: Reviews,
+        activeImage: ActiveReviews,
         link: "/dashboard/profile/history-of-feedbacks",
     },
     {
         name: "Messages",
         isActive: false,
         image: Inbox,
-        activeImage: Inbox,
+        activeImage: ActiveInbox,
         link: "/dashboard/profile/page-of-messages",
-        counterOfMsg: true
+        counterOfMsg: true,
     },
     {
         name: "Settings",
         isActive: false,
         image: Settings,
-        activeImage: Settings,
+        activeImage: ActiveSettings,
         link: "/dashboard/profile/edit",
     },
 ];

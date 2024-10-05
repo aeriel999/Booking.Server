@@ -20,6 +20,7 @@ import { IChangePassword } from "../../interfaces/user/index.ts";
 import { changePassword } from "../../store/users/user.action.ts";
 import { logout } from "../../store/accounts/account.slice.ts";
 import { changeDashboardMenuItem } from "../../store/settings/settings.slice.ts";
+import { Loading } from "../../components/common/Loading/Loading.tsx";
 
 export default function RealtorProfileEditPage() {
     const { user } = useAppSelector((state) => state.account);
@@ -30,6 +31,7 @@ export default function RealtorProfileEditPage() {
     const [isPhoneValid, setIsPhoneValid] = useState(true);
     const [phone, setPhone] = useState<string>(user?.phoneNumber ?? "");
     const [open, setOpen] = useState<boolean>(false);
+    const [loading, setLoading] = useState<boolean>(false);
     const message =
         "Please note that your email will be changed once you confirm the update. " +
         "We'll send a confirmation link to your new email address shortly. Thank you for your patience.";
@@ -50,9 +52,13 @@ export default function RealtorProfileEditPage() {
     } = useForm<IChangePassword>({ resolver: changePasswordResolver });
 
     const onProfileDataSubmit = async (data: IEditRealtorInfo) => {
+        setLoading(true);
+
         if (!isPhoneValid) {
             return;
         }
+
+        setErrorMessage(undefined);
 
         const model: IEditRealtorInfo = {
             ...data,
@@ -77,6 +83,9 @@ export default function RealtorProfileEditPage() {
     };
 
     const onPasswordChangeSubmit = async (data: IChangePassword) => {
+        setErrorMessage(undefined);
+        setLoading(true);
+
         try {
             const response = await dispatch(changePassword(data));
             unwrapResult(response);
@@ -91,13 +100,17 @@ export default function RealtorProfileEditPage() {
 
     return (
         <>
-                {errorMessage && 
-                     <div className="errorContainer">
+            {errorMessage && (
+                <div className="errorContainer">
                     <OutlinedErrorAlert
                         message={errorMessage}
                         textColor="#000"
-                    /></div>}
-           
+                    />
+                </div>
+            )}
+
+            {loading && <Loading />}
+
             <div className="twoColumnsContainer">
                 {open && (
                     <CustomizedDialogs
@@ -105,7 +118,9 @@ export default function RealtorProfileEditPage() {
                         isOpen={open}
                         setOpen={setOpen}
                         navigate={"/dashboard/profile"}
-                        menuItem="Profile" lable={""}                    />
+                        menuItem="Profile"
+                        lable={""}
+                    />
                 )}
 
                 <div className="textInputsContainer">
@@ -238,7 +253,7 @@ export default function RealtorProfileEditPage() {
                             <InputField
                                 placeholder="Confirm Password"
                                 type="password"
-                                name="confirmPassword"
+                                name="confirmNewPassword"
                                 register={registerPassword}
                                 setValue={setValuePassword}
                                 className={
