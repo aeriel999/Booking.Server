@@ -23,7 +23,6 @@ export const ChatTextArea = (info: IChatTextArea) => {
     const {
         register,
         handleSubmit,
-        getValues,
         formState: { isSubmitting, errors },
         setValue,
         reset
