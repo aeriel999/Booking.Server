@@ -129,7 +129,7 @@ export default function ArchivePage() {
                     </TableHead>
                     <TableBody>
                         {rows?.map((row) => (
-                            <>
+                             
                                 <StyledTableRow key={row.id}>
                                     <StyledTableCell >
                                         {row.category}
@@ -185,7 +185,7 @@ export default function ArchivePage() {
                                         </Button>
                                     </StyledTableCell>
                                 </StyledTableRow>
-                            </>
+                             
                         ))}
                         {emptyRows > 0 && (
                             <TableRow style={{ height: 53 * emptyRows }}>

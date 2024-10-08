@@ -29,9 +29,7 @@ export default function AllPostList() {
     const [rowsPerPage, setRowsPerPage] = useState(5);
     const [totalCount, setTotalCount] = useState(0);
     const [rows, setRows] = useState<IPostInfoForRealtor[]>();
-    const [errorMessage, setErrorMessage] = useState<string | undefined>(
-        undefined
-    );
+    const [errorMessage, setErrorMessage] = useState<string | undefined>(undefined);
     const dispatch = useAppDispatch();
     const navigate = useNavigate();
     const [isDialogOpen, setIsDialogOpen] = useState(false);
@@ -56,9 +54,12 @@ export default function AllPostList() {
     };
 
     const getDataForPage = async (model: IFetchData) => {
+        setErrorMessage(undefined);
+
         try {
             const response = await dispatch(getListPostsForRealtor(model));
             unwrapResult(response);
+
             return response;
         } catch (error) {
             setErrorMessage(ErrorHandler(error));
@@ -138,11 +139,12 @@ export default function AllPostList() {
                                             : "-"}
                                     </StyledTableCell>
 
-                                    <StyledTableCell>
+                                    <StyledTableCell 
+                                         style={{color: !row.isActive ? "red" : ""}}>
                                         {row.isActive ? "Yes" : "No"}
                                     </StyledTableCell>
 
-                                    <StyledTableCell>
+                                    <StyledTableCell >
                                         {row.isArhive ? "Yes" : "No"}
                                     </StyledTableCell>
 

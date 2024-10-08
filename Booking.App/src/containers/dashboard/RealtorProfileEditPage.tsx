@@ -25,9 +25,7 @@ import { Loading } from "../../components/common/Loading/Loading.tsx";
 export default function RealtorProfileEditPage() {
     const { user } = useAppSelector((state) => state.account);
     const dispatch = useAppDispatch();
-    const [errorMessage, setErrorMessage] = useState<string | undefined>(
-        undefined
-    );
+    const [errorMessage, setErrorMessage] = useState<string | undefined>(undefined);
     const [isPhoneValid, setIsPhoneValid] = useState(true);
     const [phone, setPhone] = useState<string>(user?.phoneNumber ?? "");
     const [open, setOpen] = useState<boolean>(false);
@@ -84,6 +82,7 @@ export default function RealtorProfileEditPage() {
 
     const onPasswordChangeSubmit = async (data: IChangePassword) => {
         setErrorMessage(undefined);
+
         setLoading(true);
 
         try {
@@ -99,7 +98,7 @@ export default function RealtorProfileEditPage() {
     };
 
     return (
-        <>
+        <div style={{ position: "relative" }}>
             {errorMessage && (
                 <div className="errorContainer">
                     <OutlinedErrorAlert
@@ -125,7 +124,7 @@ export default function RealtorProfileEditPage() {
 
                 <div className="textInputsContainer">
                     <div className="title">Edit Profile</div>
-
+                    
                     <form
                         onSubmit={handleSubmitProfile(onProfileDataSubmit)}
                         className="formContainer"
@@ -299,6 +298,6 @@ export default function RealtorProfileEditPage() {
                     </form>
                 </div>
             </div>
-        </>
+        </div>
     );
 }

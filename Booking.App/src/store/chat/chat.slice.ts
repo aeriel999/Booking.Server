@@ -282,7 +282,7 @@ export const chatSlice = createSlice({
                 state.status = Status.SUCCESS;
             })
             .addCase(setMessagesReadtByChatId.pending, (state) => {
-                //state.status = Status.LOADING;
+                state.status = Status.LOADING;
             })
             .addCase(deleteChatById.fulfilled, (state) => {
                 state.status = Status.SUCCESS;

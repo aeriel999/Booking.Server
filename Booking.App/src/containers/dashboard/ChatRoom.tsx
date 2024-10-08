@@ -1,10 +1,9 @@
 import { styled } from "@mui/system";
 import { IChatItem, IChatInfo, IChatMessageInfo } from "../../interfaces/chat";
-import { Avatar, Button } from "@mui/material";
+import { Avatar } from "@mui/material";
 import { useAppSelector } from "../../hooks/redux";
 
 import "../../css/DashBoardAnonymousClasses/index.scss";
-import Trash from "../../assets/DashboardIcons/mdi_trash-outline.svg";
 import { useDispatch } from "react-redux";
 import { AppDispatch } from "../../store";
 import { useEffect, useRef, useState } from "react";
@@ -49,7 +48,9 @@ export default function ChatRoom() {
     const [message, setMessage] = useState<IChatMessageInfo>();
     const [isDialogOpen, setIsDialogOpen] = useState<boolean>(false);
     const [deletedChatId, setDeletedChatId] = useState<string | null>(null);
-    const deletedChatRooms = useAppSelector((state) => state.chat.deletedChatRooms);
+    const deletedChatRooms = useAppSelector(
+        (state) => state.chat.deletedChatRooms
+    );
     const [isDeletePostChat, setIsDeletePostChat] = useState<boolean>(false);
     const {
         newMessage,
@@ -61,15 +62,15 @@ export default function ChatRoom() {
     const [openChatId, setOpenChatId] = useState<string | null>(null);
     const [chatIsDeleted, setChatIsDeleted] = useState<boolean>(false);
 
-    const leaveRoom = async (roomId: string) => {
-        if (connection.state === signalR.HubConnectionState.Connected) {
-            await connection.send("Leave", { roomId });
-        } else {
-            await connection.start().then(async () => {
-                await connection.send("Leave", { roomId });
-            })
-        }
-    }
+    // const leaveRoom = async (roomId: string) => {
+    //     if (connection.state === signalR.HubConnectionState.Connected) {
+    //         await connection.send("Leave", { roomId });
+    //     } else {
+    //         await connection.start().then(async () => {
+    //             await connection.send("Leave", { roomId });
+    //         });
+    //     }
+    // };
 
     const handleChatToggle = (chatId: string) => {
         // Toggle the chat open/close
@@ -176,10 +177,12 @@ export default function ChatRoom() {
         setErrorMessage(undefined);
 
         if (chatInfo?.chatId) {
-            if (deletedChatRooms && deletedChatRooms.find((element) => element == chatInfo.chatId)) {
+            if (
+                deletedChatRooms &&
+                deletedChatRooms.find((element) => element == chatInfo.chatId)
+            ) {
                 setChatIsDeleted(true);
-            }
-            else {
+            } else {
                 setChatIsDeleted(false);
                 dispatch(setChatRoomId(chatInfo?.chatId));
                 getMessageList(chatInfo?.chatId).then((data) => {
@@ -241,10 +244,10 @@ export default function ChatRoom() {
                 prevPostChatList.map((chatItem) =>
                     chatItem.id === getingMessageInfo.postId
                         ? {
-                            ...chatItem,
-                            numberOfUnreadMessages:
-                                (chatItem.numberOfUnreadMessages || 0) + 1,
-                        }
+                              ...chatItem,
+                              numberOfUnreadMessages:
+                                  (chatItem.numberOfUnreadMessages || 0) + 1,
+                          }
                         : chatItem
                 )
             );
@@ -303,16 +306,19 @@ export default function ChatRoom() {
     useEffect(() => {
         const leave = async () => {
             if (deletedChatRooms && chatInfo) {
-                console.log(deletedChatRooms)
-                if (deletedChatRooms.find((element) => element == chatInfo.chatId)) {
+                console.log(deletedChatRooms);
+                if (
+                    deletedChatRooms.find(
+                        (element) => element == chatInfo.chatId
+                    )
+                ) {
                     //await leaveRoom(chatInfo.chatId);
                     setChatIsDeleted(true);
                 }
             }
-        }
+        };
         leave();
-
-    }, [deletedChatRooms])
+    }, [deletedChatRooms]);
 
     return (
         <div className="chatRoom">
@@ -326,7 +332,7 @@ export default function ChatRoom() {
                     }}
                     //  navigate={"/dashboard/chat"}
                     lable="Deleting chat"
-                //  menuItem="All Posts"
+                    //  menuItem="All Posts"
                 />
             )}
 
@@ -353,7 +359,9 @@ export default function ChatRoom() {
                     ))}
             </div>
             <div className="chatContainer">
-                {chatIsDeleted == true ? <ChatRoomIsDeleted /> : (
+                {chatIsDeleted == true ? (
+                    <ChatRoomIsDeleted />
+                ) : (
                     <>
                         {errorMessage && (
                             <OutlinedErrorAlert
@@ -399,7 +407,9 @@ export default function ChatRoom() {
                                                     )
                                                 )
                                             ) : (
-                                                <div>No read messages available</div>
+                                                <div>
+                                                    No read messages available
+                                                </div>
                                             )}
                                             <div id="Ref" ref={messageEndRef} />
                                         </div>
@@ -417,7 +427,6 @@ export default function ChatRoom() {
                         )}
                     </>
                 )}
-
             </div>
         </div>
     );

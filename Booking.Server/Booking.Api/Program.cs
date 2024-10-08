@@ -57,7 +57,7 @@ BookingInitializer.SeedPostDataAsync(app);
 
 //For SignalR
 app.UseDefaultFiles();
-app.UseCors("reactApp");
+//app.UseCors("reactApp");
 
 app.MapHub<ChatHub>("/chat", options =>
 {

@@ -67,7 +67,8 @@ export default function RealtorProfilePage() {
     };
 
     const handleOnReloadHeaderImage = async (
-        e: React.ChangeEvent<HTMLInputElement>) => {
+        e: React.ChangeEvent<HTMLInputElement>
+    ) => {
         if (!e.target.files) return;
 
         const file = e.target.files[0];
@@ -108,7 +109,17 @@ export default function RealtorProfilePage() {
                 }}
             >
                 <div id="reload">
-                    <label htmlFor="header-upload">
+                    <label
+                        htmlFor="header-upload"
+                        tabIndex={0}
+                        onKeyDown={(e) => {
+                            if (e.key === "Enter") {
+                                document
+                                    .getElementById("header-upload")
+                                    ?.click();
+                            }
+                        }}
+                    >
                         <img src={HeaderUpload} alt="HeaderUpload" />
                     </label>
                     <input
@@ -129,7 +140,16 @@ export default function RealtorProfilePage() {
                     }) center / cover no-repeat`,
                 }}
             >
-                <label className="uploadIcon" htmlFor="avatar-upload">
+                <label
+                    className="uploadIcon"
+                    htmlFor="avatar-upload"
+                    tabIndex={0}
+                    onKeyDown={(e) => {
+                        if (e.key === "Enter") {
+                            document.getElementById("avatar-upload")?.click();
+                        }
+                    }}
+                >
                     <img id="logo" src={Upload} alt="Upload" />
                 </label>
                 <input

@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useRef, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { ChatTextArea } from '../../../components/common/ChatTextArea/ChatTextArea';
 import '../../../css/ChatRoom/index.scss';
 import { Message } from '../Message/Message';
@@ -34,7 +34,7 @@ export const ChatRoom = (info: IChatRoom) => {
     const [messages, setMessages] = useState<IChatMessageInfo[]>([]);
     const [numberOfUnreadMessages, setNumberOfUnreadMessages] =
         useState<number>(0);
-    const [errorMessage, setErrorMessage] = useState<string | undefined>(
+    const [_errorMessage, setErrorMessage] = useState<string | undefined>(
         undefined
     );
     const [isDialogOpen, setIsDialogOpen] = useState<boolean>(false);

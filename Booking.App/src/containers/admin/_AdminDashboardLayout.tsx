@@ -40,7 +40,7 @@ export default function AdminDashboardLayout() {
     const [currentMenuItem, setCurrentMenuItem] = useState<string>(
         currentBreadcrumbsItem
     ); //Item name for Breadcrumbs navigate
-    const [avatarUrl, setAvatarUrl] = useState<string>();
+    const [_avatarUrl, setAvatarUrl] = useState<string>();
     const [isExpanded, setIsExpanded] = useState(false); //set and get menu expanded
 
     //Get and set avatar

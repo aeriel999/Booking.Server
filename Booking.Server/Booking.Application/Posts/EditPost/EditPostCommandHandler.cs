@@ -130,6 +130,12 @@ public class EditPostCommandHandler(
 			post.Price = request.Price;
 		}
 
+		//Discount
+		if (request.Discount != post.Discount)
+		{
+			post.Discount = request.Discount;
+		}
+
 		post.IsActive = user.Rating >= 4.5 ? true : false;
 
 		post.EditAt = DateTime.Now.ToUniversalTime();

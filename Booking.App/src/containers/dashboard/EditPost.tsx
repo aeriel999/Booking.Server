@@ -1,6 +1,6 @@
 import { useNavigate, useParams } from "react-router-dom";
 import ComboBox from "../../components/common/ComboBox.tsx";
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { useAppDispatch, useAppSelector } from "../../hooks/redux";
 import { unwrapResult } from "@reduxjs/toolkit";
 import {
@@ -105,9 +105,7 @@ export function EditPost() {
     const [defaultRooms, setDefaultRooms] = useState<IRoomInfo[] | null>([]);
     const [deletedRooms, setDeletedRooms] = useState<string[] | null>([]);
 
-    useEffect(() => {
-        console.log("defaultRooms", defaultRooms);
-    }, [defaultRooms]);
+    const topOfPage = useRef<HTMLDivElement>(null);
 
     const {
         register,
@@ -116,10 +114,19 @@ export function EditPost() {
         setValue,
     } = useForm<IPostEdit>({ resolver: editPostResolver });
 
+    const scrollToTop = () => {
+        if (topOfPage.current) {
+            topOfPage.current.scrollIntoView({ behavior: "smooth" });
+        }
+    };
+
     const getPost = async (id: string) => {
+        setErrorMessage(undefined);
+
         try {
             const response = await dispatch(getPostForEditById(id));
             unwrapResult(response);
+
             return response;
         } catch (error) {
             setErrorMessage(ErrorHandler(error));
@@ -128,9 +135,12 @@ export function EditPost() {
 
     //Methods for geting data for comboboxes and checkboxes
     const getCategoryList = async () => {
+        setErrorMessage(undefined);
+
         try {
             const response = await dispatch(getListOfCategories());
             unwrapResult(response);
+
             return response;
         } catch (error) {
             setErrorMessage(ErrorHandler(error));
@@ -138,6 +148,8 @@ export function EditPost() {
     };
 
     const getCountryList = async () => {
+        setErrorMessage(undefined);
+
         try {
             const response = await dispatch(getListOfCountries());
             unwrapResult(response);
@@ -148,6 +160,8 @@ export function EditPost() {
     };
 
     const getCityList = async (countryId: string) => {
+        setErrorMessage(undefined);
+
         try {
             const response = await dispatch(
                 getListOfCitiesByCountryId(countryId)
@@ -160,6 +174,8 @@ export function EditPost() {
     };
 
     const getStreetList = async (cityId: string) => {
+        setErrorMessage(undefined);
+
         try {
             const response = await dispatch(getListOfStreetsByCityId(cityId));
             unwrapResult(response);
@@ -170,6 +186,8 @@ export function EditPost() {
     };
 
     const getTypeofRestList = async () => {
+        setErrorMessage(undefined);
+
         try {
             const response = await dispatch(getListOfTypesOfRest());
             unwrapResult(response);
@@ -180,6 +198,8 @@ export function EditPost() {
     };
 
     const getServicesList = async () => {
+        setErrorMessage(undefined);
+
         try {
             const response = await dispatch(getListOfServices());
             unwrapResult(response);
@@ -345,8 +365,6 @@ export function EditPost() {
     }, [city]);
 
     const onSubmit = async (data: IPostEdit) => {
-        console.log("model", data);
-
         if (!category) {
             setIsCategoryValid(false);
             return;
@@ -373,6 +391,8 @@ export function EditPost() {
             (isCityValid || isCityExist) &&
             (isStreetValid || isStreetExist)
         ) {
+            scrollToTop();
+
             const model: IPostEdit = {
                 ...data,
                 id: postId!,
@@ -460,6 +480,8 @@ export function EditPost() {
                 )}
 
                 <div className="title">Edit Post</div>
+
+                <div id="Ref" ref={topOfPage} />
 
                 <div className="twoColumnsContainer">
                     <div className="textInputsContainer">

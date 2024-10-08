@@ -42,6 +42,7 @@ export default function ComboBox({
             id="combo-box-demo"
             options={options}
             value={selectedOption}
+            isOptionEqualToValue={(option, value) => option.id === value.id} // Custom equality check
             getOptionLabel={(option) => option.name} // Display the name in the dropdown
             sx={{ minHeight: 40 }}
             onChange={handleChange} // Handle change event
