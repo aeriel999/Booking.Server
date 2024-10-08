@@ -205,6 +205,7 @@ export const getFilteredListOfCountries = createAsyncThunk(
                 {
                     params: {
                         category: payload.category,
+                        city: payload.city,
                         realtor: payload.realtor,
                     },
                 }

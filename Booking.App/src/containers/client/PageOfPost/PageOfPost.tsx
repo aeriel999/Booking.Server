@@ -104,7 +104,6 @@ const PageOfPost = () => {
     }, [post])
 
     useEffect(() => {
-        console.log(post);
         if (post && post.id.toString() == postId!) {
             setIsLoading(false);
             setPostImages(post!.imagePostList!.$values!);

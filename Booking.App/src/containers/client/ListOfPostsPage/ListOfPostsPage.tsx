@@ -62,7 +62,7 @@ export default function ListOfPostsPage() {
     }
     const getCountries = async () => {
         try {
-            var result = await dispatch(getFilteredListOfCountries({ category: filter.category, realtor: filter.realtor }))
+            var result = await dispatch(getFilteredListOfCountries({ category: filter.category, city: filter.city, realtor: filter.realtor }))
             unwrapResult(result);
         } catch (error) {
             setErrorMessage(ErrorHandler(error))
@@ -164,17 +164,17 @@ export default function ListOfPostsPage() {
             dispatch(changeLoaderIsLoading(true));
             const getFilteredCategories = async () => {
                 try {
-                    var result1 = await dispatch(getFilteredListOfCountries({ category: filter.category, realtor: filter.realtor }))
+                    var result1 = await dispatch(getFilteredListOfCountries({ category: filter.category, city: filter.city, realtor: filter.realtor }))
                     unwrapResult(result1);
 
                     if (filter.country != null) {
                         var result2 = await dispatch(getFilteredListOfCities({ category: filter.category, country: filter.country!, realtor: filter.realtor }))
                         unwrapResult(result2);
                     }
-                    if (filter.city == null) {
-                        var result3 = await dispatch(getFilteredListOfRealtors({ category: filter.category, country: filter.country, city: filter.city }))
-                        unwrapResult(result3);
-                    }
+                    //if (filter.city == null) {
+                    var result3 = await dispatch(getFilteredListOfRealtors({ category: filter.category, country: filter.country, city: filter.city }))
+                    unwrapResult(result3);
+                    //}
 
                 } catch (error) {
                     setErrorMessage(ErrorHandler(error))
@@ -226,10 +226,10 @@ export default function ListOfPostsPage() {
                 try {
                     var result1 = await dispatch(getFilteredListOfCategories({ country: filter.country, city: filter.city, realtor: filter.realtor }))
                     unwrapResult(result1);
-                    if (filter.city == null) {
-                        var result2 = await dispatch(getFilteredListOfCountries({ category: filter.category, realtor: filter.realtor }))
-                        unwrapResult(result2);
-                    }
+                    //if (filter.city == null) {
+                    var result2 = await dispatch(getFilteredListOfCountries({ category: filter.category, city: filter.city, realtor: filter.realtor }))
+                    unwrapResult(result2);
+                    //}
                     var result3 = await dispatch(getFilteredListOfRealtors({ category: filter.category, country: filter.country, city: filter.city }))
                     unwrapResult(result3);
                 } catch (error) {
@@ -260,10 +260,10 @@ export default function ListOfPostsPage() {
                         var result2 = await dispatch(getFilteredListOfCities({ category: filter.category, country: filter.country, realtor: filter.realtor }))
                         unwrapResult(result2);
                     }
-                    if (filter.city == null) {
-                        var result3 = await dispatch(getFilteredListOfCountries({ category: filter.category, realtor: filter.realtor }))
-                        unwrapResult(result3);
-                    }
+                    //if (filter.city == null) {
+                    var result3 = await dispatch(getFilteredListOfCountries({ category: filter.category, city: filter.city, realtor: filter.realtor }))
+                    unwrapResult(result3);
+                    //}
                 } catch (error) {
                     setErrorMessage(ErrorHandler(error))
                 }

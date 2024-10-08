@@ -240,9 +240,9 @@ public class PostController(ISender mediatr, IMapper mapper) : ApiController
 
     [AllowAnonymous]
     [HttpGet("get-countries-filtered-list")]
-    public async Task<IActionResult> GetCountriesFilteredListAsync([FromQuery] Guid? Category, Guid? Realtor)
+    public async Task<IActionResult> GetCountriesFilteredListAsync([FromQuery] Guid? Category, Guid? City, Guid? Realtor)
     {
-        var getCountriesListResult = await mediatr.Send(new GetCountriesFilteredListQuery(Category, Realtor));
+        var getCountriesListResult = await mediatr.Send(new GetCountriesFilteredListQuery(Category, City,Realtor));
 
         return getCountriesListResult.Match(
             getCountriesListResult => Ok(mapper.Map<List<GetCountryResponse>>(getCountriesListResult)),

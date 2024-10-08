@@ -238,7 +238,7 @@ export const ClientProfileEditPage = () => {
                                 <InputField
                                     placeholder="Confirm Password"
                                     type="password"
-                                    name="confirmPassword"
+                                    name="confirmNewPassword"
                                     register={registerPassword}
                                     setValue={setValuePassword}
                                     className={

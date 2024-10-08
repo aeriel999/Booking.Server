@@ -12,7 +12,7 @@ public class GetCountriesFilteredListQueryHandler(IPostCountryRepository postCou
     public async Task<ErrorOr<List<PostCountry>>> Handle(
         GetCountriesFilteredListQuery request, CancellationToken cancellationToken)
     {
-        var countryList = await postCountryRepository.GetCountriesFilteredListAsync(request.Category, request.Realtor);
+        var countryList = await postCountryRepository.GetCountriesFilteredListAsync(request.Category, request.City,request.Realtor);
 
         if (countryList == null)
             return Error.NotFound("Error in loading of countries");

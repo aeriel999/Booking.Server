@@ -16,21 +16,23 @@ public class PostCountryRepository(BookingDbContext context) : IPostCountryRepos
         return await _dbSet.ToListAsync();
     }
 
-    public async Task<List<PostCountry>?> GetCountriesFilteredListAsync(Guid? Category, Guid? Realtor)
+    public async Task<List<PostCountry>?> GetCountriesFilteredListAsync(Guid? Category, Guid? City, Guid? Realtor)
     {
         return await _dbSet
-            .Include(c=>c.Cities)
-            .ThenInclude(s => s.Streets)
+            .Include(c=>c.Cities!)
+            .ThenInclude(s => s.Streets!)
             .ThenInclude(p=> p.Posts)
-            .Where(c => (Category == null? true : 
-            c.Cities!.Any(city => 
+            .Where(c => (c.Cities != null) && (Category == null? true : ( 
+              c.Cities.Any(city => city.Streets!=null &&
               city.Streets!.Any(street => 
-                   street.Posts!.Any(post => 
-                          post.CategoryId==Category))))
-            && (Realtor == null ? true : 
-            c.Cities!.Any(city =>  
-              city.Streets!.Any(street => 
-                   street.Posts!.Any(post => 
+                   street.Posts != null && street.Posts!.Any(post => 
+                          post.CategoryId==Category)))))
+            &&(City == null ? true :
+            c.Cities.Any(city => city.Id == City)
+            ) && (Realtor == null ? true :
+            c.Cities!.Any(city =>
+              city.Streets != null && city.Streets!.Any(street =>
+                   street.Posts != null && street.Posts!.Any(post => 
                          post.UserId == Realtor)))))
             .ToListAsync();
     }

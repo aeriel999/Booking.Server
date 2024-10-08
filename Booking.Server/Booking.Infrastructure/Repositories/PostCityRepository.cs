@@ -36,13 +36,15 @@ public class PostCityRepository(BookingDbContext context) : IPostCityRepository
         return await _dbSet
             .Include(s => s.Streets!)
             .ThenInclude(p => p.Posts)
-            .Where(c => (c.CountryId == Country && c.Streets!=null && c.Streets.Any(s => s.Posts !=null && s.Posts.Any(p => p.Street!.CityId == c.Id))) && (Category == null ? true :
-              c.Streets!.Any(street =>
-                   street.Posts!.Any(post =>
+            .Where(c => (c.Streets != null) 
+			&& (c.CountryId == Country && c.Streets.Any(s => s.Posts !=null && s.Posts.Any(p => p.Street!.CityId == c.Id))) 
+			&& (Category == null ? true :
+              c.Streets.Any(street =>
+                   street.Posts != null && street.Posts!.Any(post =>
                           post.CategoryId == Category)))
             && (Realtor == null ? true :
-              c.Streets!.Any(street =>
-                   street.Posts!.Any(post =>
+              c.Streets.Any(street =>
+                   street.Posts != null && street.Posts!.Any(post =>
                          post.UserId == Realtor))))
             .ToListAsync();
     }
