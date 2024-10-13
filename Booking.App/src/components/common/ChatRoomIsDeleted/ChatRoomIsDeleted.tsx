@@ -1,10 +1,6 @@
 import '../../../css/ChatRoomIsDeleted/index.scss';
 
-/*interface IChatRoomIsDeleted {
-    postId: string;
-}*/
-
-export const ChatRoomIsDeleted = (/*info: IChatRoomIsDeleted*/) => {
+export const ChatRoomIsDeleted = () => {
 
     return (
         <div id="chat-room-is-deleted">

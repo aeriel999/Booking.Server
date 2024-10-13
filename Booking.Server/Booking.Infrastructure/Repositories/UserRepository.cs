@@ -22,9 +22,9 @@ public class UserRepository(UserManager<User> userManager)
             .AsEnumerable()
             .Where(r =>  (r.Posts!=null)
                              &&(realtors.Any(realtor => realtor.Id == r.Id && r.Posts != null && r.Posts.Count>0 && r.Posts.Any(p => p.IsActive == true && p.IsArhive == false)) 
-                             && (Category == null ? true : r.Posts!.Any(post => post.CategoryId == Category))
-                             && (City == null ? true : r.Posts!.Any(post => post.Street!.CityId == City))
-                             && (Country == null ? true : r.Posts!.Any(post => post.Street!.City!.CountryId == Country))))
+                             && (Category == null ? true : r.Posts!.Any(post => post.CategoryId == Category && post.IsActive == true && post.IsArhive == false))
+                             && (City == null ? true : r.Posts!.Any(post => post.Street!.CityId == City && post.IsActive == true && post.IsArhive == false))
+                             && (Country == null ? true : r.Posts!.Any(post => post.Street!.City!.CountryId == Country && post.IsActive == true && post.IsArhive == false))))
                 .ToList();
 	}
 

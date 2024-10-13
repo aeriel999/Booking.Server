@@ -1,15 +1,14 @@
-//import "../../../css/DashBoardRealtorClasses/index.scss";
 import "../../../App.scss";
 import Logo from "../../../assets/Logo/tripbook 1.svg";
 import LogOut from "../../../assets/Icons/logout-03.svg";
 import ArrowBack from "../../../assets/DashboardIcons/chevron-left.svg";
-import { Outlet, useNavigate } from "react-router-dom";
+import { Outlet, useLocation, useNavigate } from "react-router-dom";
 import { useAppDispatch, useAppSelector } from "../../../hooks/redux";
 import { logout } from "../../../store/accounts/account.slice";
 import { endListening } from "../../../SignalR";
 import { useEffect, useState } from "react";
 import { APP_ENV } from "../../../env";
-import { changeDashboardMenuItem } from "../../../store/settings/settings.slice";
+import { changeDashboardMenuItem, savePath } from "../../../store/settings/settings.slice";
 import { IDashboardMenuItem } from "../../../interfaces/common";
 import { clientMenuData } from "../../../utils/data";
 import { Badge } from "@mui/material";
@@ -22,6 +21,8 @@ export default function ClientDashboardLayout() {
     const { currentBreadcrumbsItem } = useAppSelector(
         (state) => state.settings
     );
+    const location = useLocation();
+
     const dispatch = useAppDispatch();
     // for set and get active menu item in side menu
     const [menuData, setMenuData] =
@@ -71,6 +72,7 @@ export default function ClientDashboardLayout() {
         setCurrentMenuItem(menuData[index].name);
         setIsExpanded(true);
         dispatch(changeDashboardMenuItem(menuData[index].name));
+        dispatch(savePath(location.pathname));
     };
 
     useEffect(() => {
@@ -197,5 +199,4 @@ export default function ClientDashboardLayout() {
         </div>
     );
 }
-/*{status === Status.LOADING &&
-                        <Loading className="dashboardClientLoading" />}*/
+

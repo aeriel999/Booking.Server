@@ -39,7 +39,6 @@ import * as signalR from "@microsoft/signalr";
 import {
     setOutcomeMessagesReadedChatId,
     setNewMessage,
-    setDeletedChatId,
     setDeletedChatIdToArr,
 } from "./store/chat/chat.slice.ts";
 import { IGetMessage } from "./interfaces/chat/index.ts";

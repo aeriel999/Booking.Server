@@ -94,40 +94,7 @@ export const ChatRoom = (info: IChatRoom) => {
         };
     }, [])
 
-    /*const startListeningPost = async (roomId: string) => {
-        if (connection.state === signalR.HubConnectionState.Connected) {
-            await connection
-                .invoke("JoinRoomForListening", { roomId })
-                .then(async (data) => {
-                    console.log("JoinRoomForListening", roomId);
-                    console.log("send_message", data);
-                    setMessages(data);
-                    // Remove any previous listener before adding a new one
-                    connection.off("send_notify");
-                    // Add the new listener
-                    connection.on("send_message", async (m) => {
-                        console.log("send_message", m);
-                        // setMessages(m)
-                    });
-                });
-        } else {
-            await connection.start().then(() => {
-                connection
-                    .invoke("JoinRoomForListening", { roomId })
-                    .then(async (data) => {
-                        console.log("roomId", roomId);
-                        setMessages(data);
-                        // Remove any previous listener before adding a new one
-                        connection.off("send_notify");
-                        // Add the new listener
-                        connection.on("send_message", async (m) => {
-                            console.log("send_message", m);
-                            // setMessages(m)
-                        });
-                    });
-            });
-        }
-    };*/
+
 
     const getMessageSignalR = async (chatId: any) => {
         if (connection.state === signalR.HubConnectionState.Connected) {
@@ -267,9 +234,7 @@ export const ChatRoom = (info: IChatRoom) => {
                     action={async () => {
                         await deleteChat(info.chatRoomId!);
                     }}
-                    //  navigate={"/dashboard/chat"}
                     lable="Deleting chat"
-                //  menuItem="All Posts"
                 />
             )}
             {status == Status.LOADING ? <Loading /> : ""}
@@ -308,7 +273,7 @@ export const ChatRoom = (info: IChatRoom) => {
                             {messages.length > 0
                                 ? messages.map((item) => (
                                     <Message
-                                        key={item.id} // Додайте унікальний ключ для кожного повідомлення
+                                        key={item.id}
                                         text={item.text}
                                         myMessage={user?.id === item.userId}
                                         date={new Date(item.date!)}

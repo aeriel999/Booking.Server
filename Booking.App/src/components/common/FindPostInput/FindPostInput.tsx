@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import "../../../css/FindPostInputClasses/index.scss"
 
 interface IFindPostInput {
@@ -12,6 +12,7 @@ export const FindPostInput = (info: IFindPostInput) => {
 
     const [selectedText, setSelectedText] = useState<string>("");
     const [isBlur, setIsBlur] = useState<boolean>(true);
+    const [posts, setPosts] = useState<string[] | null>(null);
 
     const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
         setSelectedText(e.target.value);
@@ -22,6 +23,9 @@ export const FindPostInput = (info: IFindPostInput) => {
             info.setText(e.target.value);
         }
     };
+    useEffect(() => {
+        setPosts(info.postsName);
+    }, [info.postsName])
 
     const takeName = (item: string) => {
         setSelectedText(item);
@@ -44,7 +48,7 @@ export const FindPostInput = (info: IFindPostInput) => {
                 type="text"
                 onChange={handleChange}
                 value={selectedText} />
-            {info.postsName && !isBlur ? info.postsName.map((item) => (
+            {posts && !isBlur ? posts.map((item) => (
                 <div
                     key={item}
                     className="input-item-name"

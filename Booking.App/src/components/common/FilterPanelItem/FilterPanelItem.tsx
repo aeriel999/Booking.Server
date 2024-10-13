@@ -15,10 +15,15 @@ export const FilterPanelItem = (info: IFilterPanelItem) => {
 
     const [isOpen, setIsOpen] = useState(false);
     const [selectedButton, setSelectedButton] = useState<string | null>(null);
+    const [defaultValue, setDefaultValue] = useState<string | null>(null);
 
     useEffect(() => {
         setIsOpen(info.isOpen);
     }, [])
+    useEffect(() => {
+        setDefaultValue(info.defaultValue)
+        setSelectedButton(info.defaultValue)
+    }, [info.defaultValue])
 
     useEffect(() => {
         info.selectedItem(selectedButton);
@@ -35,7 +40,7 @@ export const FilterPanelItem = (info: IFilterPanelItem) => {
                         <input
                             name="category-filter-option"
                             type="radio"
-                            checked={!info.defaultValue ? true : false}
+                            checked={!defaultValue ? true : false}
                             onChange={() => setSelectedButton(null)} />
                         <p>Any</p>
                     </label>
@@ -46,7 +51,7 @@ export const FilterPanelItem = (info: IFilterPanelItem) => {
                             <input
                                 name="category-filter-option"
                                 type="radio"
-                                checked={info.defaultValue && info.defaultValue == item.id ? true : false}
+                                checked={defaultValue && defaultValue == item.id ? true : false}
                                 onChange={() => setSelectedButton(item.id)} />
                             <p>{item.name}</p>
                         </label>

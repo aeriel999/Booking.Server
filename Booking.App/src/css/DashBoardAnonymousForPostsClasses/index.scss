@@ -131,6 +131,10 @@
         }
     }
 
+    #error {
+        padding: $default-padding;
+    }
+
     footer {
         width: 100%;
         min-width: 1652px;

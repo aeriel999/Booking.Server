@@ -12,10 +12,13 @@ import { IFetchDataByName, IFilter, IFilteredRequestName } from "../../../interf
 import { useDispatch, useSelector } from "react-redux";
 import { AppDispatch, RootState } from "../../../store";
 import { getListOfPostsName, getPostByName } from "../../../store/post/post.actions";
-import { setTextForSearching } from "../../../store/post/post.slice";
+import { clearPost, clearSearchingPost, setTextForSearching } from "../../../store/post/post.slice";
 import { changeLoaderIsLoading, changePaginationPage, savePath } from "../../../store/settings/settings.slice";
 import avatar from "../../../assets/Auth/image20.svg";
 import { APP_ENV } from "../../../env";
+import { unwrapResult } from "@reduxjs/toolkit";
+import ErrorHandler from "../../../components/common/ErrorHandler";
+import OutlinedErrorAlert from "../../../components/common/ErrorAlert";
 
 export const AnonymousDashboardLayoutForPosts = () => {
 
@@ -29,22 +32,9 @@ export const AnonymousDashboardLayoutForPosts = () => {
     const isLogin = useSelector((state: RootState) => state.account.isLogin);
     const user = useSelector((state: RootState) => state.account.user);
     const [avatarUrl, setAvatarUrl] = useState<string | null>(null);
-    //const [isBlur, setIsBlur] = useState<boolean>(true);
-    /*
-    <div id="userInfo">
-                        {user!.avatar != null ? <div
-                            id="avatar"
-                            style={{
-                                background: `url(${avatarUrl}) center / cover no-repeat`,
-                            }}
-                        /> :
-                            <Avatar userName={user?.email!} />}
+    const [errorMessage, setErrorMessage] = useState<string | null>(null);
 
-                        <div id="name">
-                            {user?.firstName && user?.lastName ? `${user?.firstName} ${user?.lastName}` : user?.email}
-                        </div>
-                    </div>
-    */
+
 
     const changeText = async (text: string | null) => {
         const currentFilter: IFilter = {
@@ -72,20 +62,29 @@ export const AnonymousDashboardLayoutForPosts = () => {
 
     const findPost = async (event: React.FormEvent<HTMLFormElement>) => {
         event.preventDefault();
-        dispatch(changeLoaderIsLoading(true));
+
         if (searchingText != null && searchingText != "") {
-            const currentFilter: IFilter = {
-                category: filter.category,
-                country: filter.country,
-                city: filter.city,
-                realtor: filter.realtor
-            };
-            const payload: IFetchDataByName = {
-                filter: currentFilter,
-                name: searchingText,
+            try {
+                dispatch(clearPost());
+                dispatch(changeLoaderIsLoading(true));
+                const currentFilter: IFilter = {
+                    category: filter.category,
+                    country: filter.country,
+                    city: filter.city,
+                    realtor: filter.realtor
+                };
+                const payload: IFetchDataByName = {
+                    filter: currentFilter,
+                    name: searchingText,
+                }
+                dispatch(changePaginationPage(1))
+                const response = await dispatch(getPostByName(payload));
+                unwrapResult(response);
+
+            } catch (error) {
+                dispatch(changeLoaderIsLoading(false));
+                setErrorMessage(ErrorHandler(error));
             }
-            await dispatch(getPostByName(payload));
-            dispatch(changePaginationPage(1))
         }
 
     }
@@ -93,10 +92,22 @@ export const AnonymousDashboardLayoutForPosts = () => {
     useEffect(() => {
         window.scrollTo(0, 0);
     }, [])
+    useEffect(() => {
+        if (errorMessage != null) {
+            new Promise(() => {
+                setTimeout(() => {
+                    setErrorMessage(null)
+                }, 5000)
+            });
+        }
+    }, [errorMessage])
+
 
     useEffect(() => {
-        if (searchingPost != null) {
+        dispatch(changeLoaderIsLoading(false));
+        if (searchingPost != null && errorMessage == null) {
             navigate(`/posts/post/${searchingPost}`);
+            dispatch(clearSearchingPost());
         }
     }, [searchingPost])
 
@@ -186,8 +197,8 @@ export const AnonymousDashboardLayoutForPosts = () => {
                     </form>
                 </div>
             </header>
+            {errorMessage ? <div id="error"><OutlinedErrorAlert message={errorMessage} /></div> : ""}
             <Outlet />
-
             <footer>
                 <img src={logo} />
 

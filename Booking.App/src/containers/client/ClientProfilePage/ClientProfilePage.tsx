@@ -63,6 +63,7 @@ export default function RealtorProfilePage() {
             const avatar: IReloadAvatar = { avatar: file };
 
             try {
+
                 const response = await dispatch(reloadAvatar(avatar));
                 unwrapResult(response);
             } catch (error) {

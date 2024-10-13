@@ -21,7 +21,9 @@ export const userSlice = createSlice({
     name: 'user',
     initialState,
     reducers: {
-
+        clearFilterRealtors: (state) => {
+            state.filteredRealtors = null;
+        }
     },
     extraReducers: (builder) => {
         builder
@@ -114,5 +116,7 @@ export const userSlice = createSlice({
             });
     },
 });
+
+export const { clearFilterRealtors } = userSlice.actions;
 
 export default userSlice.reducer;

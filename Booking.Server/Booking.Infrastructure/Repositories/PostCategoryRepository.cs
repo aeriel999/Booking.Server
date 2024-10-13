@@ -2,6 +2,7 @@
 using Booking.Domain.Posts;
 using Booking.Infrastructure.Common.Persistence;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Hosting;
 
 namespace Booking.Infrastructure.Repositories;
 
@@ -26,10 +27,10 @@ public class PostCategoryRepository(BookingDbContext context) : IPostCategoryRep
 			.ThenInclude(post => post.Street!.City!.Country)
 			.Where(category =>
             category.Posts != null
-            && (Country==null ? true : category.Posts.Any(post => post.Street != null && post.Street.City != null && post.Street.City.CountryId == Country))
-			&& (City == null ? true : category.Posts.Any(post => post.Street != null && post.Street.CityId == City))
-            && (Realtor == null ? true : category.Posts.Any(p => p.UserId == Realtor))).
-			ToListAsync();
+            && (Country==null ? true : category.Posts.Any(post => post.Street != null && post.Street.City != null && post.Street.City.CountryId == Country && post.IsActive == true && post.IsArhive == false))
+			&& (City == null ? true : category.Posts.Any(post => post.Street != null && post.Street.CityId == City && post.IsActive == true && post.IsArhive == false))
+            && (Realtor == null ? true : category.Posts.Any(p => p.UserId == Realtor && p.IsActive == true && p.IsArhive == false))).
+        ToListAsync();
 	}
 }
 /*

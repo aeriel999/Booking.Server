@@ -109,16 +109,6 @@ export default function ClientDashboardLayout() {
     useEffect(() => {
         if (user) {
             setAvatarUrl(APP_ENV.BASE_URL + user?.avatar);
-            // const getRooms = async () => {
-            //     try {
-            //         const response = await dispatch(getListOfChatRooms());
-            //         unwrapResult(response);
-            //     } catch (e) {
-            //         console.log(e);
-            //     }
-            // };
-
-            // getRooms();
         }
     }, [user]);
 
@@ -260,33 +250,33 @@ export default function ClientDashboardLayout() {
                     <Collapse in={isOpenFeedbacks} timeout="auto" unmountOnExit>
                         {realtors?.$values
                             ? realtors.$values.map((item) => (
-                                  <List component="div" disablePadding>
-                                      <ListItemButton
-                                          sx={{ pl: 4 }}
-                                          onClick={() =>
-                                              navigate(`realtor/${item.id}`)
-                                          }
-                                      >
-                                          <ListItemIcon>
-                                              {APP_ENV.BASE_URL +
-                                                  "/images/avatars/" +
-                                                  item.avatar && (
-                                                  <Avatar
-                                                      alt={item.realtor}
-                                                      src={
-                                                          APP_ENV.BASE_URL +
-                                                          "/images/avatars/" +
-                                                          item.avatar
-                                                      }
-                                                  />
-                                              )}
-                                          </ListItemIcon>
-                                          <ListItemText
-                                              primary={item.realtor}
-                                          />
-                                      </ListItemButton>
-                                  </List>
-                              ))
+                                <List component="div" disablePadding>
+                                    <ListItemButton
+                                        sx={{ pl: 4 }}
+                                        onClick={() =>
+                                            navigate(`realtor/${item.id}`)
+                                        }
+                                    >
+                                        <ListItemIcon>
+                                            {APP_ENV.BASE_URL +
+                                                "/images/avatars/" +
+                                                item.avatar && (
+                                                    <Avatar
+                                                        alt={item.realtor}
+                                                        src={
+                                                            APP_ENV.BASE_URL +
+                                                            "/images/avatars/" +
+                                                            item.avatar
+                                                        }
+                                                    />
+                                                )}
+                                        </ListItemIcon>
+                                        <ListItemText
+                                            primary={item.realtor}
+                                        />
+                                    </ListItemButton>
+                                </List>
+                            ))
                             : ""}
                     </Collapse>
                 </List>

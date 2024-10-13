@@ -36,6 +36,7 @@ div.find-post-input {
         display: flex;
         align-items: center;
         z-index: 1;
+        cursor: pointer;
 
         &:hover {
             background-color: #d6cece;

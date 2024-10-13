@@ -74,7 +74,7 @@ export default function RealtorRegisterAvatarPage() {
 
                     <button
                         onClick={handleSubmit}
-                        disabled={image !== null}
+                        disabled={/*image !== null*/ image === null}
                         className={`endRegisterButton ${image ? "active" : ""}`}
                     >
                         Complete Registration

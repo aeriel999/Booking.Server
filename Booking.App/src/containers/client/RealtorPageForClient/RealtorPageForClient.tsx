@@ -20,7 +20,7 @@ export const RealtorPageForClient = () => {
     const status = useAppSelector((state) => state.user.status);
     const isLogin = useAppSelector((state) => state.account.isLogin);
     const [avatarUrl, setAvatarUrl] = useState<string>();
-    // const navigate = useNavigate();
+
     const dispatch = useAppDispatch();
     const [headerUrl, setHeaderUrl] = useState<string | null>(null);
     const [errorMessage, setErrorMessage] = useState<string | undefined>(
