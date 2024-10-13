@@ -345,7 +345,9 @@ export default function ChatRoom() {
                             id={item.id}
                             name={item.name}
                             image={
-                                APP_ENV.BASE_URL + "/images/posts/" + item.image
+                                APP_ENV.BASE_URL +
+                                "/uploads/posts/" +
+                                item.image
                             }
                             numberOfUnreadMessages={
                                 item.numberOfUnreadMessages!

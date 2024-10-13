@@ -154,7 +154,7 @@ export const ChatListItem = (info: IChatListItem) => {
                         {info.chatItem.avatar ? (
                             <img
                                 id="chat-list-item-avatar"
-                                src={`${APP_ENV.BASE_URL}/images/avatars/${info.chatItem.avatar}`}
+                                src={`${APP_ENV.BASE_URL}/uploads/avatars/${info.chatItem.avatar}`}
                                 alt=""
                             />
                         ) : (
@@ -220,7 +220,7 @@ export const ChatListItem = (info: IChatListItem) => {
                                   >
                                       <img
                                           id="chat-list-item-avatar"
-                                          src={`${APP_ENV.BASE_URL}/images/posts/${item.postImage}`}
+                                          src={`${APP_ENV.BASE_URL}/uploads/posts/${item.postImage}`}
                                           alt=""
                                       />
 

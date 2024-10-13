@@ -37,7 +37,7 @@ export default function PostPage() {
                             <Button sx={{ height: 300, width: "100%" }} onClick={() => setIsOpen(!isOpen)}>
                                 <CardMedia
                                     sx={{ height: "100%", width: "100%" }}
-                                    image={`${APP_ENV.BASE_URL}/images/posts/${post.imagePostList[0]}`}
+                                    image={`${APP_ENV.BASE_URL}/uploads/posts/${post.imagePostList[0]}`}
                                     title={post.name}
 
                                 />

@@ -15,8 +15,10 @@ export function ReviewCard(props: ReviewCardProps) {
                 console.log("props.avatar", props.avatar);
 
                 setAvatar(props.avatar);
-            }else{
-                  setAvatar(`${APP_ENV.BASE_URL}/images/avatars/${props.avatar}`);
+            } else {
+                setAvatar(
+                    `${APP_ENV.BASE_URL}/uploads/avatars/${props.avatar}`
+                );
             }
         }
     }, [props]);
@@ -53,8 +55,10 @@ export function ReviewCard(props: ReviewCardProps) {
                         <div className="leftPart">
                             <div className="name">{props.userName}</div>
                             <div className="date">
-                            {formatDistanceToNow(props.date, { addSuffix: true })}
-                                 </div>
+                                {formatDistanceToNow(props.date, {
+                                    addSuffix: true,
+                                })}
+                            </div>
                         </div>
                         <div className="rightPart">
                             <div className="rateContainer">

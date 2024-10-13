@@ -167,27 +167,27 @@ export default function EditRoom(props: EditRoomsProps) {
                         label={props.label}
                         defaultImageUrl={`${
                             APP_ENV.BASE_URL
-                        }${"/images/posts/"}${props.defaultRoom?.mainImage}`}
+                        }${"/uploads/posts/"}${props.defaultRoom?.mainImage}`}
                     />
                 </div>
             </div>
-         <div className="editRoomButtonContainer">
-         <button
-                type="submit"
-                className="roomButton"
-                form={props.formName}
-                disabled={isSubmit}
-            >
-                Save
-            </button>
-            <button
+            <div className="editRoomButtonContainer">
+                <button
+                    type="submit"
+                    className="roomButton"
+                    form={props.formName}
+                    disabled={isSubmit}
+                >
+                    Save
+                </button>
+                <button
                     type="button"
                     className="roomButton"
                     onClick={onDelete} // Trigger onDelete
                 >
                     Delete
                 </button>
-         </div>
+            </div>
         </div>
     );
 }

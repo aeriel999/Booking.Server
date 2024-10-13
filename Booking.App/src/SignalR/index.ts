@@ -6,9 +6,12 @@ import * as signalR from "@microsoft/signalr";
 export const connection = new signalR.HubConnectionBuilder()
     .withUrl(APP_ENV.BASE_URL + "/chat", {
         accessTokenFactory: () => getLocalStorage("authToken") as string,
-        transport:
-            signalR.HttpTransportType.WebSockets |
-            signalR.HttpTransportType.LongPolling,
+        transport: signalR.HttpTransportType.WebSockets,
+        // skipNegotiation: true,
+        // headers: { "access-control-allow-origin" : "*"},
+        // withCredentials: true,
+       
+
     })
     .withAutomaticReconnect([0, 2000, 10000, 30000])
     .build();

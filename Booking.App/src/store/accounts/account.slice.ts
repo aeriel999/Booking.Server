@@ -24,7 +24,6 @@ import {
 import { Status } from "../../utils/enum";
 import { IAccountState, IRealtorRegister } from "../../interfaces/account";
 
-
 function isRejectedAction(action: AnyAction): action is RejectedAction {
     return action.type.endsWith("/rejected");
 }
@@ -34,7 +33,7 @@ const updateLoginUserState = (state: IAccountState, token: string): void => {
     const email = decodedToken["email"];
     const role =
         decodedToken[
-        "http://schemas.microsoft.com/ws/2008/06/identity/claims/role"
+            "http://schemas.microsoft.com/ws/2008/06/identity/claims/role"
         ];
     const id = decodedToken["sub"];
     const headerImage = decodedToken["ProfileHeaderImage"];
@@ -47,7 +46,7 @@ const updateLoginUserState = (state: IAccountState, token: string): void => {
 
         const phoneNumber =
             decodedToken[
-            "http://schemas.xmlsoap.org/ws/2005/05/identity/claims/mobilephone"
+                "http://schemas.xmlsoap.org/ws/2005/05/identity/claims/mobilephone"
             ];
 
         const rating = decodedToken["Rating"];
@@ -59,10 +58,10 @@ const updateLoginUserState = (state: IAccountState, token: string): void => {
             firstName: firstName,
             lastName: lastName,
             phoneNumber: phoneNumber,
-            avatar: "/images/avatars/" + avatar,
+            avatar: "/uploads/avatars/" + avatar,
             rating: Number(rating),
             profileHeaderImage:
-                headerImage === "" ? null : "/images/avatars/" + headerImage,
+                headerImage === "" ? null : "/uploads/avatars/" + headerImage,
         };
     } else if (role === "admin") {
         state.user = {
@@ -74,17 +73,16 @@ const updateLoginUserState = (state: IAccountState, token: string): void => {
             phoneNumber: null,
             avatar: null,
             rating: null,
-            profileHeaderImage: null
-        }
+            profileHeaderImage: null,
+        };
     } else if (role === "user") {
         const avatar = decodedToken["Avatar"];
         let savedAvatar: string | null = null;
         if (avatar != null && avatar != "") {
             if (avatar.slice(0, 5) == "https") {
                 savedAvatar = avatar;
-            }
-            else {
-                savedAvatar = "/images/avatars/" + avatar;
+            } else {
+                savedAvatar = "/uploads/avatars/" + avatar;
             }
         }
 
@@ -92,9 +90,8 @@ const updateLoginUserState = (state: IAccountState, token: string): void => {
         if (headerImage != null) {
             if (headerImage.trim() === "") {
                 savedHeader = null;
-            }
-            else {
-                savedHeader = "/images/avatars/" + headerImage;
+            } else {
+                savedHeader = "/uploads/avatars/" + headerImage;
             }
         }
         state.user = {
@@ -106,7 +103,7 @@ const updateLoginUserState = (state: IAccountState, token: string): void => {
             phoneNumber: null,
             avatar: savedAvatar,
             rating: null,
-            profileHeaderImage: savedHeader
+            profileHeaderImage: savedHeader,
         };
     }
     state.token = token;
@@ -121,7 +118,7 @@ const initialState: IAccountState = {
     isLogin: false,
     status: Status.IDLE,
     registerData: null,
-    isUserHasPassword: true
+    isUserHasPassword: true,
 };
 
 export const accountsSlice = createSlice({
@@ -231,17 +228,17 @@ export const accountsSlice = createSlice({
             .addCase(editUserProfile.fulfilled, (state, action) => {
                 const { token } = action.payload;
                 updateLoginUserState(state, token);
-                state.status = Status.SUCCESS
+                state.status = Status.SUCCESS;
             })
             .addCase(editUserProfile.pending, (state) => {
-                state.status = Status.LOADING
+                state.status = Status.LOADING;
             })
             .addCase(checkPasswordIsNotNull.fulfilled, (state, action) => {
                 state.isUserHasPassword = action.payload;
-                state.status = Status.SUCCESS
+                state.status = Status.SUCCESS;
             })
             .addCase(checkPasswordIsNotNull.pending, (state) => {
-                state.status = Status.LOADING
+                state.status = Status.LOADING;
             })
             .addMatcher(isRejectedAction, (state) => {
                 state.status = Status.ERROR;

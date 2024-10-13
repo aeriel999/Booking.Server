@@ -1,6 +1,6 @@
 ﻿using Booking.Application.Common.Interfaces.Common;
 using Booking.Domain.Users;
-using ErrorOr;
+using Microsoft.AspNetCore.Hosting;
 using Microsoft.IdentityModel.Tokens;
 using SixLabors.ImageSharp;
 using SixLabors.ImageSharp.Formats.Webp;
@@ -8,11 +8,23 @@ using SixLabors.ImageSharp.Processing;
 
 namespace Booking.Infrastructure.Services.Common;
 
-public class ImageStorageService : IImageStorageService
+public class ImageStorageService(IWebHostEnvironment environment) : IImageStorageService
 {
+	private string UploadsPath => Path.Combine(environment.WebRootPath, "uploads");
+
+	private void EnsureDirectoryExists()
+	{
+		if (!Directory.Exists(UploadsPath))
+		{
+			Directory.CreateDirectory(UploadsPath);
+		}
+
+	}
 	public async Task<string> AddAvatarAsync(User user, byte[] file)
 	{
-		var uploadFolderPath = Path.Combine(Directory.GetCurrentDirectory(), "images", "avatars");
+		EnsureDirectoryExists();
+
+		var uploadFolderPath = Path.Combine(UploadsPath, "avatars");
  
 		//Delete Avatar if it already exist
 		if (!user.Avatar.IsNullOrEmpty())
@@ -28,7 +40,9 @@ public class ImageStorageService : IImageStorageService
 
 	public async Task<string> AddProfileHeaderImageAsync(User user, byte[] file)
 	{
-		var uploadFolderPath = Path.Combine(Directory.GetCurrentDirectory(), "images", "avatars");
+		EnsureDirectoryExists();
+
+		var uploadFolderPath = Path.Combine(UploadsPath, "avatars");
 
 		//Delete Avatar if it already exist
 		if (!user.ProfileHeaderImage.IsNullOrEmpty())
@@ -44,7 +58,9 @@ public class ImageStorageService : IImageStorageService
 
 	public async Task<string> SavePostImageInStorageAsync(byte[] file)
 	{
-		var uploadFolderPath = Path.Combine(Directory.GetCurrentDirectory(), "images", "posts");
+		EnsureDirectoryExists();
+
+		var uploadFolderPath = Path.Combine(UploadsPath, "posts");
 
 		return await SaveImageAsync(file, uploadFolderPath, 1200, 1200);
 	}
@@ -82,7 +98,9 @@ public class ImageStorageService : IImageStorageService
 
 	public void DeleteImage(string imageName, string path)
 	{
-		var uploadFolderPath = Path.Combine(Directory.GetCurrentDirectory(), "images", path);
+		EnsureDirectoryExists();
+
+		var uploadFolderPath = Path.Combine(UploadsPath, path);
 
 		var delFilePath = Path.Combine(uploadFolderPath, imageName);
 

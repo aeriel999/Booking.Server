@@ -1,33 +1,47 @@
-import { useEffect, useRef, useState } from 'react';
-import { ChatTextArea } from '../../../components/common/ChatTextArea/ChatTextArea';
-import '../../../css/ChatRoom/index.scss';
-import { Message } from '../Message/Message';
-import { useAppDispatch } from '../../../hooks/redux';
-import { useSelector } from 'react-redux';
-import { RootState } from '../../../store';
-import { getChatRoomById, getMessageListByChatId, setMessagesReadtByChatId } from '../../../store/chat/chat.action';
-import { connection } from '../../../SignalR';
-import { IChatMessageInfo } from '../../../interfaces/chat';
+import { useEffect, useRef, useState } from "react";
+import { ChatTextArea } from "../../../components/common/ChatTextArea/ChatTextArea";
+import "../../../css/ChatRoom/index.scss";
+import { Message } from "../Message/Message";
+import { useAppDispatch } from "../../../hooks/redux";
+import { useSelector } from "react-redux";
+import { RootState } from "../../../store";
+import {
+    getChatRoomById,
+    getMessageListByChatId,
+    setMessagesReadtByChatId,
+} from "../../../store/chat/chat.action";
+import { connection } from "../../../SignalR";
+import { IChatMessageInfo } from "../../../interfaces/chat";
 import * as signalR from "@microsoft/signalr";
-import { APP_ENV } from '../../../env';
-import { Status } from '../../../utils/enum';
-import { Loading } from '../../../components/common/Loading/Loading';
-import { unwrapResult } from '@reduxjs/toolkit';
-import { deleteNumberOfMessageFromGeneralCount, readMessages, resetChatInfoForClient, setChatRoomId, setDeletedChatId } from '../../../store/chat/chat.slice';
-import ErrorHandler from '../../../components/common/ErrorHandler';
+import { APP_ENV } from "../../../env";
+import { Status } from "../../../utils/enum";
+import { Loading } from "../../../components/common/Loading/Loading";
+import { unwrapResult } from "@reduxjs/toolkit";
+import {
+    deleteNumberOfMessageFromGeneralCount,
+    readMessages,
+    resetChatInfoForClient,
+    setChatRoomId,
+    setDeletedChatId,
+} from "../../../store/chat/chat.slice";
+import ErrorHandler from "../../../components/common/ErrorHandler";
 import Trash from "../../../assets/DashboardIcons/mdi_trash-outline.svg";
-import CustomizedDialogs from '../../../components/common/Dialog';
+import CustomizedDialogs from "../../../components/common/Dialog";
 
 interface IChatRoom {
-    chatRoomId: string | null,
-    countOfUnreadedMessages: number,
-    postId: string | null
+    chatRoomId: string | null;
+    countOfUnreadedMessages: number;
+    postId: string | null;
 }
 
 export const ChatRoom = (info: IChatRoom) => {
     const dispatch = useAppDispatch();
-    const chatRoom = useSelector((state: RootState) => state.chat.chatRoomInfoForClient);
-    const outcomeMessagesReadedChatId = useSelector((state: RootState) => state.chat.outcomeMessagesReadedChatId);
+    const chatRoom = useSelector(
+        (state: RootState) => state.chat.chatRoomInfoForClient
+    );
+    const outcomeMessagesReadedChatId = useSelector(
+        (state: RootState) => state.chat.outcomeMessagesReadedChatId
+    );
     const newMessage = useSelector((state: RootState) => state.chat.newMessage);
     const status = useSelector((state: RootState) => state.chat.status);
     const user = useSelector((state: RootState) => state.account.user);
@@ -85,9 +99,7 @@ export const ChatRoom = (info: IChatRoom) => {
         setNumberOfUnreadMessages(info.countOfUnreadedMessages);
         getChatRoom();
         //handleMessageRead();
-        if (info.chatRoomId)
-            dispatch(setChatRoomId(info.chatRoomId!))
-
+        if (info.chatRoomId) dispatch(setChatRoomId(info.chatRoomId!));
 
         //}
         //}
@@ -97,10 +109,9 @@ export const ChatRoom = (info: IChatRoom) => {
         handleMessageRead();
         if (info.chatRoomId)
             dispatch(setChatRoomId(info.chatRoomId))*/
-    }, [info.chatRoomId])
+    }, [info.chatRoomId]);
 
     useEffect(() => {
-
         if (newMessage) {
             const addNewMessage = async () => {
                 //handleMessageRead(1);
@@ -122,13 +133,10 @@ export const ChatRoom = (info: IChatRoom) => {
                     await dispatch(
                         setMessagesReadtByChatId(info.chatRoomId)
                     );*/
-            }
+            };
             addNewMessage();
         }
-
     }, [newMessage]);
-
-
 
     useEffect(() => {
         if (messagesRef.current != null) {
@@ -136,12 +144,11 @@ export const ChatRoom = (info: IChatRoom) => {
         }
     }, [messages.length]);
 
-
     useEffect(() => {
         return () => {
             dispatch(setChatRoomId(""));
         };
-    }, [])
+    }, []);
 
     /*const startListeningPost = async (roomId: string) => {
         if (connection.state === signalR.HubConnectionState.Connected) {
@@ -187,7 +194,7 @@ export const ChatRoom = (info: IChatRoom) => {
                 await connection.send("GetPostNotify", { chatId });
             });
         }
-    }
+    };
     const getMessageList = async (roomId: string) => {
         setErrorMessage(undefined);
 
@@ -235,13 +242,12 @@ export const ChatRoom = (info: IChatRoom) => {
     async function handleMessageRead(): Promise<void> {
         if (info?.chatRoomId && numberOfUnreadMessages > 0) {
             try {
-
-                dispatch(readMessages({
-                    chatRoomId: info.chatRoomId!,
-                    countReadedMessages: numberOfUnreadMessages
-                }))
-
-
+                dispatch(
+                    readMessages({
+                        chatRoomId: info.chatRoomId!,
+                        countReadedMessages: numberOfUnreadMessages,
+                    })
+                );
 
                 const response = await dispatch(
                     setMessagesReadtByChatId(info.chatRoomId)
@@ -256,7 +262,6 @@ export const ChatRoom = (info: IChatRoom) => {
                     )
                 );
 
-
                 dispatch(
                     deleteNumberOfMessageFromGeneralCount(
                         numberOfUnreadMessages
@@ -264,8 +269,6 @@ export const ChatRoom = (info: IChatRoom) => {
                 );
                 setNumberOfUnreadMessages(0);
                 await getMessageSignalR(info.chatRoomId);
-
-
             } catch (error) {
                 setErrorMessage(ErrorHandler(error));
             }
@@ -295,8 +298,8 @@ export const ChatRoom = (info: IChatRoom) => {
             }
 
             //setDeletedChatId(id);
-            dispatch(setDeletedChatId(id))
-            dispatch(resetChatInfoForClient())
+            dispatch(setDeletedChatId(id));
+            dispatch(resetChatInfoForClient());
         } else {
             setErrorMessage(
                 ErrorHandler("You cannot delete chat with unread messages")
@@ -316,7 +319,7 @@ export const ChatRoom = (info: IChatRoom) => {
                     }}
                     //  navigate={"/dashboard/chat"}
                     lable="Deleting chat"
-                //  menuItem="All Posts"
+                    //  menuItem="All Posts"
                 />
             )}
             {status == Status.LOADING ? <Loading /> : ""}
@@ -325,24 +328,24 @@ export const ChatRoom = (info: IChatRoom) => {
                     <div className="chat-room-header">
                         <div className="post">
                             <img
-                                src={`${APP_ENV.BASE_URL}/images/posts/${chatRoom.postImage}`}
+                                src={`${APP_ENV.BASE_URL}/uploads/posts/${chatRoom.postImage}`}
                                 alt="Post Image"
                             />
                             <p>{chatRoom.postName}</p>
                         </div>
                         <div className="realtor">
                             <img
-                                src={`${APP_ENV.BASE_URL}/images/avatars/${chatRoom.realtorAvatar}`}
+                                src={`${APP_ENV.BASE_URL}/uploads/avatars/${chatRoom.realtorAvatar}`}
                                 alt="Realtor Avatar"
                             />
                             <p>{chatRoom.realtorName}</p>
                             <button
                                 tabIndex={0}
-                                className='delete-button'
+                                className="delete-button"
                                 onClick={() => setIsDialogOpen(true)}
                                 onKeyDown={(e) => {
-                                    if (e.key === 'Enter') {
-                                        setIsDialogOpen(true)
+                                    if (e.key === "Enter") {
+                                        setIsDialogOpen(true);
                                     }
                                 }}
                             >
@@ -350,18 +353,21 @@ export const ChatRoom = (info: IChatRoom) => {
                             </button>
                         </div>
                     </div>
-                    <div className="chat-room-messages" onClick={handleMessageRead}>
+                    <div
+                        className="chat-room-messages"
+                        onClick={handleMessageRead}
+                    >
                         <div className="messages" ref={messagesRef}>
                             {messages.length > 0
                                 ? messages.map((item) => (
-                                    <Message
-                                        key={item.id} // Додайте унікальний ключ для кожного повідомлення
-                                        text={item.text}
-                                        myMessage={user?.id === item.userId}
-                                        date={new Date(item.date!)}
-                                        isRead={item.isRead}
-                                    />
-                                ))
+                                      <Message
+                                          key={item.id} // Додайте унікальний ключ для кожного повідомлення
+                                          text={item.text}
+                                          myMessage={user?.id === item.userId}
+                                          date={new Date(item.date!)}
+                                          isRead={item.isRead}
+                                      />
+                                  ))
                                 : ""}
                         </div>
                         <div className="send-message">
@@ -379,11 +385,9 @@ export const ChatRoom = (info: IChatRoom) => {
                     <p>Choose a chat to communicate</p>
                 </div>
             )}
-
         </div>
-    )
-}
-
+    );
+};
 
 /*
 {chatRoom != null && info.chatRoomId != null ? (
@@ -391,13 +395,13 @@ export const ChatRoom = (info: IChatRoom) => {
                     <div className="chat-room-header">
                         <div className="post">
                             <img
-                                src={`${APP_ENV.BASE_URL}/images/posts/${chatRoom.postImage}`}
+                                src={`${APP_ENV.BASE_URL}/uploads/posts/${chatRoom.postImage}`}
                             />
                             <p>{chatRoom.postName}</p>
                         </div>
                         <div className="realtor">
                             <img
-                                src={`${APP_ENV.BASE_URL}/images/avatars/${chatRoom.realtorAvatar}`}
+                                src={`${APP_ENV.BASE_URL}/uploads/avatars/${chatRoom.realtorAvatar}`}
                             />
                             <p>{chatRoom.realtorName}</p>
                         </div>

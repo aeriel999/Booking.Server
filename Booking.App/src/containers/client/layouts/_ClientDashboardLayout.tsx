@@ -269,13 +269,13 @@ export default function ClientDashboardLayout() {
                                       >
                                           <ListItemIcon>
                                               {APP_ENV.BASE_URL +
-                                                  "/images/avatars/" +
+                                                  "/uploads/avatars/" +
                                                   item.avatar && (
                                                   <Avatar
                                                       alt={item.realtor}
                                                       src={
                                                           APP_ENV.BASE_URL +
-                                                          "/images/avatars/" +
+                                                          "/uploads/avatars/" +
                                                           item.avatar
                                                       }
                                                   />

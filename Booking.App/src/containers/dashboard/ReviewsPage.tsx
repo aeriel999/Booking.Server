@@ -14,7 +14,9 @@ import { TablePaginationActions } from "../../components/realtorDashboard/TableP
 
 export function ReviewsPage() {
     const dispatch = useAppDispatch();
-    const [errorMessage, setErrorMessage] = useState<string | undefined>(undefined);
+    const [errorMessage, setErrorMessage] = useState<string | undefined>(
+        undefined
+    );
     const [feedbackList, setFeedbackList] = useState<ReviewCardProps[]>([]);
     const [totalCount, setTotalCount] = useState(0);
     const [page, setPage] = useState(0);
@@ -27,7 +29,7 @@ export function ReviewsPage() {
 
     const getfeedbackList = async (data: IFetchData) => {
         setErrorMessage(undefined);
-        
+
         try {
             const response = await dispatch(getListOfFeedbackForRealtor(data));
             unwrapResult(response);
@@ -73,7 +75,7 @@ export function ReviewsPage() {
                         countryName={feedback.countryName}
                         cityName={feedback.cityName}
                         postRaiting={feedback.postRaiting}
-                        postImage={`${APP_ENV.BASE_URL}${"/images/posts/"}${
+                        postImage={`${APP_ENV.BASE_URL}${"/uploads/posts/"}${
                             feedback.postImage
                         }`}
                         userName={feedback.userName}
@@ -87,26 +89,23 @@ export function ReviewsPage() {
                 <p>No reviews available</p>
             )}
 
-<div className="pagination">
-    <table>
-        <tbody>
-            <tr>
-                 
-                    <TablePagination
-                        rowsPerPageOptions={[3, 6, 12]}
-                        count={totalCount}
-                        rowsPerPage={rowsPerPage}
-                        page={page}
-                        onPageChange={handleChangePage}
-                        onRowsPerPageChange={handleChangeRowsPerPage}
-                        ActionsComponent={TablePaginationActions}
-                    />
-                 
-            </tr>
-        </tbody>
-    </table>
-</div>
-
+            <div className="pagination">
+                <table>
+                    <tbody>
+                        <tr>
+                            <TablePagination
+                                rowsPerPageOptions={[3, 6, 12]}
+                                count={totalCount}
+                                rowsPerPage={rowsPerPage}
+                                page={page}
+                                onPageChange={handleChangePage}
+                                onRowsPerPageChange={handleChangeRowsPerPage}
+                                ActionsComponent={TablePaginationActions}
+                            />
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
         </div>
     );
 }

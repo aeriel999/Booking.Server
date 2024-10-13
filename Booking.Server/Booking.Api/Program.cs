@@ -15,6 +15,7 @@ builder.Services
 	.AddApplication()
 	.AddInfrastructure(builder.Configuration);
 
+
 //NLog
 //builder.Logging.ClearProviders();
 //builder.Logging.SetMinimumLevel(LogLevel.Trace);
@@ -36,15 +37,19 @@ else
 	app.UseHsts();
 }
 
-app.UseCustomStaticFiles();
+app.UseStaticFiles();
 
-app.UseCors(options =>
-	options.SetIsOriginAllowed(origin => true)
-		.AllowAnyHeader()
-		.AllowCredentials()
-		.AllowAnyMethod());
+//app.UseCors(options =>
+//	options.WithOrigins("https://client.tamos.click")
+//		.AllowAnyHeader()
+//		.AllowCredentials()
+//		.AllowAnyMethod()
+//		.SetIsOriginAllowed((host) => true));
 
-//app.UseHttpsRedirection();
+
+app.UseHttpsRedirection();
+
+app.UseCors("reactApp");
 
 app.UseAuthentication();
 
@@ -57,13 +62,14 @@ BookingInitializer.SeedPostDataAsync(app);
 
 //For SignalR
 app.UseDefaultFiles();
-//app.UseCors("reactApp");
+//app.UseStaticFiles();
 
 app.MapHub<ChatHub>("/chat", options =>
 {
 	options.Transports =
-		HttpTransportType.WebSockets |
-		HttpTransportType.LongPolling;
+		HttpTransportType.WebSockets;
 });
+
+
 
 app.Run();

@@ -300,7 +300,7 @@ export function EditPost() {
 
             //Create Url for main image
             setDefaultMainImageUrl(
-                `${APP_ENV.BASE_URL}${"/images/posts/"}${
+                `${APP_ENV.BASE_URL}${"/uploads/posts/"}${
                     history?.payload.imagePostList.$values[0]
                 }`
             );
@@ -311,7 +311,7 @@ export function EditPost() {
                     .slice(1)
                     .map(
                         (image: string) =>
-                            `${APP_ENV.BASE_URL}${"/images/posts/"}${image}`
+                            `${APP_ENV.BASE_URL}${"/uploads/posts/"}${image}`
                     );
 
             setDefaultImagesUrlList(fullImageUrls);
