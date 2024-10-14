@@ -37,7 +37,7 @@ else
 	app.UseHsts();
 }
 
-app.UseStaticFiles();
+app.UseFileServer();
 
 //app.UseCors(options =>
 //	options.WithOrigins("https://client.tamos.click")
