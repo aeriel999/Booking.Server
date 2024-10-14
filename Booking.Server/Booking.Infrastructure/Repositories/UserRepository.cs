@@ -12,15 +12,16 @@ namespace Booking.Infrastructure.Repositories;
 public class UserRepository(UserManager<User> userManager) 
     : IUserRepository
 {
-    public async Task<List<User>> GetRealtorsFilteredListAsync(Guid? Category,Guid? Country, Guid? City)
+    public async Task<List<User>?> GetRealtorsFilteredListAsync(Guid? Category,Guid? Country, Guid? City)
 	{
         var realtors = await userManager.GetUsersInRoleAsync(Roles.Realtor);
         
         return userManager.Users
-            .Include(user => user.Posts)
+            .Include(user => user.Posts!)
             .ThenInclude(post => post.Street!.City!.Country)
             .AsEnumerable()
-            .Where(r =>  (realtors.Any(realtor => realtor.Id == r.Id && r.Posts != null && r.Posts.Count>0 && r.Posts.Any(p => p.IsActive == true && p.IsArhive == false)) 
+            .Where(r =>  (r.Posts!=null)
+                             &&(realtors.Any(realtor => realtor.Id == r.Id && r.Posts != null && r.Posts.Count>0 && r.Posts.Any(p => p.IsActive == true && p.IsArhive == false)) 
                              && (Category == null ? true : r.Posts!.Any(post => post.CategoryId == Category))
                              && (City == null ? true : r.Posts!.Any(post => post.Street!.CityId == City))
                              && (Country == null ? true : r.Posts!.Any(post => post.Street!.City!.CountryId == Country))))

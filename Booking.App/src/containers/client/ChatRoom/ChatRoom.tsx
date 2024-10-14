@@ -1,17 +1,13 @@
-import { useEffect, useRef, useState } from "react";
-import { ChatTextArea } from "../../../components/common/ChatTextArea/ChatTextArea";
-import "../../../css/ChatRoom/index.scss";
-import { Message } from "../Message/Message";
-import { useAppDispatch } from "../../../hooks/redux";
-import { useSelector } from "react-redux";
-import { RootState } from "../../../store";
-import {
-    getChatRoomById,
-    getMessageListByChatId,
-    setMessagesReadtByChatId,
-} from "../../../store/chat/chat.action";
-import { connection } from "../../../SignalR";
-import { IChatMessageInfo } from "../../../interfaces/chat";
+import { useEffect, useRef, useState } from 'react';
+import { ChatTextArea } from '../../../components/common/ChatTextArea/ChatTextArea';
+import '../../../css/ChatRoom/index.scss';
+import { Message } from '../Message/Message';
+import { useAppDispatch } from '../../../hooks/redux';
+import { useSelector } from 'react-redux';
+import { RootState } from '../../../store';
+import { getChatRoomById, getMessageListByChatId, setMessagesReadtByChatId } from '../../../store/chat/chat.action';
+import { connection } from '../../../SignalR';
+import { IChatMessageInfo } from '../../../interfaces/chat';
 import * as signalR from "@microsoft/signalr";
 import { APP_ENV } from "../../../env";
 import { Status } from "../../../utils/enum";
@@ -26,7 +22,8 @@ import {
 } from "../../../store/chat/chat.slice";
 import ErrorHandler from "../../../components/common/ErrorHandler";
 import Trash from "../../../assets/DashboardIcons/mdi_trash-outline.svg";
-import CustomizedDialogs from "../../../components/common/Dialog";
+import CustomizedDialogs from '../../../components/common/Dialog';
+import OutlinedErrorAlert from '../../../components/common/ErrorAlert';
 
 interface IChatRoom {
     chatRoomId: string | null;
@@ -52,70 +49,28 @@ export const ChatRoom = (info: IChatRoom) => {
         undefined
     );
     const [isDialogOpen, setIsDialogOpen] = useState<boolean>(false);
-    //const [isDeletePostChat, setIsDeletePostChat] = useState<boolean>(false);
-    //const [deletedChatId, setDeletedChatId] = useState<string | null>(null);
 
     const messagesRef = useRef<HTMLDivElement>(null);
+    const chatRoomRef = useRef<HTMLDivElement>(null);
 
-    ///////////
-    /*const { deletedChatId } = useAppSelector((state) => state.chat);
-
-    const leave = (roomId: string) =>
-        connection.send("LeaveRoom", { roomId }).then(() => {
-            console.log("leave", roomId);
-        });
-
-    useEffect(() => {
-        if (deletedChatId) {
-            leave(deletedChatId);
-        }
-    }, [deletedChatId]);*/
-    ///////////////
     const getChatRoom = async () => {
         if (info.chatRoomId) {
             await dispatch(getChatRoomById(info.chatRoomId));
-            //dispatch(changeLoaderIsLoading(true));
         }
     };
 
-    /*useEffect(() => {
-        if (chatIsExist) {
-            if (chatIsExist === true) {
-                setNumberOfUnreadMessages(info.countOfUnreadedMessages);
-                getChatRoom();
-                handleMessageRead();
-                if (info.chatRoomId)
-                    dispatch(setChatRoomId(info.chatRoomId!))
-            }
-        }
-    }, [chatIsExist])*/
-    /*useEffect(() => {
-        if (info.chatRoomId)
-            startListeningPost(info.chatRoomId)
-    }, [chatRoom])*/
     useEffect(() => {
-        //if (chatIsExist) {
-        //if (chatIsExist === true) {
         setNumberOfUnreadMessages(info.countOfUnreadedMessages);
         getChatRoom();
-        //handleMessageRead();
-        if (info.chatRoomId) dispatch(setChatRoomId(info.chatRoomId!));
-
-        //}
-        //}
-        //chechIsChatExist()
-        /*setNumberOfUnreadMessages(info.countOfUnreadedMessages);
-        getChatRoom();
-        handleMessageRead();
         if (info.chatRoomId)
-            dispatch(setChatRoomId(info.chatRoomId))*/
-    }, [info.chatRoomId]);
+            dispatch(setChatRoomId(info.chatRoomId!))
+    }, [info.chatRoomId])
 
     useEffect(() => {
         if (newMessage) {
             const addNewMessage = async () => {
-                //handleMessageRead(1);
                 const messageInfo: IChatMessageInfo = {
+                    id: Date.now().toString(),
                     date: new Date(),
                     text: newMessage!,
                     isRead: false,
@@ -127,13 +82,7 @@ export const ChatRoom = (info: IChatRoom) => {
                     messageInfo, // Add the new message to the array
                 ]);
 
-                //await getMessageSignalR(info?.chatRoomId);
-
-                /*if (info.chatRoomId)
-                    await dispatch(
-                        setMessagesReadtByChatId(info.chatRoomId)
-                    );*/
-            };
+            }
             addNewMessage();
         }
     }, [newMessage]);
@@ -223,7 +172,6 @@ export const ChatRoom = (info: IChatRoom) => {
                     setMessages(sortedMessages); // Set the sorted messages
                 }
             });
-            //startListeningPost(info.chatRoomId);
         }
     }, [chatRoom]);
 
@@ -291,15 +239,11 @@ export const ChatRoom = (info: IChatRoom) => {
         if (numberOfUnreadMessages < 1) {
             try {
                 await DeleteChatSignalR(id);
-                // const response = await dispatch(deleteChatById(id));
-                // unwrapResult(response);
             } catch (error) {
                 setErrorMessage(ErrorHandler(error));
             }
-
-            //setDeletedChatId(id);
-            dispatch(setDeletedChatId(id));
-            dispatch(resetChatInfoForClient());
+            dispatch(setDeletedChatId(id))
+            dispatch(resetChatInfoForClient())
         } else {
             setErrorMessage(
                 ErrorHandler("You cannot delete chat with unread messages")
@@ -307,8 +251,15 @@ export const ChatRoom = (info: IChatRoom) => {
         }
     };
 
+    useEffect(() => {
+        if (errorMessage && errorMessage != null && messagesRef && messagesRef.current) {
+            messagesRef.current.style.height = "65%";
+        }
+    }, [errorMessage])
+
     return (
-        <div id="chat-room">
+        <div id="chat-room" ref={chatRoomRef}>
+            {errorMessage ? <OutlinedErrorAlert message={errorMessage} /> : ""}
             {isDialogOpen && chatRoom && (
                 <CustomizedDialogs
                     message={`You want to delete chat with ${chatRoom.realtorName}. Are you sure?`}

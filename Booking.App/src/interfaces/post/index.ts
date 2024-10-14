@@ -28,6 +28,7 @@ export interface ICountry {
 
 export interface IFilteredListOfCountriesRequest {
     category: string | null;
+    city: string | null;
     realtor: string | null;
 }
 

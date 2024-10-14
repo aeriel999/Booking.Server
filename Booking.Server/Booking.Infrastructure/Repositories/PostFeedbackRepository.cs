@@ -32,13 +32,17 @@ public class PostFeedbackRepository(BookingDbContext context,UserManager<User> u
     public async Task DeleteAllFeedbacksAsync(string id)
     {
         var user = await userManager.FindByIdAsync(id);
-
-        if (await userManager.IsInRoleAsync(user, Roles.User))
+        if (user != null)
         {
-           var feedbacks = await _dbSet.Where(f => f.ClientId == user.Id).ToListAsync();
-           _dbSet.RemoveRange(feedbacks);
+            if (await userManager.IsInRoleAsync(user, Roles.User))
+            {
+                var feedbacks = await _dbSet.Where(f => f.ClientId == user.Id).ToListAsync();
+                _dbSet.RemoveRange(feedbacks);
+            }
+            await context.SaveChangesAsync();
         }
-       await context.SaveChangesAsync();
+
+        
     }
 
 

@@ -94,7 +94,6 @@ export const App: React.FC = () => {
                         );
                     }
                     if (listOfChatsIdForListening) {
-                        console.log("All chats - ", listOfChatsIdForListening);
                         await listeningAllChats(listOfChatsIdForListening);
                     }
                 })
@@ -153,7 +152,6 @@ export const App: React.FC = () => {
 
     const startListeningChat = async (roomId: string) => {
         if (connection.state === signalR.HubConnectionState.Connected) {
-            console.log("startListeningChat");
             await connection
                 .invoke("JoinRoomForListening", { roomId })
                 .then(() => {
