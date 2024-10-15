@@ -18,7 +18,7 @@ import { Pagination } from "../../../components/common/Pagination/Pagination";
 import { FeedbackTextArea } from "../../../components/common/FeedbackTextArea/FeedbackTextArea";
 import { savePath, savePostIdForChat } from "../../../store/settings/settings.slice";
 import { RoomCard } from "../../../components/common/RoomCard/RoomCard";
-import { setIdOfSelectedFeedback } from "../../../store/post/post.slice";
+import { clearPost, setIdOfSelectedFeedback } from "../../../store/post/post.slice";
 import { cutNumber } from "../../../utils/data";
 import { unwrapResult } from "@reduxjs/toolkit";
 import ErrorHandler from "../../../components/common/ErrorHandler";
@@ -37,7 +37,8 @@ const PageOfPost = () => {
     const isLogin = useAppSelector((state: RootState) => state.account.isLogin);
     const selectedFeedback = useAppSelector((state: RootState) => state.post.idOfSelectedFeedback);
     const pageOfSelectedFeedback = useAppSelector((state: RootState) => state.post.pageOfSelectedFeedback);
-    const searchingPost = useAppSelector((state: RootState) => state.post.searchingPost);
+    const loaderIsLoading = useAppSelector((state: RootState) => state.settings.loaderIsLoading);
+    const role = useAppSelector((state: RootState) => state.account.user?.role);
 
     const { postId } = useParams<string>();
     const [isLoading, setIsLoading] = useState<boolean>(true);
@@ -49,6 +50,7 @@ const PageOfPost = () => {
     const [errorMessage, setErrorMessage] = useState<string | null>(null);
     const [postImages, setPostImages] = useState<string[]>([]);
     const [rating, setRating] = useState<number>(0);
+    const [totalCountOfFeedbacks, setTotalCountOfFeedbacks] = useState<number>(0);
 
 
     const getPost = async (id: string) => {
@@ -87,13 +89,17 @@ const PageOfPost = () => {
         }
     }
     useEffect(() => {
+        if (postImages.length > 0) setPostImages([]);
+
         getPost(postId!);
         if (selectedFeedback) {
             getFeedbackByPage();
             dispatch(setIdOfSelectedFeedback(null));
         }
-        //getFeedbacks();
-    }, [])
+        else {
+            getFeedbacks();
+        }
+    }, [postId])
     useEffect(() => {
         setPageOfFeedbacks(pageOfSelectedFeedback);
 
@@ -116,6 +122,7 @@ const PageOfPost = () => {
     }, [post])
     useEffect(() => {
         if (feedbacks != null) {
+            setTotalCountOfFeedbacks(feedbacks.totalCount != null ? feedbacks.totalCount : 0);
             setIsFeedbacksLoading(false);
         }
     }, [feedbacks])
@@ -144,6 +151,9 @@ const PageOfPost = () => {
                 unwrapResult(response);
 
                 setIsFeedbacksLoading(true);
+                if (totalCountOfFeedbacks > 2 && totalCountOfFeedbacks % 2 == 0) {
+                    setTotalCountOfFeedbacks(totalCountOfFeedbacks + 1);
+                }
                 getFeedbacks();
             } catch (error) {
                 setErrorMessage(ErrorHandler(error));
@@ -154,16 +164,18 @@ const PageOfPost = () => {
 
     }
     useEffect(() => {
-        if (searchingPost != null) {
-            setIsLoading(true);
-            navigate(`/posts/post/${searchingPost}`);
-        }
-    }, [searchingPost])
-    useEffect(() => {
         if (postId != null) {
             getPost(postId!);
         }
     }, [postId])
+    useEffect(() => {
+        window.scrollTo(0, 0);
+    }, [])
+    useEffect(() => {
+        return (() => {
+            dispatch(clearPost())
+        })
+    }, [])
 
     return (
         <>
@@ -173,8 +185,8 @@ const PageOfPost = () => {
                     :
                     ""
                 }
-                {isLoading ?
-                    <Loading />
+                {post == null || isLoading || loaderIsLoading == true ?
+                    <div className="post-page-loading"><Loading /></div>
                     :
                     <>
                         <div className="navigation">
@@ -247,7 +259,7 @@ const PageOfPost = () => {
                                         />
 
                                     </div>
-                                    {post?.categoryName != "Hotel" && isLogin == true ? <button
+                                    {post?.categoryName != "Hotel" && isLogin == true && role === "user" ? <button
                                         tabIndex={0}
                                         onClick={async () => {
                                             await joinNewPostChatByUser(postId!)
@@ -255,9 +267,6 @@ const PageOfPost = () => {
                                                     dispatch(savePostIdForChat(id));
                                                     navigate("/dashboard/profile/page-of-messages");
                                                 });
-
-                                            //dispatch(savePostIdForChat(postId!))
-
                                         }}
                                     >Booking</button> : <div></div>}
                                     <div className="booking-location">
@@ -282,37 +291,41 @@ const PageOfPost = () => {
                                                     avatar={item.clientAvatar}
                                                 ></Feedback>
                                             ))}
-                                        {feedbacks?.totalCount != null && feedbacks?.totalCount > 2 ? (
+                                        {isLogin == true && (feedbacks?.totalCount == null || feedbacks?.totalCount == 0) ? <div className="leave-a-feedback">Leave a feedback</div> : ""}
+                                        {totalCountOfFeedbacks > 2 ? (
                                             <Pagination
                                                 page={pageOfFeedbacks}
                                                 sizeOfPage={feedbacks!.sizeOfPage}
-                                                countOfPosts={feedbacks!.totalCount!}
+                                                countOfPosts={totalCountOfFeedbacks}
                                                 changePage={setPageOfFeedbacks}
-                                            />) : <div className="leave-a-feedback">Leave a feedback</div>}
+                                            />) : ""}
                                     </div>
                                     <div className="send-feedback">
-                                        {isLogin ? <>
-                                            <p>
-                                                Rate from 1 to 5
-                                            </p>
-                                            <div className="send-feedback-rating">
-                                                <Rating
-                                                    rating={0}
-                                                    isSelecting={true}
-                                                    selectedRating={setSelectedRating}
-                                                />
-                                                {error ? <div id="error-message">
-                                                    {error}
-                                                </div> : ""}
-                                            </div>
-                                            <div className="send-feedback-text-area">
-                                                <FeedbackTextArea
-
-                                                    maxLength={300}
-                                                    //setText={setFeedbackMessage}
-                                                    onClickSend={sendFeedbackAsync} />
-                                            </div>
-                                        </>
+                                        {isLogin ?
+                                            role === "user" ?
+                                                <>
+                                                    <p>
+                                                        Rate from 1 to 5
+                                                    </p>
+                                                    <div className="send-feedback-rating">
+                                                        <Rating
+                                                            rating={0}
+                                                            isSelecting={true}
+                                                            selectedRating={setSelectedRating}
+                                                        />
+                                                        {error ? <div id="error-message">
+                                                            {error}
+                                                        </div> : ""}
+                                                    </div>
+                                                    <div className="send-feedback-text-area">
+                                                        <FeedbackTextArea
+                                                            maxLength={300}
+                                                            onClickSend={sendFeedbackAsync} />
+                                                    </div>
+                                                </>
+                                                : <p>
+                                                    You are realtor, and you can't send feedbacks
+                                                </p>
                                             :
                                             <>
                                                 <p>
@@ -414,41 +427,3 @@ const PageOfPost = () => {
 }
 
 export default PageOfPost;
-/*
-<div className="service-card">
-                                        <img src={`${APP_ENV.BASE_URL}/images/icons/wi-fi.svg`} alt="Icon" />
-                                        <p>Wi-Fi</p>
-                                    </div>
-                                    <div className="service-card">
-                                        <img src={`${APP_ENV.BASE_URL}/images/icons/pool.svg`} alt="Icon" />
-                                        <p>Pool</p>
-                                    </div>
-                                    <div className="service-card">
-                                        <img src={`${APP_ENV.BASE_URL}/images/icons/gym.svg`} alt="Icon" />
-                                        <p>Gym</p>
-                                    </div>
-                                    <div className="service-card">
-                                        <img src={`${APP_ENV.BASE_URL}/images/icons/dinner.svg`} alt="Icon" />
-                                        <p>Dinner</p>
-                                    </div>
-                                    <div className="service-card">
-                                        <img src={`${APP_ENV.BASE_URL}/images/icons/kids-room.svg`} alt="Icon" />
-                                        <p>Kids room</p>
-                                    </div>
-                                    <div className="service-card">
-                                        <img src={`${APP_ENV.BASE_URL}/images/icons/kids-pool.svg`} alt="Icon" />
-                                        <p>Kids pool</p>
-                                    </div>
-                                    <div className="service-card">
-                                        <img src={`${APP_ENV.BASE_URL}/images/icons/massage.svg`} alt="Icon" />
-                                        <p>Massage</p>
-                                    </div>
-                                    <div className="service-card">
-                                        <img src={`${APP_ENV.BASE_URL}/images/icons/travel-walk.svg`} alt="Icon" />
-                                        <p>Travel walk</p>
-                                    </div>
-                                    <div className="service-card">
-                                        <img src={`${APP_ENV.BASE_URL}/images/icons/cafe-or-restaurant.svg`} alt="Icon" />
-                                        <p>Cafe or restaurant</p>
-                                    </div>
-*/

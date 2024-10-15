@@ -2,9 +2,6 @@ import { Outlet, useLocation, useNavigate } from "react-router-dom";
 import "../../../css/DashBoardRealtorClasses/index.scss";
 import "../../../css/DashBoardAnonymousClasses/index.scss";
 import logo from "../../../assets/Logo/tripbook 1.svg";
-// import dot from "../../../assets/Icons/mingcute_map-pin-line.svg";
-// import calendar from "../../../assets/Icons/calendar-06.svg";
-// import human from "../../../assets/Icons/user-profile-03.svg";
 import { useSelector } from "react-redux";
 import { RootState } from "../../../store";
 import { useEffect, useState } from "react";
@@ -102,24 +99,6 @@ export default function AnonymousDashboardLayout() {
                     </div>
                     <div className="searching">
                         <div>Travel, visit new places with TripBook!</div>
-                        {/* <form>
-                            <img src={dot} />
-                            <input placeholder="Place of travel?" />
-                            <img src={calendar} />
-                            <input
-                                type="text"
-                                placeholder="Date of arrival - departure"
-                                onFocus={(event) => {
-                                    event.target.type = "date";
-                                }}
-                                onBlur={(event) => {
-                                    event.target.type = "text";
-                                }}
-                            />
-                            <img src={human} />
-                            <input placeholder="Count of people - number" />
-                            <button>Find</button>
-                        </form> */}
                     </div>
                 </div>
             </header>
@@ -140,9 +119,6 @@ export default function AnonymousDashboardLayout() {
                         </a>
                         <a tabIndex={0}>Send Message to Administrator</a>
                         <a tabIndex={0}>On issues of advertising</a>
-                        {/* <a tabIndex={6}>Districts</a>{" "}
-                        <a tabIndex={7}>Attractions</a>{" "}
-                        <a tabIndex={8}>Airports</a> <a tabIndex={9}>Hotels</a> */}
                     </div>
                 </div>
             </footer>

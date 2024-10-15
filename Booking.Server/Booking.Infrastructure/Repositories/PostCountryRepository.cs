@@ -26,14 +26,14 @@ public class PostCountryRepository(BookingDbContext context) : IPostCountryRepos
               c.Cities.Any(city => city.Streets!=null &&
               city.Streets!.Any(street => 
                    street.Posts != null && street.Posts!.Any(post => 
-                          post.CategoryId==Category)))))
+                          post.CategoryId==Category && post.IsActive == true && post.IsArhive == false)))))
             &&(City == null ? true :
-            c.Cities.Any(city => city.Id == City)
+            c.Cities.Any(city => city.Id == City && city.Streets != null && city.Streets.Any(s => s.Posts != null && s.Posts.Any(post => post.IsActive == true && post.IsArhive == false)))
             ) && (Realtor == null ? true :
             c.Cities!.Any(city =>
               city.Streets != null && city.Streets!.Any(street =>
                    street.Posts != null && street.Posts!.Any(post => 
-                         post.UserId == Realtor)))))
+                         post.UserId == Realtor && post.IsActive == true && post.IsArhive == false)))))
             .ToListAsync();
     }
 

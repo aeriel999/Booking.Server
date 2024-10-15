@@ -7,7 +7,7 @@ import { IChatRoomForClient } from "../../../interfaces/chat";
 import { APP_ENV } from "../../../env";
 import { useAppDispatch, useAppSelector } from "../../../hooks/redux";
 import { savePostIdForChat } from "../../../store/settings/settings.slice";
-import { CheckChatIsExist } from "../../../store/chat/chat.action";
+import { clearGetingMessageInfo } from "../../../store/chat/chat.slice";
 
 interface IChatListItem {
     chatItem: {
@@ -33,6 +33,7 @@ export const ChatListItem = (info: IChatListItem) => {
     const [chats, setChats] = useState<IChatRoomForClient[] | null>(null);
 
     useEffect(() => {
+        console.log(info)
         setCountOfUnreadMessages(info.countOfUnreadMessages);
         setChats(info.chatItem.chats);
         if (info.chatItem.chats.find((element) => element.chatRoomId == savedChatRoom)) {
@@ -41,8 +42,10 @@ export const ChatListItem = (info: IChatListItem) => {
         }
     }, [])
     useEffect(() => {
+        console.log("GEttingMessageInfo - ", getingMessageInfo);
         if (getingMessageInfo && info.chatItem.chats && info.chatItem.chats.find((element) => element.chatRoomId == getingMessageInfo.chatRoomId)) {
-            if (!countOfUnreadMessages) {
+            console.log(countOfUnreadMessages)
+            if (countOfUnreadMessages == null) {
                 setCountOfUnreadMessages(1)
             }
             else setCountOfUnreadMessages(countOfUnreadMessages + 1)
@@ -62,6 +65,8 @@ export const ChatListItem = (info: IChatListItem) => {
 
                 ));
             }
+
+            dispatch(clearGetingMessageInfo());
         }
     }, [getingMessageInfo])
 
@@ -119,7 +124,7 @@ export const ChatListItem = (info: IChatListItem) => {
                         : <Avatar userName={info.chatItem.name} />
                     }
                     <p className="chat-list-item-name">{info.chatItem.name}</p>
-                    {countOfUnreadMessages ? <div className="count-of-unread-messages"><p>{countOfUnreadMessages}</p></div> : ""}
+                    {countOfUnreadMessages && countOfUnreadMessages > 0 ? <div className="count-of-unread-messages"><p>{countOfUnreadMessages}</p></div> : ""}
                     <img id="chewron" src={isOpen ? chewronTop : chewronDown} alt="" />
 
                 </div>
@@ -134,7 +139,6 @@ export const ChatListItem = (info: IChatListItem) => {
                                     info.setCountOfUnreadedMessages(item.unreadMessages ? item.unreadMessages : 0) :
                                     0
                                 info.setPostId(item.postId);
-                                //chechIsChatExist(item.postId);
                             }}
                             onKeyDown={(e) => {
                                 if (e.key === 'Enter') {

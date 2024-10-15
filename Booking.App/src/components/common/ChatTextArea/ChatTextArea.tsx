@@ -28,8 +28,6 @@ export const ChatTextArea = (info: IChatTextArea) => {
         reset
     } = useForm<ISendMessage>({ resolver: sendMessageResolver })
 
-    // const sendMessageSignalR = (message: string, roomId: string) =>
-    //     connection.send('SendMessage', { message, roomId })
     const sendMessageSignalR = async (message: string, roomId: string) => {
         if (connection.state === signalR.HubConnectionState.Connected) {
             await connection.send("SendMessage", { message, roomId });

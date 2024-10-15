@@ -1,6 +1,6 @@
 import { useNavigate, useParams } from "react-router-dom";
 import ComboBox from "../../components/common/ComboBox.tsx";
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { useAppDispatch, useAppSelector } from "../../hooks/redux";
 import { unwrapResult } from "@reduxjs/toolkit";
 import {
@@ -104,6 +104,14 @@ export function EditPost() {
     const [editRooms, setEditRooms] = useState<IEditRoom[] | null>([]);
     const [defaultRooms, setDefaultRooms] = useState<IRoomInfo[] | null>([]);
     const [deletedRooms, setDeletedRooms] = useState<string[] | null>([]);
+
+    const topOfPage = useRef<HTMLDivElement>(null);
+
+    const scrollOnTop = () => {
+        if (topOfPage.current) {
+            topOfPage.current.scrollIntoView({ behavior: "smooth" });
+        }
+    }
 
     useEffect(() => {
         console.log("defaultRooms", defaultRooms);
@@ -280,8 +288,7 @@ export function EditPost() {
 
             //Create Url for main image
             setDefaultMainImageUrl(
-                `${APP_ENV.BASE_URL}${"/images/posts/"}${
-                    history?.payload.imagePostList.$values[0]
+                `${APP_ENV.BASE_URL}${"/images/posts/"}${history?.payload.imagePostList.$values[0]
                 }`
             );
 
@@ -373,6 +380,9 @@ export function EditPost() {
             (isCityValid || isCityExist) &&
             (isStreetValid || isStreetExist)
         ) {
+
+            scrollOnTop();
+
             const model: IPostEdit = {
                 ...data,
                 id: postId!,
@@ -460,6 +470,8 @@ export function EditPost() {
                 )}
 
                 <div className="title">Edit Post</div>
+
+                <div id="Ref" ref={topOfPage} />
 
                 <div className="twoColumnsContainer">
                     <div className="textInputsContainer">

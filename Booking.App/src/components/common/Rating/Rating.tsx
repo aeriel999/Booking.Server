@@ -83,28 +83,3 @@ export const Rating = (info: IRating) => {
         </div>
     )
 }
-//<p>({info.countOfRating})</p>
-/*
-<div className="card-rating" onMouseLeave={() => mouseLeave()}>
-            {[...Array(fullStars)].map((_, index) => (
-                <div className='star' key={`full-star-${index}`} >
-                    <img src={starFull} alt="" onClick={() => onClick(index)} onMouseEnter={() => mouseEnter(index)} />
-                </div>
-            ))}
-            {!isHalf ? <div className='star'>
-                <img src={starHalf} alt="" />
-            </div> : ""}
-            {[...Array(emptyStars)].map((_, index) => (
-                <div className='star' key={`empty-star-${index}`}>
-                    <img
-                        src={starEmpty}
-                        alt=""
-                        onMouseEnter={() => mouseEnter(index)}
-
-
-                    />
-                </div>
-            ))}
-
-        </div>
-*/

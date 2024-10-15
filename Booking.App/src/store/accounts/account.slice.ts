@@ -145,7 +145,7 @@ export const accountsSlice = createSlice({
             action: PayloadAction<IRealtorRegister>
         ) => {
             state.registerData = action.payload;
-        },
+        }
     },
     extraReducers: (builder) => {
         builder

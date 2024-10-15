@@ -58,7 +58,7 @@ export const Pagination = (info: IPagination) => {
 
         setCountOfPages(pages);
         setAllPages(arrPages);
-    }, [info.page])
+    }, [info.page, info.countOfPosts, info.sizeOfPage])
 
     return (
         <div className="pagination">
@@ -92,7 +92,9 @@ export const Pagination = (info: IPagination) => {
                     ) : ""}
                     {allPages.map((item) => (
 
-                        <div tabIndex={0}
+                        <div
+                            key={item}
+                            tabIndex={0}
                             className={`${info.page == item ? "page-number-active" : "page-number"}`}
                             onClick={() => info.changePage(item)}
                             onKeyDown={(e) => {

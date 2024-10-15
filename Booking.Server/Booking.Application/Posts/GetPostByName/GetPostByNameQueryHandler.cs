@@ -14,8 +14,6 @@ public class GetPostByNameQueryHandler(IPostRepository repository) : IRequestHan
 
         if (postId == Guid.Empty) return Error.NotFound("Post is not found");
 
-        //var response = PagedList<Post>.getPagedList(posts, request.Page, request.SizeOfPage);
-
         return postId;
     }
 }

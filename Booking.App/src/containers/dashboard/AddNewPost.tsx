@@ -1,6 +1,6 @@
 import { useNavigate } from "react-router-dom";
 import ComboBox from "../../components/common/ComboBox.tsx";
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { useAppDispatch } from "../../hooks/redux";
 import { unwrapResult } from "@reduxjs/toolkit";
 import {
@@ -83,6 +83,14 @@ export function AddNewPost() {
         formState: { errors },
         setValue,
     } = useForm<IPostCreate>({ resolver: addPostResolver });
+
+    const topOfPage = useRef<HTMLDivElement>(null);
+
+    const scrollOnTop = () => {
+        if (topOfPage.current) {
+            topOfPage.current.scrollIntoView({ behavior: "smooth" });
+        }
+    }
 
     //Methods for geting data for conboboxes and checkboxes
     const getCategoryList = async () => {
@@ -241,6 +249,9 @@ export function AddNewPost() {
             (isCityValid || isCityExist) &&
             (isStreetValid || isStreetExist)
         ) {
+
+            scrollOnTop();
+
             const model: IPostCreate = {
                 ...data,
                 categoryId: category?.id!,
@@ -301,6 +312,8 @@ export function AddNewPost() {
             )}
 
             <div className="title">Add New Post</div>
+
+            <div id="Ref" ref={topOfPage} />
 
             <div className="twoColumnsContainer">
                 <div className="textInputsContainer">
@@ -629,5 +642,5 @@ export function AddNewPost() {
         </div>
     );
 }
- 
+
 

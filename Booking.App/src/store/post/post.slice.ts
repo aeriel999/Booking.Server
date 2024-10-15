@@ -104,7 +104,21 @@ export const postSlice = createSlice({
         },
         setIdOfSelectedFeedback: (state, action: PayloadAction<string | null>) => {
             state.idOfSelectedFeedback = action.payload;
-        }
+        },
+        clearSearchingPost: (state) => {
+            state.searchingPost = null;
+        },
+        clearPosts: (state) => {
+            state.posts = null;
+        },
+        clearFilter: (state) => {
+            state.filteredCategories = null;
+            state.filteredCountries = null;
+            state.filteredCities = null;
+        },
+        clearPost: (state) => {
+            state.post = null;
+        },
     },
     extraReducers: (builder) => {
         builder
@@ -384,6 +398,10 @@ export const { setCategoryToFilter,
     setCityToFilter,
     setRealtorToFilter,
     setTextForSearching,
-    setIdOfSelectedFeedback } = postSlice.actions;
+    setIdOfSelectedFeedback,
+    clearSearchingPost,
+    clearPosts,
+    clearFilter,
+    clearPost } = postSlice.actions;
 
 export default postSlice.reducer;

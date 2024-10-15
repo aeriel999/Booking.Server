@@ -6,7 +6,7 @@ import { AppDispatch, RootState } from "../../../store";
 import { getFilteredListByType, getFilteredListOfCategories, getFilteredListOfCities, getFilteredListOfCountries, getListOfCitiesByCountryId, getListOfPosts } from "../../../store/post/post.actions";
 import { useEffect, useState } from "react";
 import { getFilteredListOfRealtors } from "../../../store/users/user.action";
-import { setCategoryToFilter, setCityToFilter, setCountryToFilter, setRealtorToFilter } from "../../../store/post/post.slice";
+import { clearFilter, clearPosts, setCategoryToFilter, setCityToFilter, setCountryToFilter, setRealtorToFilter } from "../../../store/post/post.slice";
 import { PostCard } from "../../../components/common/PostCard/PostCard";
 import { Pagination } from "../../../components/common/Pagination/Pagination";
 import { IFetchData, IFilter, IFilteredRequest } from "../../../interfaces/post";
@@ -16,6 +16,7 @@ import emptyBox from "../../../assets/Icons/empty-box.png";
 import { unwrapResult } from "@reduxjs/toolkit";
 import ErrorHandler from "../../../components/common/ErrorHandler";
 import OutlinedErrorAlert from "../../../components/common/ErrorAlert";
+import { clearFilterRealtors } from "../../../store/users/user.slice";
 
 
 
@@ -28,7 +29,6 @@ export default function ListOfPostsPage() {
     const listOfCities = useSelector((state: RootState) => state.post.filteredCities);
     const listOfRealtors = useSelector((state: RootState) => state.user.filteredRealtors);
     const filter = useSelector((state: RootState) => state.post.filter);
-    //const searchingText = useSelector((state: RootState) => state.post.textForSearching);
     const currentPage = useSelector((state: RootState) => state.settings.currentPaginationPage);
     const isLoading = useSelector((state: RootState) => state.settings.loaderIsLoading);
 
@@ -102,7 +102,6 @@ export default function ListOfPostsPage() {
 
     const findPost = async () => {
 
-        //if (searchingText == null || searchingText == "") {
         const currentFilter: IFilter = {
             category: filter.category,
             country: filter.country,
@@ -125,22 +124,6 @@ export default function ListOfPostsPage() {
         }
 
 
-        //}
-        /*else {
-            const currentFilter: IFilter = {
-                category: filter.category,
-                country: filter.country,
-                city: filter.city,
-                realtor: filter.realtor,
-            };
-            const payload: IFetchDataByName = {
-                filter: currentFilter,
-                name: searchingText,
-            }
-            await dispatch(getPostByName(payload));
-        }*/
-
-
 
     }
     const skip = () => {
@@ -148,6 +131,7 @@ export default function ListOfPostsPage() {
         dispatch(setCountryToFilter(null));
         dispatch(setCityToFilter(null));
         dispatch(setRealtorToFilter(null));
+
     }
 
     useEffect(() => {
@@ -155,10 +139,23 @@ export default function ListOfPostsPage() {
         getCategories();
         getCountries();
         getRealtors();
+
     }, []);
     useEffect(() => {
         dispatch(setCategoryToFilter(categorySelect))
     }, [categorySelect])
+
+    useEffect(() => {
+        return (() => {
+            dispatch(clearPosts())
+            dispatch(clearFilter())
+            dispatch(clearFilterRealtors())
+            dispatch(setCategoryToFilter(null))
+            dispatch(setCountryToFilter(null))
+            dispatch(setCityToFilter(null))
+            dispatch(setRealtorToFilter(null))
+        })
+    }, [])
     useEffect(() => {
         if (firstLoading) {
             dispatch(changeLoaderIsLoading(true));
@@ -197,6 +194,7 @@ export default function ListOfPostsPage() {
     useEffect(() => {
         if (firstLoading) {
             dispatch(changeLoaderIsLoading(true));
+            console.log(filter.country)
             const getFilteredCountries = async () => {
                 try {
                     var result1 = await dispatch(getFilteredListOfCategories({ country: filter.country, city: filter.city, realtor: filter.realtor }))
@@ -226,17 +224,13 @@ export default function ListOfPostsPage() {
                 try {
                     var result1 = await dispatch(getFilteredListOfCategories({ country: filter.country, city: filter.city, realtor: filter.realtor }))
                     unwrapResult(result1);
-                    //if (filter.city == null) {
                     var result2 = await dispatch(getFilteredListOfCountries({ category: filter.category, city: filter.city, realtor: filter.realtor }))
                     unwrapResult(result2);
-                    //}
                     var result3 = await dispatch(getFilteredListOfRealtors({ category: filter.category, country: filter.country, city: filter.city }))
                     unwrapResult(result3);
                 } catch (error) {
                     setErrorMessage(ErrorHandler(error))
                 }
-                /*await dispatch(getFilteredListOfCategories({ country: filter.country, city: filter.city, realtor: filter.realtor }))
-                await dispatch(getFilteredListOfRealtors({ category: filter.category, country: filter.country, city: filter.city }))*/
                 findPost();
             }
             getFilteredCities();
@@ -260,16 +254,11 @@ export default function ListOfPostsPage() {
                         var result2 = await dispatch(getFilteredListOfCities({ category: filter.category, country: filter.country, realtor: filter.realtor }))
                         unwrapResult(result2);
                     }
-                    //if (filter.city == null) {
                     var result3 = await dispatch(getFilteredListOfCountries({ category: filter.category, city: filter.city, realtor: filter.realtor }))
                     unwrapResult(result3);
-                    //}
                 } catch (error) {
                     setErrorMessage(ErrorHandler(error))
                 }
-                /*await dispatch(getFilteredListOfCategories({ country: filter.country, city: filter.city, realtor: filter.realtor }))
-                if (filter.country != null) await dispatch(getFilteredListOfCountries({ category: filter.category, realtor: filter.realtor }))
-                await dispatch(getFilteredListOfCities({ category: filter.category, country: filter.country!, realtor: filter.realtor }))*/
                 findPost();
 
             }

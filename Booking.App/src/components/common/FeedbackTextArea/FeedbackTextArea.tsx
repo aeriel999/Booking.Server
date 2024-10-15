@@ -4,9 +4,7 @@ import sendMessage from '../../../assets/Icons/send.svg';
 import { SubmitHandler, useForm } from "react-hook-form";
 
 interface IFeedbackTextArea {
-
     maxLength: number,
-    //setText: React.Dispatch<React.SetStateAction<string | null>>,
     onClickSend: (text: string) => void;
 }
 type FeedbackForm = {
@@ -20,8 +18,10 @@ export const FeedbackTextArea = (info: IFeedbackTextArea) => {
         {
             register,
             handleSubmit,
+            setValue,
             setError,
             formState: { errors, isSubmitting }
+
         } = useForm<FeedbackForm>();
 
     const handleChange = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
@@ -48,7 +48,7 @@ export const FeedbackTextArea = (info: IFeedbackTextArea) => {
 
         }
         else {
-            //info.setText(data.feedbackText);
+            setValue("feedbackText", "", { shouldValidate: true });
             info.onClickSend(data.feedbackText);
         }
     };

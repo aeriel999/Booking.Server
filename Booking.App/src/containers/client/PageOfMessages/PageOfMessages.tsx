@@ -11,9 +11,6 @@ import { Loading } from '../../../components/common/Loading/Loading';
 import { Status } from '../../../utils/enum';
 import { clearChatRoomsForClient } from '../../../store/chat/chat.slice';
 
-
-
-
 export const PageOfMessages = () => {
 
     const listOfChatRoomsForClient = useAppSelector((state: RootState) => state.chat.chatRoomsForClient);
@@ -49,7 +46,6 @@ export const PageOfMessages = () => {
         if (savedChatRoom?.length != 0) {
             console.log(savedChatRoom);
             setChatRoomId(savedChatRoom);
-            //dispatch(savePostIdForChat(""));
         }
     }, [savedChatRoom])
     return (

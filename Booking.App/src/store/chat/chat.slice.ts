@@ -37,9 +37,9 @@ const initialState: IChatState = {
         "generalNumberOfUnreadMessages"
     )
         ? parseInt(
-              getLocalStorage("generalNumberOfUnreadMessages") as string,
-              10
-          )
+            getLocalStorage("generalNumberOfUnreadMessages") as string,
+            10
+        )
         : 0,
     listOfPostIdForListening: getListFromLocalStorage(
         "updateListOfIdForListening"
@@ -57,7 +57,7 @@ const initialState: IChatState = {
     deletedChatId: null,
     deletedChatRooms: null,
     chatIsExist: null,
-    
+
 };
 
 export const chatSlice = createSlice({
@@ -204,6 +204,11 @@ export const chatSlice = createSlice({
             if (state.chatRoomsForClient) state.chatRoomsForClient = null;
 
         },
+        clearGetingMessageInfo: (
+            state: IChatState
+        ) => {
+            if (state.getingMessageInfo) state.getingMessageInfo = null;
+        }
     },
     extraReducers: (builder) => {
         builder
@@ -332,6 +337,7 @@ export const {
     setDeletedChatId,
     resetChatInfoForClient,
     setDeletedChatIdToArr,
-    clearChatRoomsForClient
+    clearChatRoomsForClient,
+    clearGetingMessageInfo
 } = chatSlice.actions;
 export default chatSlice.reducer;

@@ -21,6 +21,7 @@ interface IRoomCard {
 }
 export const RoomCard = (info: IRoomCard) => {
     const isLogin = useAppSelector((state: RootState) => state.account.isLogin);
+    const role = useAppSelector((state: RootState) => state.account.user?.role);
     const navigate = useNavigate();
     const dispatch = useDispatch<AppDispatch>();
     return (
@@ -56,7 +57,7 @@ export const RoomCard = (info: IRoomCard) => {
                     <p>{info.price} UAH</p>
                     <p>/ 1 day</p>
                 </div>
-                {isLogin == true ? <button
+                {isLogin == true && role === "user" ? <button
                     tabIndex={0}
                     onClick={async () => {
                         await joinNewPostChatByUser(info.postId)
